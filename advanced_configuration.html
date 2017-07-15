@@ -1,0 +1,662 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Advanced Configuration &mdash; Sphinx-Gallery 0.1.11-git documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="_static/gallery.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/theme_override.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Sphinx-Gallery 0.1.11-git documentation" href="index.html"/>
+        <link rel="next" title="Frequently Asked Questions" href="faq.html"/>
+        <link rel="prev" title="Getting Started to Sphinx-Gallery" href="getting_started.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Sphinx-Gallery
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.11
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started to Sphinx-Gallery</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Advanced Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#manage-multiple-galleries">Manage Multiple galleries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#building-examples-matching-a-pattern">Building examples matching a pattern</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#linking-to-documentation">Linking to documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#references-to-examples-backreferences">References to examples (backreferences)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#examples-using-numpy-exp">Examples using <code class="docutils literal"><span class="pre">numpy.exp</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#auto-documenting-your-api-with-links-to-examples">Auto documenting your API with links to examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#using-a-custom-default-thumbnail-image">Using a custom default thumbnail image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#choosing-the-thumbnail-image-from-multiple-figures">Choosing the thumbnail image from multiple figures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#build-the-gallery-without-executing-the-examples">Build the Gallery without executing the examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dealing-with-failing-gallery-example-scripts">Dealing with failing Gallery example scripts</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#abort-build-on-first-fail">Abort build on first fail</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#don-t-fail-the-build-on-exit">Don’t fail the build on exit</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">Frequently Asked Questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="syntax.html">Sphinx-Gallery Syntax</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">Sphinx-Gallery Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Sphinx-Gallery API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html">Gallery of Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">Secondary gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_mayavi_examples/index.html">Gallery of Examples using Mayavi</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changes.html">Change Log</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery">Fork sphinx-gallery on Github</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Sphinx-Gallery</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>Advanced Configuration</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/advanced_configuration.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="advanced-configuration">
+<h1>Advanced Configuration<a class="headerlink" href="#advanced-configuration" title="Permalink to this headline">¶</a></h1>
+<p>Here are the personal configurations that you can modify within Sphinx-Gallery.</p>
+<div class="section" id="manage-multiple-galleries">
+<span id="multiple-galleries-config"></span><h2>Manage Multiple galleries<a class="headerlink" href="#manage-multiple-galleries" title="Permalink to this headline">¶</a></h2>
+<p>Sphinx-Gallery only supports up to sub-folder level in its gallery directories.
+This might be a limitation for you. Or you might want to have separate
+galleries for different purposes, an examples gallery and a tutorials gallery.
+For this you use in your Sphinx <code class="docutils literal"><span class="pre">conf.py</span></code> file a list of directories in
+the sphinx configuration dictionary:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;examples_dirs&#39;</span>   <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;../examples&#39;</span><span class="p">,</span> <span class="s1">&#39;../tutorials&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;gallery_dirs&#39;</span>    <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;auto_examples&#39;</span><span class="p">,</span> <span class="s1">&#39;tutorials&#39;</span><span class="p">],</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Keep in mind that both lists have to be of the same length.</p>
+</div>
+<div class="section" id="building-examples-matching-a-pattern">
+<span id="build-pattern"></span><h2>Building examples matching a pattern<a class="headerlink" href="#building-examples-matching-a-pattern" title="Permalink to this headline">¶</a></h2>
+<p>By default, Sphinx-Gallery execute only examples beginning with <code class="docutils literal"><span class="pre">plot</span></code>. However,
+if this naming convention does not suit your project, you can modify this pattern
+in your Sphinx <code class="docutils literal"><span class="pre">conf.py</span></code>. For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;filename_pattern&#39;</span>  <span class="p">:</span> <span class="s1">&#39;/plot_compute_&#39;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>will build all examples starting with <code class="docutils literal"><span class="pre">plot_compute_</span></code>. The key <code class="docutils literal"><span class="pre">filename_pattern</span></code> accepts
+<a class="reference external" href="https://docs.python.org/2/library/re.html">regular expressions</a> which will be matched with the full path of the example. This is the reason
+the leading <code class="docutils literal"><span class="pre">'/'</span></code> is required. Users are advised to use <code class="docutils literal"><span class="pre">os.sep</span></code> instead of <code class="docutils literal"><span class="pre">'/'</span></code> if
+they want to be agnostic to the operating system.</p>
+<p>This option is also useful if you want to build only a subset of the examples. For example, you may
+want to build only one example so that you can link it in the documentation. In that case,
+you would do:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;filename_pattern&#39;</span> <span class="p">:</span> <span class="s1">&#39;plot_awesome_example.py&#39;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Here, one should escape the dot <code class="docutils literal"><span class="pre">'\.'</span></code> as otherwise python <a class="reference external" href="https://docs.python.org/2/library/re.html">regular expressions</a> matches any character. Nevertheless, as
+one is targeting a specific file, it is most certainly going to match the dot in the filename.</p>
+<p>Similarly, to build only examples in a specific directory, you can do:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;filename_pattern&#39;</span> <span class="p">:</span> <span class="s1">&#39;/directory/plot_&#39;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Alternatively, you can skip some examples. For example, to skip building examples
+starting with <code class="docutils literal"><span class="pre">plot_long_examples_</span></code>, you would do:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;filename_pattern&#39;</span> <span class="p">:</span> <span class="s1">&#39;/plot_(?!long_examples)&#39;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>As the patterns are parsed as <a class="reference external" href="https://docs.python.org/2/library/re.html">regular expressions</a>, users are advised to consult the
+<a class="reference external" href="https://docs.python.org/2/library/re.html">regular expressions</a> module for more details.</p>
+</div>
+<div class="section" id="linking-to-documentation">
+<span id="link-to-documentation"></span><h2>Linking to documentation<a class="headerlink" href="#linking-to-documentation" title="Permalink to this headline">¶</a></h2>
+<p>Sphinx-Gallery enables you to add hyperlinks in your example scripts so that
+you can link the used functions to their matching online documentation. As such
+code snippets within the gallery appear like this</p>
+<div class="highlight-python"><div class="highlight"><pre>
+<span class="n">y</span> <span class="o">=</span> <a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.sin.html#numpy.sin"><span class="n">np</span><span class="o">.</span><span class="n">sin</span></a><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div><p>Have a look at this in full action
+in our example <a class="reference internal" href="auto_examples/plot_gallery_version.html#sphx-glr-auto-examples-plot-gallery-version-py"><span class="std std-ref">Sphinx-Gallery introduction</span></a>.</p>
+<p>To make this work in your documentation you need to include to the configuration
+dictionary within your Sphinx <code class="docutils literal"><span class="pre">conf.py</span></code> file :</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;reference_url&#39;</span><span class="p">:</span>  <span class="p">{</span>
+             <span class="c1"># The module you locally document uses a None</span>
+            <span class="s1">&#39;sphinx_gallery&#39;</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
+
+            <span class="c1"># External python modules use their documentation websites</span>
+            <span class="s1">&#39;matplotlib&#39;</span><span class="p">:</span> <span class="s1">&#39;http://matplotlib.org&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;numpy&#39;</span><span class="p">:</span> <span class="s1">&#39;http://docs.scipy.org/doc/numpy-1.9.1&#39;</span><span class="p">}</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="references-to-examples-backreferences">
+<span id="references-to-examples"></span><h2>References to examples (backreferences)<a class="headerlink" href="#references-to-examples-backreferences" title="Permalink to this headline">¶</a></h2>
+<p>Sphinx-Gallery enables you, when documenting your modules, to
+reference to the examples that use a particular function. For example
+if we are documenting the <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.exp.html#numpy.exp" title="(in NumPy v1.13)"><code class="xref py py-data docutils literal"><span class="pre">numpy.exp</span></code></a> function its possible to embed
+a small gallery of examples that is specific to this function and
+looks like this:</p>
+<div class="section" id="examples-using-numpy-exp">
+<h3>Examples using <code class="docutils literal"><span class="pre">numpy.exp</span></code><a class="headerlink" href="#examples-using-numpy-exp" title="Permalink to this headline">¶</a></h3>
+<div class="sphx-glr-thumbcontainer" tooltip="An example to demonstrate how to choose which figure is displayed as the thumbnail if the examp..."><div class="figure" id="id3">
+<img alt="_images/sphx_glr_plot_choose_thumbnail_thumb.png" src="_images/sphx_glr_plot_choose_thumbnail_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="auto_examples/plot_choose_thumbnail.html#sphx-glr-auto-examples-plot-choose-thumbnail-py"><span class="std std-ref">Choosing the thumbnail figure</span></a></span></p>
+</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="A simple example for ploting two figures of a exponential function in order to test the autonom..."><div class="figure" id="id4">
+<img alt="_images/sphx_glr_plot_exp_thumb.png" src="_images/sphx_glr_plot_exp_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="auto_examples/plot_exp.html#sphx-glr-auto-examples-plot-exp-py"><span class="std std-ref">Plotting the exponential function</span></a></span></p>
+</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Plot to present Sphinx-Gallery using itself to display its version. "><div class="figure" id="id5">
+<img alt="_images/sphx_glr_plot_gallery_version_thumb.png" src="_images/sphx_glr_plot_gallery_version_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="auto_examples/plot_gallery_version.html#sphx-glr-auto-examples-plot-gallery-version-py"><span class="std std-ref">Sphinx-Gallery introduction</span></a></span></p>
+</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Considering an atomic single orbital and how to fill it by use of the chemical potential. This ..."><div class="figure" id="id6">
+<img alt="_images/sphx_glr_plot_quantum_thumb.png" src="_images/sphx_glr_plot_quantum_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="auto_examples/plot_quantum.html#sphx-glr-auto-examples-plot-quantum-py"><span class="std std-ref">Some Quantum Mechanics, filling an atomic orbital</span></a></span></p>
+</div>
+</div><div style='clear:both'></div><p>For such behavior to be available, you have to activate it in your
+Sphinx-Gallery configuration <code class="docutils literal"><span class="pre">conf.py</span></code> file with:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c1"># directory where function granular galleries are stored</span>
+    <span class="s1">&#39;backreferences_dir&#39;</span>  <span class="p">:</span> <span class="s1">&#39;gen_modules/backreferences&#39;</span><span class="p">,</span>
+
+    <span class="c1"># Modules for which function level galleries are created.  In</span>
+    <span class="c1"># this case sphinx_gallery and numpy in a tuple of strings.</span>
+    <span class="s1">&#39;doc_module&#39;</span>          <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;sphinx_gallery&#39;</span><span class="p">,</span> <span class="s1">&#39;numpy&#39;</span><span class="p">)}</span>
+</pre></div>
+</div>
+<p>The path you specify in <code class="docutils literal"><span class="pre">backreferences_dir</span></code>, here we choose
+<code class="docutils literal"><span class="pre">gen_modules/backreferences</span></code> will get populated with
+ReStructuredText files, each of which contains a reduced version of the
+gallery specific to every function used across all the examples
+galleries and belonging to the modules listed in <code class="docutils literal"><span class="pre">doc_module</span></code>. Keep
+in mind that the path set in <code class="docutils literal"><span class="pre">backreferences_dir</span></code> is <strong>relative</strong> to the
+<code class="docutils literal"><span class="pre">conf.py</span></code> file.</p>
+<p>Then within your sphinx documentation <code class="docutils literal"><span class="pre">.rst</span></code> files you write these
+lines to include this reduced version of the Gallery, which has
+examples in use of a specific function, in this case <code class="docutils literal"><span class="pre">numpy.exp</span></code>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">..</span> <span class="n">include</span><span class="p">::</span> <span class="n">gen_modules</span><span class="o">/</span><span class="n">backreferences</span><span class="o">/</span><span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="o">.</span><span class="n">examples</span>
+<span class="o">..</span> <span class="n">raw</span><span class="p">::</span> <span class="n">html</span>
+
+    <span class="o">&lt;</span><span class="n">div</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;clear:both&#39;</span><span class="o">&gt;&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">include</span></code> directive takes a path <strong>relative</strong> to the <code class="docutils literal"><span class="pre">rst</span></code>
+file it is called from. In the case of this documentation file (which
+is in the same directory as <code class="docutils literal"><span class="pre">conf.py</span></code>) we directly use the path
+declared in <code class="docutils literal"><span class="pre">backreferences_dir</span></code> followed by the function whose
+examples we want to show and the file has the <code class="docutils literal"><span class="pre">.examples</span></code> extension.</p>
+<div class="section" id="auto-documenting-your-api-with-links-to-examples">
+<h4>Auto documenting your API with links to examples<a class="headerlink" href="#auto-documenting-your-api-with-links-to-examples" title="Permalink to this headline">¶</a></h4>
+<p>The previous feature can be automated for all your modules combining
+it with the standard sphinx extensions <a class="reference external" href="http://sphinx-doc.org/ext/autodoc.html">autodoc</a> and <a class="reference external" href="http://sphinx-doc.org/ext/autosummary.html">autosummary</a>. First enable them in your
+<code class="docutils literal"><span class="pre">conf.py</span></code> extensions list.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sphinx_gallery</span>
+<span class="n">extensions</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="o">...</span>
+    <span class="s1">&#39;sphinx.ext.autodoc&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;sphinx.ext.autosummary&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;sphinx_gallery.gen_gallery&#39;</span><span class="p">,</span>
+    <span class="p">]</span>
+
+<span class="c1"># generate autosummary even if no references</span>
+<span class="n">autosummary_generate</span> <span class="o">=</span> <span class="bp">True</span>
+</pre></div>
+</div>
+<p><a class="reference external" href="http://sphinx-doc.org/ext/autodoc.html">autodoc</a> and <a class="reference external" href="http://sphinx-doc.org/ext/autosummary.html">autosummary</a> are very powerful
+extensions please read about them. In this example we’ll explain how
+the <a class="reference internal" href="reference.html#sphx-glr-api-reference"><span class="std std-ref">Sphinx-Gallery API Reference</span></a> is automatically generated. The
+documentation is done at the module level. We first start with the
+<code class="docutils literal"><span class="pre">reference.rst</span></code> file</p>
+<div class="highlight-rst"><div class="highlight"><pre><span></span><span class="p">..</span> <span class="nt">_sphx_glr_api_reference:</span>
+
+<span class="gh">Sphinx-Gallery API Reference</span>
+<span class="gh">============================</span>
+
+The complete Sphinx-Gallery project is automatically documented for
+every module.
+
+<span class="p">..</span> <span class="ow">currentmodule</span><span class="p">::</span> sphinx_gallery
+
+<span class="p">..</span> <span class="ow">autosummary</span><span class="p">::</span>
+   <span class="nc">:toctree:</span> <span class="nf">gen_modules/</span>
+   <span class="nc">:template:</span> <span class="nf">module.rst</span>
+
+   gen_gallery
+   backreferences
+   gen_rst
+   py_source_parser
+   docs_resolv
+   notebook
+   downloads
+   docs_resolv
+</pre></div>
+</div>
+<p>The important directives are <code class="docutils literal"><span class="pre">currentmodule</span></code> where we specify which
+module we are documenting, for our purpose is <code class="docutils literal"><span class="pre">sphinx_gallery</span></code>. The
+<code class="docutils literal"><span class="pre">autosummary</span></code> directive is responsible for generating the <code class="docutils literal"><span class="pre">rst</span></code>
+files documenting each module.  <code class="docutils literal"><span class="pre">autosummary</span></code> takes the option
+<em>toctree</em> which is where the <code class="docutils literal"><span class="pre">rst</span></code> files are saved and <em>template</em>
+which is the file that describes how the module <code class="docutils literal"><span class="pre">rst</span></code> documentation
+file is to be constructed, finally we write the modules we wish to
+document, in this case all modules of Sphinx-Gallery.</p>
+<p>The template file <code class="docutils literal"><span class="pre">module.rst</span></code> for the <code class="docutils literal"><span class="pre">autosummary</span></code> directive has
+to be saved in the path <code class="docutils literal"><span class="pre">_templates/module.rst</span></code>. We present our
+configuration in the following block. The most relevant part is the
+loop defined between lines <strong>12-22</strong> that parses all the functions of
+the module. There we have included the snippet introduced in the
+previous section. Keep in mind that the include directive is
+<strong>relative</strong> to the file location, and module documentation files are
+saved in the directory we specified in the <em>toctree</em> option of the
+<code class="docutils literal"><span class="pre">autosummary</span></code> directive used before in the <code class="docutils literal"><span class="pre">reference.rst</span></code> file.
+The files we are including are from the <code class="docutils literal"><span class="pre">backreferences_dir</span></code>
+configuration option setup for Sphinx-Gallery.</p>
+<div class="highlight-rst"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51</pre></div></td><td class="code"><div class="highlight"><pre><span></span>{{ fullname }}
+{{ underline }}
+
+<span class="p">..</span> <span class="ow">automodule</span><span class="p">::</span> {{ fullname }}
+
+   {% block functions %}
+   {% if functions %}
+
+   Functions
+   ---------
+
+<span class="hll">   {% for item in functions %}
+</span><span class="hll">
+</span><span class="hll"><span class="p">   ..</span> <span class="ow">autofunction</span><span class="p">::</span> {{ item }}
+</span><span class="hll">
+</span><span class="hll"><span class="p">   ..</span> <span class="ow">include</span><span class="p">::</span> backreferences/{{fullname}}.{{item}}.examples
+</span><span class="hll">
+</span><span class="hll"><span class="p">   ..</span> <span class="ow">raw</span><span class="p">::</span> html
+</span><span class="hll">
+</span><span class="hll">	       &lt;div style=&#39;clear:both&#39;&gt;&lt;/div&gt;
+</span><span class="hll">
+</span><span class="hll">   {%- endfor %}
+</span>   {% endif %}
+   {% endblock %}
+
+   {% block classes %}
+   {% if classes %}
+
+   Classes
+   -------
+
+   {% for item in classes %}
+<span class="p">   ..</span> <span class="ow">autoclass</span><span class="p">::</span> {{ item }}
+      <span class="nc">:members:</span>
+
+   {%- endfor %}
+   {% endif %}
+   {% endblock %}
+
+   {% block exceptions %}
+   {% if exceptions %}
+
+   Exceptions
+   ----------
+
+<span class="p">   ..</span> <span class="ow">autosummary</span><span class="p">::</span>
+   {% for item in exceptions %}
+      {{ item }}
+   {%- endfor %}
+   {% endif %}
+   {% endblock %}
+</pre></div>
+</td></tr></table></div>
+</div>
+</div>
+</div>
+<div class="section" id="using-a-custom-default-thumbnail-image">
+<h2>Using a custom default thumbnail image<a class="headerlink" href="#using-a-custom-default-thumbnail-image" title="Permalink to this headline">¶</a></h2>
+<p>In case you want to use your own image for the thumbnail of examples that do
+not generate any plot, you can specify it by editing your Sphinx <code class="docutils literal"><span class="pre">conf.py</span></code>
+file. You need to add to the configuration dictionary a key called
+<cite>default_thumb_file</cite>. For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;default_thumb_file&#39;</span>     <span class="p">:</span> <span class="s1">&#39;path/to/thumb/file.png&#39;</span><span class="p">}}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="choosing-the-thumbnail-image-from-multiple-figures">
+<h2>Choosing the thumbnail image from multiple figures<a class="headerlink" href="#choosing-the-thumbnail-image-from-multiple-figures" title="Permalink to this headline">¶</a></h2>
+<p>For examples that generate multiple figures, the default behavior will use
+the first figure created in each as the thumbnail image displayed in the
+gallery. To change the thumbnail image to a figure generated later in
+an example script, add a comment to the example script to specify the
+number of the figure you would like to use as the thumbnail. For example,
+to use the 2nd figure created as the thumbnail:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># sphinx_gallery_thumbnail_number = 2</span>
+</pre></div>
+</div>
+<p>The default behavior is <code class="docutils literal"><span class="pre">sphinx_gallery_thumbnail_number</span> <span class="pre">=</span> <span class="pre">1</span></code>. See
+<a class="reference internal" href="auto_examples/plot_choose_thumbnail.html#sphx-glr-auto-examples-plot-choose-thumbnail-py"><span class="std std-ref">Choosing the thumbnail figure</span></a> for an example
+of this functionality.</p>
+</div>
+<div class="section" id="build-the-gallery-without-executing-the-examples">
+<h2>Build the Gallery without executing the examples<a class="headerlink" href="#build-the-gallery-without-executing-the-examples" title="Permalink to this headline">¶</a></h2>
+<p>Sphinx-Gallery can parse all your examples and build the gallery
+without executing any of the scripts. This is just for speed
+visualization processes of the gallery and the size it takes your
+website to display, or any use you can imagine for it. To achieve this you
+need to pass the no plot option in the build process by modifying
+your <code class="docutils literal"><span class="pre">Makefile</span></code> with:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>html-noplot:
+    $(SPHINXBUILD) -D plot_gallery=0 -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
+    @echo
+    @echo &quot;Build finished. The HTML pages are in $(BUILDDIR)/html.&quot;
+</pre></div>
+</div>
+<p>Remember that for <code class="docutils literal"><span class="pre">Makefile</span></code> white space is significant and the indentation are tabs
+and not spaces.</p>
+<p>Alternatively, you can add the <code class="docutils literal"><span class="pre">plot_gallery</span></code> option to the
+<code class="docutils literal"><span class="pre">sphinx_gallery_conf</span></code> dictionary inside your <code class="docutils literal"><span class="pre">conf.py</span></code>
+configuration file to have it as a default. The highest precedence is
+always given to the <cite>-D</cite> flag of the <code class="docutils literal"><span class="pre">sphinx-build</span></code> command.</p>
+</div>
+<div class="section" id="dealing-with-failing-gallery-example-scripts">
+<h2>Dealing with failing Gallery example scripts<a class="headerlink" href="#dealing-with-failing-gallery-example-scripts" title="Permalink to this headline">¶</a></h2>
+<p>As your project evolves some of your example scripts might stop
+executing properly. Sphinx-Gallery assist you in the discovery process
+of those bugged examples. The default behavior is to replace the
+thumbnail of those examples in the gallery with the broken
+thumbnail. That allows you to find with a quick glance of the gallery
+which examples failed. Broken examples remain accessible in the html
+view of the gallery and the traceback message is written for the
+failing code block. Refer to example
+<a class="reference internal" href="auto_examples/plot_raise.html#sphx-glr-auto-examples-plot-raise-py"><span class="std std-ref">Example that fails to execute</span></a> to view the default
+behavior.</p>
+<p>The build is also failed exiting with code 1 and giving you a summary
+of the failed examples with their respective traceback. This way you
+are aware of failing examples right after the build and can find them
+easily.</p>
+<p>There are some additional options at your hand to deal with broken examples.</p>
+<div class="section" id="abort-build-on-first-fail">
+<h3>Abort build on first fail<a class="headerlink" href="#abort-build-on-first-fail" title="Permalink to this headline">¶</a></h3>
+<p>Sphinx-Gallery provides the early fail option. In
+this mode the gallery build process breaks as soon as an exception
+occurs in the execution of the examples scripts. To activate this
+behavior you need to pass a flag at the build process. It can be done
+by including in your <code class="docutils literal"><span class="pre">Makefile</span></code>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>html_abort_on_example_error:
+    $(SPHINXBUILD) -D abort_on_example_error=1 -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
+    @echo
+    @echo &quot;Build finished. The HTML pages are in $(BUILDDIR)/html.&quot;
+</pre></div>
+</div>
+<p>Remember that for <code class="docutils literal"><span class="pre">Makefile</span></code> white space is significant and the indentation are tabs
+and not spaces.</p>
+<p>Alternatively, you can add the <code class="docutils literal"><span class="pre">abort_on_example_error</span></code> option to
+the <code class="docutils literal"><span class="pre">sphinx_gallery_conf</span></code> dictionary inside your <code class="docutils literal"><span class="pre">conf.py</span></code>
+configuration file to have it as a default. The highest precedence is
+always given to the <cite>-D</cite> flag of the <code class="docutils literal"><span class="pre">sphinx-build</span></code> command.</p>
+</div>
+<div class="section" id="don-t-fail-the-build-on-exit">
+<h3>Don’t fail the build on exit<a class="headerlink" href="#don-t-fail-the-build-on-exit" title="Permalink to this headline">¶</a></h3>
+<p>It might be the case that you want to keep the gallery even with
+failed examples. Thus you can configure Sphinx-Gallery to allow
+certain examples to fail and still exit with a 0 exit code. For this
+you need to list all the examples you want to allow to fail during
+build. Change your <cite>conf.py</cite> accordingly:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">...</span>
+    <span class="s1">&#39;expected_failing_examples&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;../examples/plot_raise.py&#39;</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Here you list the examples you allow to fail during the build process,
+keep in mind to specify the full relative path from your <cite>conf.py</cite> to
+the example script.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="faq.html" class="btn btn-neutral float-right" title="Frequently Asked Questions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="getting_started.html" class="btn btn-neutral" title="Getting Started to Sphinx-Gallery" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014-2017, Óscar Nájera.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1.11-git',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
