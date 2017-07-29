@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Advanced Configuration &mdash; Sphinx-Gallery 0.1.11-git documentation</title>
+  <title>Advanced Configuration &mdash; Sphinx-Gallery 0.1.12-git documentation</title>
   
 
   
@@ -39,7 +39,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="Sphinx-Gallery 0.1.11-git documentation" href="index.html"/>
+    <link rel="top" title="Sphinx-Gallery 0.1.12-git documentation" href="index.html"/>
         <link rel="next" title="Frequently Asked Questions" href="faq.html"/>
         <link rel="prev" title="Getting Started to Sphinx-Gallery" href="getting_started.html"/> 
 
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.1.11
+                0.1.12
               </div>
             
           
@@ -99,6 +99,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Advanced Configuration</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#manage-multiple-galleries">Manage Multiple galleries</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#building-examples-matching-a-pattern">Building examples matching a pattern</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sorting-the-subsections-inside-a-gallery">Sorting the subsections inside a gallery</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#linking-to-documentation">Linking to documentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#references-to-examples-backreferences">References to examples (backreferences)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#examples-using-numpy-exp">Examples using <code class="docutils literal"><span class="pre">numpy.exp</span></code></a><ul>
@@ -230,13 +231,42 @@ starting with <code class="docutils literal"><span class="pre">plot_long_example
 <p>As the patterns are parsed as <a class="reference external" href="https://docs.python.org/2/library/re.html">regular expressions</a>, users are advised to consult the
 <a class="reference external" href="https://docs.python.org/2/library/re.html">regular expressions</a> module for more details.</p>
 </div>
+<div class="section" id="sorting-the-subsections-inside-a-gallery">
+<span id="sub-gallery-order"></span><h2>Sorting the subsections inside a gallery<a class="headerlink" href="#sorting-the-subsections-inside-a-gallery" title="Permalink to this headline">¶</a></h2>
+<p>Gallery subsections are sorted by default alphabetically by their folder
+name, and as such you can always organize them by changing your folder
+names. An alternative option is to use a sortkey to organize those
+subsections. We provide an explicit order sortkey where you have to define
+the order of all subfolders in your galleries.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sphinx_gallery.sorting</span> <span class="kn">import</span> <span class="n">ExplicitOrder</span>
+<span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;examples_dirs&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;../examples&#39;</span><span class="p">,</span><span class="s1">&#39;../tutorials&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;subsection_order&#39;</span><span class="p">:</span> <span class="n">ExplicitOrder</span><span class="p">([</span><span class="s1">&#39;../examples/sin_func&#39;</span><span class="p">,</span>
+                                       <span class="s1">&#39;../examples/no_output&#39;</span><span class="p">,</span>
+                                       <span class="s1">&#39;../tutorials/seaborn&#39;</span><span class="p">]),</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Here we build 2 main galleries <cite>examples</cite> and <cite>tutorials</cite>, each of them
+with subsections. To specify their order explicitly in the gallery we
+import <a class="reference internal" href="gen_modules/sphinx_gallery.sorting.html#sphinx_gallery.sorting.ExplicitOrder" title="sphinx_gallery.sorting.ExplicitOrder"><code class="xref py py-class docutils literal"><span class="pre">sphinx_gallery.sorting.ExplicitOrder</span></code></a> and initialize it with
+the list of all subfolders with their paths relative to <cite>conf.py</cite> in the
+order you prefer them to appear. Keep in mind that we use a single sort key
+for all the galleries that are built, thus we include the prefix of each
+gallery in the corresponding subsection folders. One does not define a
+sortkey per gallery. You can use Linux paths, and if your documentation is
+built in a Windows system, paths will be transformed to work accordingly,
+the converse does not hold.</p>
+<p>If you so desire you can implement your own sorting key. It will be
+provided the relative paths to <cite>conf.py</cite> of each sub gallery folder.</p>
+</div>
 <div class="section" id="linking-to-documentation">
 <span id="link-to-documentation"></span><h2>Linking to documentation<a class="headerlink" href="#linking-to-documentation" title="Permalink to this headline">¶</a></h2>
 <p>Sphinx-Gallery enables you to add hyperlinks in your example scripts so that
 you can link the used functions to their matching online documentation. As such
 code snippets within the gallery appear like this</p>
 <div class="highlight-python"><div class="highlight"><pre>
-<span class="n">y</span> <span class="o">=</span> <a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.sin.html#numpy.sin"><span class="n">np</span><span class="o">.</span><span class="n">sin</span></a><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.sin.html#numpy.sin"><span class="n">np</span><span class="o">.</span><span class="n">sin</span></a><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 </pre></div>
 </div><p>Have a look at this in full action
 in our example <a class="reference internal" href="auto_examples/plot_gallery_version.html#sphx-glr-auto-examples-plot-gallery-version-py"><span class="std std-ref">Sphinx-Gallery introduction</span></a>.</p>
@@ -248,8 +278,8 @@ dictionary within your Sphinx <code class="docutils literal"><span class="pre">c
             <span class="s1">&#39;sphinx_gallery&#39;</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
 
             <span class="c1"># External python modules use their documentation websites</span>
-            <span class="s1">&#39;matplotlib&#39;</span><span class="p">:</span> <span class="s1">&#39;http://matplotlib.org&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;numpy&#39;</span><span class="p">:</span> <span class="s1">&#39;http://docs.scipy.org/doc/numpy-1.9.1&#39;</span><span class="p">}</span>
+            <span class="s1">&#39;matplotlib&#39;</span><span class="p">:</span> <span class="s1">&#39;https://matplotlib.org&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;numpy&#39;</span><span class="p">:</span> <span class="s1">&#39;https://docs.scipy.org/doc/numpy&#39;</span><span class="p">}</span>
     <span class="p">}</span>
 </pre></div>
 </div>
@@ -355,6 +385,7 @@ every module.
    notebook
    downloads
    docs_resolv
+   sorting
 </pre></div>
 </div>
 <p>The important directives are <code class="docutils literal"><span class="pre">currentmodule</span></code> where we specify which
@@ -539,7 +570,7 @@ thumbnail. That allows you to find with a quick glance of the gallery
 which examples failed. Broken examples remain accessible in the html
 view of the gallery and the traceback message is written for the
 failing code block. Refer to example
-<a class="reference internal" href="auto_examples/plot_raise.html#sphx-glr-auto-examples-plot-raise-py"><span class="std std-ref">Example that fails to execute</span></a> to view the default
+<span class="xref std std-ref">sphx_glr_auto_examples_plot_raise.py</span> to view the default
 behavior.</p>
 <p>The build is also failed exiting with code 1 and giving you a summary
 of the failed examples with their respective traceback. This way you
@@ -630,7 +661,7 @@ the example script.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.1.11-git',
+            VERSION:'0.1.12-git',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

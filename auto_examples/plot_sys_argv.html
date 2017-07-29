@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Example that fails to execute &mdash; Sphinx-Gallery 0.1.11-git documentation</title>
+  <title>Using sys.argv in examples &mdash; Sphinx-Gallery 0.1.12-git documentation</title>
   
 
   
@@ -39,10 +39,10 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="Sphinx-Gallery 0.1.11-git documentation" href="../index.html"/>
+    <link rel="top" title="Sphinx-Gallery 0.1.12-git documentation" href="../index.html"/>
         <link rel="up" title="Gallery of Examples" href="index.html"/>
-        <link rel="next" title="SyntaxError" href="plot_syntaxerror.html"/>
-        <link rel="prev" title="Constrained Text output frame" href="plot_strings.html"/> 
+        <link rel="next" title="Plotting the exponential function" href="plot_exp.html"/>
+        <link rel="prev" title="Gallery of Examples" href="index.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -71,7 +71,7 @@
             
             
               <div class="version">
-                0.1.11
+                0.1.12
               </div>
             
           
@@ -104,10 +104,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../reference.html">Sphinx-Gallery API Reference</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Gallery of Examples</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="index.html#general-examples">General examples</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="just_code.html">A short Python script</a></li>
-<li class="toctree-l3"><a class="reference internal" href="plot_strings.html">Constrained Text output frame</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Example that fails to execute</a></li>
-<li class="toctree-l3"><a class="reference internal" href="plot_syntaxerror.html">SyntaxError</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Using <code class="docutils literal"><span class="pre">sys.argv</span></code> in examples</a></li>
 <li class="toctree-l3"><a class="reference internal" href="plot_exp.html">Plotting the exponential function</a></li>
 <li class="toctree-l3"><a class="reference internal" href="plot_colors.html">Colormaps alter your perception</a></li>
 <li class="toctree-l3"><a class="reference internal" href="plot_quantum.html">Some Quantum Mechanics, filling an atomic orbital</a></li>
@@ -118,6 +115,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#the-sin-function">The sin function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#examples-which-don-t-produce-image-output">Examples which don’t produce image output</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Secondary gallery</a></li>
@@ -158,11 +156,11 @@
       
           <li><a href="index.html">Gallery of Examples</a> &raquo;</li>
       
-    <li>Example that fails to execute</li>
+    <li>Using <code class="docutils literal"><span class="pre">sys.argv</span></code> in examples</li>
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../_sources/auto_examples/plot_raise.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/auto_examples/plot_sys_argv.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -172,46 +170,33 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="example-that-fails-to-execute">
-<span id="sphx-glr-auto-examples-plot-raise-py"></span><h1>Example that fails to execute<a class="headerlink" href="#example-that-fails-to-execute" title="Permalink to this headline">¶</a></h1>
-<p>When scripts fail their gallery thumbnail is replaced with the broken
-image stamp. Thus allowing easy identification in the gallery display.</p>
-<p>You also get the python traceback of the failed code block</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># Code source: Óscar Nájera</span>
-<span class="c1"># License: BSD 3 clause</span>
+  <div class="section" id="using-sys-argv-in-examples">
+<span id="sphx-glr-auto-examples-plot-sys-argv-py"></span><h1>Using <code class="docutils literal"><span class="pre">sys.argv</span></code> in examples<a class="headerlink" href="#using-sys-argv-in-examples" title="Permalink to this headline">¶</a></h1>
+<p>Note that your example will be run by sphinx-gallery without arguments.</p>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-default"><div class="highlight"><pre><span></span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">:</span> <span class="p">[</span><span class="sa">u</span><span class="s1">&#39;/home/ubuntu/sphinx-gallery/examples/plot_sys_argv.py&#39;</span><span class="p">]</span>
+<span class="n">parsed</span> <span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">(</span><span class="n">option</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">sys</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
-
-<a href="http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.pcolormesh" title="View documentation for matplotlib.pyplot.pcolormesh"><span class="n">plt</span><span class="o">.</span><span class="n">pcolormesh</span></a><span class="p">(</span><a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.random.randn.html#numpy.random.randn" title="View documentation for numpy.random.randn"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
+<span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Toy parser&#39;</span><span class="p">)</span>
+<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--option&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">,</span>
+                    <span class="n">help</span><span class="o">=</span><span class="s1">&#39;a dummy optional argument&#39;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;sys.argv:&#39;</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;parsed args:&#39;</span><span class="p">,</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">())</span>
 </pre></div>
 </div>
-<img alt="../_images/sphx_glr_plot_raise_001.png" class="align-center" src="../_images/sphx_glr_plot_raise_001.png" />
-<p>This next block will raise a NameError</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">iae</span>
-</pre></div>
-</div>
-<div class="highlight-pytb"><div class="highlight"><pre><span></span><span class="gt">Traceback (most recent call last):</span>
-  File <span class="nb">&quot;/home/ubuntu/sphinx-gallery/sphinx_gallery/gen_rst.py&quot;</span>, line <span class="m">454</span>, in <span class="n">execute_code_block</span>
-    <span class="k">exec</span><span class="p">(</span><span class="n">code_block</span><span class="p">,</span> <span class="n">example_globals</span><span class="p">)</span>
-  File <span class="nb">&quot;&lt;string&gt;&quot;</span>, line <span class="m">2</span>, in <span class="n">&lt;module&gt;</span>
-<span class="gr">NameError</span>: <span class="n">name &#39;iae&#39; is not defined</span>
-</pre></div>
-</div>
-<p>Sphinx gallery will stop executing the remaining code blocks after
-the exception has occurred in the example script. Nevertheless the
-html will still render all the example annotated text and
-code blocks, but no output will be shown.</p>
-<p>Here is another error raising block but will not be executed</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><a href="http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.plot" title="View documentation for matplotlib.pyplot.plot"><span class="n">plt</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="s1">&#39;Strings are not a valid argument for the plot function&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p><strong>Total running time of the script:</strong> ( 0 minutes  0.075 seconds)</p>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  0.001 seconds)</p>
 <div class="sphx-glr-footer docutils container">
 <div class="sphx-glr-download docutils container">
-<a class="reference download internal" href="../_downloads/plot_raise.py" download=""><code class="xref download docutils literal"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_raise.py</span></code></a></div>
+<a class="reference download internal" href="../_downloads/plot_sys_argv.py" download=""><code class="xref download docutils literal"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_sys_argv.py</span></code></a></div>
 <div class="sphx-glr-download docutils container">
-<a class="reference download internal" href="../_downloads/plot_raise.ipynb" download=""><code class="xref download docutils literal"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_raise.ipynb</span></code></a></div>
+<a class="reference download internal" href="../_downloads/plot_sys_argv.ipynb" download=""><code class="xref download docutils literal"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_sys_argv.ipynb</span></code></a></div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.readthedocs.io">Generated by Sphinx-Gallery</a></p>
 </div>
@@ -226,10 +211,10 @@ code blocks, but no output will be shown.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="plot_syntaxerror.html" class="btn btn-neutral float-right" title="SyntaxError" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="plot_exp.html" class="btn btn-neutral float-right" title="Plotting the exponential function" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="plot_strings.html" class="btn btn-neutral" title="Constrained Text output frame" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="index.html" class="btn btn-neutral" title="Gallery of Examples" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -260,7 +245,7 @@ code blocks, but no output will be shown.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.1.11-git',
+            VERSION:'0.1.12-git',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
