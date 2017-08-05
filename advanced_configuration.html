@@ -193,6 +193,7 @@ file:</p>
 <li><code class="docutils literal"><span class="pre">reference_url</span></code> (<a class="reference internal" href="#link-to-documentation"><span class="std std-ref">Linking to documentation</span></a>)</li>
 <li><code class="docutils literal"><span class="pre">backreferences_dir</span></code> and <code class="docutils literal"><span class="pre">doc_module</span></code> (<a class="reference internal" href="#references-to-examples"><span class="std std-ref">Adding references to examples</span></a>)</li>
 <li><code class="docutils literal"><span class="pre">default_thumb_file</span></code> (<a class="reference internal" href="#custom-default-thumb"><span class="std std-ref">Using a custom default thumbnail</span></a>)</li>
+<li><code class="docutils literal"><span class="pre">thumbnail_size</span></code> (<a class="reference internal" href="#setting-thumbnail-size"><span class="std std-ref">Setting gallery thumbnail size</span></a>)</li>
 <li><code class="docutils literal"><span class="pre">line_numbers</span></code> (<a class="reference internal" href="#adding-line-numbers"><span class="std std-ref">Adding line numbers to examples</span></a>)</li>
 <li><code class="docutils literal"><span class="pre">download_section_examples</span></code> (<a class="reference internal" href="#disable-joint-download"><span class="std std-ref">Disabling joint download of scripts</span></a>)</li>
 <li><code class="docutils literal"><span class="pre">plot_gallery</span></code> (<a class="reference internal" href="#without-execution"><span class="std std-ref">Building without executing examples</span></a>)</li>
@@ -223,6 +224,7 @@ galleries for different purposes, an examples gallery and a tutorials gallery.
 For this you use in your Sphinx <code class="docutils literal"><span class="pre">conf.py</span></code> file a list of directories in
 the sphinx configuration dictionary:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">...</span>
     <span class="s1">&#39;examples_dirs&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;../examples&#39;</span><span class="p">,</span> <span class="s1">&#39;../tutorials&#39;</span><span class="p">],</span>
     <span class="s1">&#39;gallery_dirs&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;auto_examples&#39;</span><span class="p">,</span> <span class="s1">&#39;tutorials&#39;</span><span class="p">],</span>
 <span class="p">}</span>
@@ -236,6 +238,7 @@ the sphinx configuration dictionary:</p>
 if this naming convention does not suit your project, you can modify this pattern
 in your Sphinx <code class="docutils literal"><span class="pre">conf.py</span></code>. For example:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">...</span>
     <span class="s1">&#39;filename_pattern&#39;</span><span class="p">:</span> <span class="s1">&#39;/plot_compute_&#39;</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
@@ -248,6 +251,7 @@ they want to be agnostic to the operating system.</p>
 want to build only one example so that you can link it in the documentation. In that case,
 you would do:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">...</span>
     <span class="s1">&#39;filename_pattern&#39;</span><span class="p">:</span> <span class="s1">&#39;plot_awesome_example.py&#39;</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
@@ -256,6 +260,7 @@ you would do:</p>
 one is targeting a specific file, it is most certainly going to match the dot in the filename.</p>
 <p>Similarly, to build only examples in a specific directory, you can do:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">...</span>
     <span class="s1">&#39;filename_pattern&#39;</span><span class="p">:</span> <span class="s1">&#39;/directory/plot_&#39;</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
@@ -263,6 +268,7 @@ one is targeting a specific file, it is most certainly going to match the dot in
 <p>Alternatively, you can skip some examples. For example, to skip building examples
 starting with <code class="docutils literal"><span class="pre">plot_long_examples_</span></code>, you would do:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">...</span>
     <span class="s1">&#39;filename_pattern&#39;</span><span class="p">:</span> <span class="s1">&#39;/plot_(?!long_examples)&#39;</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
@@ -279,6 +285,7 @@ subsections. We provide an explicit order sortkey where you have to define
 the order of all subfolders in your galleries:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sphinx_gallery.sorting</span> <span class="k">import</span> <span class="n">ExplicitOrder</span>
 <span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">...</span>
     <span class="s1">&#39;examples_dirs&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;../examples&#39;</span><span class="p">,</span><span class="s1">&#39;../tutorials&#39;</span><span class="p">],</span>
     <span class="s1">&#39;subsection_order&#39;</span><span class="p">:</span> <span class="n">ExplicitOrder</span><span class="p">([</span><span class="s1">&#39;../examples/sin_func&#39;</span><span class="p">,</span>
                                        <span class="s1">&#39;../examples/no_output&#39;</span><span class="p">,</span>
@@ -312,6 +319,7 @@ in our example <a class="reference internal" href="auto_examples/plot_gallery_ve
 <p>To make this work in your documentation you need to include to the configuration
 dictionary within your Sphinx <code class="docutils literal"><span class="pre">conf.py</span></code> file:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">...</span>
     <span class="s1">&#39;reference_url&#39;</span><span class="p">:</span> <span class="p">{</span>
              <span class="c1"># The module you locally document uses a None</span>
             <span class="s1">&#39;sphinx_gallery&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
@@ -351,6 +359,7 @@ looks like this:</p>
 </div><div style='clear:both'></div><p>For such behavior to be available, you have to activate it in your
 Sphinx-Gallery configuration <code class="docutils literal"><span class="pre">conf.py</span></code> file with:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">...</span>
     <span class="c1"># directory where function granular galleries are stored</span>
     <span class="s1">&#39;backreferences_dir&#39;</span>  <span class="p">:</span> <span class="s1">&#39;gen_modules/backreferences&#39;</span><span class="p">,</span>
 
@@ -559,6 +568,7 @@ not generate any plot, you can specify it by editing your Sphinx <code class="do
 file. You need to add to the configuration dictionary a key called
 <cite>default_thumb_file</cite>. For example:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">...</span>
     <span class="s1">&#39;default_thumb_file&#39;</span><span class="p">:</span> <span class="s1">&#39;path/to/thumb/file.png&#39;</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
@@ -569,6 +579,7 @@ file. You need to add to the configuration dictionary a key called
 <p>Line numbers can be displayed in listings by adding the global <code class="docutils literal"><span class="pre">line_numbers</span></code>
 setting:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">...</span>
     <span class="s1">&#39;line_numbers&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
@@ -588,6 +599,7 @@ all Jupyter notebooks for each gallery section and makes them
 available for download at the end of each section. To disable this
 behavior add to the configuration dictionary in your <code class="docutils literal"><span class="pre">conf.py</span></code> file:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">...</span>
     <span class="s1">&#39;download_section_examples&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
@@ -628,6 +640,7 @@ and not spaces.</p>
 <code class="docutils literal"><span class="pre">sphinx_gallery_conf</span></code> dictionary inside your <code class="docutils literal"><span class="pre">conf.py</span></code> to have it as
 a default:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">...</span>
     <span class="s1">&#39;plot_gallery&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
@@ -641,6 +654,7 @@ a default:</p>
 when building. However, extracting figures generated by <a class="reference external" href="http://docs.enthought.com/mayavi/mayavi/auto/mlab_reference.html#module-mayavi.mlab" title="(in mayavi v4.5.0)"><code class="xref py py-mod docutils literal"><span class="pre">mayavi.mlab</span></code></a> is
 also supported. To enable this feature, you can do:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">...</span>
     <span class="s1">&#39;find_mayavi_figures&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
@@ -682,6 +696,7 @@ and not spaces.</p>
 the <code class="docutils literal"><span class="pre">sphinx_gallery_conf</span></code> dictionary inside your <code class="docutils literal"><span class="pre">conf.py</span></code>
 configuration file to have it as a default:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">...</span>
     <span class="s1">&#39;abort_on_example_error&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
@@ -709,21 +724,33 @@ the example script.</p>
 </div>
 <div class="section" id="setting-gallery-thumbnail-size">
 <span id="setting-thumbnail-size"></span><h2>Setting gallery thumbnail size<a class="headerlink" href="#setting-gallery-thumbnail-size" title="Permalink to this headline">¶</a></h2>
-<p>The gallery uses various CSS classes in the gallery. For example, to use
-images that are at most 250x250px, you can modify the default CSS
-with something like:</p>
+<p>By default Sphinx-gallery will generate thumbnails at size <code class="docutils literal"><span class="pre">(400,</span> <span class="pre">280)</span></code>,
+and add pillarboxes or letterboxes as necessary to scale the image while
+maintaining the original aspect ratio. This size can be controlled with the
+<code class="docutils literal"><span class="pre">thumbnail_size</span></code> entry as, e.g.:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">...</span>
+    <span class="s1">&#39;thumbnail_size&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">250</span><span class="p">,</span> <span class="mi">250</span><span class="p">),</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The gallery uses various CSS classes to display these thumbnails, which
+default to maximum 160x160px. To change this, e.g. to display the images
+at 250x250px, you can modify the default CSS with something like the following
+in your own site’s CSS file:</p>
 <div class="highlight-css"><div class="highlight"><pre><span></span><span class="p">.</span><span class="nc">sphx-glr-thumbcontainer</span> <span class="p">{</span>
-    <span class="k">min-height</span><span class="p">:</span> <span class="mi">300</span><span class="kt">px</span><span class="p">;</span>
+    <span class="k">min-height</span><span class="p">:</span> <span class="mi">320</span><span class="kt">px</span> <span class="cp">!important</span><span class="p">;</span>
+    <span class="k">margin</span><span class="p">:</span> <span class="mi">20</span><span class="kt">px</span> <span class="cp">!important</span><span class="p">;</span>
 <span class="p">}</span>
 <span class="p">.</span><span class="nc">sphx-glr-thumbcontainer</span> <span class="p">.</span><span class="nc">figure</span> <span class="p">{</span>
-    <span class="k">width</span><span class="p">:</span> <span class="mi">250</span><span class="kt">px</span><span class="p">;</span>
+    <span class="k">width</span><span class="p">:</span> <span class="mi">250</span><span class="kt">px</span> <span class="cp">!important</span><span class="p">;</span>
 <span class="p">}</span>
 <span class="p">.</span><span class="nc">sphx-glr-thumbcontainer</span> <span class="nt">img</span> <span class="p">{</span>
-    <span class="k">max-height</span><span class="p">:</span> <span class="mi">250</span><span class="kt">px</span><span class="p">;</span>
-    <span class="k">width</span><span class="p">:</span> <span class="mi">250</span><span class="kt">px</span><span class="p">;</span>
+    <span class="k">max-height</span><span class="p">:</span> <span class="mi">250</span><span class="kt">px</span> <span class="cp">!important</span><span class="p">;</span>
+    <span class="k">width</span><span class="p">:</span> <span class="mi">250</span><span class="kt">px</span> <span class="cp">!important</span><span class="p">;</span>
 <span class="p">}</span>
 <span class="p">.</span><span class="nc">sphx-glr-thumbcontainer</span> <span class="nt">a</span><span class="p">.</span><span class="nc">internal</span> <span class="p">{</span>
-    <span class="k">padding</span><span class="p">:</span> <span class="mi">210</span><span class="kt">px</span>
+    <span class="k">padding</span><span class="p">:</span> <span class="mi">270</span><span class="kt">px</span> <span class="mi">10</span><span class="kt">px</span> <span class="mi">0</span> <span class="cp">!important</span><span class="p">;</span>
 <span class="p">}</span>
 </pre></div>
 </div>
