@@ -101,6 +101,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#managing-multiple-galleries">Managing multiple galleries</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#building-examples-matching-a-pattern">Building examples matching a pattern</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#sorting-gallery-subsections">Sorting gallery subsections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sorting-gallery-examples">Sorting gallery examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#linking-to-documentation">Linking to documentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#adding-references-to-examples">Adding references to examples</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#examples-using-numpy-exp">Examples using <code class="docutils literal"><span class="pre">numpy.exp</span></code></a></li>
@@ -190,6 +191,7 @@ file:</p>
 <li><code class="docutils literal"><span class="pre">examples_dirs</span></code> and <code class="docutils literal"><span class="pre">gallery_dirs</span></code> (<a class="reference internal" href="#multiple-galleries-config"><span class="std std-ref">Managing multiple galleries</span></a>)</li>
 <li><code class="docutils literal"><span class="pre">filename_pattern</span></code> (<a class="reference internal" href="#build-pattern"><span class="std std-ref">Building examples matching a pattern</span></a>)</li>
 <li><code class="docutils literal"><span class="pre">subsection_order</span></code> (<a class="reference internal" href="#sub-gallery-order"><span class="std std-ref">Sorting gallery subsections</span></a>)</li>
+<li><code class="docutils literal"><span class="pre">within_subsection_order</span></code> (<a class="reference internal" href="#within-gallery-order"><span class="std std-ref">Sorting gallery examples</span></a>)</li>
 <li><code class="docutils literal"><span class="pre">reference_url</span></code> (<a class="reference internal" href="#link-to-documentation"><span class="std std-ref">Linking to documentation</span></a>)</li>
 <li><code class="docutils literal"><span class="pre">backreferences_dir</span></code> and <code class="docutils literal"><span class="pre">doc_module</span></code> (<a class="reference internal" href="#references-to-examples"><span class="std std-ref">Adding references to examples</span></a>)</li>
 <li><code class="docutils literal"><span class="pre">default_thumb_file</span></code> (<a class="reference internal" href="#custom-default-thumb"><span class="std std-ref">Using a custom default thumbnail</span></a>)</li>
@@ -306,6 +308,30 @@ the converse does not hold.</p>
 <p>If you so desire you can implement your own sorting key. It will be
 provided the relative paths to <cite>conf.py</cite> of each sub gallery folder.</p>
 </div>
+<div class="section" id="sorting-gallery-examples">
+<span id="within-gallery-order"></span><h2>Sorting gallery examples<a class="headerlink" href="#sorting-gallery-examples" title="Permalink to this headline">¶</a></h2>
+<p>Within a given gallery (sub)section, the example files are ordered by
+using the standard <a class="reference external" href="https://docs.python.org/2/library/functions.html#sorted" title="(in Python v2.7)"><code class="xref py py-func docutils literal"><span class="pre">sorted()</span></code></a> function with the <code class="docutils literal"><span class="pre">key</span></code> argument by default
+set to
+<a class="reference internal" href="gen_modules/sphinx_gallery.sorting.html#sphinx_gallery.sorting.NumberOfCodeLinesSortKey" title="sphinx_gallery.sorting.NumberOfCodeLinesSortKey"><code class="xref py py-class docutils literal"><span class="pre">NumberOfCodeLinesSortKey(src_dir)</span></code></a>,
+which sorts the files based on the number of code lines:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sphinx_gallery.sorting</span> <span class="k">import</span> <span class="n">NumberOfCodeLinesSortKey</span>
+<span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">...</span>
+    <span class="s1">&#39;within_subsection_order&#39;</span><span class="p">:</span> <span class="n">NumberOfCodeLinesSortKey</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>In addition, multiple convenience classes are provided for use with
+<code class="docutils literal"><span class="pre">within_subsection_order</span></code>:</p>
+<ul class="simple">
+<li><a class="reference internal" href="gen_modules/sphinx_gallery.sorting.html#sphinx_gallery.sorting.NumberOfCodeLinesSortKey" title="sphinx_gallery.sorting.NumberOfCodeLinesSortKey"><code class="xref py py-class docutils literal"><span class="pre">sphinx_gallery.sorting.NumberOfCodeLinesSortKey</span></code></a> (default) to sort by
+the number of code lines.</li>
+<li><a class="reference internal" href="gen_modules/sphinx_gallery.sorting.html#sphinx_gallery.sorting.FileSizeSortKey" title="sphinx_gallery.sorting.FileSizeSortKey"><code class="xref py py-class docutils literal"><span class="pre">sphinx_gallery.sorting.FileSizeSortKey</span></code></a> to sort by file size.</li>
+<li><a class="reference internal" href="gen_modules/sphinx_gallery.sorting.html#sphinx_gallery.sorting.FileNameSortKey" title="sphinx_gallery.sorting.FileNameSortKey"><code class="xref py py-class docutils literal"><span class="pre">sphinx_gallery.sorting.FileNameSortKey</span></code></a> to sort by file name.</li>
+<li><a class="reference internal" href="gen_modules/sphinx_gallery.sorting.html#sphinx_gallery.sorting.ExampleTitleSortKey" title="sphinx_gallery.sorting.ExampleTitleSortKey"><code class="xref py py-class docutils literal"><span class="pre">sphinx_gallery.sorting.ExampleTitleSortKey</span></code></a> to sort by example title.</li>
+</ul>
+</div>
 <div class="section" id="linking-to-documentation">
 <span id="link-to-documentation"></span><h2>Linking to documentation<a class="headerlink" href="#linking-to-documentation" title="Permalink to this headline">¶</a></h2>
 <p>Sphinx-Gallery enables you to add hyperlinks in your example scripts so that
@@ -340,21 +366,21 @@ a small gallery of examples that is specific to this function and
 looks like this:</p>
 <div class="section" id="examples-using-numpy-exp">
 <h3>Examples using <code class="docutils literal"><span class="pre">numpy.exp</span></code><a class="headerlink" href="#examples-using-numpy-exp" title="Permalink to this headline">¶</a></h3>
-<div class="sphx-glr-thumbcontainer" tooltip="An example to demonstrate how to choose which figure is displayed as the thumbnail if the examp..."><div class="figure" id="id3">
-<img alt="_images/sphx_glr_plot_choose_thumbnail_thumb.png" src="_images/sphx_glr_plot_choose_thumbnail_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="auto_examples/plot_choose_thumbnail.html#sphx-glr-auto-examples-plot-choose-thumbnail-py"><span class="std std-ref">Choosing the thumbnail figure</span></a></span></p>
-</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="A simple example for ploting two figures of a exponential function in order to test the autonom..."><div class="figure" id="id4">
+<div class="sphx-glr-thumbcontainer" tooltip="A simple example for ploting two figures of a exponential function in order to test the autonom..."><div class="figure" id="id3">
 <img alt="_images/sphx_glr_plot_exp_thumb.png" src="_images/sphx_glr_plot_exp_thumb.png" />
 <p class="caption"><span class="caption-text"><a class="reference internal" href="auto_examples/plot_exp.html#sphx-glr-auto-examples-plot-exp-py"><span class="std std-ref">Plotting the exponential function</span></a></span></p>
 </div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Plot to present Sphinx-Gallery using itself to display its version. "><div class="figure" id="id5">
-<img alt="_images/sphx_glr_plot_gallery_version_thumb.png" src="_images/sphx_glr_plot_gallery_version_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="auto_examples/plot_gallery_version.html#sphx-glr-auto-examples-plot-gallery-version-py"><span class="std std-ref">Sphinx-Gallery introduction</span></a></span></p>
-</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Considering an atomic single orbital and how to fill it by use of the chemical potential. This ..."><div class="figure" id="id6">
+</div><div class="sphx-glr-thumbcontainer" tooltip="Considering an atomic single orbital and how to fill it by use of the chemical potential. This ..."><div class="figure" id="id4">
 <img alt="_images/sphx_glr_plot_quantum_thumb.png" src="_images/sphx_glr_plot_quantum_thumb.png" />
 <p class="caption"><span class="caption-text"><a class="reference internal" href="auto_examples/plot_quantum.html#sphx-glr-auto-examples-plot-quantum-py"><span class="std std-ref">Some Quantum Mechanics, filling an atomic orbital</span></a></span></p>
+</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="An example to demonstrate how to choose which figure is displayed as the thumbnail if the examp..."><div class="figure" id="id5">
+<img alt="_images/sphx_glr_plot_choose_thumbnail_thumb.png" src="_images/sphx_glr_plot_choose_thumbnail_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="auto_examples/plot_choose_thumbnail.html#sphx-glr-auto-examples-plot-choose-thumbnail-py"><span class="std std-ref">Choosing the thumbnail figure</span></a></span></p>
+</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Plot to present Sphinx-Gallery using itself to display its version. "><div class="figure" id="id6">
+<img alt="_images/sphx_glr_plot_gallery_version_thumb.png" src="_images/sphx_glr_plot_gallery_version_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="auto_examples/plot_gallery_version.html#sphx-glr-auto-examples-plot-gallery-version-py"><span class="std std-ref">Sphinx-Gallery introduction</span></a></span></p>
 </div>
 </div><div style='clear:both'></div><p>For such behavior to be available, you have to activate it in your
 Sphinx-Gallery configuration <code class="docutils literal"><span class="pre">conf.py</span></code> file with:</p>
