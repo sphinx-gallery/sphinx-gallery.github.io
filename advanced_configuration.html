@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Configuration &mdash; Sphinx-Gallery 0.1.12-git documentation</title>
+  <title>Configuration &mdash; Sphinx-Gallery 0.1.13-git documentation</title>
   
 
   
@@ -39,7 +39,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="Sphinx-Gallery 0.1.12-git documentation" href="index.html"/>
+    <link rel="top" title="Sphinx-Gallery 0.1.13-git documentation" href="index.html"/>
         <link rel="next" title="Frequently Asked Questions" href="faq.html"/>
         <link rel="prev" title="Getting Started with Sphinx-Gallery" href="getting_started.html"/> 
 
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.1.12
+                0.1.13
               </div>
             
           
@@ -348,15 +348,18 @@ dictionary within your Sphinx <code class="docutils literal"><span class="pre">c
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
     <span class="s1">&#39;reference_url&#39;</span><span class="p">:</span> <span class="p">{</span>
-             <span class="c1"># The module you locally document uses a None</span>
-            <span class="s1">&#39;sphinx_gallery&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-
-            <span class="c1"># External python modules use their documentation websites</span>
-            <span class="s1">&#39;matplotlib&#39;</span><span class="p">:</span> <span class="s1">&#39;https://matplotlib.org&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;numpy&#39;</span><span class="p">:</span> <span class="s1">&#39;https://docs.scipy.org/doc/numpy&#39;</span><span class="p">},</span>
+         <span class="c1"># The module you locally document uses None</span>
+        <span class="s1">&#39;sphinx_gallery&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 </div>
+<p>To link to external modules, if you use the Sphinx extension
+<a class="reference external" href="http://www.sphinx-doc.org/en/stable/ext/intersphinx.html#module-sphinx.ext.intersphinx" title="(in Sphinx v1.6.5+)"><code class="xref py py-mod docutils literal"><span class="pre">sphinx.ext.intersphinx</span></code></a>, no additional changes are necessary,
+as the <code class="docutils literal"><span class="pre">intersphinx</span></code> inventory will automatically be used.
+If you do not use <code class="docutils literal"><span class="pre">intersphinx</span></code>, then you should add entries that
+point to the directory containing <code class="docutils literal"><span class="pre">searchindex.js</span></code>, such as
+<code class="docutils literal"><span class="pre">'matplotlib':</span> <span class="pre">'https://matplotlib.org'</span></code>.</p>
 </div>
 <div class="section" id="adding-references-to-examples">
 <span id="references-to-examples"></span><h2>Adding references to examples<a class="headerlink" href="#adding-references-to-examples" title="Permalink to this headline">¶</a></h2>
@@ -448,6 +451,12 @@ The complete Sphinx-Gallery project is automatically documented for
 every module.
 
 <span class="p">..</span> <span class="ow">currentmodule</span><span class="p">::</span> sphinx_gallery
+
+<span class="p">..</span> <span class="ow">automodule</span><span class="p">::</span> sphinx_gallery
+   <span class="nc">:no-members:</span>
+   <span class="nc">:no-inherited-members:</span>
+
+<span class="na">:py:mod:</span><span class="nv">`sphinx_gallery`</span>:
 
 <span class="p">..</span> <span class="ow">autosummary</span><span class="p">::</span>
    <span class="nc">:toctree:</span> <span class="nf">gen_modules/</span>
@@ -668,7 +677,7 @@ and not spaces.</p>
 a default:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;plot_gallery&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s1">&#39;plot_gallery&#39;</span><span class="p">:</span> <span class="s1">&#39;False&#39;</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -677,7 +686,7 @@ a default:</p>
 </div>
 <div class="section" id="finding-mayavi-figures">
 <span id="find-mayavi"></span><h2>Finding Mayavi figures<a class="headerlink" href="#finding-mayavi-figures" title="Permalink to this headline">¶</a></h2>
-<p>By default, Sphinx-gallery will only look for <a class="reference external" href="https://matplotlib.org/api/pyplot_api.html#module-matplotlib.pyplot" title="(in Matplotlib v2.0.2)"><code class="xref py py-mod docutils literal"><span class="pre">matplotlib.pyplot</span></code></a> figures
+<p>By default, Sphinx-gallery will only look for <code class="xref py py-mod docutils literal"><span class="pre">matplotlib.pyplot</span></code> figures
 when building. However, extracting figures generated by <a class="reference external" href="http://docs.enthought.com/mayavi/mayavi/auto/mlab_reference.html#module-mayavi.mlab" title="(in mayavi v4.5.0)"><code class="xref py py-mod docutils literal"><span class="pre">mayavi.mlab</span></code></a> is
 also supported. To enable this feature, you can do:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
@@ -837,7 +846,7 @@ embedded in the html output.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.1.12-git',
+            VERSION:'0.1.13-git',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
