@@ -112,6 +112,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#adding-line-numbers-to-examples">Adding line numbers to examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#disabling-joint-download-of-scripts">Disabling joint download of scripts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#choosing-the-thumbnail-image">Choosing the thumbnail image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#generate-binder-links-for-gallery-notebooks-experimental">Generate Binder links for gallery notebooks (experimental)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#building-without-executing-examples">Building without executing examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#finding-mayavi-figures">Finding Mayavi figures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#dealing-with-failing-gallery-example-scripts">Dealing with failing Gallery example scripts</a><ul>
@@ -203,6 +204,7 @@ file:</p>
 <li><code class="docutils literal"><span class="pre">abort_on_example_error</span></code> (<a class="reference internal" href="#abort-on-first"><span class="std std-ref">Abort build on first fail</span></a>)</li>
 <li><code class="docutils literal"><span class="pre">expected_failing_examples</span></code> (<a class="reference internal" href="#dont-fail-exit"><span class="std std-ref">Don’t fail the build on exit</span></a>)</li>
 <li><code class="docutils literal"><span class="pre">min_reported_time</span></code> (<a class="reference internal" href="#min-reported-time"><span class="std std-ref">Minimal reported time</span></a>)</li>
+<li><code class="docutils literal"><span class="pre">binder</span></code> (<a class="reference internal" href="#binder-links"><span class="std std-ref">Generate Binder links for gallery notebooks (experimental)</span></a>)</li>
 </ul>
 <p>Some options can also be set or overridden on a file-by-file basis:</p>
 <ul class="simple">
@@ -370,19 +372,19 @@ a small gallery of examples that is specific to this function and
 looks like this:</p>
 <div class="section" id="examples-using-numpy-exp">
 <h3>Examples using <code class="docutils literal"><span class="pre">numpy.exp</span></code><a class="headerlink" href="#examples-using-numpy-exp" title="Permalink to this headline">¶</a></h3>
-<div class="sphx-glr-thumbcontainer" tooltip="A simple example for ploting two figures of a exponential function in order to test the autonom..."><div class="figure" id="id3">
+<div class="sphx-glr-thumbcontainer" tooltip="A simple example for ploting two figures of a exponential function in order to test the autonom..."><div class="figure" id="id4">
 <img alt="_images/sphx_glr_plot_exp_thumb.png" src="_images/sphx_glr_plot_exp_thumb.png" />
 <p class="caption"><span class="caption-text"><a class="reference internal" href="auto_examples/plot_exp.html#sphx-glr-auto-examples-plot-exp-py"><span class="std std-ref">Plotting the exponential function</span></a></span></p>
 </div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Considering an atomic single orbital and how to fill it by use of the chemical potential. This ..."><div class="figure" id="id4">
+</div><div class="sphx-glr-thumbcontainer" tooltip="Considering an atomic single orbital and how to fill it by use of the chemical potential. This ..."><div class="figure" id="id5">
 <img alt="_images/sphx_glr_plot_quantum_thumb.png" src="_images/sphx_glr_plot_quantum_thumb.png" />
 <p class="caption"><span class="caption-text"><a class="reference internal" href="auto_examples/plot_quantum.html#sphx-glr-auto-examples-plot-quantum-py"><span class="std std-ref">Some Quantum Mechanics, filling an atomic orbital</span></a></span></p>
 </div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="An example to demonstrate how to choose which figure is displayed as the thumbnail if the examp..."><div class="figure" id="id5">
+</div><div class="sphx-glr-thumbcontainer" tooltip="An example to demonstrate how to choose which figure is displayed as the thumbnail if the examp..."><div class="figure" id="id6">
 <img alt="_images/sphx_glr_plot_choose_thumbnail_thumb.png" src="_images/sphx_glr_plot_choose_thumbnail_thumb.png" />
 <p class="caption"><span class="caption-text"><a class="reference internal" href="auto_examples/plot_choose_thumbnail.html#sphx-glr-auto-examples-plot-choose-thumbnail-py"><span class="std std-ref">Choosing the thumbnail figure</span></a></span></p>
 </div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Plot to present Sphinx-Gallery using itself to display its version. "><div class="figure" id="id6">
+</div><div class="sphx-glr-thumbcontainer" tooltip="Plot to present Sphinx-Gallery using itself to display its version. "><div class="figure" id="id7">
 <img alt="_images/sphx_glr_plot_gallery_version_thumb.png" src="_images/sphx_glr_plot_gallery_version_thumb.png" />
 <p class="caption"><span class="caption-text"><a class="reference internal" href="auto_examples/plot_gallery_version.html#sphx-glr-auto-examples-plot-gallery-version-py"><span class="std std-ref">Sphinx-Gallery introduction</span></a></span></p>
 </div>
@@ -471,6 +473,7 @@ every module.
    downloads
    docs_resolv
    sorting
+   binder
 </pre></div>
 </div>
 <p>The important directives are <code class="docutils literal"><span class="pre">currentmodule</span></code> where we specify which
@@ -655,6 +658,49 @@ to use the 2nd figure created as the thumbnail:</p>
 <p>The default behavior is <code class="docutils literal"><span class="pre">sphinx_gallery_thumbnail_number</span> <span class="pre">=</span> <span class="pre">1</span></code>. See
 <a class="reference internal" href="auto_examples/plot_choose_thumbnail.html#sphx-glr-auto-examples-plot-choose-thumbnail-py"><span class="std std-ref">Choosing the thumbnail figure</span></a> for an example
 of this functionality.</p>
+</div>
+<div class="section" id="generate-binder-links-for-gallery-notebooks-experimental">
+<span id="binder-links"></span><h2>Generate Binder links for gallery notebooks (experimental)<a class="headerlink" href="#generate-binder-links-for-gallery-notebooks-experimental" title="Permalink to this headline">¶</a></h2>
+<p>Sphinx-Gallery automatically generates Jupyter notebooks for any
+examples built with the gallery. <a class="reference external" href="http://mybinder.org">Binder</a> makes it
+possible to create interactive GitHub repositories connect to cloud resources.
+If you host your documentation on a GitHub repository, it is possible to
+auto-generate a Binder link for each notebook. Clicking this link will
+take users to a live version of the Jupyter notebook where they may
+run the code interactively. For more information see the <a class="reference external" href="http://docs.mybinder.org">Binder documentation</a>.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Binder is still beta technology, so there may be instability in the
+experience of users who click Binder links.</p>
+</div>
+<p>In order to enable Binder links with Sphinx-Gallery, you must specify
+a few pieces of information in <code class="docutils literal"><span class="pre">conf.py</span></code>. These are given as a nested
+dictionary following the pattern below:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="o">...</span>
+  <span class="s1">&#39;binder&#39;</span><span class="p">:</span> <span class="p">{</span>
+     <span class="s1">&#39;org&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;github_org&gt;&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;repo&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;github_repo&gt;&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;binder_url&gt;&#39;</span><span class="p">,</span>  <span class="c1"># URL serving binders (e.g. mybinder.org)</span>
+     <span class="s1">&#39;branch&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;repo_branch&gt;&#39;</span><span class="p">,</span>  <span class="c1"># Can also be a tag or commit hash</span>
+     <span class="s1">&#39;dependencies&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;list_of_paths_to_dependency_files&gt;&#39;</span>
+     <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition important">
+<p class="first admonition-title">Important</p>
+<p class="last"><code class="docutils literal"><span class="pre">dependencies</span></code> should be a list of paths to Binder configuration files that
+define the environment needed to run the examples. For example, a
+<code class="docutils literal"><span class="pre">requirements.txt</span></code> file. These will be copied to
+your documentation branch, and used by Binder to create your environment.
+For more information on what files you can use, see <a class="reference external" href="https://mybinder.readthedocs.io/en/latest/using.html#preparing-a-repository-for-binder">preparing your
+repository</a>
+in the <a class="reference external" href="docs.mybinder.org">Binder documentation</a> for more information on
+what build files are supported.</p>
+</div>
+<p>See the Sphinx-Gallery <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/blob/master/doc/conf.py">Sphinx configuration file</a>
+for an example that uses the <a class="reference external" href="http://mybinder.org">public Binder server</a>.</p>
 </div>
 <div class="section" id="building-without-executing-examples">
 <span id="without-execution"></span><h2>Building without executing examples<a class="headerlink" href="#building-without-executing-examples" title="Permalink to this headline">¶</a></h2>
