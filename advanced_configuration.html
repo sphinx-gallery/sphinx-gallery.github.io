@@ -99,7 +99,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Configuration</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#list-of-config-options">List of config options</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#managing-multiple-galleries">Managing multiple galleries</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#building-examples-matching-a-pattern">Building examples matching a pattern</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#parsing-and-executing-examples-based-on-matching-patterns">Parsing and executing examples based on matching patterns</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#sorting-gallery-subsections">Sorting gallery subsections</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#sorting-gallery-examples">Sorting gallery examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#linking-to-documentation">Linking to documentation</a></li>
@@ -190,7 +190,7 @@ greater detail in subsequent sections.</p>
 file:</p>
 <ul class="simple">
 <li><code class="docutils literal"><span class="pre">examples_dirs</span></code> and <code class="docutils literal"><span class="pre">gallery_dirs</span></code> (<a class="reference internal" href="#multiple-galleries-config"><span class="std std-ref">Managing multiple galleries</span></a>)</li>
-<li><code class="docutils literal"><span class="pre">filename_pattern</span></code> (<a class="reference internal" href="#build-pattern"><span class="std std-ref">Building examples matching a pattern</span></a>)</li>
+<li><code class="docutils literal"><span class="pre">filename_pattern</span></code> and <code class="docutils literal"><span class="pre">ignore_pattern</span></code> (<a class="reference internal" href="#build-pattern"><span class="std std-ref">Parsing and executing examples based on matching patterns</span></a>)</li>
 <li><code class="docutils literal"><span class="pre">subsection_order</span></code> (<a class="reference internal" href="#sub-gallery-order"><span class="std std-ref">Sorting gallery subsections</span></a>)</li>
 <li><code class="docutils literal"><span class="pre">within_subsection_order</span></code> (<a class="reference internal" href="#within-gallery-order"><span class="std std-ref">Sorting gallery examples</span></a>)</li>
 <li><code class="docutils literal"><span class="pre">reference_url</span></code> (<a class="reference internal" href="#link-to-documentation"><span class="std std-ref">Linking to documentation</span></a>)</li>
@@ -237,11 +237,21 @@ the sphinx configuration dictionary:</p>
 </div>
 <p>Keep in mind that both lists have to be of the same length.</p>
 </div>
-<div class="section" id="building-examples-matching-a-pattern">
-<span id="build-pattern"></span><h2>Building examples matching a pattern<a class="headerlink" href="#building-examples-matching-a-pattern" title="Permalink to this headline">¶</a></h2>
-<p>By default, Sphinx-Gallery execute only examples beginning with <code class="docutils literal"><span class="pre">plot</span></code>. However,
-if this naming convention does not suit your project, you can modify this pattern
-in your Sphinx <code class="docutils literal"><span class="pre">conf.py</span></code>. For example:</p>
+<div class="section" id="parsing-and-executing-examples-based-on-matching-patterns">
+<span id="build-pattern"></span><h2>Parsing and executing examples based on matching patterns<a class="headerlink" href="#parsing-and-executing-examples-based-on-matching-patterns" title="Permalink to this headline">¶</a></h2>
+<p>By default, Sphinx-Gallery will <strong>parse and add</strong> all files with a <code class="docutils literal"><span class="pre">.py</span></code>
+extension to the gallery. To ignore some files and omit them from the gallery
+entirely, you can use a regular expression (the default is shown here):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">...</span>
+    <span class="s1">&#39;ignore_pattern&#39;</span><span class="p">:</span> <span class="s1">&#39;__init__\.py&#39;</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Of the files that get <strong>parsed and added</strong> to the gallery, by default
+Sphinx-Gallery only <strong>executes</strong> files whose name begins with <code class="docutils literal"><span class="pre">plot</span></code>.
+However, if this naming convention does not suit your project, you can modify
+the pattern of filenames to build in your Sphinx <code class="docutils literal"><span class="pre">conf.py</span></code>. For example:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
     <span class="s1">&#39;filename_pattern&#39;</span><span class="p">:</span> <span class="s1">&#39;/plot_compute_&#39;</span><span class="p">,</span>
@@ -257,12 +267,12 @@ want to build only one example so that you can link it in the documentation. In 
 you would do:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;filename_pattern&#39;</span><span class="p">:</span> <span class="s1">&#39;plot_awesome_example.py&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;filename_pattern&#39;</span><span class="p">:</span> <span class="s1">&#39;plot_awesome_example\.py&#39;</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <p>Here, one should escape the dot <code class="docutils literal"><span class="pre">'\.'</span></code> as otherwise python <a class="reference external" href="https://docs.python.org/2/library/re.html">regular expressions</a> matches any character. Nevertheless, as
-one is targeting a specific file, it is most certainly going to match the dot in the filename.</p>
+one is targeting a specific file, it would match the dot in the filename even without this escape character.</p>
 <p>Similarly, to build only examples in a specific directory, you can do:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
@@ -270,7 +280,7 @@ one is targeting a specific file, it is most certainly going to match the dot in
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Alternatively, you can skip some examples. For example, to skip building examples
+<p>Alternatively, you can skip executing some examples. For example, to skip building examples
 starting with <code class="docutils literal"><span class="pre">plot_long_examples_</span></code>, you would do:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
@@ -280,6 +290,14 @@ starting with <code class="docutils literal"><span class="pre">plot_long_example
 </div>
 <p>As the patterns are parsed as <a class="reference external" href="https://docs.python.org/2/library/re.html">regular expressions</a>, users are advised to consult the
 <a class="reference external" href="https://docs.python.org/2/library/re.html">regular expressions</a> module for more details.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>Remember that Sphinx allows overriding <code class="docutils literal"><span class="pre">conf.py</span></code> values from the command
+line, so you can for example build a single example directly via something like:</p>
+<div class="last highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> sphinx-build -D sphinx_gallery_conf.filename_pattern<span class="o">=</span>plot_specific_example<span class="se">\.</span>py ...
+</pre></div>
+</div>
+</div>
 </div>
 <div class="section" id="sorting-gallery-subsections">
 <span id="sub-gallery-order"></span><h2>Sorting gallery subsections<a class="headerlink" href="#sorting-gallery-subsections" title="Permalink to this headline">¶</a></h2>
