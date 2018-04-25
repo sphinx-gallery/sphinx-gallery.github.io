@@ -25,31 +25,21 @@
   
 
   
-  
     <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  
-
-  
-    <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
-  
-    <link rel="stylesheet" href="../_static/theme_override.css" type="text/css" />
-  
-
-  
-        <link rel="index" title="Index"
-              href="../genindex.html"/>
-        <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="Sphinx-Gallery 0.1.13-git documentation" href="../index.html"/>
-        <link rel="up" title="Gallery of Examples" href="index.html"/>
-        <link rel="next" title="Seaborn example" href="plot_seaborn.html"/>
-        <link rel="prev" title="Colormaps alter your perception" href="plot_colors.html"/> 
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_override.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Seaborn example" href="plot_seaborn.html" />
+    <link rel="prev" title="Colormaps alter your perception" href="plot_colors.html" /> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
@@ -134,7 +124,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">Sphinx-Gallery</a>
@@ -142,9 +132,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -171,44 +162,48 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="some-quantum-mechanics-filling-an-atomic-orbital">
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Click <a class="reference internal" href="#sphx-glr-download-auto-examples-plot-quantum-py"><span class="std std-ref">here</span></a> to download the full example code or run this example in your browser via Binder</p>
+</div>
+<div class="sphx-glr-example-title section" id="some-quantum-mechanics-filling-an-atomic-orbital">
 <span id="sphx-glr-auto-examples-plot-quantum-py"></span><h1>Some Quantum Mechanics, filling an atomic orbital<a class="headerlink" href="#some-quantum-mechanics-filling-an-atomic-orbital" title="Permalink to this headline">¶</a></h1>
 <p>Considering an atomic single orbital and how to fill it by use of the
-chemical potential. This system has a four element basis, <span class="math notranslate">\(B =
+chemical potential. This system has a four element basis, <span class="math notranslate nohighlight">\(B =
 \{ \lvert \emptyset \rangle, \lvert \uparrow \rangle, \lvert
 \downarrow \rangle, \lvert \uparrow\downarrow \rangle \}\)</span>, that is the
 empty orbital, one spin up electron, one spin down electron and the
 filled orbital.</p>
 <p>The environment of the orbital is set up by an energy cost for
-occupying the orbital, that is <span class="math notranslate">\(\epsilon\)</span> and when both
+occupying the orbital, that is <span class="math notranslate nohighlight">\(\epsilon\)</span> and when both
 electrons meet a contact interaction corresponding to the Coulomb
-repulsion <span class="math notranslate">\(U\)</span>. Finally the chemical potential <span class="math notranslate">\(\mu\)</span> is
+repulsion <span class="math notranslate nohighlight">\(U\)</span>. Finally the chemical potential <span class="math notranslate nohighlight">\(\mu\)</span> is
 what allows in the Grand canonical picture, to fill up our atomic
 orbital from a reservoir of electrons.</p>
 <blockquote>
 <div>The the simple Hamiltonian to model this system is given by:</div></blockquote>
-<div class="math notranslate">
+<div class="math notranslate nohighlight">
 \[\mathcal{H} =
      \sum_{\sigma=\uparrow,\downarrow} \epsilon c^\dagger_\sigma c_\sigma
     + Un_\uparrow n_\downarrow - \mu \hat{N}\]</div>
-<p>Here <span class="math notranslate">\(c^\dagger,c\)</span> creation and annihilation operators,
-<span class="math notranslate">\(n=c^\dagger c\)</span>, and
-<span class="math notranslate">\(\hat{N}=n_\uparrow+n_\downarrow\)</span>. This Hamiltonian is diagonal
+<p>Here <span class="math notranslate nohighlight">\(c^\dagger,c\)</span> creation and annihilation operators,
+<span class="math notranslate nohighlight">\(n=c^\dagger c\)</span>, and
+<span class="math notranslate nohighlight">\(\hat{N}=n_\uparrow+n_\downarrow\)</span>. This Hamiltonian is diagonal
 in the basis of particle number we have chosen earlier, as the basis
 elements are also eigenvectors.</p>
-<div class="math notranslate">
+<div class="math notranslate nohighlight">
 \[\begin{split}\mathcal{H} \lvert \emptyset \rangle &amp;= 0 \\
 \mathcal{H} \lvert \uparrow  \rangle &amp;= (\epsilon - \mu) | \uparrow  \rangle \\
 \mathcal{H} \lvert \downarrow  \rangle &amp;= (\epsilon - \mu) | \downarrow  \rangle \\
 \mathcal{H} \lvert \uparrow\downarrow \rangle &amp;= (2\epsilon - 2\mu +U) \lvert \uparrow\downarrow \rangle\end{split}\]</div>
 <p>It is easy to see, that the system will prefer to be empty if
-<span class="math notranslate">\(\mu \in [0,\epsilon)\)</span>, be single occupied if <span class="math notranslate">\(\mu \in (\epsilon, \epsilon +U)\)</span>
-and doubly occupied if <span class="math notranslate">\(\mu &gt; \epsilon +U\)</span>.</p>
+<span class="math notranslate nohighlight">\(\mu \in [0,\epsilon)\)</span>, be single occupied if <span class="math notranslate nohighlight">\(\mu \in (\epsilon, \epsilon +U)\)</span>
+and doubly occupied if <span class="math notranslate nohighlight">\(\mu &gt; \epsilon +U\)</span>.</p>
 <p>For a more rigorous treatment, the partition function has to be
 calculated and then the expected particle number can be
-found. Introducing a new variable <span class="math notranslate">\(\xi = \epsilon - \mu\)</span>, and
-<span class="math notranslate">\(\beta\)</span> corresponding to the inverse temperature of the system.</p>
-<div class="math notranslate">
+found. Introducing a new variable <span class="math notranslate nohighlight">\(\xi = \epsilon - \mu\)</span>, and
+<span class="math notranslate nohighlight">\(\beta\)</span> corresponding to the inverse temperature of the system.</p>
+<div class="math notranslate nohighlight">
 \[\begin{split}\mathcal{Z} &amp;= Tr(e^{-\beta \mathcal{H}}) = 1 + 2e^{-\beta\xi} + e^{-\beta(2\xi + U)} \\
 \langle \hat{N} \rangle &amp;= \frac{1}{\beta} \frac{\partial}{\partial \mu} \ln \mathcal{Z}\end{split}\]</div>
 <img alt="../_images/sphx_glr_plot_quantum_001.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_quantum_001.png" />
@@ -228,8 +223,8 @@ found. Introducing a new variable <span class="math notranslate">\(\xi = \epsilo
 <a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="View documentation for matplotlib.pyplot.show"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
 </pre></div>
 </div>
-<p><strong>Total running time of the script:</strong> ( 0 minutes  0.060 seconds)</p>
-<div class="sphx-glr-footer class sphx-glr-footer-example docutils container">
+<p><strong>Total running time of the script:</strong> ( 0 minutes  0.061 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-quantum-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/sphinx-gallery/sphinx-gallery.github.io/master?filepath=_downloads/plot_quantum.ipynb"><img alt="https://static.mybinder.org/badge.svg" src="https://static.mybinder.org/badge.svg" width="150px" /></a>
 </div>
@@ -243,9 +238,7 @@ found. Introducing a new variable <span class="math notranslate">\(\xi = \epsilo
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -267,7 +260,7 @@ found. Introducing a new variable <span class="math notranslate">\(\xi = \epsilo
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -286,6 +279,7 @@ found. Introducing a new variable <span class="math notranslate">\(\xi = \epsilo
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
             VERSION:'0.1.13-git',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -304,14 +298,13 @@ found. Introducing a new variable <span class="math notranslate">\(\xi = \epsilo
     <script type="text/javascript" src="../_static/js/theme.js"></script>
   
 
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          
+          SphinxRtdTheme.Navigation.enableSticky();
+          
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>
