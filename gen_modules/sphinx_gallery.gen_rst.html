@@ -30,7 +30,7 @@
   <link rel="stylesheet" href="../_static/theme_override.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="sphinx_gallery.py_source_parser" href="sphinx_gallery.py_source_parser.html" />
+    <link rel="next" title="sphinx_gallery.scrapers" href="sphinx_gallery.scrapers.html" />
     <link rel="prev" title="sphinx_gallery.backreferences" href="sphinx_gallery.backreferences.html" /> 
 
   
@@ -102,6 +102,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="sphinx_gallery.scrapers.html">sphinx_gallery.scrapers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sphinx_gallery.py_source_parser.html">sphinx_gallery.py_source_parser</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sphinx_gallery.docs_resolv.html">sphinx_gallery.docs_resolv</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sphinx_gallery.notebook.html">sphinx_gallery.notebook</a></li>
@@ -171,18 +172,10 @@
 <h2>RST file generator<a class="headerlink" href="#rst-file-generator" title="Permalink to this headline">¶</a></h2>
 <p>Generate the rst files for the examples by iterating over the python
 example files.</p>
-<p>Files that generate images should start with ‘plot’</p>
+<p>Files that generate images should start with ‘plot’.</p>
 <div class="section" id="functions">
 <h3>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
-<dt id="sphinx_gallery.gen_rst.clean_modules">
-<code class="descclassname">sphinx_gallery.gen_rst.</code><code class="descname">clean_modules</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sphinx_gallery.gen_rst.clean_modules" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove “unload” seaborn from the name space</p>
-<p>After a script is executed it can load a variety of setting that one
-does not want to influence in other examples in the gallery.</p>
-</dd></dl>
-
-<div style='clear:both'></div><dl class="function">
 <dt id="sphinx_gallery.gen_rst.codestr2rst">
 <code class="descclassname">sphinx_gallery.gen_rst.</code><code class="descname">codestr2rst</code><span class="sig-paren">(</span><em>codestr</em>, <em>lang='python'</em>, <em>lineno=None</em><span class="sig-paren">)</span><a class="headerlink" href="#sphinx_gallery.gen_rst.codestr2rst" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return reStructuredText code block from code string</p>
@@ -251,32 +244,6 @@ representation of the output of each block</li>
 <dt id="sphinx_gallery.gen_rst.extract_intro_and_title">
 <code class="descclassname">sphinx_gallery.gen_rst.</code><code class="descname">extract_intro_and_title</code><span class="sig-paren">(</span><em>filename</em>, <em>docstring</em><span class="sig-paren">)</span><a class="headerlink" href="#sphinx_gallery.gen_rst.extract_intro_and_title" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract the first paragraph of module-level docstring. max:95 char</p>
-</dd></dl>
-
-<div style='clear:both'></div><dl class="function">
-<dt id="sphinx_gallery.gen_rst.figure_rst">
-<code class="descclassname">sphinx_gallery.gen_rst.</code><code class="descname">figure_rst</code><span class="sig-paren">(</span><em>figure_list</em>, <em>sources_dir</em><span class="sig-paren">)</span><a class="headerlink" href="#sphinx_gallery.gen_rst.figure_rst" title="Permalink to this definition">¶</a></dt>
-<dd><p>Given a list of paths to figures generate the corresponding rst</p>
-<p>Depending on whether we have one or more figures, we use a
-single rst call to ‘image’ or a horizontal list.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>figure_list</strong> (<em>list of str</em>) – Strings are the figures’ absolute paths</li>
-<li><strong>sources_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – absolute path of Sphinx documentation sources</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>images_rst</strong> – rst code to embed the images in the document</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a></p>
-</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <div style='clear:both'></div><dl class="function">
@@ -360,32 +327,6 @@ representation of the output of each block</li>
 </dd></dl>
 
 <div style='clear:both'></div><dl class="function">
-<dt id="sphinx_gallery.gen_rst.save_figures">
-<code class="descclassname">sphinx_gallery.gen_rst.</code><code class="descname">save_figures</code><span class="sig-paren">(</span><em>image_path</em>, <em>fig_count</em>, <em>gallery_conf</em><span class="sig-paren">)</span><a class="headerlink" href="#sphinx_gallery.gen_rst.save_figures" title="Permalink to this definition">¶</a></dt>
-<dd><p>Save all open matplotlib figures of the example code-block</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>image_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Path where plots are saved (format string which accepts figure number)</li>
-<li><strong>fig_count</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – Previous figure number count. Figure number add from this number</li>
-<li><strong>gallery_conf</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – Contains the configuration of Sphinx-Gallery</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
-<li><strong>images_rst</strong> (<em>str</em>) – rst code to embed the images in the document</li>
-<li><strong>fig_num</strong> (<em>int</em>) – number of figures saved</li>
-</ul>
-</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<div style='clear:both'></div><dl class="function">
 <dt id="sphinx_gallery.gen_rst.save_rst_example">
 <code class="descclassname">sphinx_gallery.gen_rst.</code><code class="descname">save_rst_example</code><span class="sig-paren">(</span><em>example_rst</em>, <em>example_file</em>, <em>time_elapsed</em>, <em>gallery_conf</em><span class="sig-paren">)</span><a class="headerlink" href="#sphinx_gallery.gen_rst.save_rst_example" title="Permalink to this definition">¶</a></dt>
 <dd><p>Saves the rst notebook to example_file including necessary header &amp; footer</p>
@@ -424,14 +365,6 @@ representation of the output of each block</li>
 </table>
 </dd></dl>
 
-<div style='clear:both'></div><dl class="function">
-<dt id="sphinx_gallery.gen_rst.scale_image">
-<code class="descclassname">sphinx_gallery.gen_rst.</code><code class="descname">scale_image</code><span class="sig-paren">(</span><em>in_fname</em>, <em>out_fname</em>, <em>max_width</em>, <em>max_height</em><span class="sig-paren">)</span><a class="headerlink" href="#sphinx_gallery.gen_rst.scale_image" title="Permalink to this definition">¶</a></dt>
-<dd><p>Scales an image with the same aspect ratio centered in an
-image box with the given max_width and max_height
-if in_fname == out_fname the image can only be scaled down</p>
-</dd></dl>
-
 <div style='clear:both'></div></div>
 <div class="section" id="classes">
 <h3>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h3>
@@ -467,7 +400,7 @@ the length of the string.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="sphinx_gallery.py_source_parser.html" class="btn btn-neutral float-right" title="sphinx_gallery.py_source_parser" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="sphinx_gallery.scrapers.html" class="btn btn-neutral float-right" title="sphinx_gallery.scrapers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="sphinx_gallery.backreferences.html" class="btn btn-neutral" title="sphinx_gallery.backreferences" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
