@@ -100,6 +100,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#using-a-custom-default-thumbnail">Using a custom default thumbnail</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#adding-line-numbers-to-examples">Adding line numbers to examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#add-your-own-first-notebook-cell">Add your own first notebook cell</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#disabling-download-button-of-all-scripts">Disabling download button of all scripts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#choosing-the-thumbnail-image">Choosing the thumbnail image</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#generate-binder-links-for-gallery-notebooks-experimental">Generate Binder links for gallery notebooks (experimental)</a></li>
@@ -203,6 +204,7 @@ file:</p>
 <li><code class="docutils literal notranslate"><span class="pre">expected_failing_examples</span></code> (<a class="reference internal" href="#dont-fail-exit"><span class="std std-ref">Don’t fail the build on exit</span></a>)</li>
 <li><code class="docutils literal notranslate"><span class="pre">min_reported_time</span></code> (<a class="reference internal" href="#min-reported-time"><span class="std std-ref">Minimal reported time</span></a>)</li>
 <li><code class="docutils literal notranslate"><span class="pre">binder</span></code> (<a class="reference internal" href="#binder-links"><span class="std std-ref">Generate Binder links for gallery notebooks (experimental)</span></a>)</li>
+<li><code class="docutils literal notranslate"><span class="pre">first_notebook_cell</span></code> (<a class="reference internal" href="#first-notebook-cell"><span class="std std-ref">Add your own first notebook cell</span></a>)</li>
 </ul>
 <p>Some options can also be set or overridden on a file-by-file basis:</p>
 <ul class="simple">
@@ -373,7 +375,7 @@ dictionary within your Sphinx <code class="docutils literal notranslate"><span c
 </pre></div>
 </div>
 <p>To link to external modules, if you use the Sphinx extension
-<a class="reference external" href="http://www.sphinx-doc.org/en/stable/ext/intersphinx.html#module-sphinx.ext.intersphinx" title="(in Sphinx v1.7.6)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sphinx.ext.intersphinx</span></code></a>, no additional changes are necessary,
+<a class="reference external" href="http://www.sphinx-doc.org/en/stable/ext/intersphinx.html#module-sphinx.ext.intersphinx" title="(in Sphinx v1.7.7)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sphinx.ext.intersphinx</span></code></a>, no additional changes are necessary,
 as the <code class="docutils literal notranslate"><span class="pre">intersphinx</span></code> inventory will automatically be used.
 If you do not use <code class="docutils literal notranslate"><span class="pre">intersphinx</span></code>, then you should add entries that
 point to the directory containing <code class="docutils literal notranslate"><span class="pre">searchindex.js</span></code>, such as
@@ -672,6 +674,29 @@ setting:</p>
 </div>
 <p>Note that for Sphinx &lt; 1.3, the line numbers will not be consistent with the
 original file.</p>
+</div>
+<div class="section" id="add-your-own-first-notebook-cell">
+<span id="first-notebook-cell"></span><h2>Add your own first notebook cell<a class="headerlink" href="#add-your-own-first-notebook-cell" title="Permalink to this headline">¶</a></h2>
+<p>Sphinx-Gallery adds an extra cell to the beginning of every generated notebook.
+This is often for adding code that is required to run properly in the notebook,
+but not in a <code class="docutils literal notranslate"><span class="pre">.py</span></code> file. By default, this text is</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+</pre></div>
+</div>
+<p>You can choose whatever text you like by modifying the <code class="docutils literal notranslate"><span class="pre">first_notebook_cell</span></code>
+configuration parameter. For example, the gallery of this documentation
+displays a comment along-side each the code shown above.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># This cell is added by sphinx-gallery</span>
+<span class="c1"># It can be customized to whatever you like</span>
+<span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+</pre></div>
+</div>
+<p>Which is achieved by the following configuration:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;first_notebook_cell&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;# This cell is added by sphinx-gallery</span><span class="se">\n</span><span class="s2">&quot;</span>
+                        <span class="s2">&quot;# It can be customized to whatever you like</span><span class="se">\n</span><span class="s2">&quot;</span>
+                        <span class="s2">&quot;%matplotlib inline&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="disabling-download-button-of-all-scripts">
 <span id="disable-all-scripts-download"></span><h2>Disabling download button of all scripts<a class="headerlink" href="#disabling-download-button-of-all-scripts" title="Permalink to this headline">¶</a></h2>
