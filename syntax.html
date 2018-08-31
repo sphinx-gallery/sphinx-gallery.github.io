@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Sphinx-Gallery Syntax &mdash; Sphinx-Gallery 0.2.0-git documentation</title>
+  <title>How to structure your Python scripts for Sphinx-Gallery &mdash; Sphinx-Gallery 0.2.0-git documentation</title>
   
 
   
@@ -30,8 +30,8 @@
   <link rel="stylesheet" href="_static/theme_override.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Sphinx-Gallery Utilities" href="utils.html" />
-    <link rel="prev" title="Frequently Asked Questions" href="faq.html" /> 
+    <link rel="next" title="Configuration" href="configuration.html" />
+    <link rel="prev" title="Getting Started with Sphinx-Gallery" href="getting_started.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -84,20 +84,31 @@
               
             
             
-              <ul class="current">
+              <p class="caption"><span class="caption-text">Using Sphinx Gallery</span></p>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started with Sphinx-Gallery</a></li>
-<li class="toctree-l1"><a class="reference internal" href="advanced_configuration.html">Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="faq.html">Frequently Asked Questions</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Sphinx-Gallery Syntax</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#simple-examples">Simple examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#notebook-styled-examples-syntax">Notebook Styled examples syntax</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">How to structure your Python scripts for Sphinx-Gallery</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#a-simple-example">A simple example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#embed-rst-in-your-example-python-files">Embed rST in your example Python files</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Advanced usage and information</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="advanced.html">Advanced usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">Frequently Asked Questions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="utils.html">Sphinx-Gallery Utilities</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reference.html">Sphinx-Gallery API Reference</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Example galleries</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html">Gallery of Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">Secondary gallery</a></li>
 <li class="toctree-l1"><a class="reference internal" href="auto_mayavi_examples/index.html">Gallery of Examples using Mayavi</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API and developer reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Sphinx-Gallery API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changes.html">Change Log</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery">Fork sphinx-gallery on Github</a></li>
 </ul>
@@ -133,7 +144,7 @@
   <ul class="wy-breadcrumbs">
     <li><a href="index.html">Docs</a> &raquo;</li>
       
-    <li>Sphinx-Gallery Syntax</li>
+    <li>How to structure your Python scripts for Sphinx-Gallery</li>
       <li class="wy-breadcrumbs-aside">
         
           
@@ -147,33 +158,93 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="sphinx-gallery-syntax">
-<h1>Sphinx-Gallery Syntax<a class="headerlink" href="#sphinx-gallery-syntax" title="Permalink to this headline">¶</a></h1>
-<p>For your examples to work you have to make them valid python code.</p>
-<div class="section" id="simple-examples">
-<h2>Simple examples<a class="headerlink" href="#simple-examples" title="Permalink to this headline">¶</a></h2>
-<p>This is the base of a python script of module. The structure follows
-a leading docstring that must follow reStructuredText syntax and a header.
-Then the executable code of your script.</p>
+  <div class="section" id="how-to-structure-your-python-scripts-for-sphinx-gallery">
+<span id="python-script-syntax"></span><h1>How to structure your Python scripts for Sphinx-Gallery<a class="headerlink" href="#how-to-structure-your-python-scripts-for-sphinx-gallery" title="Permalink to this headline">¶</a></h1>
+<p>This page describes the structure and syntax that can be used in Python scripts
+to generate rendered HTML gallery pages.</p>
+<div class="section" id="a-simple-example">
+<h2>A simple example<a class="headerlink" href="#a-simple-example" title="Permalink to this headline">¶</a></h2>
+<p>Sphinx-Gallery expects each Python file to have two things:</p>
+<ol class="arabic">
+<li><p class="first"><strong>A docstring</strong>, written in rST, that defines the
+header for the example. It must begin by defining an rST title. For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This is my example script</span>
+<span class="sd">=========================</span>
+
+<span class="sd">This example doesn&#39;t do much, it just makes a simple plot</span>
+<span class="sd">&quot;&quot;&quot;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>Python code</strong>. This can be any valid Python code that you wish. Any
+Matplotlib or Mayavi images that are generated will be saved to disk, and
+the rST generated will display these images with the built examples.</p>
+</li>
+</ol>
 <p>For a quick reference have a look at the example
 <a class="reference internal" href="auto_examples/plot_gallery_version.html#sphx-glr-auto-examples-plot-gallery-version-py"><span class="std std-ref">Sphinx-Gallery introduction</span></a></p>
-<p>In this 2 block structure, the website is rendered ordered with
-the docstring, then output images and output code. Finally the
-generating code script.</p>
 </div>
-<div class="section" id="notebook-styled-examples-syntax">
-<span id="notebook-examples-syntax"></span><h2>Notebook Styled examples syntax<a class="headerlink" href="#notebook-styled-examples-syntax" title="Permalink to this headline">¶</a></h2>
-<p>It is also possible to have more complicated examples, for which you
-want to embed more documenting strings within your code and separating
-it by blocks. This is also possible, you follow standard python coding
-syntax but new documenting strings that will be rendered as reStructuredText
-have to be leaded by a line of hashes.</p>
+<div class="section" id="embed-rst-in-your-example-python-files">
+<span id="embedding-rst"></span><h2>Embed rST in your example Python files<a class="headerlink" href="#embed-rst-in-your-example-python-files" title="Permalink to this headline">¶</a></h2>
+<p>Additionally, you may embed rST syntax within your Python scripts. This will
+be rendered in-line with the Python code and its outputs, similar to how
+Jupyter Notebooks are structured (in fact, Sphinx-Gallery also <strong>creates</strong> a
+Jupyter Notebook for each example that is built).</p>
+<p>You can embed rST in your Python examples by including a line of <code class="docutils literal notranslate"><span class="pre">#</span></code> symbols
+that spans &gt;= 20 columns. We recommend using 79 columns, like
+this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">###############################################################################</span>
+</pre></div>
+</div>
+<p>Any commented lines (that begin with <code class="docutils literal notranslate"><span class="pre">#</span></code> and a space so they are
+PEP8-compliant) that immediately follow will be rendered as rST in the built
+gallery examples. For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># This is commented python</span>
+<span class="n">myvariable</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;my variable is </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">myvariable</span><span class="p">))</span>
+
+<span class="c1">###############################################################################</span>
+<span class="c1"># This is a section header</span>
+<span class="c1"># ------------------------</span>
+<span class="c1">#</span>
+<span class="c1"># In the built documentation, it will be rendered as rST.</span>
+
+<span class="c1"># These lines won&#39;t be rendered as rST because there is a gap after the last</span>
+<span class="c1"># commented rST block. Instead, they&#39;ll resolve as regular Python comments.</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;my variable plus 2 is </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">myvariable</span> <span class="o">+</span> <span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Here are the contents of an example Python file from the snippets above.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This is my example script</span>
+<span class="sd">=========================</span>
+
+<span class="sd">This example doesn&#39;t do much, it just makes a simple plot</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1">###############################################################################</span>
+<span class="c1"># This is a section header</span>
+<span class="c1"># ------------------------</span>
+<span class="c1">#</span>
+<span class="c1"># .. note:: This is the first section!</span>
+
+<span class="c1"># This line won&#39;t be rendered as rST because there&#39;s a space after the last block.</span>
+<span class="n">myvariable</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;my variable is </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">myvariable</span><span class="p">))</span>
+
+<span class="c1">###############################################################################</span>
+<span class="c1"># This is another section header</span>
+<span class="c1"># ------------------------------</span>
+<span class="c1">#</span>
+<span class="c1"># In the built documentation, it will be rendered as rST after the code above!</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;my variable plus 2 is </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">myvariable</span> <span class="o">+</span> <span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
 <p>For a clear example refer to the rendered example
-<a class="reference internal" href="tutorials/plot_notebook.html#sphx-glr-tutorials-plot-notebook-py"><span class="std std-ref">Notebook styled examples</span></a> and compare it to the generating
+<a class="reference internal" href="tutorials/plot_notebook.html#sphx-glr-tutorials-plot-notebook-py"><span class="std std-ref">Notebook styled examples</span></a> and compare it to the generated
 <a class="reference download internal" href="_downloads/plot_notebook.py" download=""><code class="xref download docutils literal notranslate"><span class="pre">original</span> <span class="pre">python</span> <span class="pre">script</span></code></a></p>
-<p>In this multiblock structure, the website is rendered ordered by the
-leading docstring. Then executable python code is presented and after
-its output in images and test, following  the intuitive notebook structure.</p>
 </div>
 </div>
 
@@ -185,10 +256,10 @@ its output in images and test, following  the intuitive notebook structure.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="utils.html" class="btn btn-neutral float-right" title="Sphinx-Gallery Utilities" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="configuration.html" class="btn btn-neutral float-right" title="Configuration" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="faq.html" class="btn btn-neutral" title="Frequently Asked Questions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="getting_started.html" class="btn btn-neutral" title="Getting Started with Sphinx-Gallery" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

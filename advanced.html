@@ -1,0 +1,282 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Advanced usage &mdash; Sphinx-Gallery 0.2.0-git documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="_static/theme_override.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Frequently Asked Questions" href="faq.html" />
+    <link rel="prev" title="Configuration" href="configuration.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Sphinx-Gallery
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Using Sphinx Gallery</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started with Sphinx-Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="syntax.html">How to structure your Python scripts for Sphinx-Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Advanced usage and information</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Advanced usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#extend-your-makefile-for-sphinx-gallery">Extend your Makefile for Sphinx-Gallery</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#cleaning-the-gallery-files">Cleaning the gallery files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#build-the-gallery-without-running-any-examples">Build the gallery without running any examples</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#know-your-gallery-files">Know your Gallery files</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">Frequently Asked Questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">Sphinx-Gallery Utilities</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Example galleries</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html">Gallery of Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">Secondary gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_mayavi_examples/index.html">Gallery of Examples using Mayavi</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API and developer reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Sphinx-Gallery API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changes.html">Change Log</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery">Fork sphinx-gallery on Github</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Sphinx-Gallery</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>Advanced usage</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/advanced.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="advanced-usage">
+<span id="id1"></span><h1>Advanced usage<a class="headerlink" href="#advanced-usage" title="Permalink to this headline">¶</a></h1>
+<p>This page contains more advanced topics in case you want to understand how
+to use Sphinx-Gallery more deeply.</p>
+<div class="section" id="extend-your-makefile-for-sphinx-gallery">
+<h2>Extend your Makefile for Sphinx-Gallery<a class="headerlink" href="#extend-your-makefile-for-sphinx-gallery" title="Permalink to this headline">¶</a></h2>
+<p>This section describes some common extensions to the documentation Makefile
+that are useful for Sphinx-Gallery.</p>
+<div class="section" id="cleaning-the-gallery-files">
+<h3>Cleaning the gallery files<a class="headerlink" href="#cleaning-the-gallery-files" title="Permalink to this headline">¶</a></h3>
+<p>Once your gallery is working you might need completely remove all generated files by
+Sphinx-Gallery to have a clean build. For this we recommend adding the following
+to your Sphinx <code class="docutils literal notranslate"><span class="pre">Makefile</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>clean:
+        rm -rf <span class="k">$(</span>BUILDDIR<span class="k">)</span>/*
+        rm -rf auto_examples/
+</pre></div>
+</div>
+</div>
+<div class="section" id="build-the-gallery-without-running-any-examples">
+<h3>Build the gallery without running any examples<a class="headerlink" href="#build-the-gallery-without-running-any-examples" title="Permalink to this headline">¶</a></h3>
+<p>If you wish to build your gallery without running examples first (e.g., if an
+example takes a long time to run), add the following to your <code class="docutils literal notranslate"><span class="pre">Makefile</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>html-noplot:
+        <span class="k">$(</span>SPHINXBUILD<span class="k">)</span> -D <span class="nv">plot_gallery</span><span class="o">=</span><span class="m">0</span> -b html <span class="k">$(</span>ALLSPHINXOPTS<span class="k">)</span> <span class="k">$(</span>BUILDDIR<span class="k">)</span>/html
+        @echo
+        @echo <span class="s2">&quot;Build finished. The HTML pages are in </span><span class="k">$(</span>BUILDDIR<span class="k">)</span><span class="s2">/html.&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="know-your-gallery-files">
+<h2>Know your Gallery files<a class="headerlink" href="#know-your-gallery-files" title="Permalink to this headline">¶</a></h2>
+<p>The Gallery has been built, now you and all of your project’s users
+can already start enjoying it. All the temporary files needed to
+generate the gallery(rst files, images, chache objects, etc) are
+stored where you configured in <code class="docutils literal notranslate"><span class="pre">gallery_dirs</span></code>. The final files that go
+into the HTML version of your documentation have a particular
+namespace, to avoid colisions with your own files and images.</p>
+<p>Our namespace convention is to prefix everything with <code class="docutils literal notranslate"><span class="pre">sphx_glr</span></code> and
+change path separators with underscores. This is valid for
+cross-references labels, and images.</p>
+<p>So for example if we want to reference the example
+<a class="reference internal" href="auto_examples/plot_gallery_version.html#sphx-glr-auto-examples-plot-gallery-version-py"><span class="std std-ref">Sphinx-Gallery introduction</span></a>, we just call
+its reference
+<code class="docutils literal notranslate"><span class="pre">:ref:`sphx_glr_auto_examples_plot_gallery_version.py`</span></code>. The image
+it generated has the name <code class="docutils literal notranslate"><span class="pre">sphx_glr_plot_gallery_version_thumb.png</span></code>
+and its thumbnail is <code class="docutils literal notranslate"><span class="pre">sphx_glr_plot_gallery_version_thumb.png</span></code></p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="faq.html" class="btn btn-neutral float-right" title="Frequently Asked Questions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="configuration.html" class="btn btn-neutral" title="Configuration" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014-2018, Óscar Nájera.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.2.0-git',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
