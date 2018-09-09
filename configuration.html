@@ -119,6 +119,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#setting-gallery-thumbnail-size">Setting gallery thumbnail size</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#minimal-reported-time">Minimal reported time</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#showing-memory-consumption">Showing memory consumption</a></li>
 </ul>
 </li>
 </ul>
@@ -214,6 +215,7 @@ file:</p>
 <li><code class="docutils literal notranslate"><span class="pre">abort_on_example_error</span></code> (<a class="reference internal" href="#abort-on-first"><span class="std std-ref">Abort build on first fail</span></a>)</li>
 <li><code class="docutils literal notranslate"><span class="pre">expected_failing_examples</span></code> (<a class="reference internal" href="#dont-fail-exit"><span class="std std-ref">Don’t fail the build on exit</span></a>)</li>
 <li><code class="docutils literal notranslate"><span class="pre">min_reported_time</span></code> (<a class="reference internal" href="#min-reported-time"><span class="std std-ref">Minimal reported time</span></a>)</li>
+<li><code class="docutils literal notranslate"><span class="pre">show_memory</span></code> (<a class="reference internal" href="#show-memory"><span class="std std-ref">Showing memory consumption</span></a>)</li>
 <li><code class="docutils literal notranslate"><span class="pre">binder</span></code> (<a class="reference internal" href="#binder-links"><span class="std std-ref">Generate Binder links for gallery notebooks (experimental)</span></a>)</li>
 <li><code class="docutils literal notranslate"><span class="pre">first_notebook_cell</span></code> (<a class="reference internal" href="#first-notebook-cell"><span class="std std-ref">Add your own first notebook cell</span></a>)</li>
 </ul>
@@ -386,7 +388,7 @@ dictionary within your Sphinx <code class="docutils literal notranslate"><span c
 </pre></div>
 </div>
 <p>To link to external modules, if you use the Sphinx extension
-<a class="reference external" href="http://www.sphinx-doc.org/en/stable/ext/intersphinx.html#module-sphinx.ext.intersphinx" title="(in Sphinx v1.7.8)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sphinx.ext.intersphinx</span></code></a>, no additional changes are necessary,
+<a class="reference external" href="http://www.sphinx-doc.org/en/stable/ext/intersphinx.html#module-sphinx.ext.intersphinx" title="(in Sphinx v1.7.9)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sphinx.ext.intersphinx</span></code></a>, no additional changes are necessary,
 as the <code class="docutils literal notranslate"><span class="pre">intersphinx</span></code> inventory will automatically be used.
 If you do not use <code class="docutils literal notranslate"><span class="pre">intersphinx</span></code>, then you should add entries that
 point to the directory containing <code class="docutils literal notranslate"><span class="pre">searchindex.js</span></code>, such as
@@ -1037,9 +1039,21 @@ in your own site’s CSS file:</p>
 <p>By default, Sphinx-gallery logs and embeds in the html output the time it took
 to run each script.  If the majority of your examples runs quickly, you may not
 need this information.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">min_reported_time</span></code> configuration can be set to a number of seconds.  The
+<p>The <code class="docutils literal notranslate"><span class="pre">min_reported_time</span></code> parameter can be set to a number of seconds.  The
 duration of scripts that ran faster than that amount will not be logged nor
 embedded in the html output.</p>
+</div>
+<div class="section" id="showing-memory-consumption">
+<span id="show-memory"></span><h2>Showing memory consumption<a class="headerlink" href="#showing-memory-consumption" title="Permalink to this headline">¶</a></h2>
+<p>Sphinx-Gallery can use <code class="docutils literal notranslate"><span class="pre">memory_profiler</span></code>, if installed, to report the peak
+memory during the run of an example. After installing <code class="docutils literal notranslate"><span class="pre">memory_profiler</span></code>,
+you can do:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">...</span>
+    <span class="s1">&#39;show_memory&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="s1">&#39;,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 </div>
 </div>
 
