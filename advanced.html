@@ -99,6 +99,13 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#know-your-gallery-files">Know your Gallery files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#writing-a-custom-image-scraper">Writing a custom image scraper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#example-one-a-matplotlib-and-mayavi-style-scraper">Example one - a Matplotlib and Mayavi-style scraper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-two-detecting-image-files-on-disk">Example two - detecting image files on disk</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#contributing-scrapers-back-to-sphinx-gallery">Contributing scrapers back to Sphinx-gallery</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#defining-resetting-behavior-for-custom-visualization-libraries">Defining resetting behavior for custom visualization libraries</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="faq.html">Frequently Asked Questions</a></li>
@@ -211,6 +218,157 @@ its reference
 it generated has the name <code class="docutils literal notranslate"><span class="pre">sphx_glr_plot_gallery_version_thumb.png</span></code>
 and its thumbnail is <code class="docutils literal notranslate"><span class="pre">sphx_glr_plot_gallery_version_thumb.png</span></code></p>
 </div>
+<div class="section" id="writing-a-custom-image-scraper">
+<span id="custom-scraper"></span><h2>Writing a custom image scraper<a class="headerlink" href="#writing-a-custom-image-scraper" title="Permalink to this headline">¶</a></h2>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The API for custom scrapers is currently experimental.</p>
+</div>
+<p>By default, Sphinx-gallery supports image scrapers for Matplotlib
+(<a class="reference internal" href="gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.matplotlib_scraper" title="sphinx_gallery.scrapers.matplotlib_scraper"><code class="xref py py-func docutils literal notranslate"><span class="pre">sphinx_gallery.scrapers.matplotlib_scraper()</span></code></a>) and Mayavi
+(<a class="reference internal" href="gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.mayavi_scraper" title="sphinx_gallery.scrapers.mayavi_scraper"><code class="xref py py-func docutils literal notranslate"><span class="pre">sphinx_gallery.scrapers.mayavi_scraper()</span></code></a>). You can also write a custom
+scraper for other python packages. This section describes how to do so.</p>
+<p>Image scrapers are functions (or callable class instances) that do two things:</p>
+<ol class="arabic simple">
+<li>Collect a list of images created in the latest execution of code.</li>
+<li>Write these images to disk</li>
+<li>Return rST that embeds these figures in the built documentation.</li>
+</ol>
+<p>The function should take the following inputs (in this order): <code class="docutils literal notranslate"><span class="pre">block</span></code>,
+<code class="docutils literal notranslate"><span class="pre">block_vars</span></code>, and <code class="docutils literal notranslate"><span class="pre">gallery_conf</span></code>. It should return a string containing the
+rST for embedding this figure in the documentation.
+See the <a class="reference internal" href="gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.matplotlib_scraper" title="sphinx_gallery.scrapers.matplotlib_scraper"><code class="xref py py-func docutils literal notranslate"><span class="pre">sphinx_gallery.scrapers.matplotlib_scraper()</span></code></a> for
+a description of the inputs/outputs.</p>
+<p>This function will be called once for each code block of your examples.</p>
+<div class="section" id="example-one-a-matplotlib-and-mayavi-style-scraper">
+<h3>Example one - a Matplotlib and Mayavi-style scraper<a class="headerlink" href="#example-one-a-matplotlib-and-mayavi-style-scraper" title="Permalink to this headline">¶</a></h3>
+<p>For example, we will show sample code for a scraper for a hypothetical package.
+It uses an approach similar to what <a class="reference internal" href="gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.matplotlib_scraper" title="sphinx_gallery.scrapers.matplotlib_scraper"><code class="xref py py-func docutils literal notranslate"><span class="pre">sphinx_gallery.scrapers.matplotlib_scraper()</span></code></a>
+and <a class="reference internal" href="gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.mayavi_scraper" title="sphinx_gallery.scrapers.mayavi_scraper"><code class="xref py py-func docutils literal notranslate"><span class="pre">sphinx_gallery.scrapers.mayavi_scraper()</span></code></a> do under the hood, which
+use the helper function <a class="reference internal" href="gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.figure_rst" title="sphinx_gallery.scrapers.figure_rst"><code class="xref py py-func docutils literal notranslate"><span class="pre">sphinx_gallery.scrapers.figure_rst()</span></code></a> to
+create the standardized rST. If your package will be used to write an image file
+to disk (e.g., PNG or JPEG), we recommend you use a similar approach.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">my_module_scraper</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">block_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
+    <span class="kn">import</span> <span class="nn">mymodule</span>
+    <span class="c1"># We use a list to collect references to image names</span>
+    <span class="n">image_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="c1"># The `image_path_iterator` is created by Sphinx-gallery, it will yield</span>
+    <span class="c1"># a path to a file name that adheres to Sphinx-gallery naming convention.</span>
+    <span class="n">image_path_iterator</span> <span class="o">=</span> <span class="n">block_vars</span><span class="p">[</span><span class="s1">&#39;image_path_iterator&#39;</span><span class="p">]</span>
+
+    <span class="c1"># Define a list of our already-created figure objects.</span>
+    <span class="n">list_of_my_figures</span> <span class="o">=</span> <span class="n">mymodule</span><span class="o">.</span><span class="n">get_figures</span><span class="p">()</span>
+
+    <span class="c1"># Iterate through figure objects, save to disk, and keep track of paths.</span>
+    <span class="k">for</span> <span class="n">fig</span><span class="p">,</span> <span class="n">image_path</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">list_of_my_figures</span><span class="p">,</span> <span class="n">image_path_iterator</span><span class="p">):</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">save_png</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span>
+        <span class="n">image_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span>
+
+    <span class="c1"># Close all references to figures so they aren&#39;t used later.</span>
+    <span class="n">mymodule</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Use the `figure_rst` helper function to generate the rST for this</span>
+    <span class="c1"># code block&#39;s figures. Alternatively you can define your own rST.</span>
+    <span class="k">return</span> <span class="n">figure_rst</span><span class="p">(</span><span class="n">image_names</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>This code would be defined either in your <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file, or as a module that
+you import into your <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file. The configuration needed to use this
+scraper would look like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">...</span>
+    <span class="s1">&#39;image_scrapers&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;matplotlib&#39;</span><span class="p">,</span> <span class="n">my_module_scraper</span><span class="p">),</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="example-two-detecting-image-files-on-disk">
+<h3>Example two - detecting image files on disk<a class="headerlink" href="#example-two-detecting-image-files-on-disk" title="Permalink to this headline">¶</a></h3>
+<p>Here’s another example that assumes that images have <em>already been written to
+disk</em>. In this case we won’t <em>generate</em> any image files, we’ll only generate
+the rST needed to embed them in the documentation.</p>
+<p>We’ll use a callable class in this case, and assume it is defined within your
+package in a module called <code class="docutils literal notranslate"><span class="pre">scraper</span></code>. Here is the scraper code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">sphinx_gallery.gen_rst</span> <span class="kn">import</span> <span class="n">figure_rst</span>
+
+<span class="k">class</span> <span class="nc">PNGScraper</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seen</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">block_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
+        <span class="c1"># Find all PNG files in the directory of this example.</span>
+        <span class="n">path_current_example</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">block_vars</span><span class="p">[</span><span class="s1">&#39;src_file&#39;</span><span class="p">])</span>
+        <span class="n">pngs</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="s1">&#39;*.png&#39;</span><span class="p">))</span>
+
+        <span class="c1"># Iterate through PNGs, copy them to the sphinx-gallery output directory</span>
+        <span class="n">image_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="n">image_path_iterator</span> <span class="o">=</span> <span class="n">block_vars</span><span class="p">[</span><span class="s1">&#39;image_path_iterator&#39;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">png</span> <span class="ow">in</span> <span class="n">pngs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">png</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">:</span>
+                <span class="n">seen</span> <span class="o">|=</span> <span class="nb">set</span><span class="p">(</span><span class="n">png</span><span class="p">)</span>
+                <span class="n">this_image_path</span> <span class="o">=</span> <span class="n">image_path_iterator</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+                <span class="n">image_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">this_image_path</span><span class="p">)</span>
+                <span class="n">shutil</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">png</span><span class="p">,</span> <span class="n">this_image_path</span><span class="p">)</span>
+        <span class="c1"># Use the `figure_rst` helper function to generate rST for image files</span>
+        <span class="k">return</span> <span class="n">figure_rst</span><span class="p">(</span><span class="n">image_names</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Then, in our <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file, we include the following code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mymodule</span> <span class="kn">import</span> <span class="n">PNGScraper</span>
+<span class="n">my_scraper_instance</span> <span class="o">=</span> <span class="n">PNGScraper</span><span class="p">()</span>
+
+<span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">...</span>
+    <span class="s1">&#39;image_scrapers&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;matplotlib&#39;</span><span class="p">,</span> <span class="n">my_scraper_instance</span><span class="p">),</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="contributing-scrapers-back-to-sphinx-gallery">
+<h3>Contributing scrapers back to Sphinx-gallery<a class="headerlink" href="#contributing-scrapers-back-to-sphinx-gallery" title="Permalink to this headline">¶</a></h3>
+<p>If you’ve developed a custom scraper for Sphinx-gallery that would be useful
+to the broader community, we encourage you to contribute it to the list of
+natively-supported scrapers located in
+<a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/blob/master/sphinx_gallery/scrapers.py">the scrapers module</a>.
+We welcome PRs!</p>
+</div>
+<div class="section" id="defining-resetting-behavior-for-custom-visualization-libraries">
+<span id="custom-reset"></span><h3>Defining resetting behavior for custom visualization libraries<a class="headerlink" href="#defining-resetting-behavior-for-custom-visualization-libraries" title="Permalink to this headline">¶</a></h3>
+<p>Sphinx-gallery natively supports resetting <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> and <code class="docutils literal notranslate"><span class="pre">seaborn</span></code>.
+However, if you’d like to support resetting for other libraries (or would like
+to modify the resetting behavior for a natively-supported library), you can
+add a custom function to the resetting tuple defined in <code class="docutils literal notranslate"><span class="pre">conf.py</span></code>.</p>
+<p>The function takes two variables: a dictionary called <code class="docutils literal notranslate"><span class="pre">gallery_conf</span></code> (which is
+your Sphinx-gallery configuration) and a string called <code class="docutils literal notranslate"><span class="pre">fname</span></code> (which is the
+file name of the currently-executed Python script). These generally don’t need
+to be used in order to perform whatever resetting behavior you want, but must
+be included in the function definition for compatibility reasons.</p>
+<p>For example, to reset matplotlib to always use the <code class="docutils literal notranslate"><span class="pre">ggplot</span></code> style, you could do:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">reset_mpl</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">style</span>
+    <span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;ggplot&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Any custom functions can be defined (or imported) in <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> and given to
+the <code class="docutils literal notranslate"><span class="pre">reset_modules</span></code> configuration key. For the function defined above:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">...</span>
+    <span class="s1">&#39;reset_modules&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">reset_mpl</span><span class="p">,</span> <span class="s1">&#39;seaborn&#39;</span><span class="p">),</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Using resetters such as <code class="docutils literal notranslate"><span class="pre">reset_mpl</span></code> that deviate from the
+standard behavior that users will experience when manually running
+examples themselves is discouraged due to the inconsistency
+that results between the rendered examples and local outputs.</p>
+</div>
+</div>
+</div>
 </div>
 
 
@@ -233,7 +391,7 @@ and its thumbnail is <code class="docutils literal notranslate"><span class="pre
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2014-2018, Óscar Nájera
+        &copy; Copyright 2014-2019, Óscar Nájera
 
     </p>
   </div>
@@ -258,7 +416,8 @@ and its thumbnail is <code class="docutils literal notranslate"><span class="pre
         <script type="text/javascript" src="_static/jquery.js"></script>
         <script type="text/javascript" src="_static/underscore.js"></script>
         <script type="text/javascript" src="_static/doctools.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
 
   

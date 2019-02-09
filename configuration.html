@@ -415,7 +415,7 @@ typically implicitly returned rather than explicitly instantiated (e.g.,
 <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.0.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a> which is most often instantiated only indirectly
 within function calls).</p>
 <p>For example, we can embed a small gallery of all examples that use or
-refer to <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.exp.html#numpy.exp" title="(in NumPy v1.15)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.exp</span></code></a>, which looks like this:</p>
+refer to <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.exp.html#numpy.exp" title="(in NumPy v1.16)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.exp</span></code></a>, which looks like this:</p>
 <div class="section" id="examples-using-numpy-exp">
 <h3>Examples using <code class="docutils literal notranslate"><span class="pre">numpy.exp</span></code><a class="headerlink" href="#examples-using-numpy-exp" title="Permalink to this headline">¶</a></h3>
 <div class="sphx-glr-thumbcontainer" tooltip="Considering an atomic single orbital and how to fill it by use of the chemical potential. This ..."><div class="figure" id="id5">
@@ -830,9 +830,13 @@ a default:</p>
 </div>
 <div class="section" id="image-scrapers">
 <span id="id4"></span><h2>Image scrapers<a class="headerlink" href="#image-scrapers" title="Permalink to this headline">¶</a></h2>
-<p>By default, at the end of each code block Sphinx-gallery will detect new
-<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.html#module-matplotlib.pyplot" title="(in Matplotlib v3.0.2)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.pyplot</span></code></a> figures and turn them into images. This behavior is
-equivalent to the default of:</p>
+<p>Image scrapers are plugins that allow Sphinx-gallery to detect images produced
+during execution of your examples, and then embed them into documentation.
+Scrapers can be activated by appending scraper names to the <code class="docutils literal notranslate"><span class="pre">image_scrapers</span></code>
+field of your Sphinx-gallery configuration (see below). There are currently
+two native image scrapers in Sphinx-gallery (Matplotlib and Mayavi).</p>
+<p>By default, Sphinx-gallery will only detect new <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.html#module-matplotlib.pyplot" title="(in Matplotlib v3.0.2)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.pyplot</span></code></a>
+figures. This behavior is equivalent to the default of:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
     <span class="s1">&#39;image_scrapers&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;matplotlib&#39;</span><span class="p">,),</span>
@@ -840,13 +844,18 @@ equivalent to the default of:</p>
 </pre></div>
 </div>
 <p>Built-in support is also provided for finding <a class="reference external" href="http://docs.enthought.com/mayavi/mayavi/auto/mlab_reference.html#module-mayavi.mlab" title="(in mayavi v4.6.2)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">Mayavi</span></code></a>
-figures. To enable this feature, you can do:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="o">...</span>
-    <span class="s1">&#39;image_scrapers&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;matplotlib&#39;</span><span class="p">,</span> <span class="s1">&#39;mayavi&#39;</span><span class="p">),</span>
-<span class="p">}</span>
+figures. Enable this feature with the following configuration:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">..</span> <span class="n">code</span><span class="o">-</span><span class="n">block</span><span class="p">::</span> <span class="n">python</span>
 </pre></div>
 </div>
+<blockquote>
+<div><dl class="docutils">
+<dt>sphinx_gallery_conf = {</dt>
+<dd>…
+‘image_scrapers’: (‘matplotlib’, ‘mayavi’),</dd>
+</dl>
+<p>}</p>
+</div></blockquote>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">The parameter <code class="docutils literal notranslate"><span class="pre">find_mayavi_figures</span></code> which can also be used to
@@ -855,95 +864,37 @@ and will be removed in a future release.</p>
 </div>
 <div class="section" id="custom-scrapers">
 <h3>Custom scrapers<a class="headerlink" href="#custom-scrapers" title="Permalink to this headline">¶</a></h3>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">The API for custom scrapers is currently experimental.</p>
-</div>
-<p>You can also add your own custom function (or callable class instance)
-to this list. See <a class="reference internal" href="gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.matplotlib_scraper" title="sphinx_gallery.scrapers.matplotlib_scraper"><code class="xref py py-func docutils literal notranslate"><span class="pre">sphinx_gallery.scrapers.matplotlib_scraper()</span></code></a> for
-a description of the interface. Here is pseudocode for what this function
-and <a class="reference internal" href="gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.mayavi_scraper" title="sphinx_gallery.scrapers.mayavi_scraper"><code class="xref py py-func docutils literal notranslate"><span class="pre">sphinx_gallery.scrapers.mayavi_scraper()</span></code></a> do under the hood, which
-uses <a class="reference internal" href="gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.figure_rst" title="sphinx_gallery.scrapers.figure_rst"><code class="xref py py-func docutils literal notranslate"><span class="pre">sphinx_gallery.scrapers.figure_rst()</span></code></a> to create standardized RST:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">mod_scraper</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">block_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
-    <span class="kn">import</span> <span class="nn">mymod</span>
-    <span class="n">image_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
-    <span class="n">image_path_iterator</span> <span class="o">=</span> <span class="n">block_vars</span><span class="p">[</span><span class="s1">&#39;image_path_iterator&#39;</span><span class="p">]</span>
-    <span class="k">for</span> <span class="n">fig</span><span class="p">,</span> <span class="n">image_path</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">mymod</span><span class="o">.</span><span class="n">get_figures</span><span class="p">(),</span> <span class="n">image_path_iterator</span><span class="p">):</span>
-        <span class="n">fig</span><span class="o">.</span><span class="n">save_png</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span>
-        <span class="n">image_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span>
-    <span class="n">mymod</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">figure_rst</span><span class="p">(</span><span class="n">image_names</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">])</span>
-</pre></div>
-</div>
-<p>For example, a naive class to scrape any new PNG outputs in the
-current directory could do, e.g.:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">glob</span>
-<span class="kn">import</span> <span class="nn">shutil</span>
-<span class="kn">from</span> <span class="nn">sphinx_gallery.gen_rst</span> <span class="k">import</span> <span class="n">figure_rst</span>
-
-
-<span class="k">class</span> <span class="nc">PNGScraper</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">seen</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-
-    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">block_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
-        <span class="n">pngs</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="s1">&#39;*.png&#39;</span><span class="p">)))</span>
-        <span class="n">image_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
-        <span class="n">image_path_iterator</span> <span class="o">=</span> <span class="n">block_vars</span><span class="p">[</span><span class="s1">&#39;image_path_iterator&#39;</span><span class="p">]</span>
-        <span class="k">for</span> <span class="n">png</span> <span class="ow">in</span> <span class="n">pngs</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">png</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">:</span>
-                <span class="n">seen</span> <span class="o">|=</span> <span class="nb">set</span><span class="p">(</span><span class="n">png</span><span class="p">)</span>
-                <span class="n">image_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">image_path_iterator</span><span class="o">.</span><span class="n">next</span><span class="p">())</span>
-                <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="n">png</span><span class="p">,</span> <span class="n">image_names</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-        <span class="k">return</span> <span class="n">figure_rst</span><span class="p">(</span><span class="n">image_names</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">])</span>
-
-
-<span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="o">...</span>
-    <span class="s1">&#39;image_scrapers&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;matplotlib&#39;</span><span class="p">,</span> <span class="n">PNGScraper</span><span class="p">()),</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<p>If you have an idea for a scraper that is likely to be useful to others
-(e.g., a fully functional image-file-detector, or one for another visualization
-libarry), feel free to contribute it on GitHub!</p>
+<p>It is possible to write custom scrapers for images generated by packages
+outside of those supported natively in Sphinx-gallery. This is accomplished
+by writing your own Python function to define how to detect and retrieve
+images produced by an arbitrary package. <strong>For instructions on how to accomplish
+this, see :ref:`custom_scrapers`</strong>.</p>
+<p>If you’ve developed a custom scraper for Sphinx-gallery that would be useful
+to the broader community, we encourage you to contribute it to the list of
+natively-supported scrapers located in
+<a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/blob/master/sphinx_gallery/scrapers.py">the scrapers module</a>.
+We welcome PRs!</p>
 </div>
 </div>
 <div class="section" id="resetting-modules">
 <span id="reset-modules"></span><h2>Resetting modules<a class="headerlink" href="#resetting-modules" title="Permalink to this headline">¶</a></h2>
-<p>By default, at the end of each file <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> is reset using
-<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.rcdefaults.html#matplotlib.pyplot.rcdefaults" title="(in Matplotlib v3.0.2)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.rcdefaults()</span></code></a> and <code class="docutils literal notranslate"><span class="pre">seaborn</span></code> is reset by trying
-to unload the module from <code class="docutils literal notranslate"><span class="pre">sys.modules</span></code>. This is equivalent to the
-entries:</p>
+<p>Often you wish to “reset” the behavior of your visualization packages in order
+to ensure that any changes made to plotting behavior in one example do not
+propagate to the other examples.</p>
+<p>By default, at the end of executing each example file, Sphinx-gallery will
+reset <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> (by using <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.rcdefaults.html#matplotlib.pyplot.rcdefaults" title="(in Matplotlib v3.0.2)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.rcdefaults()</span></code></a>) and <code class="docutils literal notranslate"><span class="pre">seaborn</span></code>
+(by trying to unload the module from <code class="docutils literal notranslate"><span class="pre">sys.modules</span></code>). This is equivalent to the
+following configuration:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
     <span class="s1">&#39;reset_modules&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;matplotlib&#39;</span><span class="p">,</span> <span class="s1">&#39;seaborn&#39;</span><span class="p">),</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>You can also add your own custom function to this tuple.
-The function takes two variables, the <code class="docutils literal notranslate"><span class="pre">gallery_conf</span></code> dict and the
-<code class="docutils literal notranslate"><span class="pre">fname</span></code>, which on the first call is the directory name being processed, and
-then the names of all files within that directory.
-For example, to reset matplotlib to always use the <code class="docutils literal notranslate"><span class="pre">ggplot</span></code> style, you could do:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">reset_mpl</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">style</span>
-    <span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;ggplot&#39;</span><span class="p">)</span>
-
-
-<span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="o">...</span>
-    <span class="s1">&#39;reset_modules&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">reset_mpl</span><span class="p">,),</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Using resetters such as <code class="docutils literal notranslate"><span class="pre">reset_mpl</span></code> that deviate from
-standard behaviors that users will experience when manually running
-examples themselves is discouraged due to the inconsistency
-that results between the rendered examples and local outputs.</p>
-</div>
+<p>Currently, Sphinx-gallery natively supports resetting <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> and
+<code class="docutils literal notranslate"><span class="pre">seaborn</span></code>. However, you can also add your own custom function to
+this tuple in order to define resetting behavior for other visualization libraries.</p>
+<p>To do so, follow the instructions in <a class="reference internal" href="advanced.html#custom-reset"><span class="std std-ref">Defining resetting behavior for custom visualization libraries</span></a>.</p>
 </div>
 <div class="section" id="dealing-with-failing-gallery-example-scripts">
 <h2>Dealing with failing Gallery example scripts<a class="headerlink" href="#dealing-with-failing-gallery-example-scripts" title="Permalink to this headline">¶</a></h2>
@@ -1083,7 +1034,7 @@ you can do:</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2014-2018, Óscar Nájera
+        &copy; Copyright 2014-2019, Óscar Nájera
 
     </p>
   </div>
@@ -1108,7 +1059,8 @@ you can do:</p>
         <script type="text/javascript" src="_static/jquery.js"></script>
         <script type="text/javascript" src="_static/underscore.js"></script>
         <script type="text/javascript" src="_static/doctools.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
 
   
