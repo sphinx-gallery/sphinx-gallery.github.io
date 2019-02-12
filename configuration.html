@@ -91,7 +91,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Configuration</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#list-of-config-options">List of config options</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#manage-multiple-galleries">Manage multiple galleries</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#parsing-and-executing-examples-based-on-matching-patterns">Parsing and executing examples based on matching patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#parsing-and-executing-examples-via-matching-patterns">Parsing and executing examples via matching patterns</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#sorting-gallery-subsections">Sorting gallery subsections</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#sorting-gallery-examples">Sorting gallery examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#add-intersphinx-links-to-your-examples">Add intersphinx links to your examples</a></li>
@@ -199,7 +199,7 @@ greater detail in subsequent sections.</p>
 file:</p>
 <ul class="simple">
 <li><code class="docutils literal notranslate"><span class="pre">examples_dirs</span></code> and <code class="docutils literal notranslate"><span class="pre">gallery_dirs</span></code> (<a class="reference internal" href="#multiple-galleries-config"><span class="std std-ref">Manage multiple galleries</span></a>)</li>
-<li><code class="docutils literal notranslate"><span class="pre">filename_pattern</span></code> and <code class="docutils literal notranslate"><span class="pre">ignore_pattern</span></code> (<a class="reference internal" href="#build-pattern"><span class="std std-ref">Parsing and executing examples based on matching patterns</span></a>)</li>
+<li><code class="docutils literal notranslate"><span class="pre">filename_pattern</span></code> and <code class="docutils literal notranslate"><span class="pre">ignore_pattern</span></code> (<a class="reference internal" href="#build-pattern"><span class="std std-ref">Parsing and executing examples via matching patterns</span></a>)</li>
 <li><code class="docutils literal notranslate"><span class="pre">subsection_order</span></code> (<a class="reference internal" href="#sub-gallery-order"><span class="std std-ref">Sorting gallery subsections</span></a>)</li>
 <li><code class="docutils literal notranslate"><span class="pre">within_subsection_order</span></code> (<a class="reference internal" href="#within-gallery-order"><span class="std std-ref">Sorting gallery examples</span></a>)</li>
 <li><code class="docutils literal notranslate"><span class="pre">reference_url</span></code> (<a class="reference internal" href="#link-to-documentation"><span class="std std-ref">Add intersphinx links to your examples</span></a>)</li>
@@ -256,41 +256,45 @@ the sphinx configuration dictionary:</p>
 file that is generated for each gallery dir.</p>
 </div>
 </div>
-<div class="section" id="parsing-and-executing-examples-based-on-matching-patterns">
-<span id="build-pattern"></span><h2>Parsing and executing examples based on matching patterns<a class="headerlink" href="#parsing-and-executing-examples-based-on-matching-patterns" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="parsing-and-executing-examples-via-matching-patterns">
+<span id="build-pattern"></span><h2>Parsing and executing examples via matching patterns<a class="headerlink" href="#parsing-and-executing-examples-via-matching-patterns" title="Permalink to this headline">¶</a></h2>
 <p>By default, Sphinx-Gallery will <strong>parse and add</strong> all files with a <code class="docutils literal notranslate"><span class="pre">.py</span></code>
-extension to the gallery. To ignore some files and omit them from the gallery
-entirely, you can use a regular expression (the default is shown here):</p>
+extension to the gallery, but only <strong>execute</strong> files beginning with <code class="docutils literal notranslate"><span class="pre">plot_</span></code>.
+These behaviors are controlled by the <code class="docutils literal notranslate"><span class="pre">ignore_pattern</span></code> and <code class="docutils literal notranslate"><span class="pre">filename_pattern</span></code>
+entries, which have the default values:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;ignore_pattern&#39;</span><span class="p">:</span> <span class="s1">&#39;__init__\.py&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;filename_pattern&#39;</span><span class="p">:</span> <span class="s1">&#39;/plot_&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;ignore_pattern&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;__init__\.py&#39;</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Of the files that get <strong>parsed and added</strong> to the gallery, by default
-Sphinx-Gallery only <strong>executes</strong> files whose name begins with <code class="docutils literal notranslate"><span class="pre">plot</span></code>.
-However, if this naming convention does not suit your project, you can modify
-the pattern of filenames to build in your Sphinx <code class="docutils literal notranslate"><span class="pre">conf.py</span></code>. For example:</p>
+<p>To omit some files from the gallery entirely (i.e., not execute, parse, or
+add them), you can change the <code class="docutils literal notranslate"><span class="pre">ignore_pattern</span></code> option.
+To choose which of the parsed and added Python scripts are actualy
+executed, you can modify <code class="docutils literal notranslate"><span class="pre">filename_pattern</span></code>. For example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
     <span class="s1">&#39;filename_pattern&#39;</span><span class="p">:</span> <span class="s1">&#39;/plot_compute_&#39;</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>will build all examples starting with <code class="docutils literal notranslate"><span class="pre">plot_compute_</span></code>. The key <code class="docutils literal notranslate"><span class="pre">filename_pattern</span></code> accepts
-<a class="reference external" href="https://docs.python.org/2/library/re.html">regular expressions</a> which will be matched with the full path of the example. This is the reason
-the leading <code class="docutils literal notranslate"><span class="pre">'/'</span></code> is required. Users are advised to use <code class="docutils literal notranslate"><span class="pre">os.sep</span></code> instead of <code class="docutils literal notranslate"><span class="pre">'/'</span></code> if
-they want to be agnostic to the operating system.</p>
-<p>This option is also useful if you want to build only a subset of the examples. For example, you may
+<p>will build all examples starting with <code class="docutils literal notranslate"><span class="pre">plot_compute_</span></code>. The key
+<code class="docutils literal notranslate"><span class="pre">filename_pattern</span></code> (and <code class="docutils literal notranslate"><span class="pre">ignore_pattern</span></code>) accepts <a class="reference external" href="https://docs.python.org/2/library/re.html">regular expressions</a>
+which will be matched with the full path of the example. This is the reason
+the leading <code class="docutils literal notranslate"><span class="pre">'/'</span></code> is required. Users are advised to use <code class="docutils literal notranslate"><span class="pre">re.escape(os.sep)</span></code>
+instead of <code class="docutils literal notranslate"><span class="pre">'/'</span></code> if they want to be agnostic to the operating system.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">filename_pattern</span></code> option is also useful if you want to build only a
+subset of the examples. For example, you may
 want to build only one example so that you can link it in the documentation. In that case,
 you would do:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;filename_pattern&#39;</span><span class="p">:</span> <span class="s1">&#39;plot_awesome_example\.py&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;filename_pattern&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;plot_awesome_example\.py&#39;</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Here, one should escape the dot <code class="docutils literal notranslate"><span class="pre">'\.'</span></code> as otherwise python <a class="reference external" href="https://docs.python.org/2/library/re.html">regular expressions</a> matches any character. Nevertheless, as
+<p>Here, one should escape the dot <code class="docutils literal notranslate"><span class="pre">r'\.'</span></code> as otherwise python <a class="reference external" href="https://docs.python.org/2/library/re.html">regular expressions</a> matches any character. Nevertheless, as
 one is targeting a specific file, it would match the dot in the filename even without this escape character.</p>
 <p>Similarly, to build only examples in a specific directory, you can do:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>

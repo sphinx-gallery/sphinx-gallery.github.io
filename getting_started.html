@@ -203,6 +203,11 @@ cover next.</p>
 </div>
 <div class="section" id="structure-the-examples-folder">
 <h3>Structure the examples folder<a class="headerlink" href="#structure-the-examples-folder" title="Permalink to this headline">¶</a></h3>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Sphinx-Gallery will only run files that begin with <code class="docutils literal notranslate"><span class="pre">plot_</span></code> by default. For
+instructions on how to modify this behavior, see <a class="reference internal" href="configuration.html#build-pattern"><span class="std std-ref">Parsing and executing examples via matching patterns</span></a>.</p>
+</div>
 <p>In order for Sphinx-Gallery to build a gallery from your <code class="docutils literal notranslate"><span class="pre">examples</span></code> folder,
 this folder must have the following things:</p>
 <ul>
@@ -219,12 +224,12 @@ this folder. It must have at least a title. For example:</p>
 <li><p class="first"><strong>Example Python Scripts</strong>: A collection of Python scripts that will be
 processed when you build your HTML documentation.  For information on how
 to structure these Python scripts with embedded rST, see
-<a class="reference internal" href="syntax.html#python-script-syntax"><span class="std std-ref">How to structure your Python scripts for Sphinx-Gallery</span></a>. By default files prefixed with <code class="docutils literal notranslate"><span class="pre">plot</span></code>
+<a class="reference internal" href="syntax.html#python-script-syntax"><span class="std std-ref">How to structure your Python scripts for Sphinx-Gallery</span></a>. By default files prefixed with <code class="docutils literal notranslate"><span class="pre">plot_</span></code>
 will be executed and their outputs captured to incorporate them in the
 HTML version of the script. Files without that prefix will be only parsed
 and presented in a rich literate programming fashion, without any output.
 To change the default pattern for execution and capture see
-<a class="reference internal" href="configuration.html#build-pattern"><span class="std std-ref">Parsing and executing examples based on matching patterns</span></a>.</p>
+<a class="reference internal" href="configuration.html#build-pattern"><span class="std std-ref">Parsing and executing examples via matching patterns</span></a>.</p>
 </li>
 </ul>
 <div class="admonition note">
@@ -254,10 +259,8 @@ For more advanced configuration, see the <a class="reference internal" href="con
 relative to <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> (<code class="docutils literal notranslate"><span class="pre">../examples</span></code>) as well as the location of the
 directory to be generated when your gallery is built (<code class="docutils literal notranslate"><span class="pre">auto_examples</span></code>).:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
-     <span class="c1"># path to your examples scripts</span>
-     <span class="s1">&#39;examples_dirs&#39;</span><span class="p">:</span> <span class="s1">&#39;../examples&#39;</span><span class="p">,</span>
-     <span class="c1"># path where to save gallery generated examples</span>
-     <span class="s1">&#39;gallery_dirs&#39;</span><span class="p">:</span> <span class="s1">&#39;auto_examples&#39;</span><span class="p">,</span>
+     <span class="s1">&#39;examples_dirs&#39;</span><span class="p">:</span> <span class="s1">&#39;../examples&#39;</span><span class="p">,</span>   <span class="c1"># path to your example scripts</span>
+     <span class="s1">&#39;gallery_dirs&#39;</span><span class="p">:</span> <span class="s1">&#39;auto_examples&#39;</span><span class="p">,</span>  <span class="c1"># path where to save gallery generated examples</span>
 <span class="p">}</span>
 </pre></div>
 </div>
