@@ -716,6 +716,8 @@ displays a comment along-side each the code shown above.</p>
                         <span class="s2">&quot;%matplotlib inline&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>If the value of <code class="docutils literal notranslate"><span class="pre">first_notebook_cell</span></code> is set to <code class="docutils literal notranslate"><span class="pre">None</span></code>, then no extra first
+cell will be added to the notebook.</p>
 </div>
 <div class="section" id="disabling-download-button-of-all-scripts">
 <span id="disable-all-scripts-download"></span><h2>Disabling download button of all scripts<a class="headerlink" href="#disabling-download-button-of-all-scripts" title="Permalink to this headline">¶</a></h2>
@@ -768,35 +770,61 @@ dictionary following the pattern below:</p>
      <span class="c1"># Required keys</span>
      <span class="s1">&#39;org&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;github_org&gt;&#39;</span><span class="p">,</span>
      <span class="s1">&#39;repo&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;github_repo&gt;&#39;</span><span class="p">,</span>
-     <span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;binder_url&gt;&#39;</span><span class="p">,</span>  <span class="c1"># Any URL of a binder server. Must be full URL (e.g. https://mybinder.org).</span>
-     <span class="s1">&#39;branch&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;branch-for-documentation&gt;&#39;</span><span class="p">,</span>  <span class="c1"># Can be any branch, tag, or commit hash. Use a branch that hosts your docs.</span>
+     <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;ref-for-documentation&gt;&#39;</span><span class="p">,</span>  <span class="c1"># Can be any branch, tag, or commit hash. Use a branch that hosts your docs.</span>
+     <span class="s1">&#39;binderhub_url&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;binder_url&gt;&#39;</span><span class="p">,</span>  <span class="c1"># Any URL of a binderhub deployment. Must be full URL (e.g. https://mybinder.org).</span>
      <span class="s1">&#39;dependencies&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;list_of_paths_to_dependency_files&gt;&#39;</span><span class="p">,</span>
      <span class="c1"># Optional keys</span>
-     <span class="s1">&#39;filepath_prefix&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;prefix&gt;&#39;</span> <span class="c1"># A prefix to append to any filepaths in Binder links.</span>
-     <span class="s1">&#39;notebooks_dir&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;notebooks-directory-name&gt;&#39;</span> <span class="c1"># Jupyter notebooks for Binder will be copied to this directory (relative to site root).</span>
+     <span class="s1">&#39;filepath_prefix&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;prefix&gt;&#39;</span> <span class="c1"># A prefix to prepend to any filepaths in Binder links.</span>
+     <span class="s1">&#39;notebooks_dir&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;notebooks-directory-name&gt;&#39;</span> <span class="c1"># Jupyter notebooks for Binder will be copied to this directory (relative to built documentation root).</span>
      <span class="s1">&#39;use_jupyter_lab&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">bool</span><span class="o">&gt;</span> <span class="c1"># Whether Binder links should start Jupyter Lab instead of the Jupyter Notebook interface.</span>
      <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Note that <code class="docutils literal notranslate"><span class="pre">branch:</span></code> should be the branch on which your documentation is hosted.
-If you host your documentation on GitHub, this is usually <code class="docutils literal notranslate"><span class="pre">gh-pages</span></code> or <code class="docutils literal notranslate"><span class="pre">master</span></code>.</p>
+<p>If a Sphinx-Gallery configuration for Binder is discovered, the following extra things will happen:</p>
+<ol class="arabic simple">
+<li>The dependency files specified in <code class="docutils literal notranslate"><span class="pre">dependencies</span></code> will be copied to a <code class="docutils literal notranslate"><span class="pre">binder/</span></code> folder in your built documentation.</li>
+<li>The built Jupyter Notebooks from the documentation will be copied to a folder called <code class="docutils literal notranslate"><span class="pre">&lt;notebooks_dir/&gt;</span></code> at the root of
+your built documentation (they will follow the same folder hierarchy within the notebooks directory folder.</li>
+</ol>
+<p>2. The rST output of each Sphinx-Gallery example will now have a <code class="docutils literal notranslate"><span class="pre">launch</span> <span class="pre">binder</span></code> button in it.
+4. That button will point to a binder link with the following structure:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>&lt;binderhub_url&gt;/v2/gh/&lt;org&gt;/&lt;repo&gt;/&lt;ref&gt;?filepath=&lt;filepath_prefix&gt;/&lt;notebooks_dir&gt;/path/to/notebook.ipynb
+</pre></div>
+</div>
+<p>Below is a more complete explanation of each field.</p>
+<dl class="docutils">
+<dt>org (type: string)</dt>
+<dd>The GitHub organization where your documentation is stored.</dd>
+<dt>repo (type: string)</dt>
+<dd>The GitHub repository where your documentation is stored.</dd>
+<dt>ref (type: string)</dt>
+<dd>A reference to the version of your repository where your documentation exists.
+For example, if your built documentation is stored on a <code class="docutils literal notranslate"><span class="pre">gh-pages</span></code> branch, then this field
+should be set to <code class="docutils literal notranslate"><span class="pre">gh-pages</span></code>.</dd>
+<dt>binderhub_url (type: string)</dt>
+<dd>The full URL to a BinderHub deployment where you want your examples to run. One
+public BinderHub deployment is at <code class="docutils literal notranslate"><span class="pre">https://mybinder.org</span></code>, though if you (and your users) have access to
+another, this can be configured with this field.</dd>
+<dt>dependencies (type: list)</dt>
+<dd>A list of paths (relative to <code class="docutils literal notranslate"><span class="pre">conf.py</span></code>) to dependency files that Binder uses to infer the environment needed
+to run your examples. For example, a <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> file. These will be copied into a folder
+called <code class="docutils literal notranslate"><span class="pre">binder/</span></code> in your built documentation folder. For a list of all the possible dependency files
+you can use, see <a class="reference external" href="https://mybinder.readthedocs.io/en/latest/config_files.html#config-files">the Binder configuration documentation</a>.</dd>
+<dt>filepath_prefix (type: string | None, default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)</dt>
+<dd>A prefix to append to the filepath in the Binder links. You should use this if you will store your built
+documentation in a sub-folder of a repository, instead of in the root.</dd>
+<dt>notebooks_dir (type: string, default: <code class="docutils literal notranslate"><span class="pre">notebooks</span></code>)</dt>
+<dd>The name of a folder where the built Jupyter notebooks will be copied. This ensures that all the notebooks are
+in one place (though they retain their folder hierarchy) in case you’d like users to browse multiple notebook examples in one session.</dd>
+<dt>use_jupyter_lab (type: bool, default: <code class="docutils literal notranslate"><span class="pre">False</span></code>)</dt>
+<dd>Whether the default interface activated by the Binder link will be for
+Jupyter Lab or the classic Jupyter Notebook interface.</dd>
+</dl>
 <p>Each generated Jupyter Notebook will be copied to the folder
 specified in <code class="docutils literal notranslate"><span class="pre">notebooks_dir</span></code>. This will be a subfolder of the sphinx output
 directory and included with your site build.
 Binder links will point to these notebooks.</p>
-<div class="admonition important">
-<p class="first admonition-title">Important</p>
-<p class="last"><code class="docutils literal notranslate"><span class="pre">dependencies</span></code> should be a list of paths to Binder configuration files that
-define the environment needed to run the examples. For example, a
-<code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> file. These will be copied to
-the documentation branch specified in <code class="docutils literal notranslate"><span class="pre">branch:</span></code>. When a user clicks your
-Binder link, these files will be used to create the environment.
-For more information on what files you can use, see <a class="reference external" href="https://mybinder.readthedocs.io/en/latest/using.html#preparing-a-repository-for-binder">preparing your
-repository</a>
-in the <a class="reference external" href="https://docs.mybinder.org">Binder documentation</a> for more information on
-what build files are supported.</p>
-</div>
 <p>See the Sphinx-Gallery <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/blob/master/doc/conf.py">Sphinx configuration file</a>
 for an example that uses the <a class="reference external" href="http://mybinder.org">public Binder server</a>.</p>
 </div>
