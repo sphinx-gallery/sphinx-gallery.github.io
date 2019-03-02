@@ -106,6 +106,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#using-a-custom-default-thumbnail">Using a custom default thumbnail</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#adding-line-numbers-to-examples">Adding line numbers to examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#add-your-own-first-notebook-cell">Add your own first notebook cell</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-junit-xml-files">Using JUnit XML files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#disabling-download-button-of-all-scripts">Disabling download button of all scripts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#choosing-the-thumbnail-image">Choosing the thumbnail image</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#generate-binder-links-for-gallery-notebooks-experimental">Generate Binder links for gallery notebooks (experimental)</a></li>
@@ -221,6 +222,7 @@ file:</p>
 <li><code class="docutils literal notranslate"><span class="pre">show_memory</span></code> (<a class="reference internal" href="#show-memory"><span class="std std-ref">Showing memory consumption</span></a>)</li>
 <li><code class="docutils literal notranslate"><span class="pre">binder</span></code> (<a class="reference internal" href="#binder-links"><span class="std std-ref">Generate Binder links for gallery notebooks (experimental)</span></a>)</li>
 <li><code class="docutils literal notranslate"><span class="pre">first_notebook_cell</span></code> (<a class="reference internal" href="#first-notebook-cell"><span class="std std-ref">Add your own first notebook cell</span></a>)</li>
+<li><code class="docutils literal notranslate"><span class="pre">junit</span></code> (<a class="reference internal" href="#junit-xml"><span class="std std-ref">Using JUnit XML files</span></a>)</li>
 </ul>
 <p>Some options can also be set or overridden on a file-by-file basis:</p>
 <ul class="simple">
@@ -419,7 +421,7 @@ in a documentation block.</li>
 <p>The former is useful for auto-documenting functions that are used and classes
 that are explicitly instantiated. The latter is useful for classes that are
 typically implicitly returned rather than explicitly instantiated (e.g.,
-<a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.0.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a> which is most often instantiated only indirectly
+<a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.0.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a> which is most often instantiated only indirectly
 within function calls).</p>
 <p>For example, we can embed a small gallery of all examples that use or
 refer to <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.exp.html#numpy.exp" title="(in NumPy v1.16)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.exp</span></code></a>, which looks like this:</p>
@@ -726,6 +728,34 @@ displays a comment along-side each the code shown above.</p>
 <p>If the value of <code class="docutils literal notranslate"><span class="pre">first_notebook_cell</span></code> is set to <code class="docutils literal notranslate"><span class="pre">None</span></code>, then no extra first
 cell will be added to the notebook.</p>
 </div>
+<div class="section" id="using-junit-xml-files">
+<span id="junit-xml"></span><h2>Using JUnit XML files<a class="headerlink" href="#using-junit-xml-files" title="Permalink to this headline">¶</a></h2>
+<p>Sphinx-Gallery can create a JUnit XML file of your example run times,
+successes, and failures. To create a file named e.g. <code class="docutils literal notranslate"><span class="pre">junit-result.xml</span></code>
+in the <code class="docutils literal notranslate"><span class="pre">/build</span></code> output directory, set the configuration key (path is relative
+to the HTML output directory):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">...</span>
+    <span class="s1">&#39;junit&#39;</span><span class="p">:</span> <span class="s1">&#39;../test-results/sphinx-gallery/junit.xml&#39;</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>By default, JUnit XML file generation is disabled (by setting <code class="docutils literal notranslate"><span class="pre">'junit':</span> <span class="pre">''</span></code>).
+JUnit XML files are useful for example on CircleCI builds, where you can add
+a line like this to get a summary of your example run times in the CircleCI GUI
+(which will parse the file path
+<code class="docutils literal notranslate"><span class="pre">doc/_build/test-results/sphinx-gallery/junit.xml</span></code> and infer the tests
+came from <code class="docutils literal notranslate"><span class="pre">sphinx-gallery</span></code> based on the nested subdirectory name):</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span> <span class="nt">store_test_results</span><span class="p">:</span>
+    <span class="nt">path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">doc/_build/test-results</span>
+<span class="p p-Indicator">-</span> <span class="nt">store_artifacts</span><span class="p">:</span>
+    <span class="nt">path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">doc/_build/test-results</span>
+</pre></div>
+</div>
+<p>For more information on CircleCI integration, peruse the related
+<a class="reference external" href="https://circleci.com/docs/2.0/collect-test-data/#metadata-collection-in-custom-test-steps">CircleCI doc</a>
+and <a class="reference external" href="https://circleci.com/blog/how-to-output-junit-tests-through-circleci-2-0-for-expanded-insights/">blog post</a>.</p>
+</div>
 <div class="section" id="disabling-download-button-of-all-scripts">
 <span id="disable-all-scripts-download"></span><h2>Disabling download button of all scripts<a class="headerlink" href="#disabling-download-button-of-all-scripts" title="Permalink to this headline">¶</a></h2>
 <p>By default Sphinx-Gallery collects all python scripts and all Jupyter
@@ -870,7 +900,7 @@ during execution of your examples, and then embed them into documentation.
 Scrapers can be activated by appending scraper names to the <code class="docutils literal notranslate"><span class="pre">image_scrapers</span></code>
 field of your Sphinx-gallery configuration (see below). There are currently
 two native image scrapers in Sphinx-gallery (Matplotlib and Mayavi).</p>
-<p>By default, Sphinx-gallery will only detect new <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.html#module-matplotlib.pyplot" title="(in Matplotlib v3.0.2)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.pyplot</span></code></a>
+<p>By default, Sphinx-gallery will only detect new <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.html#module-matplotlib.pyplot" title="(in Matplotlib v3.0.3)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.pyplot</span></code></a>
 figures. This behavior is equivalent to the default of:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
@@ -917,7 +947,7 @@ We welcome PRs!</p>
 to ensure that any changes made to plotting behavior in one example do not
 propagate to the other examples.</p>
 <p>By default, at the end of executing each example file, Sphinx-gallery will
-reset <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> (by using <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.rcdefaults.html#matplotlib.pyplot.rcdefaults" title="(in Matplotlib v3.0.2)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.rcdefaults()</span></code></a>) and <code class="docutils literal notranslate"><span class="pre">seaborn</span></code>
+reset <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> (by using <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.rcdefaults.html#matplotlib.pyplot.rcdefaults" title="(in Matplotlib v3.0.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.rcdefaults()</span></code></a>) and <code class="docutils literal notranslate"><span class="pre">seaborn</span></code>
 (by trying to unload the module from <code class="docutils literal notranslate"><span class="pre">sys.modules</span></code>). This is equivalent to the
 following configuration:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
