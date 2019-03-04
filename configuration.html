@@ -107,6 +107,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#adding-line-numbers-to-examples">Adding line numbers to examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#add-your-own-first-notebook-cell">Add your own first notebook cell</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#using-junit-xml-files">Using JUnit XML files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#setting-log-level">Setting log level</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#disabling-download-button-of-all-scripts">Disabling download button of all scripts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#choosing-the-thumbnail-image">Choosing the thumbnail image</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#generate-binder-links-for-gallery-notebooks-experimental">Generate Binder links for gallery notebooks (experimental)</a></li>
@@ -223,6 +224,7 @@ file:</p>
 <li><code class="docutils literal notranslate"><span class="pre">binder</span></code> (<a class="reference internal" href="#binder-links"><span class="std std-ref">Generate Binder links for gallery notebooks (experimental)</span></a>)</li>
 <li><code class="docutils literal notranslate"><span class="pre">first_notebook_cell</span></code> (<a class="reference internal" href="#first-notebook-cell"><span class="std std-ref">Add your own first notebook cell</span></a>)</li>
 <li><code class="docutils literal notranslate"><span class="pre">junit</span></code> (<a class="reference internal" href="#junit-xml"><span class="std std-ref">Using JUnit XML files</span></a>)</li>
+<li><code class="docutils literal notranslate"><span class="pre">log_level</span></code> (<a class="reference internal" href="#log-level"><span class="std std-ref">Setting log level</span></a>)</li>
 </ul>
 <p>Some options can also be set or overridden on a file-by-file basis:</p>
 <ul class="simple">
@@ -258,7 +260,8 @@ the sphinx configuration dictionary:</p>
 <p class="first admonition-title">Note</p>
 <p class="last">If your examples take a long time to run, consider looking at the
 <a class="reference internal" href="auto_examples/sg_execution_times.html#sphx-glr-auto-examples-sg-execution-times"><span class="std std-ref">execution times</span></a>
-file that is generated for each gallery dir.</p>
+file that is generated for each gallery dir (as long as any examples
+were actually executed in that directory during the build).</p>
 </div>
 </div>
 <div class="section" id="parsing-and-executing-examples-via-matching-patterns">
@@ -301,6 +304,14 @@ you would do:</p>
 </div>
 <p>Here, one should escape the dot <code class="docutils literal notranslate"><span class="pre">r'\.'</span></code> as otherwise python <a class="reference external" href="https://docs.python.org/2/library/re.html">regular expressions</a> matches any character. Nevertheless, as
 one is targeting a specific file, it would match the dot in the filename even without this escape character.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Sphinx-gallery only re-runs examples that have changed (according to their
+md5 hash). You can delete the associated MD5 files (e.g.,
+<code class="docutils literal notranslate"><span class="pre">./auto_examples/plot_awesome_example.py.md5</span></code>) to force a rebuild if
+you have not changed the example itself between subsequent <code class="docutils literal notranslate"><span class="pre">sphinx</span></code>
+calls.</p>
+</div>
 <p>Similarly, to build only examples in a specific directory, you can do:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
@@ -356,6 +367,25 @@ built in a Windows system, paths will be transformed to work accordingly,
 the converse does not hold.</p>
 <p>If you so desire you can implement your own sorting key. It will be
 provided the relative paths to <cite>conf.py</cite> of each sub gallery folder.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p>If you create your own class for <code class="docutils literal notranslate"><span class="pre">'subsection_order'</span></code>, ensure
+that the <code class="docutils literal notranslate"><span class="pre">__str__</span></code> of your class is stable across runs.
+Sphinx determines if the build environment has changed
+(and thus if <em>all</em> documents should be rewritten)
+by examining the config values using
+<code class="docutils literal notranslate"><span class="pre">md5(str(obj).encode()).hexdigest()</span></code> in
+<code class="docutils literal notranslate"><span class="pre">sphinx/builders/html.py</span></code>. Default class instances
+in Python have their memory address in their <code class="docutils literal notranslate"><span class="pre">__repr__</span></code> which
+will in general change for each build. For <code class="docutils literal notranslate"><span class="pre">ExplicitOrder</span></code>
+for example, this is fixed via:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s1">&#39;&lt;</span><span class="si">%s</span><span class="s1">: </span><span class="si">%s</span><span class="s1">&gt;&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ordered_list</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="last">Thus the files are only all rebuilt if the specified ordered list
+is changed.</p>
+</div>
 </div>
 <div class="section" id="sorting-gallery-examples">
 <span id="within-gallery-order"></span><h2>Sorting gallery examples<a class="headerlink" href="#sorting-gallery-examples" title="Permalink to this headline">¶</a></h2>
@@ -720,9 +750,12 @@ displays a comment along-side each the code shown above.</p>
 </pre></div>
 </div>
 <p>Which is achieved by the following configuration:</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;first_notebook_cell&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;# This cell is added by sphinx-gallery</span><span class="se">\n</span><span class="s2">&quot;</span>
-                        <span class="s2">&quot;# It can be customized to whatever you like</span><span class="se">\n</span><span class="s2">&quot;</span>
-                        <span class="s2">&quot;%matplotlib inline&quot;</span><span class="p">)</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">...</span>
+    <span class="s1">&#39;first_notebook_cell&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;# This cell is added by sphinx-gallery</span><span class="se">\n</span><span class="s2">&quot;</span>
+                            <span class="s2">&quot;# It can be customized to whatever you like</span><span class="se">\n</span><span class="s2">&quot;</span>
+                            <span class="s2">&quot;%matplotlib inline&quot;</span><span class="p">)</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>If the value of <code class="docutils literal notranslate"><span class="pre">first_notebook_cell</span></code> is set to <code class="docutils literal notranslate"><span class="pre">None</span></code>, then no extra first
@@ -755,6 +788,23 @@ came from <code class="docutils literal notranslate"><span class="pre">sphinx-ga
 <p>For more information on CircleCI integration, peruse the related
 <a class="reference external" href="https://circleci.com/docs/2.0/collect-test-data/#metadata-collection-in-custom-test-steps">CircleCI doc</a>
 and <a class="reference external" href="https://circleci.com/blog/how-to-output-junit-tests-through-circleci-2-0-for-expanded-insights/">blog post</a>.</p>
+</div>
+<div class="section" id="setting-log-level">
+<span id="log-level"></span><h2>Setting log level<a class="headerlink" href="#setting-log-level" title="Permalink to this headline">¶</a></h2>
+<p>Sphinx-Gallery logs output at several stages. Warnings can be generated for
+code that requires case sensitivity (e.g., <code class="docutils literal notranslate"><span class="pre">plt.subplot</span></code> and <code class="docutils literal notranslate"><span class="pre">plt.Subplot</span></code>)
+when building docs on a filesystem that does not support case sensitive
+naming (e.g., Windows). In this case, by default a <code class="docutils literal notranslate"><span class="pre">logger.warning</span></code> is
+emitted, which will lead to a build failure when buidling with <code class="docutils literal notranslate"><span class="pre">-W</span></code>.
+The log level can be set with:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">...</span>
+    <span class="s1">&#39;log_level&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;backreference_missing&#39;</span><span class="p">:</span> <span class="s1">&#39;warning&#39;</span><span class="p">},</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The only valid key currently is <code class="docutils literal notranslate"><span class="pre">backreference_missing</span></code>.
+The valid values are <code class="docutils literal notranslate"><span class="pre">'debug'</span></code>, <code class="docutils literal notranslate"><span class="pre">'info'</span></code>, <code class="docutils literal notranslate"><span class="pre">'warning'</span></code>, and <code class="docutils literal notranslate"><span class="pre">'error'</span></code>.</p>
 </div>
 <div class="section" id="disabling-download-button-of-all-scripts">
 <span id="disable-all-scripts-download"></span><h2>Disabling download button of all scripts<a class="headerlink" href="#disabling-download-button-of-all-scripts" title="Permalink to this headline">¶</a></h2>
@@ -819,16 +869,20 @@ dictionary following the pattern below:</p>
 </pre></div>
 </div>
 <p>If a Sphinx-Gallery configuration for Binder is discovered, the following extra things will happen:</p>
-<ol class="arabic simple">
-<li>The dependency files specified in <code class="docutils literal notranslate"><span class="pre">dependencies</span></code> will be copied to a <code class="docutils literal notranslate"><span class="pre">binder/</span></code> folder in your built documentation.</li>
-<li>The built Jupyter Notebooks from the documentation will be copied to a folder called <code class="docutils literal notranslate"><span class="pre">&lt;notebooks_dir/&gt;</span></code> at the root of
-your built documentation (they will follow the same folder hierarchy within the notebooks directory folder.</li>
-</ol>
-<p>2. The rST output of each Sphinx-Gallery example will now have a <code class="docutils literal notranslate"><span class="pre">launch</span> <span class="pre">binder</span></code> button in it.
-4. That button will point to a binder link with the following structure:</p>
+<ol class="arabic">
+<li><p class="first">The dependency files specified in <code class="docutils literal notranslate"><span class="pre">dependencies</span></code> will be copied to a <code class="docutils literal notranslate"><span class="pre">binder/</span></code> folder in your built documentation.</p>
+</li>
+<li><p class="first">The built Jupyter Notebooks from the documentation will be copied to a folder called <code class="docutils literal notranslate"><span class="pre">&lt;notebooks_dir/&gt;</span></code> at the root of
+your built documentation (they will follow the same folder hierarchy within the notebooks directory folder.</p>
+</li>
+<li><p class="first">The rST output of each Sphinx-Gallery example will now have a <code class="docutils literal notranslate"><span class="pre">launch</span> <span class="pre">binder</span></code> button in it.</p>
+</li>
+<li><p class="first">That button will point to a binder link with the following structure:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span>&lt;binderhub_url&gt;/v2/gh/&lt;org&gt;/&lt;repo&gt;/&lt;ref&gt;?filepath=&lt;filepath_prefix&gt;/&lt;notebooks_dir&gt;/path/to/notebook.ipynb
 </pre></div>
 </div>
+</li>
+</ol>
 <p>Below is a more complete explanation of each field.</p>
 <dl class="docutils">
 <dt>org (type: string)</dt>
@@ -1016,6 +1070,11 @@ build. Change your <cite>conf.py</cite> accordingly:</p>
 <p>Here you list the examples you allow to fail during the build process,
 keep in mind to specify the full relative path from your <cite>conf.py</cite> to
 the example script.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If an example is expected to fail, sphinx-gallery will error if
+the example runs without error.</p>
+</div>
 </div>
 </div>
 <div class="section" id="setting-gallery-thumbnail-size">
