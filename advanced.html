@@ -251,7 +251,7 @@ and <a class="reference internal" href="gen_modules/sphinx_gallery.scrapers.html
 use the helper function <a class="reference internal" href="gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.figure_rst" title="sphinx_gallery.scrapers.figure_rst"><code class="xref py py-func docutils literal notranslate"><span class="pre">sphinx_gallery.scrapers.figure_rst()</span></code></a> to
 create the standardized rST. If your package will be used to write an image file
 to disk (e.g., PNG or JPEG), we recommend you use a similar approach.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">my_module_scraper</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">block_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">my_module_scraper</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">block_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
     <span class="kn">import</span> <span class="nn">mymodule</span>
     <span class="c1"># We use a list to collect references to image names</span>
     <span class="n">image_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
@@ -278,7 +278,7 @@ to disk (e.g., PNG or JPEG), we recommend you use a similar approach.</p>
 <p>This code would be defined either in your <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file, or as a module that
 you import into your <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file. The configuration needed to use this
 scraper would look like:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
     <span class="s1">&#39;image_scrapers&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;matplotlib&#39;</span><span class="p">,</span> <span class="n">my_module_scraper</span><span class="p">),</span>
 <span class="p">}</span>
@@ -292,16 +292,16 @@ disk</em>. In this case we won’t <em>generate</em> any image files, we’ll on
 the rST needed to embed them in the documentation.</p>
 <p>We’ll use a callable class in this case, and assume it is defined within your
 package in a module called <code class="docutils literal notranslate"><span class="pre">scraper</span></code>. Here is the scraper code:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">glob</span> <span class="k">import</span> <span class="n">glob</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">sphinx_gallery.gen_rst</span> <span class="kn">import</span> <span class="n">figure_rst</span>
+<span class="kn">from</span> <span class="nn">sphinx_gallery.gen_rst</span> <span class="k">import</span> <span class="n">figure_rst</span>
 
 <span class="k">class</span> <span class="nc">PNGScraper</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">seen</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">block_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">block_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
         <span class="c1"># Find all PNG files in the directory of this example.</span>
         <span class="n">path_current_example</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">block_vars</span><span class="p">[</span><span class="s1">&#39;src_file&#39;</span><span class="p">])</span>
         <span class="n">pngs</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="s1">&#39;*.png&#39;</span><span class="p">))</span>
@@ -320,7 +320,7 @@ package in a module called <code class="docutils literal notranslate"><span clas
 </pre></div>
 </div>
 <p>Then, in our <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file, we include the following code:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mymodule</span> <span class="kn">import</span> <span class="n">PNGScraper</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mymodule</span> <span class="k">import</span> <span class="n">PNGScraper</span>
 <span class="n">my_scraper_instance</span> <span class="o">=</span> <span class="n">PNGScraper</span><span class="p">()</span>
 
 <span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
@@ -350,14 +350,14 @@ file name of the currently-executed Python script). These generally don’t need
 to be used in order to perform whatever resetting behavior you want, but must
 be included in the function definition for compatibility reasons.</p>
 <p>For example, to reset matplotlib to always use the <code class="docutils literal notranslate"><span class="pre">ggplot</span></code> style, you could do:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">reset_mpl</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">style</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">reset_mpl</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">style</span>
     <span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;ggplot&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Any custom functions can be defined (or imported) in <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> and given to
 the <code class="docutils literal notranslate"><span class="pre">reset_modules</span></code> configuration key. For the function defined above:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
     <span class="s1">&#39;reset_modules&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">reset_mpl</span><span class="p">,</span> <span class="s1">&#39;seaborn&#39;</span><span class="p">),</span>
 <span class="p">}</span>
