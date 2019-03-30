@@ -169,21 +169,21 @@ To create a new release of Sphinx Gallery, you need to do these things:</p>
 <p>You should double-check a few things to make sure that you can create
 a new release for Sphinx Gallery.</p>
 <ol class="arabic simple">
-<li>Ensure that you <strong>registered an acccount</strong> on <a class="reference external" href="https://pypi.org/account/register/">the PyPI index</a>.</li>
-<li>Ensure you have <strong>push access</strong> to the
+<li><p>Ensure that you <strong>registered an acccount</strong> on <a class="reference external" href="https://pypi.org/account/register/">the PyPI index</a>.</p></li>
+<li><p>Ensure you have <strong>push access</strong> to the
 <a class="reference external" href="https://pypi.org/project/sphinx-gallery/">Sphinx Gallery pypi repository</a>.
-Ask one of the Sphinx Gallery core developers if you do not.</li>
-<li>Install the <a class="reference external" href="https://github.com/github-changelog-generator/github-changelog-generator#installation">GitHub Changelog Generator</a>.
-This is a small tool written in Ruby to generate a markdown list of recent changes.</li>
-<li>Install <a class="reference external" href="https://twine.readthedocs.io/en/latest/">the twine package</a>. This is
+Ask one of the Sphinx Gallery core developers if you do not.</p></li>
+<li><p>Install the <a class="reference external" href="https://github.com/github-changelog-generator/github-changelog-generator#installation">GitHub Changelog Generator</a>.
+This is a small tool written in Ruby to generate a markdown list of recent changes.</p></li>
+<li><p>Install <a class="reference external" href="https://twine.readthedocs.io/en/latest/">the twine package</a>. This is
 a package that helps you
-bundle and push new Python package distributions to pip.</li>
+bundle and push new Python package distributions to pip.</p></li>
 </ol>
 </div>
 <div class="section" id="check-that-we-are-ready-for-a-release">
 <h3>Check that we are ready for a release<a class="headerlink" href="#check-that-we-are-ready-for-a-release" title="Permalink to this headline">¶</a></h3>
 <ul>
-<li><p class="first">Update the change log</p>
+<li><p>Update the change log</p>
 <p>Use <a class="reference external" href="https://github.com/skywinder/github-changelog-generator#installation">github_changelog_generator</a> to
 gather all merged pull requests and closed issues during the development
 cycle. We do this because our failing discipline of writing in the
@@ -196,28 +196,26 @@ changes to
 <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/blob/master/CHANGES.rst">CHANGES.rst</a>.
 You can easily convert this document to <code class="docutils literal notranslate"><span class="pre">.rst</span></code> by using <a class="reference external" href="https://pandoc.org/">Pandoc</a>.</p>
 </li>
-<li><p class="first">Build the docs cleanly</p>
+<li><p>Build the docs cleanly</p>
 <p>Make sure to clean all and have a clean build. Double-check visually that
 everything looks right.</p>
 </li>
-<li><p class="first">Double check that continuous integration is passing on the master branch of
-Sphinx Gallery.</p>
-</li>
-<li><p class="first">Update version</p>
+<li><p>Double check that continuous integration is passing on the master branch of
+Sphinx Gallery.</p></li>
+<li><p>Update version</p>
 <p>Update the version in <code class="docutils literal notranslate"><span class="pre">sphinx_gallery/__init__.py</span></code>. It should end in
 <code class="docutils literal notranslate"><span class="pre">dev0</span></code>. You should remove this text, and the remaining number will become
 the version for this release.</p>
 </li>
-<li><p class="first">Open a Pull Request that contains the two changes we’ve made above: <strong>the version bump</strong>
+<li><p>Open a Pull Request that contains the two changes we’ve made above: <strong>the version bump</strong>
 and <strong>the CHANGELOG update</strong>. Get somebody else to make sure all looks well, and
-merge this pull request. Once that is done, move on to the final step!</p>
-</li>
+merge this pull request. Once that is done, move on to the final step!</p></li>
 </ul>
 </div>
 <div class="section" id="make-the-release">
 <h3>Make the release<a class="headerlink" href="#make-the-release" title="Permalink to this headline">¶</a></h3>
 <ul>
-<li><p class="first">Create the new release on PyPI
+<li><p>Create the new release on PyPI
 * Build a source distribution</p>
 <blockquote>
 <div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python setup.py sdist
@@ -225,33 +223,30 @@ merge this pull request. Once that is done, move on to the final step!</p>
 </div>
 </div></blockquote>
 <ul>
-<li><p class="first">Upload to PyPI</p>
+<li><p>Upload to PyPI</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>twine upload dist/sphinx-gallery-&lt;version&gt;.tar.gz
 </pre></div>
 </div>
 </li>
-<li><p class="first">Confirm that the new version of Sphinx Gallery
-<a class="reference external" href="https://pypi.org/project/sphinx-gallery/">is posted to pypi</a>.</p>
-</li>
+<li><p>Confirm that the new version of Sphinx Gallery
+<a class="reference external" href="https://pypi.org/project/sphinx-gallery/">is posted to pypi</a>.</p></li>
 </ul>
 </li>
-<li><p class="first">Create a new release on GitHub</p>
+<li><p>Create a new release on GitHub</p>
 <ul class="simple">
-<li>Go to the <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/releases/new">Draft a new release</a> page.</li>
-<li>The <strong>tag version</strong> is whatever the version is in <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> prepended with <code class="docutils literal notranslate"><span class="pre">v</span></code>. E.g., <code class="docutils literal notranslate"><span class="pre">v0.3.0</span></code>.</li>
-<li>The <strong>release title</strong> is <code class="docutils literal notranslate"><span class="pre">Release:</span> <span class="pre">&lt;&lt;</span> <span class="pre">tag-version</span> <span class="pre">&gt;&gt;</span></code>.</li>
-<li>The <strong>description</strong> should contain the markdown changelog
+<li><p>Go to the <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/releases/new">Draft a new release</a> page.</p></li>
+<li><p>The <strong>tag version</strong> is whatever the version is in <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> prepended with <code class="docutils literal notranslate"><span class="pre">v</span></code>. E.g., <code class="docutils literal notranslate"><span class="pre">v0.3.0</span></code>.</p></li>
+<li><p>The <strong>release title</strong> is <code class="docutils literal notranslate"><span class="pre">Release:</span> <span class="pre">&lt;&lt;</span> <span class="pre">tag-version</span> <span class="pre">&gt;&gt;</span></code>.</p></li>
+<li><p>The <strong>description</strong> should contain the markdown changelog
 you generated above (in the <code class="docutils literal notranslate"><span class="pre">CHANGELOG.md</span></code> file). Make sure to update any links to point
-to the tag that will be created for this release (e.g., change <code class="docutils literal notranslate"><span class="pre">HEAD</span></code> to <code class="docutils literal notranslate"><span class="pre">v0.3.0</span></code>).</li>
-<li>Click <strong>Publish release</strong> when you are done.</li>
+to the tag that will be created for this release (e.g., change <code class="docutils literal notranslate"><span class="pre">HEAD</span></code> to <code class="docutils literal notranslate"><span class="pre">v0.3.0</span></code>).</p></li>
+<li><p>Click <strong>Publish release</strong> when you are done.</p></li>
 </ul>
 </li>
-<li><p class="first">Now that the releases are complete, we need to switch the “master” branch back into a developer
+<li><p>Now that the releases are complete, we need to switch the “master” branch back into a developer
 mode. Bump the <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/blob/master/sphinx_gallery/__init__.py">Sphinx Gallery version number</a>
-to the next minor (or major) release and append <cite>dev0</cite> to the end.</p>
-</li>
-<li><p class="first">Celebrate! You’ve just released a new version of Sphinx Gallery!</p>
-</li>
+to the next minor (or major) release and append <cite>dev0</cite> to the end.</p></li>
+<li><p>Celebrate! You’ve just released a new version of Sphinx Gallery!</p></li>
 </ul>
 </div>
 </div>
