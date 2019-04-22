@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Advanced usage &mdash; Sphinx-Gallery 0.3.1-git documentation</title>
+  <title>Advanced usage &mdash; Sphinx-Gallery 0.4.0.dev0-git documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.3.1
+                0.4.0.dev0
               </div>
             
           
@@ -103,8 +103,9 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#know-your-gallery-files">Know your Gallery files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#writing-a-custom-image-scraper">Writing a custom image scraper</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#example-one-a-matplotlib-and-mayavi-style-scraper">Example one - a Matplotlib and Mayavi-style scraper</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#example-two-detecting-image-files-on-disk">Example two - detecting image files on disk</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-1-a-matplotlib-and-mayavi-style-scraper">Example 1: a Matplotlib and Mayavi-style scraper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-2-detecting-image-files-on-disk">Example 2: detecting image files on disk</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-3-matplotlib-with-svg-format">Example 3: matplotlib with SVG format</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#contributing-scrapers-back-to-sphinx-gallery">Contributing scrapers back to Sphinx-gallery</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#defining-resetting-behavior-for-custom-visualization-libraries">Defining resetting behavior for custom visualization libraries</a></li>
 </ul>
@@ -228,23 +229,32 @@ and its thumbnail is <code class="docutils literal notranslate"><span class="pre
 <p>The API for custom scrapers is currently experimental.</p>
 </div>
 <p>By default, Sphinx-gallery supports image scrapers for Matplotlib
-(<a class="reference internal" href="gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.matplotlib_scraper" title="sphinx_gallery.scrapers.matplotlib_scraper"><code class="xref py py-func docutils literal notranslate"><span class="pre">sphinx_gallery.scrapers.matplotlib_scraper()</span></code></a>) and Mayavi
-(<a class="reference internal" href="gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.mayavi_scraper" title="sphinx_gallery.scrapers.mayavi_scraper"><code class="xref py py-func docutils literal notranslate"><span class="pre">sphinx_gallery.scrapers.mayavi_scraper()</span></code></a>). You can also write a custom
+(<a class="reference internal" href="gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.matplotlib_scraper" title="sphinx_gallery.scrapers.matplotlib_scraper"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib_scraper()</span></code></a>) and Mayavi
+(<a class="reference internal" href="gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.mayavi_scraper" title="sphinx_gallery.scrapers.mayavi_scraper"><code class="xref py py-func docutils literal notranslate"><span class="pre">mayavi_scraper()</span></code></a>). You can also write a custom
 scraper for other python packages. This section describes how to do so.</p>
 <p>Image scrapers are functions (or callable class instances) that do two things:</p>
 <ol class="arabic simple">
 <li><p>Collect a list of images created in the latest execution of code.</p></li>
-<li><p>Write these images to disk</p></li>
+<li><p>Write these images to disk in PNG or SVG format (with .png or .svg
+extensions, respectively)</p></li>
 <li><p>Return rST that embeds these figures in the built documentation.</p></li>
 </ol>
 <p>The function should take the following inputs (in this order): <code class="docutils literal notranslate"><span class="pre">block</span></code>,
 <code class="docutils literal notranslate"><span class="pre">block_vars</span></code>, and <code class="docutils literal notranslate"><span class="pre">gallery_conf</span></code>. It should return a string containing the
 rST for embedding this figure in the documentation.
-See the <a class="reference internal" href="gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.matplotlib_scraper" title="sphinx_gallery.scrapers.matplotlib_scraper"><code class="xref py py-func docutils literal notranslate"><span class="pre">sphinx_gallery.scrapers.matplotlib_scraper()</span></code></a> for
+See <a class="reference internal" href="gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.matplotlib_scraper" title="sphinx_gallery.scrapers.matplotlib_scraper"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib_scraper()</span></code></a> for
 a description of the inputs/outputs.</p>
-<p>This function will be called once for each code block of your examples.</p>
-<div class="section" id="example-one-a-matplotlib-and-mayavi-style-scraper">
-<h3>Example one - a Matplotlib and Mayavi-style scraper<a class="headerlink" href="#example-one-a-matplotlib-and-mayavi-style-scraper" title="Permalink to this headline">¶</a></h3>
+<p>This function will be called once for each code block of your examples.
+Sphinx-gallery will take care of scaling images for the gallery
+index page thumbnails. PNG images are scaled using Pillow, and
+SVG images are copied.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>SVG images do not work with <code class="docutils literal notranslate"><span class="pre">latex</span></code> build modes, thus will not
+work while building a PDF vesion of your documentation.</p>
+</div>
+<div class="section" id="example-1-a-matplotlib-and-mayavi-style-scraper">
+<h3>Example 1: a Matplotlib and Mayavi-style scraper<a class="headerlink" href="#example-1-a-matplotlib-and-mayavi-style-scraper" title="Permalink to this headline">¶</a></h3>
 <p>For example, we will show sample code for a scraper for a hypothetical package.
 It uses an approach similar to what <a class="reference internal" href="gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.matplotlib_scraper" title="sphinx_gallery.scrapers.matplotlib_scraper"><code class="xref py py-func docutils literal notranslate"><span class="pre">sphinx_gallery.scrapers.matplotlib_scraper()</span></code></a>
 and <a class="reference internal" href="gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.mayavi_scraper" title="sphinx_gallery.scrapers.mayavi_scraper"><code class="xref py py-func docutils literal notranslate"><span class="pre">sphinx_gallery.scrapers.mayavi_scraper()</span></code></a> do under the hood, which
@@ -285,8 +295,8 @@ scraper would look like:</p>
 </pre></div>
 </div>
 </div>
-<div class="section" id="example-two-detecting-image-files-on-disk">
-<h3>Example two - detecting image files on disk<a class="headerlink" href="#example-two-detecting-image-files-on-disk" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="example-2-detecting-image-files-on-disk">
+<h3>Example 2: detecting image files on disk<a class="headerlink" href="#example-2-detecting-image-files-on-disk" title="Permalink to this headline">¶</a></h3>
 <p>Here’s another example that assumes that images have <em>already been written to
 disk</em>. In this case we won’t <em>generate</em> any image files, we’ll only generate
 the rST needed to embed them in the documentation.</p>
@@ -300,6 +310,9 @@ package in a module called <code class="docutils literal notranslate"><span clas
 <span class="k">class</span> <span class="nc">PNGScraper</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">seen</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;PNGScraper&#39;</span>
 
     <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">block_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
         <span class="c1"># Find all PNG files in the directory of this example.</span>
@@ -321,14 +334,39 @@ package in a module called <code class="docutils literal notranslate"><span clas
 </div>
 <p>Then, in our <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file, we include the following code:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mymodule</span> <span class="k">import</span> <span class="n">PNGScraper</span>
-<span class="n">my_scraper_instance</span> <span class="o">=</span> <span class="n">PNGScraper</span><span class="p">()</span>
 
 <span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;image_scrapers&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;matplotlib&#39;</span><span class="p">,</span> <span class="n">my_scraper_instance</span><span class="p">),</span>
+    <span class="s1">&#39;image_scrapers&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;matplotlib&#39;</span><span class="p">,</span> <span class="n">PNGScraper</span><span class="p">()),</span>
 <span class="p">}</span>
 </pre></div>
 </div>
+</div>
+<div class="section" id="example-3-matplotlib-with-svg-format">
+<h3>Example 3: matplotlib with SVG format<a class="headerlink" href="#example-3-matplotlib-with-svg-format" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference internal" href="gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.matplotlib_scraper" title="sphinx_gallery.scrapers.matplotlib_scraper"><code class="xref py py-func docutils literal notranslate"><span class="pre">sphinx_gallery.scrapers.matplotlib_scraper()</span></code></a> supports <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>
+to pass to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure.savefig" title="(in Matplotlib v3.0.3)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">matplotlib.figure.Figure.savefig()</span></code></a>, one of which is the
+<code class="docutils literal notranslate"><span class="pre">format</span></code> argument. Currently sphinx-gallery supports PNG (default) and SVG
+output formats. To use SVG, you can do:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sphinx_gallery.scrapers</span> <span class="k">import</span> <span class="n">matplotlib_scraper</span>
+
+<span class="k">class</span> <span class="nc">matplotlib_svg_scraper</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">matplotlib_scraper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;svg&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">...</span>
+    <span class="s1">&#39;image_scrapers&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">matplotlib_svg_scraper</span><span class="p">(),),</span>
+    <span class="o">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>You can also use different formats on a per-image basis, but this requires
+writing a customized scraper class or function.</p>
 </div>
 <div class="section" id="contributing-scrapers-back-to-sphinx-gallery">
 <h3>Contributing scrapers back to Sphinx-gallery<a class="headerlink" href="#contributing-scrapers-back-to-sphinx-gallery" title="Permalink to this headline">¶</a></h3>
