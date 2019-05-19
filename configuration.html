@@ -114,6 +114,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#generate-binder-links-for-gallery-notebooks-experimental">Generate Binder links for gallery notebooks (experimental)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#building-without-executing-examples">Building without executing examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#image-scrapers">Image scrapers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#external-scrapers">External scrapers</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#custom-scrapers">Custom scrapers</a></li>
 </ul>
 </li>
@@ -455,7 +456,7 @@ in a documentation block.</p></li>
 <p>The former is useful for auto-documenting functions that are used and classes
 that are explicitly instantiated. The latter is useful for classes that are
 typically implicitly returned rather than explicitly instantiated (e.g.,
-<a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.0.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a> which is most often instantiated only indirectly
+<a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.1.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a> which is most often instantiated only indirectly
 within function calls).</p>
 <p>For example, we can embed a small gallery of all examples that use or
 refer to <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.exp.html#numpy.exp" title="(in NumPy v1.16)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.exp</span></code></a>, which looks like this:</p>
@@ -969,7 +970,7 @@ during execution of your examples, and then embed them into documentation.
 Scrapers can be activated by appending scraper names to the <code class="docutils literal notranslate"><span class="pre">image_scrapers</span></code>
 field of your Sphinx-gallery configuration (see below). There are currently
 two native image scrapers in Sphinx-gallery (Matplotlib and Mayavi).</p>
-<p>By default, Sphinx-gallery will only detect new <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.html#module-matplotlib.pyplot" title="(in Matplotlib v3.0.3)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.pyplot</span></code></a>
+<p>By default, Sphinx-gallery will only detect new <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.html#module-matplotlib.pyplot" title="(in Matplotlib v3.1.0)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.pyplot</span></code></a>
 figures. This behavior is equivalent to the default of:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
@@ -990,6 +991,16 @@ figures. Enable this feature with the following configuration:</p>
 <p>The parameter <code class="docutils literal notranslate"><span class="pre">find_mayavi_figures</span></code> which can also be used to
 extract Mayavi figures is <strong>deprecated</strong> in version 0.2+,
 and will be removed in a future release.</p>
+</div>
+<div class="section" id="external-scrapers">
+<h3>External scrapers<a class="headerlink" href="#external-scrapers" title="Permalink to this headline">¶</a></h3>
+<p>Several external packages maintain their own Sphinx-Gallery image
+scrapers. If you are using these projects, then it is possible to
+leverage their scrapers with Sphinx-Gallery. These packages include:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/pyvista/pyvista">PyVista</a></p></li>
+<li><p><a class="reference external" href="https://github.com/GenericMappingTools/pygmt">PyGMT</a></p></li>
+</ul>
 </div>
 <div class="section" id="custom-scrapers">
 <h3>Custom scrapers<a class="headerlink" href="#custom-scrapers" title="Permalink to this headline">¶</a></h3>
@@ -1014,7 +1025,7 @@ We welcome PRs!</p>
 to ensure that any changes made to plotting behavior in one example do not
 propagate to the other examples.</p>
 <p>By default, at the end of executing each example file, Sphinx-gallery will
-reset <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> (by using <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.rcdefaults.html#matplotlib.pyplot.rcdefaults" title="(in Matplotlib v3.0.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.rcdefaults()</span></code></a>) and <code class="docutils literal notranslate"><span class="pre">seaborn</span></code>
+reset <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> (by using <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.rcdefaults.html#matplotlib.pyplot.rcdefaults" title="(in Matplotlib v3.1.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.rcdefaults()</span></code></a>) and <code class="docutils literal notranslate"><span class="pre">seaborn</span></code>
 (by trying to unload the module from <code class="docutils literal notranslate"><span class="pre">sys.modules</span></code>). This is equivalent to the
 following configuration:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
