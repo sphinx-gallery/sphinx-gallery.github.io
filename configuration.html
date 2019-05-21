@@ -113,11 +113,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#choosing-the-thumbnail-image">Choosing the thumbnail image</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#generate-binder-links-for-gallery-notebooks-experimental">Generate Binder links for gallery notebooks (experimental)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#building-without-executing-examples">Building without executing examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#image-scrapers">Image scrapers</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#external-scrapers">External scrapers</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#custom-scrapers">Custom scrapers</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="#image-scrapers">Image scrapers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#resetting-modules">Resetting modules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#dealing-with-failing-gallery-example-scripts">Dealing with failing Gallery example scripts</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#abort-build-on-first-fail">Abort build on first fail</a></li>
@@ -968,9 +964,9 @@ a default:</p>
 <p>Image scrapers are plugins that allow Sphinx-gallery to detect images produced
 during execution of your examples, and then embed them into documentation.
 Scrapers can be activated by appending scraper names to the <code class="docutils literal notranslate"><span class="pre">image_scrapers</span></code>
-field of your Sphinx-gallery configuration (see below). There are currently
-two native image scrapers in Sphinx-gallery (Matplotlib and Mayavi).</p>
-<p>By default, Sphinx-gallery will only detect new <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.html#module-matplotlib.pyplot" title="(in Matplotlib v3.1.0)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.pyplot</span></code></a>
+field of your Sphinx-gallery configuration:</p>
+<ul>
+<li><p>By default, Sphinx-gallery will only detect new <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.html#module-matplotlib.pyplot" title="(in Matplotlib v3.1.0)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.pyplot</span></code></a>
 figures. This behavior is equivalent to the default of:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
@@ -978,7 +974,8 @@ figures. This behavior is equivalent to the default of:</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Built-in support is also provided for finding <a class="reference external" href="http://docs.enthought.com/mayavi/mayavi/auto/mlab_reference.html#module-mayavi.mlab" title="(in mayavi v4.6.2)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">Mayavi</span></code></a>
+</li>
+<li><p>Built-in support is also provided for finding <a class="reference external" href="http://docs.enthought.com/mayavi/mayavi/auto/mlab_reference.html#module-mayavi.mlab" title="(in mayavi v4.6.2)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">Mayavi</span></code></a>
 figures. Enable this feature with the following configuration:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
@@ -986,38 +983,23 @@ figures. Enable this feature with the following configuration:</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The parameter <code class="docutils literal notranslate"><span class="pre">find_mayavi_figures</span></code> which can also be used to
-extract Mayavi figures is <strong>deprecated</strong> in version 0.2+,
-and will be removed in a future release.</p>
-</div>
-<div class="section" id="external-scrapers">
-<h3>External scrapers<a class="headerlink" href="#external-scrapers" title="Permalink to this headline">¶</a></h3>
-<p>Several external packages maintain their own Sphinx-Gallery image
+</li>
+<li><p>Some external packages maintain their own Sphinx-Gallery image
 scrapers. If you are using these projects, then it is possible to
-leverage their scrapers with Sphinx-Gallery. These packages include:</p>
+leverage their scrapers with Sphinx-Gallery. To do so, view their
+documentation on how to integrate with Sphinx-gallery via the
+<code class="docutils literal notranslate"><span class="pre">'image_scrapers'</span></code> configuration value:</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://github.com/pyvista/pyvista">PyVista</a></p></li>
 <li><p><a class="reference external" href="https://github.com/GenericMappingTools/pygmt">PyGMT</a></p></li>
 </ul>
-</div>
-<div class="section" id="custom-scrapers">
-<h3>Custom scrapers<a class="headerlink" href="#custom-scrapers" title="Permalink to this headline">¶</a></h3>
-<p>It is possible to write custom scrapers for images generated by packages
+</li>
+<li><p>It is possible to write custom scrapers for images generated by packages
 outside of those supported natively in Sphinx-gallery. This is accomplished
 by writing your own Python function to define how to detect and retrieve
-images produced by an arbitrary package. For instructions on how to accomplish
-this, see <a class="reference internal" href="advanced.html#custom-scraper"><span class="std std-ref">Writing a custom image scraper</span></a>.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>If you’ve developed a custom scraper for Sphinx-gallery that would
-be useful to the broader community, we encourage you to contribute
-it to the list of natively-supported scrapers located in
-<a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/blob/master/sphinx_gallery/scrapers.py">the scrapers module</a>.
-We welcome PRs!</p>
-</div>
-</div>
+images produced by an arbitrary package. For instructions, see
+<a class="reference internal" href="advanced.html#custom-scraper"><span class="std std-ref">Write a custom image scraper</span></a>.</p></li>
+</ul>
 </div>
 <div class="section" id="resetting-modules">
 <span id="reset-modules"></span><h2>Resetting modules<a class="headerlink" href="#resetting-modules" title="Permalink to this headline">¶</a></h2>
@@ -1037,7 +1019,7 @@ following configuration:</p>
 <p>Currently, Sphinx-gallery natively supports resetting <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> and
 <code class="docutils literal notranslate"><span class="pre">seaborn</span></code>. However, you can also add your own custom function to
 this tuple in order to define resetting behavior for other visualization libraries.</p>
-<p>To do so, follow the instructions in <a class="reference internal" href="advanced.html#custom-reset"><span class="std std-ref">Defining resetting behavior for custom visualization libraries</span></a>.</p>
+<p>To do so, follow the instructions in <a class="reference internal" href="advanced.html#custom-reset"><span class="std std-ref">Define resetting behavior (e.g., for custom libraries)</span></a>.</p>
 </div>
 <div class="section" id="dealing-with-failing-gallery-example-scripts">
 <h2>Dealing with failing Gallery example scripts<a class="headerlink" href="#dealing-with-failing-gallery-example-scripts" title="Permalink to this headline">¶</a></h2>
