@@ -361,7 +361,7 @@
 <span class="sd">        absolute path to directory containing conf.py</span>
 <span class="sd">    examples_dir : str</span>
 <span class="sd">        path to the examples directory relative to conf.py</span>
-<span class="sd">    sortkey : callable</span>
+<span class="sd">    sortkey : :func:`python:callable`</span>
 <span class="sd">        The sort key to use.</span>
 
 <span class="sd">    Returns</span>
@@ -583,7 +583,7 @@
 
 
 <div class="viewcode-block" id="touch_empty_backreferences"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.touch_empty_backreferences">[docs]</a><span class="k">def</span> <span class="nf">touch_empty_backreferences</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">what</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="n">lines</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Generate empty back-reference example files</span>
+    <span class="sd">&quot;&quot;&quot;Generate empty back-reference example files.</span>
 
 <span class="sd">    This avoids inclusion errors/warnings if there are no gallery</span>
 <span class="sd">    examples for a class / module that is being parsed by autodoc&quot;&quot;&quot;</span>
@@ -601,12 +601,16 @@
         <span class="nb">open</span><span class="p">(</span><span class="n">examples_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 
+<span class="k">def</span> <span class="nf">_expected_failing_examples</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">set</span><span class="p">(</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">],</span> <span class="n">path</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;expected_failing_examples&#39;</span><span class="p">])</span>
+
+
 <span class="k">def</span> <span class="nf">_parse_failures</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Split the failures.&quot;&quot;&quot;</span>
     <span class="n">failing_examples</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;failing_examples&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-    <span class="n">expected_failing_examples</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">],</span> <span class="n">path</span><span class="p">))</span>
-        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;expected_failing_examples&#39;</span><span class="p">])</span>
+    <span class="n">expected_failing_examples</span> <span class="o">=</span> <span class="n">_expected_failing_examples</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">)</span>
     <span class="n">failing_as_expected</span> <span class="o">=</span> <span class="n">failing_examples</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span>
         <span class="n">expected_failing_examples</span><span class="p">)</span>
     <span class="n">failing_unexpectedly</span> <span class="o">=</span> <span class="n">failing_examples</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span>
