@@ -198,7 +198,7 @@
     <span class="kn">from</span> <span class="nn">textwrap</span> <span class="k">import</span> <span class="n">indent</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="k">def</span> <span class="nf">indent</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">predicate</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Adds &#39;prefix&#39; to the beginning of selected lines in &#39;text&#39;.</span>
+        <span class="sd">&quot;&quot;&quot;Add &#39;prefix&#39; to the beginning of selected lines in &#39;text&#39;.</span>
 
 <span class="sd">        If &#39;predicate&#39; is provided, &#39;prefix&#39; will only be added to the lines</span>
 <span class="sd">        where &#39;predicate(line)&#39; is True. If &#39;predicate&#39; is not provided,</span>
@@ -213,6 +213,9 @@
             <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">text</span><span class="o">.</span><span class="n">splitlines</span><span class="p">(</span><span class="kc">True</span><span class="p">):</span>
                 <span class="k">yield</span> <span class="p">(</span><span class="n">prefix</span> <span class="o">+</span> <span class="n">line</span> <span class="k">if</span> <span class="n">predicate</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="k">else</span> <span class="n">line</span><span class="p">)</span>
         <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">prefixed_lines</span><span class="p">())</span>
+
+    <span class="ne">FileNotFoundError</span> <span class="o">=</span> <span class="ne">IOError</span>
+
 
 <span class="kn">import</span> <span class="nn">sphinx</span>
 
@@ -444,15 +447,28 @@
         <span class="n">scale_image</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">thumb_file</span><span class="p">,</span> <span class="o">*</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;thumbnail_size&quot;</span><span class="p">])</span></div>
 
 
-<div class="viewcode-block" id="generate_dir_rst"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.generate_dir_rst">[docs]</a><span class="k">def</span> <span class="nf">generate_dir_rst</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">seen_backrefs</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Generate the gallery reStructuredText for an example directory&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">_get_readme</span><span class="p">(</span><span class="n">dir_</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">raise_error</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="n">extensions</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;.txt&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;app&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;source_suffix&#39;</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">ext</span> <span class="ow">in</span> <span class="n">extensions</span><span class="p">:</span>
+        <span class="n">fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dir_</span><span class="p">,</span> <span class="s1">&#39;README&#39;</span> <span class="o">+</span> <span class="n">ext</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">fname</span>
+    <span class="k">if</span> <span class="n">raise_error</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
+            <span class="s2">&quot;Example directory </span><span class="si">{0}</span><span class="s2"> does not have a README file with one &quot;</span>
+            <span class="s2">&quot;of the expected file extensions </span><span class="si">{1}</span><span class="s2">. Please write one to &quot;</span>
+            <span class="s2">&quot;introduce your gallery.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dir_</span><span class="p">,</span> <span class="n">extensions</span><span class="p">))</span>
+    <span class="k">return</span> <span class="kc">None</span>
 
+
+<div class="viewcode-block" id="generate_dir_rst"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.generate_dir_rst">[docs]</a><span class="k">def</span> <span class="nf">generate_dir_rst</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">seen_backrefs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Generate the gallery reStructuredText for an example directory.&quot;&quot;&quot;</span>
     <span class="n">head_ref</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">])</span>
     <span class="n">fhindex</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span><span class="se">\n\n</span><span class="s2">.. _sphx_glr_</span><span class="si">{0}</span><span class="s2">:</span><span class="se">\n\n</span><span class="s2">&quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
         <span class="n">head_ref</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">))</span>
 
-    <span class="k">with</span> <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="s1">&#39;README.txt&#39;</span><span class="p">),</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span>
-                     <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
+    <span class="n">fname</span> <span class="o">=</span> <span class="n">_get_readme</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
         <span class="n">fhindex</span> <span class="o">+=</span> <span class="n">fid</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
     <span class="c1"># Add empty lines to avoid bug in issue #165</span>
     <span class="n">fhindex</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
