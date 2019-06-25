@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Maintaining Sphinx Gallery &mdash; Sphinx-Gallery 0.4.0.dev0-git documentation</title>
+  <title>Maintaining Sphinx Gallery &mdash; Sphinx-Gallery 0.4.0-git documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.4.0.dev0
+                0.4.0
               </div>
             
           
@@ -199,14 +199,14 @@ bundle and push new Python package distributions to pip.</p></li>
 gather all merged pull requests and closed issues during the development
 cycle. We do this because our failing discipline of writing in the
 CHANGES.rst all relevant changes, this helps our memory.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>github_changelog_generator sphinx-gallery/sphinx-gallery --between-tags v0.3.0,v0.4.0 --token &lt;&lt;your-github-api-token&gt;&gt;
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">github_changelog_generator sphinx-gallery/sphinx-gallery --between-tags v0.3.0,v0.4.0</span>
 </pre></div>
 </div>
 </li>
 <li><p>Edit CHANGELOG.md to look reasonable (it will be used later)</p></li>
 <li><p>Propagate the relevant changes to <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/blob/master/CHANGES.rst">CHANGES.rst</a>.
 You can easily convert it RST with pandoc:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pandoc CHANGELOG.md CHANGELOG.rst
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pandoc CHANGELOG.md --wrap=none -o CHANGELOG.rst</span>
 </pre></div>
 </div>
 </li>
@@ -244,13 +244,18 @@ Get somebody else to make sure all looks well, and merge this pull request.</p>
 <ol class="arabic">
 <li><p>Create the new release on PyPI</p>
 <ul>
-<li><p>Build a source distribution</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python setup.py sdist
+<li><p>Build a source distribution:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python setup.py sdist</span>
 </pre></div>
 </div>
 </li>
-<li><p>Upload to PyPI</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>twine upload dist/sphinx-gallery-&lt;version&gt;.tar.gz
+<li><p>Check the release:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">twine check dist/sphinx-gallery-0.4.0.tar.gz</span>
+</pre></div>
+</div>
+</li>
+<li><p>Upload to PyPI:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">twine upload dist/sphinx-gallery-&lt;version&gt;.tar.gz</span>
 </pre></div>
 </div>
 </li>
