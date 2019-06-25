@@ -354,9 +354,31 @@
     <span class="k">return</span> <span class="n">code_directive</span> <span class="o">+</span> <span class="n">indented_block</span></div>
 
 
-<div class="viewcode-block" id="extract_intro_and_title"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.extract_intro_and_title">[docs]</a><span class="k">def</span> <span class="nf">extract_intro_and_title</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">docstring</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Extract the first paragraph of module-level docstring. max:95 char&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">_regroup</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
 
+
+<span class="k">def</span> <span class="nf">_sanitize_rst</span><span class="p">(</span><span class="n">string</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Use regex to remove at least some sphinx directives.&quot;&quot;&quot;</span>
+    <span class="c1"># :class:`a.b.c &lt;thing here&gt;`, :ref:`abc &lt;thing here&gt;` --&gt; thing here</span>
+    <span class="n">p</span><span class="p">,</span> <span class="n">e</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;(\s|^):[^:\s]+:`&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;`(\W|$)&#39;</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">p</span> <span class="o">+</span> <span class="sa">r</span><span class="s1">&#39;\S+\s*&lt;([^&gt;`]+)&gt;&#39;</span> <span class="o">+</span> <span class="n">e</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;\1\2\3&#39;</span><span class="p">,</span> <span class="n">string</span><span class="p">)</span>
+    <span class="c1"># :class:`~a.b.c` --&gt; c</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">p</span> <span class="o">+</span> <span class="sa">r</span><span class="s1">&#39;~([^`]+)&#39;</span> <span class="o">+</span> <span class="n">e</span><span class="p">,</span> <span class="n">_regroup</span><span class="p">,</span> <span class="n">string</span><span class="p">)</span>
+    <span class="c1"># :class:`a.b.c` --&gt; a.b.c</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">p</span> <span class="o">+</span> <span class="sa">r</span><span class="s1">&#39;([^`]+)&#39;</span> <span class="o">+</span> <span class="n">e</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;\1\2\3&#39;</span><span class="p">,</span> <span class="n">string</span><span class="p">)</span>
+
+    <span class="c1"># ``whatever thing`` --&gt; whatever thing</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;(\s|^)`&#39;</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">p</span> <span class="o">+</span> <span class="sa">r</span><span class="s1">&#39;`([^`]+)`&#39;</span> <span class="o">+</span> <span class="n">e</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;\1\2\3&#39;</span><span class="p">,</span> <span class="n">string</span><span class="p">)</span>
+    <span class="c1"># `whatever thing` --&gt; whatever thing</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">p</span> <span class="o">+</span> <span class="sa">r</span><span class="s1">&#39;([^`]+)&#39;</span> <span class="o">+</span> <span class="n">e</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;\1\2\3&#39;</span><span class="p">,</span> <span class="n">string</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">string</span>
+
+
+<div class="viewcode-block" id="extract_intro_and_title"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.extract_intro_and_title">[docs]</a><span class="k">def</span> <span class="nf">extract_intro_and_title</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">docstring</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Extract and clean the first paragraph of module-level docstring.&quot;&quot;&quot;</span>
     <span class="c1"># lstrip is just in case docstring has a &#39;\n\n&#39; at the beginning</span>
     <span class="n">paragraphs</span> <span class="o">=</span> <span class="n">docstring</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="c1"># remove comments and other syntax like `.. _link:`</span>
@@ -381,9 +403,9 @@
     <span class="n">intro_paragraph</span> <span class="o">=</span> <span class="n">title</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">paragraphs</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span> <span class="k">else</span> <span class="n">paragraphs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
     <span class="c1"># Concatenate all lines of the first paragraph and truncate at 95 chars</span>
     <span class="n">intro</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">intro_paragraph</span><span class="p">)</span>
+    <span class="n">intro</span> <span class="o">=</span> <span class="n">_sanitize_rst</span><span class="p">(</span><span class="n">intro</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">intro</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">95</span><span class="p">:</span>
         <span class="n">intro</span> <span class="o">=</span> <span class="n">intro</span><span class="p">[:</span><span class="mi">95</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;...&#39;</span>
-
     <span class="k">return</span> <span class="n">intro</span><span class="p">,</span> <span class="n">title</span></div>
 
 
@@ -866,7 +888,6 @@
             <span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">remove_config_comments</span><span class="p">(</span><span class="n">content</span><span class="p">),</span> <span class="n">line_number</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">line_number</span> <span class="ow">in</span> <span class="n">script_blocks</span>
         <span class="p">]</span>
-
 
     <span class="n">output_blocks</span><span class="p">,</span> <span class="n">time_elapsed</span> <span class="o">=</span> <span class="n">execute_script</span><span class="p">(</span><span class="n">script_blocks</span><span class="p">,</span>
                                                  <span class="n">script_vars</span><span class="p">,</span>
