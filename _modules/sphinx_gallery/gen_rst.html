@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>sphinx_gallery.gen_rst &mdash; Sphinx-Gallery 0.4.0-git documentation</title>
+  <title>sphinx_gallery.gen_rst &mdash; Sphinx-Gallery 0.5.0.dev0-git documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.4.0
+                0.5.0.dev0
               </div>
             
           
@@ -177,48 +177,20 @@
 <span class="kn">import</span> <span class="nn">ast</span>
 <span class="kn">import</span> <span class="nn">codecs</span>
 <span class="kn">import</span> <span class="nn">gc</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="k">import</span> <span class="n">StringIO</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">textwrap</span> <span class="k">import</span> <span class="n">indent</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">from</span> <span class="nn">shutil</span> <span class="k">import</span> <span class="n">copyfile</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">traceback</span>
 <span class="kn">import</span> <span class="nn">codeop</span>
-<span class="kn">from</span> <span class="nn">io</span> <span class="k">import</span> <span class="n">StringIO</span>
-<span class="kn">from</span> <span class="nn">distutils.version</span> <span class="k">import</span> <span class="n">LooseVersion</span>
 
 <span class="kn">from</span> <span class="nn">.scrapers</span> <span class="k">import</span> <span class="p">(</span><span class="n">save_figures</span><span class="p">,</span> <span class="n">ImagePathIterator</span><span class="p">,</span> <span class="n">clean_modules</span><span class="p">,</span>
                        <span class="n">_find_image_ext</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="n">replace_py_ipynb</span><span class="p">,</span> <span class="n">scale_image</span><span class="p">,</span> <span class="n">get_md5sum</span><span class="p">,</span> <span class="n">_replace_md5</span>
-
-<span class="c1"># Try Python 2 first, otherwise load from Python 3</span>
-<span class="k">try</span><span class="p">:</span>
-    <span class="c1"># textwrap indent only exists in python 3</span>
-    <span class="kn">from</span> <span class="nn">textwrap</span> <span class="k">import</span> <span class="n">indent</span>
-<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-    <span class="k">def</span> <span class="nf">indent</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">predicate</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Add &#39;prefix&#39; to the beginning of selected lines in &#39;text&#39;.</span>
-
-<span class="sd">        If &#39;predicate&#39; is provided, &#39;prefix&#39; will only be added to the lines</span>
-<span class="sd">        where &#39;predicate(line)&#39; is True. If &#39;predicate&#39; is not provided,</span>
-<span class="sd">        it will default to adding &#39;prefix&#39; to all non-empty lines that do not</span>
-<span class="sd">        consist solely of whitespace characters.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">predicate</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">def</span> <span class="nf">predicate</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
-                <span class="k">return</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-
-        <span class="k">def</span> <span class="nf">prefixed_lines</span><span class="p">():</span>
-            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">text</span><span class="o">.</span><span class="n">splitlines</span><span class="p">(</span><span class="kc">True</span><span class="p">):</span>
-                <span class="k">yield</span> <span class="p">(</span><span class="n">prefix</span> <span class="o">+</span> <span class="n">line</span> <span class="k">if</span> <span class="n">predicate</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="k">else</span> <span class="n">line</span><span class="p">)</span>
-        <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">prefixed_lines</span><span class="p">())</span>
-
-    <span class="ne">FileNotFoundError</span> <span class="o">=</span> <span class="ne">IOError</span>
-
-
-<span class="kn">import</span> <span class="nn">sphinx</span>
-
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">glr_path_static</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">sphinx_compatibility</span>
 <span class="kn">from</span> <span class="nn">.backreferences</span> <span class="k">import</span> <span class="n">write_backreferences</span><span class="p">,</span> <span class="n">_thumbnail_div</span>
@@ -228,12 +200,6 @@
 
 <span class="kn">from</span> <span class="nn">.notebook</span> <span class="k">import</span> <span class="n">jupyter_notebook</span><span class="p">,</span> <span class="n">save_notebook</span>
 <span class="kn">from</span> <span class="nn">.binder</span> <span class="k">import</span> <span class="n">check_binder_conf</span><span class="p">,</span> <span class="n">gen_binder_rst</span>
-
-<span class="k">try</span><span class="p">:</span>
-    <span class="n">basestring</span>
-<span class="k">except</span> <span class="ne">NameError</span><span class="p">:</span>
-    <span class="n">basestring</span> <span class="o">=</span> <span class="nb">str</span>
-    <span class="n">unicode</span> <span class="o">=</span> <span class="nb">str</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">sphinx_compatibility</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;sphinx-gallery&#39;</span><span class="p">)</span>
 
@@ -281,15 +247,6 @@
     <span class="c1"># When called from a local terminal seaborn needs it in Python3</span>
     <span class="k">def</span> <span class="nf">isatty</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_file</span><span class="o">.</span><span class="n">isatty</span><span class="p">()</span></div>
-
-
-<div class="viewcode-block" id="MixedEncodingStringIO"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.MixedEncodingStringIO">[docs]</a><span class="k">class</span> <span class="nc">MixedEncodingStringIO</span><span class="p">(</span><span class="n">StringIO</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Helper when both ASCII and unicode strings will be written&quot;&quot;&quot;</span>
-
-<div class="viewcode-block" id="MixedEncodingStringIO.write"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.MixedEncodingStringIO.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">unicode</span><span class="p">):</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
-        <span class="n">StringIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div></div>
 
 
 <span class="c1">###############################################################################</span>
@@ -341,12 +298,9 @@
 <div class="viewcode-block" id="codestr2rst"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.codestr2rst">[docs]</a><span class="k">def</span> <span class="nf">codestr2rst</span><span class="p">(</span><span class="n">codestr</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s1">&#39;python&#39;</span><span class="p">,</span> <span class="n">lineno</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return reStructuredText code block from code string&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">lineno</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">LooseVersion</span><span class="p">(</span><span class="n">sphinx</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="s1">&#39;1.3&#39;</span><span class="p">:</span>
-            <span class="c1"># Sphinx only starts numbering from the first non-empty line.</span>
-            <span class="n">blank_lines</span> <span class="o">=</span> <span class="n">codestr</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">codestr</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()))</span>
-            <span class="n">lineno</span> <span class="o">=</span> <span class="s1">&#39;   :lineno-start: </span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">lineno</span> <span class="o">+</span> <span class="n">blank_lines</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">lineno</span> <span class="o">=</span> <span class="s1">&#39;   :linenos:</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="c1"># Sphinx only starts numbering from the first non-empty line.</span>
+        <span class="n">blank_lines</span> <span class="o">=</span> <span class="n">codestr</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">codestr</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()))</span>
+        <span class="n">lineno</span> <span class="o">=</span> <span class="s1">&#39;   :lineno-start: </span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">lineno</span> <span class="o">+</span> <span class="n">blank_lines</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">lineno</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
     <span class="n">code_directive</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">.. code-block:: </span><span class="si">{0}</span><span class="se">\n</span><span class="si">{1}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">lang</span><span class="p">,</span> <span class="n">lineno</span><span class="p">)</span>
@@ -678,7 +632,7 @@
     <span class="c1"># First cd in the original example dir, so that any file</span>
     <span class="c1"># created by the example get created in this directory</span>
 
-    <span class="n">captured_std</span> <span class="o">=</span> <span class="n">MixedEncodingStringIO</span><span class="p">()</span>
+    <span class="n">captured_std</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
     <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">src_file</span><span class="p">))</span>
 
     <span class="n">sys_path</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
@@ -690,8 +644,6 @@
         <span class="n">code_ast</span> <span class="o">=</span> <span class="nb">compile</span><span class="p">(</span><span class="n">bcontent</span><span class="p">,</span> <span class="n">src_file</span><span class="p">,</span> <span class="s1">&#39;exec&#39;</span><span class="p">,</span>
                            <span class="n">ast</span><span class="o">.</span><span class="n">PyCF_ONLY_AST</span> <span class="o">|</span> <span class="n">compiler</span><span class="o">.</span><span class="n">flags</span><span class="p">,</span> <span class="n">dont_inherit</span><span class="p">)</span>
         <span class="n">ast</span><span class="o">.</span><span class="n">increment_lineno</span><span class="p">(</span><span class="n">code_ast</span><span class="p">,</span> <span class="n">lineno</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="c1"># don&#39;t use unicode_literals at the top of this file or you get</span>
-        <span class="c1"># nasty errors here on Py2.7</span>
         <span class="n">_</span><span class="p">,</span> <span class="n">mem</span> <span class="o">=</span> <span class="n">_memory_usage</span><span class="p">(</span><span class="n">_exec_once</span><span class="p">(</span>
             <span class="n">compiler</span><span class="p">(</span><span class="n">code_ast</span><span class="p">,</span> <span class="n">src_file</span><span class="p">,</span> <span class="s1">&#39;exec&#39;</span><span class="p">),</span> <span class="n">example_globals</span><span class="p">),</span>
             <span class="n">gallery_conf</span><span class="p">)</span>
@@ -701,13 +653,6 @@
         <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span> <span class="o">=</span> <span class="n">orig_stdout</span><span class="p">,</span> <span class="n">orig_stderr</span>
         <span class="n">except_rst</span> <span class="o">=</span> <span class="n">handle_exception</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">(),</span> <span class="n">src_file</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">,</span>
                                       <span class="n">gallery_conf</span><span class="p">)</span>
-        <span class="c1"># python2.7: Code was read in bytes needs decoding to utf-8</span>
-        <span class="c1"># unless future unicode_literals is imported in source which</span>
-        <span class="c1"># make ast output unicode strings</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">except_rst</span><span class="p">,</span> <span class="s1">&#39;decode&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> \
-                <span class="nb">isinstance</span><span class="p">(</span><span class="n">except_rst</span><span class="p">,</span> <span class="n">unicode</span><span class="p">):</span>
-            <span class="n">except_rst</span> <span class="o">=</span> <span class="n">except_rst</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
-
         <span class="n">code_output</span> <span class="o">=</span> <span class="sa">u</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{0}</span><span class="se">\n\n\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">except_rst</span><span class="p">)</span>
         <span class="c1"># still call this even though we won&#39;t use the images so that</span>
         <span class="c1"># figures are closed</span>
