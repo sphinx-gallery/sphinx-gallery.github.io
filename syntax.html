@@ -194,8 +194,9 @@ be rendered in-line with the Python code and its outputs, similar to how
 Jupyter Notebooks are structured (in fact, Sphinx-Gallery also <strong>creates</strong> a
 Jupyter Notebook for each example that is built).</p>
 <p>You can embed rST in your Python examples by including a line of <code class="docutils literal notranslate"><span class="pre">#</span></code> symbols
-that spans &gt;= 20 columns. We recommend using 79 columns, like
-this:</p>
+that spans &gt;= 20 columns or <code class="docutils literal notranslate"><span class="pre">#%%</span></code>. For compatibility reasons,
+<code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">%%</span></code> (with a space) can also be used but <code class="docutils literal notranslate"><span class="pre">#%%</span></code> is recommended for
+consistency. If using <code class="docutils literal notranslate"><span class="pre">#</span></code>’s, we recommend using 79 columns, like this:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="c1">###############################################################################</span>
 </pre></div>
 </div>
@@ -217,7 +218,14 @@ gallery examples. For example:</p>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;my variable plus 2 is </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">myvariable</span> <span class="o">+</span> <span class="mi">2</span><span class="p">))</span>
 </pre></div>
 </div>
-<p>Here are the contents of an example Python file from the snippets above.:</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">#%%</span></code> syntax is consistent with the ‘code block’ (or ‘code cell’)
+syntax in <a class="reference external" href="https://code.visualstudio.com/docs/python/jupyter-support">Jupyter VSCode plugin</a>, <a class="reference external" href="https://jupytext.readthedocs.io/en/latest/introduction.html">Jupytext</a>, <a class="reference external" href="https://www.jetbrains.com/help/pycharm/running-jupyter-notebook-cells.html">Pycharm</a>,
+<a class="reference external" href="https://nteract.gitbooks.io/hydrogen/">Hydrogen plugin (for Atom)</a> and <a class="reference external" href="https://docs.spyder-ide.org/editor.html">Spyder</a>. In these IDEs/with these IDE
+plugins, <code class="docutils literal notranslate"><span class="pre">#%%</span></code> at the start of a line signifies the start of a code block.
+The code within a code block can be easily executed all at once. This
+functionality can be helpful when writing a Sphinx-Gallery <code class="docutils literal notranslate"><span class="pre">.py</span></code> script.</p>
+<p>Here are the contents of an example Python file using the ‘code block’
+functionality:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">This is my example script</span>
 <span class="sd">=========================</span>
@@ -225,21 +233,26 @@ gallery examples. For example:</p>
 <span class="sd">This example doesn&#39;t do much, it just makes a simple plot</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="c1">###############################################################################</span>
+<span class="c1">#%%</span>
 <span class="c1"># This is a section header</span>
 <span class="c1"># ------------------------</span>
-<span class="c1">#</span>
-<span class="c1"># .. note:: This is the first section!</span>
+<span class="c1"># This is the first section!</span>
+<span class="c1"># The `#%%` signifies to Sphinx-Gallery that this text should be rendered as</span>
+<span class="c1"># rST and if using one of the above IDE/plugin&#39;s, also signifies the start of a</span>
+<span class="c1"># &#39;code block&#39;.</span>
 
 <span class="c1"># This line won&#39;t be rendered as rST because there&#39;s a space after the last block.</span>
 <span class="n">myvariable</span> <span class="o">=</span> <span class="mi">2</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;my variable is </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">myvariable</span><span class="p">))</span>
+<span class="c1"># This is the end of the &#39;code block&#39; (if using an above IDE). All code within</span>
+<span class="c1"># this block can be easily executed all at once.</span>
 
-<span class="c1">###############################################################################</span>
+<span class="c1">#%%</span>
 <span class="c1"># This is another section header</span>
 <span class="c1"># ------------------------------</span>
 <span class="c1">#</span>
 <span class="c1"># In the built documentation, it will be rendered as rST after the code above!</span>
+<span class="c1"># This is also another code block.</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;my variable plus 2 is </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">myvariable</span> <span class="o">+</span> <span class="mi">2</span><span class="p">))</span>
 </pre></div>

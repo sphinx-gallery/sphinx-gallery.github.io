@@ -193,7 +193,10 @@ with second line</p>
 </div>
 <p>There is no need to always alternate between code and comment blocks
 Now there is free repetition of both</p>
-<p>And a single line of hashes can split your blocks</p>
+<p>A block an be split by either a single line of <code class="docutils literal notranslate"><span class="pre">#</span></code>’s (&gt;=20 columns) or
+<code class="docutils literal notranslate"><span class="pre">#%%</span></code>. For compatibility reasons <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">%%</span></code> (with a space) can also be used
+but we recommend only using <code class="docutils literal notranslate"><span class="pre">#%%</span></code> for consistency. All future
+‘block splitters’ used in the source <code class="docutils literal notranslate"><span class="pre">.py</span></code> document will be <code class="docutils literal notranslate"><span class="pre">#%%</span></code>.</p>
 <p>Latex in the comments does not need to be escaped</p>
 <div class="math notranslate nohighlight">
 \[\sin\]</div>
@@ -211,22 +214,24 @@ Now there is free repetition of both</p>
 <p>Making a line cut in sphinx</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>The next kind of comments are not supported and become to hard to escape
+<p>The next kind of comments are not supported and become too hard to escape
 so just don’t code like this:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">dummy2</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Function docstring&quot;&quot;&quot;</span>
 <span class="c1">####################################</span>
-<span class="c1"># This comment inside python indentation</span>
+<span class="c1"># This comment</span>
+<span class="c1">#%%</span>
+<span class="c1"># and this comment inside python indentation</span>
 <span class="c1"># breaks the block structure and is not</span>
 <span class="c1"># supported</span>
     <span class="n">dummy2</span>
 </pre></div>
 </div>
 </div>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Free strings are not supported they remain part of the code&quot;&quot;&quot;</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Free strings are not supported. They remain part of the code&quot;&quot;&quot;</span>
 </pre></div>
 </div>
-<p>New lines can be included in you block comments and the parser
+<p>New lines can be included in your block comments and the parser
 is capable of retaining this significant whitespace to work with sphinx</p>
 <div class="section" id="so-the-restructuredtext-headers-survive">
 <h2>So the reStructuredText headers survive<a class="headerlink" href="#so-the-restructuredtext-headers-survive" title="Permalink to this headline">¶</a></h2>
@@ -240,10 +245,11 @@ is capable of retaining this significant whitespace to work with sphinx</p>
 <div class="section" id="code-block-separators">
 <h3>Code block separators<a class="headerlink" href="#code-block-separators" title="Permalink to this headline">¶</a></h3>
 <blockquote>
-<div><p>Surrounding a comment line with lines of # like a block spliter also
-works and creates a new header for that comment block
-too. Nevertheless to get rich text formatting we advise to use
-RestructuredText syntax in the comment blocks.</p>
+<div><p>Surrounding a comment line with a line of <code class="docutils literal notranslate"><span class="pre">#</span></code>’s (like a block splitter)
+above and below (or <code class="docutils literal notranslate"><span class="pre">#%%</span></code> on top and a line of <code class="docutils literal notranslate"><span class="pre">#</span></code>’s below, as we have
+done here in the source <code class="docutils literal notranslate"><span class="pre">.py</span></code> doc) also works and creates a new header for
+that comment block too. Nevertheless to get rich text formatting we advise to
+use RestructuredText syntax in the comment blocks.</p>
 </div></blockquote>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;two&#39;</span><span class="p">)</span>
 </pre></div>
@@ -286,10 +292,12 @@ RestructuredText syntax in the comment blocks.</p>
 <span class="c1"># Now there is free repetition of both</span>
 
 <span class="c1">#############################################</span>
-<span class="c1"># And a single line of hashes can split your blocks</span>
+<span class="c1"># A block an be split by either a single line of ``#``&#39;s (&gt;=20 columns) or </span>
+<span class="c1"># ``#%%``. For compatibility reasons ``# %%`` (with a space) can also be used</span>
+<span class="c1"># but we recommend only using ``#%%`` for consistency. All future </span>
+<span class="c1"># &#39;block splitters&#39; used in the source ``.py`` document will be ``#%%``.</span>
 
-
-<span class="c1">###############################################################################</span>
+<span class="c1">#%%</span>
 <span class="c1"># Latex in the comments does not need to be escaped</span>
 <span class="c1">#</span>
 <span class="c1"># .. math::</span>
@@ -304,30 +312,32 @@ RestructuredText syntax in the comment blocks.</p>
 
 <span class="c1"># this should not be part of a &#39;text&#39; block</span>
 
-<span class="c1">######################################################################</span>
+<span class="c1">#%%</span>
 <span class="c1">#</span>
 <span class="c1"># ####################################################################</span>
 <span class="c1">#</span>
 <span class="c1"># Making a line cut in sphinx</span>
 
-<span class="c1">###############################################################################</span>
+<span class="c1">#%%</span>
 <span class="c1"># .. warning::</span>
-<span class="c1">#     The next kind of comments are not supported and become to hard to escape</span>
+<span class="c1">#     The next kind of comments are not supported and become too hard to escape</span>
 <span class="c1">#     so just don&#39;t code like this::</span>
 <span class="c1">#</span>
 <span class="c1">#         def dummy2():</span>
 <span class="c1">#             &quot;&quot;&quot;Function docstring&quot;&quot;&quot;</span>
 <span class="c1">#         ####################################</span>
-<span class="c1">#         # This comment inside python indentation</span>
+<span class="c1">#         # This comment </span>
+<span class="c1">#         #%%</span>
+<span class="c1">#         # and this comment inside python indentation</span>
 <span class="c1">#         # breaks the block structure and is not</span>
 <span class="c1">#         # supported</span>
 <span class="c1">#             dummy2</span>
 <span class="c1">#</span>
 
-<span class="sd">&quot;&quot;&quot;Free strings are not supported they remain part of the code&quot;&quot;&quot;</span>
+<span class="sd">&quot;&quot;&quot;Free strings are not supported. They remain part of the code&quot;&quot;&quot;</span>
 
-<span class="c1">##############################################################################</span>
-<span class="c1"># New lines can be included in you block comments and the parser</span>
+<span class="c1">#%%</span>
+<span class="c1"># New lines can be included in your block comments and the parser</span>
 <span class="c1"># is capable of retaining this significant whitespace to work with sphinx</span>
 <span class="c1">#</span>
 <span class="c1"># So the reStructuredText headers survive</span>
@@ -336,20 +346,21 @@ RestructuredText syntax in the comment blocks.</p>
 
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;one&#39;</span><span class="p">)</span>
 
-<span class="c1">###############################################################################</span>
+<span class="c1">#%%</span>
 <span class="c1"># Code block separators</span>
-<span class="c1">###############################################################################</span>
-<span class="c1"># Surrounding a comment line with lines of # like a block spliter also</span>
-<span class="c1"># works and creates a new header for that comment block</span>
-<span class="c1"># too. Nevertheless to get rich text formatting we advise to use</span>
-<span class="c1"># RestructuredText syntax in the comment blocks.</span>
+<span class="c1">####################################################################</span>
+<span class="c1"># Surrounding a comment line with a line of ``#``&#39;s (like a block splitter)</span>
+<span class="c1"># above and below (or ``#%%`` on top and a line of ``#``&#39;s below, as we have </span>
+<span class="c1"># done here in the source ``.py`` doc) also works and creates a new header for</span>
+<span class="c1"># that comment block too. Nevertheless to get rich text formatting we advise to</span>
+<span class="c1"># use RestructuredText syntax in the comment blocks.</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;two&#39;</span><span class="p">)</span>
-<span class="c1">##################################################</span>
+<span class="c1">#%%</span>
 <span class="c1">#</span>
 <span class="n">B</span> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="c1">##############################################################################</span>
+<span class="c1">#%%</span>
 <span class="c1"># End comments</span>
 <span class="c1">#</span>
 <span class="c1"># That&#39;s all folks !</span>
@@ -359,7 +370,7 @@ RestructuredText syntax in the comment blocks.</p>
 <span class="c1">#</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.686 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.768 seconds)</p>
 <p><strong>Estimated memory usage:</strong>  8 MB</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-plot-parse-py">
 <div class="binder-badge docutils container">
