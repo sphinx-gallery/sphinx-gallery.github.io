@@ -244,13 +244,16 @@
         <span class="c1"># save a figure that&#39;s not the current figure.</span>
         <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">fig_num</span><span class="p">)</span>
         <span class="n">to_rgba</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">colorConverter</span><span class="o">.</span><span class="n">to_rgba</span>
+        <span class="c1"># shallow copy should be fine here, just want to avoid changing</span>
+        <span class="c1"># &quot;kwargs&quot; for subsequent figures processed by the loop</span>
+        <span class="n">these_kwargs</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;facecolor&#39;</span><span class="p">,</span> <span class="s1">&#39;edgecolor&#39;</span><span class="p">]:</span>
             <span class="n">fig_attr</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="s1">&#39;get_&#39;</span> <span class="o">+</span> <span class="n">attr</span><span class="p">)()</span>
             <span class="n">default_attr</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.&#39;</span> <span class="o">+</span> <span class="n">attr</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">to_rgba</span><span class="p">(</span><span class="n">fig_attr</span><span class="p">)</span> <span class="o">!=</span> <span class="n">to_rgba</span><span class="p">(</span><span class="n">default_attr</span><span class="p">)</span> <span class="ow">and</span> \
                     <span class="n">attr</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
-                <span class="n">kwargs</span><span class="p">[</span><span class="n">attr</span><span class="p">]</span> <span class="o">=</span> <span class="n">fig_attr</span>
-        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                <span class="n">these_kwargs</span><span class="p">[</span><span class="n">attr</span><span class="p">]</span> <span class="o">=</span> <span class="n">fig_attr</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="o">**</span><span class="n">these_kwargs</span><span class="p">)</span>
         <span class="n">image_paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">figure_rst</span><span class="p">(</span><span class="n">image_paths</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">])</span></div>
