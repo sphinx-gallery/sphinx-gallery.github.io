@@ -469,11 +469,9 @@
         <span class="n">sorted_listdir</span><span class="p">,</span>
         <span class="s1">&#39;generating gallery for </span><span class="si">%s</span><span class="s1">... &#39;</span> <span class="o">%</span> <span class="n">build_target_dir</span><span class="p">,</span>
         <span class="n">length</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">sorted_listdir</span><span class="p">))</span>
-    <span class="n">clean_modules</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">)</span>  <span class="c1"># fix gh-316</span>
     <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">iterator</span><span class="p">:</span>
         <span class="n">intro</span><span class="p">,</span> <span class="n">time_elapsed</span> <span class="o">=</span> <span class="n">generate_file_rst</span><span class="p">(</span>
             <span class="n">fname</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
-        <span class="n">clean_modules</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
         <span class="n">src_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">))</span>
         <span class="n">computation_times</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">time_elapsed</span><span class="p">,</span> <span class="n">src_file</span><span class="p">))</span>
         <span class="n">this_entry</span> <span class="o">=</span> <span class="n">_thumbnail_div</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">],</span>
@@ -621,7 +619,6 @@
     <span class="n">blabel</span><span class="p">,</span> <span class="n">bcontent</span><span class="p">,</span> <span class="n">lineno</span> <span class="o">=</span> <span class="n">block</span>
     <span class="c1"># If example is not suitable to run, skip executing its blocks</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;execute_script&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="n">blabel</span> <span class="o">==</span> <span class="s1">&#39;text&#39;</span><span class="p">:</span>
-        <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;memory_delta&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="k">return</span> <span class="s1">&#39;&#39;</span>
 
     <span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
@@ -647,6 +644,7 @@
         <span class="n">_</span><span class="p">,</span> <span class="n">mem</span> <span class="o">=</span> <span class="n">_memory_usage</span><span class="p">(</span><span class="n">_exec_once</span><span class="p">(</span>
             <span class="n">compiler</span><span class="p">(</span><span class="n">code_ast</span><span class="p">,</span> <span class="n">src_file</span><span class="p">,</span> <span class="s1">&#39;exec&#39;</span><span class="p">),</span> <span class="n">example_globals</span><span class="p">),</span>
             <span class="n">gallery_conf</span><span class="p">)</span>
+        <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;memory_delta&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mem</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
@@ -657,7 +655,6 @@
         <span class="c1"># still call this even though we won&#39;t use the images so that</span>
         <span class="c1"># figures are closed</span>
         <span class="n">save_figures</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
-        <span class="n">mem</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
@@ -677,7 +674,6 @@
         <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">cwd</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">sys_path</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span> <span class="o">=</span> <span class="n">orig_stdout</span><span class="p">,</span> <span class="n">orig_stderr</span>
-    <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;memory_delta&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mem</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">code_output</span></div>
 
@@ -750,10 +746,12 @@
         <span class="c1"># for more details.</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;src_file&#39;</span><span class="p">]</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">gc</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">memory_start</span> <span class="o">=</span> <span class="n">_memory_usage</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">memory_start</span> <span class="o">=</span> <span class="mf">0.</span>
 
     <span class="n">t_start</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
-    <span class="n">gc</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
-    <span class="n">_</span><span class="p">,</span> <span class="n">memory_start</span> <span class="o">=</span> <span class="n">_memory_usage</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
     <span class="n">compiler</span> <span class="o">=</span> <span class="n">codeop</span><span class="o">.</span><span class="n">Compile</span><span class="p">()</span>
     <span class="c1"># include at least one entry to avoid max() ever failing</span>
     <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;memory_delta&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">memory_start</span><span class="p">]</span>
@@ -762,14 +760,12 @@
                                         <span class="n">script_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
                      <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">script_blocks</span><span class="p">]</span>
     <span class="n">time_elapsed</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t_start</span>
-    <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;memory_delta&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>  <span class="c1"># actually turn it into a delta now</span>
-        <span class="nb">max</span><span class="p">(</span><span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;memory_delta&#39;</span><span class="p">])</span> <span class="o">-</span> <span class="n">memory_start</span><span class="p">)</span>
-
     <span class="n">sys</span><span class="o">.</span><span class="n">argv</span> <span class="o">=</span> <span class="n">argv_orig</span>
-
-    <span class="c1"># Write md5 checksum if the example was meant to run (no-plot</span>
-    <span class="c1"># shall not cache md5sum) and has built correctly</span>
+    <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;memory_delta&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;memory_delta&#39;</span><span class="p">])</span>
     <span class="k">if</span> <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;execute_script&#39;</span><span class="p">]:</span>
+        <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;memory_delta&#39;</span><span class="p">]</span> <span class="o">-=</span> <span class="n">memory_start</span>
+        <span class="c1"># Write md5 checksum if the example was meant to run (no-plot</span>
+        <span class="c1"># shall not cache md5sum) and has built correctly</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;target_file&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.md5&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_checksum</span><span class="p">:</span>
             <span class="n">file_checksum</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">get_md5sum</span><span class="p">(</span><span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;target_file&#39;</span><span class="p">]))</span>
         <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;passing_examples&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;src_file&#39;</span><span class="p">])</span>
@@ -834,6 +830,8 @@
             <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">line_number</span> <span class="ow">in</span> <span class="n">script_blocks</span>
         <span class="p">]</span>
 
+    <span class="k">if</span> <span class="n">executable</span><span class="p">:</span>
+        <span class="n">clean_modules</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
     <span class="n">output_blocks</span><span class="p">,</span> <span class="n">time_elapsed</span> <span class="o">=</span> <span class="n">execute_script</span><span class="p">(</span><span class="n">script_blocks</span><span class="p">,</span>
                                                  <span class="n">script_vars</span><span class="p">,</span>
                                                  <span class="n">gallery_conf</span><span class="p">)</span>
