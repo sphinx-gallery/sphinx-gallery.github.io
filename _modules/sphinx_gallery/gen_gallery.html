@@ -180,9 +180,8 @@
 <span class="kn">from</span> <span class="nn">sphinx.util.console</span> <span class="k">import</span> <span class="n">red</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">sphinx_compatibility</span><span class="p">,</span> <span class="n">glr_path_static</span><span class="p">,</span> <span class="n">__version__</span> <span class="k">as</span> <span class="n">_sg_version</span>
 <span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="n">_replace_md5</span>
-<span class="kn">from</span> <span class="nn">.backreferences</span> <span class="k">import</span> <span class="n">finalize_backreferences</span>
+<span class="kn">from</span> <span class="nn">.backreferences</span> <span class="k">import</span> <span class="n">_finalize_backreferences</span>
 <span class="kn">from</span> <span class="nn">.gen_rst</span> <span class="k">import</span> <span class="p">(</span><span class="n">generate_dir_rst</span><span class="p">,</span> <span class="n">SPHX_GLR_SIG</span><span class="p">,</span> <span class="n">_get_memory_base</span><span class="p">,</span>
-                      <span class="n">extract_intro_and_title</span><span class="p">,</span> <span class="n">get_docstring_and_rest</span><span class="p">,</span>
                       <span class="n">_get_readme</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">.scrapers</span> <span class="k">import</span> <span class="n">_scraper_dict</span><span class="p">,</span> <span class="n">_reset_dict</span>
 <span class="kn">from</span> <span class="nn">.docs_resolv</span> <span class="k">import</span> <span class="n">embed_code_links</span>
@@ -222,6 +221,7 @@
     <span class="s1">&#39;show_memory&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
     <span class="s1">&#39;junit&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
     <span class="s1">&#39;log_level&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;backreference_missing&#39;</span><span class="p">:</span> <span class="s1">&#39;warning&#39;</span><span class="p">},</span>
+    <span class="s1">&#39;inspect_global_variables&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">}</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">sphinx_compatibility</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;sphinx-gallery&#39;</span><span class="p">)</span>
@@ -339,6 +339,7 @@
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;first_notebook_cell&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">first_cell</span>
     <span class="c1"># Make it easy to know which builder we&#39;re in</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;builder_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">builder_name</span>
+    <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;titles&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">return</span> <span class="n">gallery_conf</span>
 
 
@@ -448,7 +449,7 @@
 
             <span class="n">fhindex</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">SPHX_GLR_SIG</span><span class="p">)</span>
         <span class="n">_replace_md5</span><span class="p">(</span><span class="n">index_rst_new</span><span class="p">)</span>
-    <span class="n">finalize_backreferences</span><span class="p">(</span><span class="n">seen_backrefs</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
+    <span class="n">_finalize_backreferences</span><span class="p">(</span><span class="n">seen_backrefs</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;plot_gallery&#39;</span><span class="p">]:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;computation time summary:&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">)</span>
@@ -558,8 +559,7 @@
                                         <span class="n">failing_as_expected</span><span class="p">,</span>
                                         <span class="n">passing_unexpectedly</span><span class="p">)):</span>
             <span class="k">continue</span>  <span class="c1"># not subselected by our regex</span>
-        <span class="n">_</span><span class="p">,</span> <span class="n">title</span> <span class="o">=</span> <span class="n">extract_intro_and_title</span><span class="p">(</span>
-            <span class="n">fname</span><span class="p">,</span> <span class="n">get_docstring_and_rest</span><span class="p">(</span><span class="n">fname</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;titles&#39;</span><span class="p">][</span><span class="n">fname</span><span class="p">]</span>
         <span class="n">output</span> <span class="o">+=</span> <span class="p">(</span>
             <span class="sa">u</span><span class="s1">&#39;&lt;testcase classname=</span><span class="si">{0!s}</span><span class="s1"> file=</span><span class="si">{1!s}</span><span class="s1"> line=&quot;1&quot; &#39;</span>
             <span class="sa">u</span><span class="s1">&#39;name=</span><span class="si">{2!s}</span><span class="s1"> time=&quot;</span><span class="si">{3!r}</span><span class="s1">&quot;&gt;&#39;</span>

@@ -226,7 +226,7 @@
         <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="n">content</span></div>
 
 
-<div class="viewcode-block" id="get_docstring_and_rest"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.py_source_parser.html#sphinx_gallery.py_source_parser.get_docstring_and_rest">[docs]</a><span class="k">def</span> <span class="nf">get_docstring_and_rest</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_get_docstring_and_rest</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Separate ``filename`` content between docstring and the rest.</span>
 
 <span class="sd">    Strongly inspired from ast.get_docstring.</span>
@@ -237,11 +237,15 @@
 <span class="sd">        docstring of ``filename``</span>
 <span class="sd">    rest : str</span>
 <span class="sd">        ``filename`` content without the docstring</span>
+<span class="sd">    lineno : int</span>
+<span class="sd">        The line number.</span>
+<span class="sd">    node : ast Node</span>
+<span class="sd">        The node.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">node</span><span class="p">,</span> <span class="n">content</span> <span class="o">=</span> <span class="n">parse_source_file</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">node</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">SYNTAX_ERROR_DOCSTRING</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">SYNTAX_ERROR_DOCSTRING</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">node</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;This function only supports modules. &quot;</span>
@@ -278,7 +282,7 @@
     <span class="c1"># Note: &#39;maxsplit&#39; argument is not a keyword argument in python2</span>
     <span class="n">rest</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">content</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)[</span><span class="n">lineno</span><span class="p">:])</span>
     <span class="n">lineno</span> <span class="o">+=</span> <span class="mi">1</span>
-    <span class="k">return</span> <span class="n">docstring</span><span class="p">,</span> <span class="n">rest</span><span class="p">,</span> <span class="n">lineno</span></div>
+    <span class="k">return</span> <span class="n">docstring</span><span class="p">,</span> <span class="n">rest</span><span class="p">,</span> <span class="n">lineno</span><span class="p">,</span> <span class="n">node</span>
 
 
 <div class="viewcode-block" id="extract_file_config"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.py_source_parser.html#sphinx_gallery.py_source_parser.extract_file_config">[docs]</a><span class="k">def</span> <span class="nf">extract_file_config</span><span class="p">(</span><span class="n">content</span><span class="p">):</span>
@@ -300,8 +304,15 @@
     <span class="k">return</span> <span class="n">file_conf</span></div>
 
 
-<div class="viewcode-block" id="split_code_and_text_blocks"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.py_source_parser.html#sphinx_gallery.py_source_parser.split_code_and_text_blocks">[docs]</a><span class="k">def</span> <span class="nf">split_code_and_text_blocks</span><span class="p">(</span><span class="n">source_file</span><span class="p">):</span>
+<div class="viewcode-block" id="split_code_and_text_blocks"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.py_source_parser.html#sphinx_gallery.py_source_parser.split_code_and_text_blocks">[docs]</a><span class="k">def</span> <span class="nf">split_code_and_text_blocks</span><span class="p">(</span><span class="n">source_file</span><span class="p">,</span> <span class="n">return_node</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return list with source file separated into code and text blocks.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    source_file : str</span>
+<span class="sd">        Path to the source file.</span>
+<span class="sd">    return_node : bool</span>
+<span class="sd">        If True, return the ast node.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -312,8 +323,11 @@
 <span class="sd">        (label, content, line_number)</span>
 <span class="sd">        List where each element is a tuple with the label (&#39;text&#39; or &#39;code&#39;),</span>
 <span class="sd">        the corresponding content string of block and the leading line number</span>
+<span class="sd">    node : ast Node</span>
+<span class="sd">        The parsed node.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">docstring</span><span class="p">,</span> <span class="n">rest_of_content</span><span class="p">,</span> <span class="n">lineno</span> <span class="o">=</span> <span class="n">get_docstring_and_rest</span><span class="p">(</span><span class="n">source_file</span><span class="p">)</span>
+    <span class="n">docstring</span><span class="p">,</span> <span class="n">rest_of_content</span><span class="p">,</span> <span class="n">lineno</span><span class="p">,</span> <span class="n">node</span> <span class="o">=</span> <span class="n">_get_docstring_and_rest</span><span class="p">(</span>
+        <span class="n">source_file</span><span class="p">)</span>
     <span class="n">blocks</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;text&#39;</span><span class="p">,</span> <span class="n">docstring</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]</span>
 
     <span class="n">file_conf</span> <span class="o">=</span> <span class="n">extract_file_config</span><span class="p">(</span><span class="n">rest_of_content</span><span class="p">)</span>
@@ -343,7 +357,10 @@
     <span class="k">if</span> <span class="n">remaining_content</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
         <span class="n">blocks</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;code&#39;</span><span class="p">,</span> <span class="n">remaining_content</span><span class="p">,</span> <span class="n">lineno</span><span class="p">))</span>
 
-    <span class="k">return</span> <span class="n">file_conf</span><span class="p">,</span> <span class="n">blocks</span></div>
+    <span class="n">out</span> <span class="o">=</span> <span class="p">(</span><span class="n">file_conf</span><span class="p">,</span> <span class="n">blocks</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">return_node</span><span class="p">:</span>
+        <span class="n">out</span> <span class="o">+=</span> <span class="p">(</span><span class="n">node</span><span class="p">,)</span>
+    <span class="k">return</span> <span class="n">out</span></div>
 
 
 <div class="viewcode-block" id="remove_config_comments"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.py_source_parser.html#sphinx_gallery.py_source_parser.remove_config_comments">[docs]</a><span class="k">def</span> <span class="nf">remove_config_comments</span><span class="p">(</span><span class="n">code_block</span><span class="p">):</span>

@@ -38,8 +38,8 @@
   <link rel="stylesheet" href="../_static/theme_override.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Sphinx-Gallery introduction" href="plot_gallery_version.html" />
-    <link rel="prev" title="Using Unicode everywhere 🤗" href="plot_unicode_everywhere.html" /> 
+    <link rel="next" title="Plotting simple sin function" href="sin_func/plot_sin.html" />
+    <link rel="prev" title="Sphinx-Gallery introduction" href="plot_gallery_version.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -111,8 +111,8 @@
 <li class="toctree-l3"><a class="reference internal" href="plot_seaborn.html">Seaborn example</a></li>
 <li class="toctree-l3"><a class="reference internal" href="plot_choose_thumbnail.html">Choosing the thumbnail figure</a></li>
 <li class="toctree-l3"><a class="reference internal" href="plot_unicode_everywhere.html">Using Unicode everywhere 🤗</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Identifying function names in a script</a></li>
 <li class="toctree-l3"><a class="reference internal" href="plot_gallery_version.html">Sphinx-Gallery introduction</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Identifying function names in a script</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#the-sin-function">The sin function</a></li>
@@ -190,12 +190,14 @@ which functions are called in the script and to which module do they belong.</p>
 <span class="kn">import</span> <span class="nn">os</span>  <span class="c1"># noqa, analysis:ignore</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">sphinx_gallery.backreferences</span> <span class="k">import</span> <a href="../gen_modules/sphinx_gallery.backreferences.html#sphinx_gallery.backreferences.identify_names" title="View documentation for sphinx_gallery.backreferences.identify_names"><span class="n">identify_names</span></a>
+<span class="kn">from</span> <span class="nn">sphinx_gallery.py_source_parser</span> <span class="k">import</span> <a href="../gen_modules/sphinx_gallery.py_source_parser.html#sphinx_gallery.py_source_parser.split_code_and_text_blocks" title="View documentation for sphinx_gallery.py_source_parser.split_code_and_text_blocks"><span class="n">split_code_and_text_blocks</span></a>
 
-<span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="vm">__file__</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.pyc&#39;</span><span class="p">,</span> <span class="s1">&#39;.py&#39;</span><span class="p">)</span>
-<span class="n">names</span> <span class="o">=</span> <a href="../gen_modules/sphinx_gallery.backreferences.html#sphinx_gallery.backreferences.identify_names" title="View documentation for sphinx_gallery.backreferences.identify_names"><span class="n">identify_names</span></a><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-<span class="n">figheight</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">)</span> <span class="o">+</span> <span class="o">.</span><span class="mi">5</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#str" title="View documentation for builtins.str"><span class="n">filename</span></a> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="vm">__file__</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.pyc&#39;</span><span class="p">,</span> <span class="s1">&#39;.py&#39;</span><span class="p">)</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#dict" title="View documentation for builtins.dict"><span class="n">_</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="View documentation for builtins.list"><span class="n">script_blocks</span></a> <span class="o">=</span> <a href="../gen_modules/sphinx_gallery.py_source_parser.html#sphinx_gallery.py_source_parser.split_code_and_text_blocks" title="View documentation for sphinx_gallery.py_source_parser.split_code_and_text_blocks"><span class="n">split_code_and_text_blocks</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="View documentation for builtins.str"><span class="n">filename</span></a><span class="p">)</span>
+<span class="n">names</span> <span class="o">=</span> <a href="../gen_modules/sphinx_gallery.backreferences.html#sphinx_gallery.backreferences.identify_names" title="View documentation for sphinx_gallery.backreferences.identify_names"><span class="n">identify_names</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="View documentation for builtins.list"><span class="n">script_blocks</span></a><span class="p">)</span>
+<a href="https://docs.python.org/3/library/functions.html#float" title="View documentation for builtins.float"><span class="n">figheight</span></a> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">)</span> <span class="o">+</span> <span class="o">.</span><span class="mi">5</span>
 
-<span class="n">fontsize</span> <span class="o">=</span> <span class="mi">20</span>
+<a href="https://docs.python.org/3/library/functions.html#int" title="View documentation for builtins.int"><span class="n">fontsize</span></a> <span class="o">=</span> <span class="mi">20</span>
 </pre></div>
 </div>
 <p>Sphinx-Gallery examines both the executed code itself, as well as the
@@ -205,20 +207,22 @@ and <a class="reference external" href="https://docs.scipy.org/doc/numpy/referen
 they are not explicitly used in the code. This is useful in particular when
 functions return classes – if you add them to the documented blocks of
 examples that use them, they will be shown in the backreferences.</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">7.5</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<p>Also note that global variables of the script have intersphinx references
+added to them automatically (e.g., <code class="docutils literal notranslate"><span class="pre">fig</span></code> and <code class="docutils literal notranslate"><span class="pre">fig.text</span></code> below).</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><a href="https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="View documentation for matplotlib.figure.Figure"><span class="n">fig</span></a> <span class="o">=</span> <a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="View documentation for matplotlib.pyplot.figure"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">7.5</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
 
-<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">names</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
-    <span class="n">fig</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.55</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">))</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">-</span> <span class="n">i</span><span class="p">)</span> <span class="o">/</span> <span class="n">figheight</span><span class="p">,</span>
-             <span class="n">name</span><span class="p">,</span>
+<span class="k">for</span> <a href="https://docs.python.org/3/library/functions.html#int" title="View documentation for builtins.int"><span class="n">i</span></a><span class="p">,</span> <span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="View documentation for builtins.str"><span class="n">name</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="View documentation for builtins.dict"><span class="n">obj</span></a><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">names</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+    <a href="https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure.text" title="View documentation for matplotlib.figure.Figure.text"><span class="n">fig</span><span class="o">.</span><span class="n">text</span></a><span class="p">(</span><span class="mf">0.55</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">))</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">-</span> <a href="https://docs.python.org/3/library/functions.html#int" title="View documentation for builtins.int"><span class="n">i</span></a><span class="p">)</span> <span class="o">/</span> <a href="https://docs.python.org/3/library/functions.html#float" title="View documentation for builtins.float"><span class="n">figheight</span></a><span class="p">,</span>
+             <a href="https://docs.python.org/3/library/stdtypes.html#str" title="View documentation for builtins.str"><span class="n">name</span></a><span class="p">,</span>
              <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span>
-             <span class="n">size</span><span class="o">=</span><span class="n">fontsize</span><span class="p">,</span>
-             <span class="n">transform</span><span class="o">=</span><span class="n">fig</span><span class="o">.</span><span class="n">transFigure</span><span class="p">,</span>
+             <span class="n">size</span><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#int" title="View documentation for builtins.int"><span class="n">fontsize</span></a><span class="p">,</span>
+             <span class="n">transform</span><span class="o">=</span><a href="https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="View documentation for matplotlib.figure.Figure"><span class="n">fig</span></a><span class="o">.</span><span class="n">transFigure</span><span class="p">,</span>
              <span class="n">bbox</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">boxstyle</span><span class="o">=</span><span class="s1">&#39;square&#39;</span><span class="p">,</span> <span class="n">fc</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">ec</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">))</span>
-    <span class="n">fig</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.6</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">))</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">-</span> <span class="n">i</span><span class="p">)</span> <span class="o">/</span> <span class="n">figheight</span><span class="p">,</span>
-             <span class="n">obj</span><span class="p">[</span><span class="s2">&quot;module&quot;</span><span class="p">],</span>
+    <a href="https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure.text" title="View documentation for matplotlib.figure.Figure.text"><span class="n">fig</span><span class="o">.</span><span class="n">text</span></a><span class="p">(</span><span class="mf">0.6</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">))</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">-</span> <a href="https://docs.python.org/3/library/functions.html#int" title="View documentation for builtins.int"><span class="n">i</span></a><span class="p">)</span> <span class="o">/</span> <a href="https://docs.python.org/3/library/functions.html#float" title="View documentation for builtins.float"><span class="n">figheight</span></a><span class="p">,</span>
+             <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="View documentation for builtins.dict"><span class="n">obj</span></a><span class="p">[</span><span class="s2">&quot;module&quot;</span><span class="p">],</span>
              <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span>
-             <span class="n">size</span><span class="o">=</span><span class="n">fontsize</span><span class="p">,</span>
-             <span class="n">transform</span><span class="o">=</span><span class="n">fig</span><span class="o">.</span><span class="n">transFigure</span><span class="p">,</span>
+             <span class="n">size</span><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#int" title="View documentation for builtins.int"><span class="n">fontsize</span></a><span class="p">,</span>
+             <span class="n">transform</span><span class="o">=</span><a href="https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="View documentation for matplotlib.figure.Figure"><span class="n">fig</span></a><span class="o">.</span><span class="n">transFigure</span><span class="p">,</span>
              <span class="n">bbox</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">boxstyle</span><span class="o">=</span><span class="s1">&#39;larrow&#39;</span><span class="p">,</span> <span class="n">fc</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">ec</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">))</span>
 <span class="c1">#</span>
 <a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.draw.html#matplotlib.pyplot.draw" title="View documentation for matplotlib.pyplot.draw"><span class="n">plt</span><span class="o">.</span><span class="n">draw</span></a><span class="p">()</span>
@@ -226,7 +230,7 @@ examples that use them, they will be shown in the backreferences.</p>
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_plot_function_identifier_001.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_function_identifier_001.png" />
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.395 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.436 seconds)</p>
 <p><strong>Estimated memory usage:</strong>  8 MB</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-function-identifier-py">
 <div class="binder-badge docutils container">
@@ -250,10 +254,10 @@ examples that use them, they will be shown in the backreferences.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="plot_gallery_version.html" class="btn btn-neutral float-right" title="Sphinx-Gallery introduction" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="sin_func/plot_sin.html" class="btn btn-neutral float-right" title="Plotting simple sin function" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="plot_unicode_everywhere.html" class="btn btn-neutral float-left" title="Using Unicode everywhere 🤗" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="plot_gallery_version.html" class="btn btn-neutral float-left" title="Sphinx-Gallery introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

@@ -192,22 +192,6 @@
 </dd></dl>
 
 <div style='clear:both'></div><dl class="function">
-<dt id="sphinx_gallery.py_source_parser.get_docstring_and_rest">
-<code class="descclassname">sphinx_gallery.py_source_parser.</code><code class="descname">get_docstring_and_rest</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sphinx_gallery/py_source_parser.html#get_docstring_and_rest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sphinx_gallery.py_source_parser.get_docstring_and_rest" title="Permalink to this definition">¶</a></dt>
-<dd><p>Separate <code class="docutils literal notranslate"><span class="pre">filename</span></code> content between docstring and the rest.</p>
-<p>Strongly inspired from ast.get_docstring.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><ul class="simple">
-<li><p><strong>docstring</strong> (<em>str</em>) – docstring of <code class="docutils literal notranslate"><span class="pre">filename</span></code></p></li>
-<li><p><strong>rest</strong> (<em>str</em>) – <code class="docutils literal notranslate"><span class="pre">filename</span></code> content without the docstring</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-<div style='clear:both'></div><dl class="function">
 <dt id="sphinx_gallery.py_source_parser.parse_source_file">
 <code class="descclassname">sphinx_gallery.py_source_parser.</code><code class="descname">parse_source_file</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sphinx_gallery/py_source_parser.html#parse_source_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sphinx_gallery.py_source_parser.parse_source_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse source file into AST node.</p>
@@ -240,23 +224,37 @@ removed, but surrounding empty lines are preserved.</p>
 
 <div style='clear:both'></div><dl class="function">
 <dt id="sphinx_gallery.py_source_parser.split_code_and_text_blocks">
-<code class="descclassname">sphinx_gallery.py_source_parser.</code><code class="descname">split_code_and_text_blocks</code><span class="sig-paren">(</span><em>source_file</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sphinx_gallery/py_source_parser.html#split_code_and_text_blocks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sphinx_gallery.py_source_parser.split_code_and_text_blocks" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">sphinx_gallery.py_source_parser.</code><code class="descname">split_code_and_text_blocks</code><span class="sig-paren">(</span><em>source_file</em>, <em>return_node=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sphinx_gallery/py_source_parser.html#split_code_and_text_blocks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sphinx_gallery.py_source_parser.split_code_and_text_blocks" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return list with source file separated into code and text blocks.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><ul class="simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Path to the source file.</p></li>
+<li><p><strong>return_node</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – If True, return the ast node.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
 <li><p><strong>file_conf</strong> (<em>dict</em>) – File-specific settings given in source file comments as:
 <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">sphinx_gallery_&lt;name&gt;</span> <span class="pre">=</span> <span class="pre">&lt;value&gt;</span></code></p></li>
 <li><p><strong>blocks</strong> (<em>list</em>) – (label, content, line_number)
 List where each element is a tuple with the label (‘text’ or ‘code’),
 the corresponding content string of block and the leading line number</p></li>
+<li><p><strong>node</strong> (<em>ast Node</em>) – The parsed node.</p></li>
 </ul>
 </p>
 </dd>
 </dl>
 </dd></dl>
 
-<div style='clear:both'></div></div>
+<div class="section" id="examples-using-sphinx-gallery-py-source-parser-split-code-and-text-blocks">
+<h4>Examples using <code class="docutils literal notranslate"><span class="pre">sphinx_gallery.py_source_parser.split_code_and_text_blocks</span></code><a class="headerlink" href="#examples-using-sphinx-gallery-py-source-parser-split-code-and-text-blocks" title="Permalink to this headline">¶</a></h4>
+<div class="sphx-glr-thumbcontainer" tooltip="This demonstrates how Sphinx-Gallery identifies function names to figure out which functions ar..."><div class="figure align-center" id="id1">
+<img alt="../_images/sphx_glr_plot_function_identifier_thumb.png" src="../_images/sphx_glr_plot_function_identifier_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_examples/plot_function_identifier.html#sphx-glr-auto-examples-plot-function-identifier-py"><span class="std std-ref">Identifying function names in a script</span></a></span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+</div><div style='clear:both'></div></div>
+</div>
 </div>
 </div>
 
