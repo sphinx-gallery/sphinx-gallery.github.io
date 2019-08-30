@@ -172,10 +172,12 @@
 <div class="section" id="creating-a-basic-gallery">
 <span id="create-simple-gallery"></span><h2>Creating a basic Gallery<a class="headerlink" href="#creating-a-basic-gallery" title="Permalink to this headline">¶</a></h2>
 <p>This section describes how to set up a basic gallery for your examples
-using <code class="docutils literal notranslate"><span class="pre">sphinx-gallery</span></code>. You’ll do the following.</p>
+using the Sphinx extension Sphinx-Gallery, which will do the following:</p>
 <ul class="simple">
-<li><p>Automatically generate sphinx rST for your examples, along with Jupyter
-notebooks of each that users can download.</p></li>
+<li><p>Automatically generate Sphinx rST out of your <code class="docutils literal notranslate"><span class="pre">.py</span></code> example files. The
+rendering of the resulting rST will provide the users with <code class="docutils literal notranslate"><span class="pre">.ipynb</span></code>
+(Jupyter notebook) and <code class="docutils literal notranslate"><span class="pre">.py</span></code> files of each example, which users can
+download.</p></li>
 <li><p>Create a gallery with thumbnails for each of these examples
 (such as <a class="reference external" href="http://scikit-learn.org/stable/auto_examples/index.html">the one that scikit-learn</a> uses)</p></li>
 </ul>
@@ -183,11 +185,12 @@ notebooks of each that users can download.</p></li>
 <span id="set-up-your-project"></span><h3>Overview your project files and folders<a class="headerlink" href="#overview-your-project-files-and-folders" title="Permalink to this headline">¶</a></h3>
 <p>This section describes the general files and structure needed for Sphinx-Gallery
 to build your examples.</p>
-<p>Let’s say your Python project looks like this:</p>
+<p>Let’s say your Python project has the following structure:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>.
 ├── doc
 │   ├── conf.py
 │   ├── index.rst
+|   ├── make.bat
 │   └── Makefile
 ├── my_python_module
 │   ├── __init__.py
@@ -198,26 +201,30 @@ to build your examples.</p>
     └── README.txt (or .rst)
 </pre></div>
 </div>
-<p>Your Python module is in <code class="docutils literal notranslate"><span class="pre">my_python_module</span></code>, examples for how to use it are
-in <code class="docutils literal notranslate"><span class="pre">examples</span></code> and the <code class="docutils literal notranslate"><span class="pre">doc</span></code> folder holds the base documentation
-structure you get from executing <code class="docutils literal notranslate"><span class="pre">sphinx-quickstart</span></code>.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">doc</span></code> is the Sphinx ‘source directory’. It contains the Sphinx base
+configuration files. Default versions of these base files can obtained from
+executing <code class="docutils literal notranslate"><span class="pre">sphinx-quickstart</span></code> (more details at <a class="reference external" href="http://www.sphinx-doc.org/en/master/usage/quickstart.html">Sphinx-quickstart</a>). Sphinx
+<code class="docutils literal notranslate"><span class="pre">.rst</span></code> source files are generally also placed here (none included in
+our example directory structure above) but these are
+unassociated with Sphinx-Gallery functions.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">my_python_module</span></code> contains the <code class="docutils literal notranslate"><span class="pre">.py</span></code> files of your Python module. This
+directory is not required and Sphinx-Gallery can be used for a variety of
+purposes outside of documenting examples for a package, for example
+creating a website for a Python tutorial.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">examples</span></code> ontains the files used by Sphinx-Gallery to build the gallery.</p></li>
+</ul>
 <p>Sphinx-Gallery expects examples to have a specific structure, which we’ll
 cover next.</p>
 </div>
 <div class="section" id="structure-the-examples-folder">
 <h3>Structure the examples folder<a class="headerlink" href="#structure-the-examples-folder" title="Permalink to this headline">¶</a></h3>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Sphinx-Gallery will only run files that begin with <code class="docutils literal notranslate"><span class="pre">plot_</span></code> by default. For
-instructions on how to modify this behavior, see <a class="reference internal" href="configuration.html#build-pattern"><span class="std std-ref">Parsing and executing examples via matching patterns</span></a>.</p>
-</div>
 <p>In order for Sphinx-Gallery to build a gallery from your <code class="docutils literal notranslate"><span class="pre">examples</span></code> folder,
 this folder must have the following things:</p>
 <ul>
-<li><p><strong>The Gallery Header</strong> (<code class="docutils literal notranslate"><span class="pre">README.txt</span></code>). A file called <code class="docutils literal notranslate"><span class="pre">README.txt</span></code>
-or <code class="docutils literal notranslate"><span class="pre">README.rst</span></code> that
-contains rST that will be used as a header for the gallery generated from
-this folder. It must have at least a title. For example:</p>
+<li><p><strong>The gallery header</strong>: A file named <code class="docutils literal notranslate"><span class="pre">README.txt</span></code> or <code class="docutils literal notranslate"><span class="pre">README.rst</span></code> that
+contains rST to be used as a header for the gallery with thumbnails generated
+from this folder. It must have at least a title. For example:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">This</span> <span class="ow">is</span> <span class="n">my</span> <span class="n">gallery</span>
 <span class="o">==================</span>
 
@@ -225,28 +232,32 @@ this folder. It must have at least a title. For example:</p>
 </pre></div>
 </div>
 </li>
-<li><p><strong>Example Python Scripts</strong>: A collection of Python scripts that will be
-processed when you build your HTML documentation.  For information on how
+<li><p><strong>Example Python scripts</strong>: A collection of Python scripts that will be
+processed when you build your HTML documentation. For information on how
 to structure these Python scripts with embedded rST, see
-<a class="reference internal" href="syntax.html#python-script-syntax"><span class="std std-ref">How to structure your Python scripts for Sphinx-Gallery</span></a>. By default files prefixed with <code class="docutils literal notranslate"><span class="pre">plot_</span></code>
-will be executed and their outputs captured to incorporate them in the
-HTML version of the script. Files without that prefix will be only parsed
-and presented in a rich literate programming fashion, without any output.
-To change the default pattern for execution and capture see
+<a class="reference internal" href="syntax.html#python-script-syntax"><span class="std std-ref">How to structure your Python scripts for Sphinx-Gallery</span></a>.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>By default <strong>only</strong> files prefixed with <code class="docutils literal notranslate"><span class="pre">plot_</span></code> will be executed and
+their outputs captured to incorporate them in the HTML (or another output
+format depending on the <a class="reference external" href="https://www.sphinx-doc.org/en/master/man/sphinx-build.html">Sphinx ‘builder’</a> selected)
+output of the script. Files without that prefix will be only parsed and
+presented in a rich literate programming fashion, without any output. To
+change the default pattern for execution and capture see
 <a class="reference internal" href="configuration.html#build-pattern"><span class="std std-ref">Parsing and executing examples via matching patterns</span></a>.</p></li>
-</ul>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>You can have sub-folders in your <code class="docutils literal notranslate"><span class="pre">examples</span></code> directory. These will be
+<li><p>You can have sub-directories in your <code class="docutils literal notranslate"><span class="pre">examples</span></code> directory. These will be
 included as sub-sections of your gallery. They <strong>must</strong> contain their own
-<code class="docutils literal notranslate"><span class="pre">README.txt</span></code> file as well.</p>
-</div>
+<code class="docutils literal notranslate"><span class="pre">README.txt</span></code> or <code class="docutils literal notranslate"><span class="pre">README.rst</span></code> file as well.</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
 </div>
 <div class="section" id="configure-and-use-sphinx-gallery">
 <h3>Configure and use sphinx-gallery<a class="headerlink" href="#configure-and-use-sphinx-gallery" title="Permalink to this headline">¶</a></h3>
 <p>After Sphinx-Gallery is installed, we must enable and configure it to build
 with Sphinx.</p>
-<p>First, enable Sphinx-Gallery in the Sphinx <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file with:</p>
+<p>First, enable Sphinx-Gallery in the Sphinx <code class="docutils literal notranslate"><span class="pre">doc/conf.py</span></code> file with:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">extensions</span> <span class="o">=</span> <span class="p">[</span>
     <span class="o">...</span>
     <span class="s1">&#39;sphinx_gallery.gen_gallery&#39;</span><span class="p">,</span>
@@ -256,36 +267,69 @@ with Sphinx.</p>
 <p>This loads Sphinx-Gallery as one of your extensions, the ellipsis
 <code class="docutils literal notranslate"><span class="pre">...</span></code> represents your other loaded extensions.</p>
 <p>Next, create your configuration dictionary for Sphinx-Gallery. Here we will
-simply tell Sphinx-Gallery which folder contains our example Python scripts.
-For more advanced configuration, see the <a class="reference internal" href="configuration.html#configuration"><span class="std std-ref">Configuration</span></a> page.</p>
-<p>The following configuration declares the location of the examples directory
-relative to <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> (<code class="docutils literal notranslate"><span class="pre">../examples</span></code>) as well as the location of the
-directory to be generated when your gallery is built (<code class="docutils literal notranslate"><span class="pre">auto_examples</span></code>).:</p>
+simply tell Sphinx-Gallery the location of the ‘examples’ directory
+(containing the gallery header file and our example Python scripts) and the
+directory to place the output files generated. The path to both of these
+directories should be relative to the <code class="docutils literal notranslate"><span class="pre">doc/conf.py</span></code> file.</p>
+<p>The following configuration declares the location of the ‘examples’ directory
+(‘example_dirs’) to be <code class="docutils literal notranslate"><span class="pre">../examples</span></code> and the ‘output’ directory
+(‘gallery_dirs’) to be <code class="docutils literal notranslate"><span class="pre">auto_examples</span></code>:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
      <span class="s1">&#39;examples_dirs&#39;</span><span class="p">:</span> <span class="s1">&#39;../examples&#39;</span><span class="p">,</span>   <span class="c1"># path to your example scripts</span>
-     <span class="s1">&#39;gallery_dirs&#39;</span><span class="p">:</span> <span class="s1">&#39;auto_examples&#39;</span><span class="p">,</span>  <span class="c1"># path where to save gallery generated examples</span>
+     <span class="s1">&#39;gallery_dirs&#39;</span><span class="p">:</span> <span class="s1">&#39;auto_examples&#39;</span><span class="p">,</span>  <span class="c1"># path where to save gallery generated output</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>After building your documentation, <code class="docutils literal notranslate"><span class="pre">gallery_dirs</span></code> will contain rST files
-for your gallery, as well as for each example Python script.</p>
+<p>After building your documentation, <code class="docutils literal notranslate"><span class="pre">gallery_dirs</span></code> will contain the following
+files and directories:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">index.rst</span></code> - the master document of the gallery containing the Gallery
+Header and table of contents tree. It which will serve as the welcome page for
+that gallery.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sg_execution_times.rst</span></code> - execution time of all example <code class="docutils literal notranslate"><span class="pre">.py</span></code> files,
+summarised in table format (<a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/348">original pull request on GitHub</a>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">images</span></code> - directory containing images produced during execution of the
+example <code class="docutils literal notranslate"><span class="pre">.py</span></code> files (more details in <a class="reference internal" href="configuration.html#image-scrapers"><span class="std std-ref">Image scrapers</span></a>) and thumbnail
+images for the gallery.</p></li>
+<li><p>A directory for each sub-directory in ‘example_dirs’. Within each directory
+will be the above and below listed files for that ‘sub-gallery’.</p></li>
+</ul>
+<p>Additionally for <strong>each</strong> <code class="docutils literal notranslate"><span class="pre">.py</span></code> file, a file with the following suffix is
+generated:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">.rst</span></code> - the rendered rST version of the <code class="docutils literal notranslate"><span class="pre">.py</span></code> file, ready for Sphinx
+to build.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">.ipynb</span></code> - to enable the user to download a Jupyter notebook version of the
+example.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">.py</span></code> - to enable the user to download a <code class="docutils literal notranslate"><span class="pre">.py</span></code> version of the example.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">.py.md5</span></code> - a md5 hash of the <code class="docutils literal notranslate"><span class="pre">.py</span></code> file, used to determine if changes
+have been made to the file and thus if new output files need to be generated.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_codeobj.pickle</span></code> - used to identify function names and to which module
+they belong (more details in
+<a class="reference internal" href="auto_examples/plot_function_identifier.html#sphx-glr-auto-examples-plot-function-identifier-py"><span class="std std-ref">Identifying function names in a script</span></a>)</p></li>
+</ul>
+<p>Additionally, two compressed <code class="docutils literal notranslate"><span class="pre">.zip</span></code> files containing all the <code class="docutils literal notranslate"><span class="pre">.ipynb</span></code> and
+<code class="docutils literal notranslate"><span class="pre">.py</span></code> files are generated.</p>
+<p>For more advanced configuration, see the <a class="reference internal" href="configuration.html#configuration"><span class="std std-ref">Configuration</span></a> page.</p>
 </div>
 <div class="section" id="add-your-gallery-to-the-documentation">
 <h3>Add your gallery to the documentation<a class="headerlink" href="#add-your-gallery-to-the-documentation" title="Permalink to this headline">¶</a></h3>
-<p>When you build your documentation, sphinx-gallery will automatically populate
-the folder specified in <code class="docutils literal notranslate"><span class="pre">gallery_dirs</span></code> above with Sphinx-ready rST.
-It will create an <code class="docutils literal notranslate"><span class="pre">index.rst</span></code> file in the root of each gallery folder that
-contains the rST for that gallery (in this example, it is <code class="docutils literal notranslate"><span class="pre">gallery_dirs/index.rst</span></code>).
-You can add it to your Sphinx navbar, or embed it with an <code class="docutils literal notranslate"><span class="pre">..</span> <span class="pre">include::</span></code> statement.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">index.rst</span></code> file generated for your gallery can be added to the table of
+contents tree in the main Sphinx <code class="docutils literal notranslate"><span class="pre">doc/index.rst</span></code> file  or embedded in a
+Sphinx source <code class="docutils literal notranslate"><span class="pre">.rst</span></code> file with an <code class="docutils literal notranslate"><span class="pre">..</span> <span class="pre">include::</span></code> statement.</p>
 </div>
 <div class="section" id="build-the-documentation">
 <h3>Build the documentation<a class="headerlink" href="#build-the-documentation" title="Permalink to this headline">¶</a></h3>
-<p>In your Sphinx documentation directory, (e.g., <code class="docutils literal notranslate"><span class="pre">myproject/doc</span></code>) execute:</p>
+<p>In your Sphinx source directory, (e.g., <code class="docutils literal notranslate"><span class="pre">myproject/doc</span></code>) execute:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ make html
 </pre></div>
 </div>
-<p>This will start the build of your complete documentation including the examples
-gallery. Once a build is completed, all your examples outputs are cached.
+<p>This will start the build of your complete documentation. Both
+the Sphinx-Gallery output files described above and
+the Sphinx output HTML (or another output format depending on the
+<a class="reference external" href="https://www.sphinx-doc.org/en/master/man/sphinx-build.html">Sphinx ‘builder’</a> selected) will
+be generated. Once a build is completed, all the outputs from your examples
+will be cached.
 In the future, only examples that have changed will be re-built.</p>
 <p>You should now have a gallery built from your example scripts! For more
 advanced usage and configuration, check out the <a class="reference internal" href="advanced.html#advanced-usage"><span class="std std-ref">Advanced usage</span></a> page or
