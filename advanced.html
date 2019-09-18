@@ -260,11 +260,39 @@ scraper for other python packages. This section describes how to do so.</p>
 extensions, respectively)</p></li>
 <li><p>Return rST that embeds these figures in the built documentation.</p></li>
 </ol>
-<p>The function should take the following inputs (in this order): <code class="docutils literal notranslate"><span class="pre">block</span></code>,
-<code class="docutils literal notranslate"><span class="pre">block_vars</span></code>, and <code class="docutils literal notranslate"><span class="pre">gallery_conf</span></code>. It should return a string containing the
-rST for embedding this figure in the documentation.
-See <a class="reference internal" href="gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.matplotlib_scraper" title="sphinx_gallery.scrapers.matplotlib_scraper"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib_scraper()</span></code></a> for
-a description of the inputs/outputs.</p>
+<p>The function should take the following inputs (in this order):</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">block</span></code> - a Sphinx-Gallery <code class="docutils literal notranslate"><span class="pre">.py</span></code> file is separated into consecutive
+lines of ‘code’ and rST ‘text’, called ‘blocks’. For each
+block, a tuple containing the (label, content, line_number)
+(e.g. <code class="docutils literal notranslate"><span class="pre">('code',</span> <span class="pre">'print(&quot;Hello</span> <span class="pre">world&quot;)',</span> <span class="pre">5)</span></code>) of the block is created.</p>
+<ul class="simple">
+<li><p>‘label’ is a string that can either be <code class="docutils literal notranslate"><span class="pre">'text'</span></code> or <code class="docutils literal notranslate"><span class="pre">'code'</span></code>. In this
+context, it should only be <code class="docutils literal notranslate"><span class="pre">'code'</span></code> as this function is only called for
+code blocks.</p></li>
+<li><p>‘content’ is a string containing the actual content of the code block.</p></li>
+<li><p>‘line_number’ is an integer, indicating the line number that the block
+starts at.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">block_vars</span></code> - dictionary of configuration and runtime variables. Of
+interest for image scrapers is the element <code class="docutils literal notranslate"><span class="pre">'image_path_iterator'</span></code> which
+is an iterable object which returns an absolute path to an image file name
+adhering to Sphinx-Gallery naming convention. The path directs to the
+<code class="docutils literal notranslate"><span class="pre">gallery_dirs/images</span></code> directory (<a class="reference internal" href="getting_started.html#configure-and-use-sphinx-gallery"><span class="std std-ref">Configure and use sphinx-gallery</span></a>)
+and the image file name is <code class="docutils literal notranslate"><span class="pre">'sphx_glr_'</span></code> followed by the name of the
+source <code class="docutils literal notranslate"><span class="pre">.py</span></code> file then a number, which starts at 1 and increases by 1 at
+each iteration. The default file format is <code class="docutils literal notranslate"><span class="pre">.'png'</span></code>. For example:
+<code class="docutils literal notranslate"><span class="pre">'home/user/Documents/module/auto_examples/images/sphx_glr_plot_mymodule_001.png'</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">gallery_conf</span></code> - dictionary containing the configuration of Sphinx-Gallery,
+set under <code class="docutils literal notranslate"><span class="pre">sphinx_gallery_conf</span></code> in <code class="docutils literal notranslate"><span class="pre">doc/conf.py</span></code> (<a class="reference internal" href="configuration.html#configuration"><span class="std std-ref">Configuration</span></a>).</p></li>
+</ol>
+<p>It should return a string containing the rST for embedding this figure in the
+documentation. See <a class="reference internal" href="gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.matplotlib_scraper" title="sphinx_gallery.scrapers.matplotlib_scraper"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib_scraper()</span></code></a> for an
+example of a scraper function (click on ‘source’ below the function name to see
+the source code). The <a class="reference internal" href="gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.matplotlib_scraper" title="sphinx_gallery.scrapers.matplotlib_scraper"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib_scraper()</span></code></a> uses
+the helper function <a class="reference internal" href="gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.figure_rst" title="sphinx_gallery.scrapers.figure_rst"><code class="xref py py-func docutils literal notranslate"><span class="pre">sphinx_gallery.scrapers.figure_rst()</span></code></a> to help generate
+rST (see below).</p>
 <p>This function will be called once for each code block of your examples.
 Sphinx-gallery will take care of scaling images for the gallery
 index page thumbnails. PNG images are scaled using Pillow, and
