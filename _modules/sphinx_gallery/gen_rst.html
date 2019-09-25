@@ -344,16 +344,18 @@
             <span class="s2">&quot;Example docstring should have a header for the example title. &quot;</span>
             <span class="s2">&quot;Please check the example file:</span><span class="se">\n</span><span class="s2"> </span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
     <span class="c1"># Title is the first paragraph with any ReSTructuredText title chars</span>
-    <span class="c1"># removed, i.e. lines that consist of (all the same) 7-bit non-ASCII chars.</span>
+    <span class="c1"># removed, i.e. lines that consist of (3 or more of the same) 7-bit</span>
+    <span class="c1"># non-ASCII chars.</span>
     <span class="c1"># This conditional is not perfect but should hopefully be good enough.</span>
     <span class="n">title_paragraph</span> <span class="o">=</span> <span class="n">paragraphs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;([\w ]+)&#39;</span><span class="p">,</span> <span class="n">title_paragraph</span><span class="p">)</span>
+    <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^(?!([\W _])\1{3,})(.+)&#39;</span><span class="p">,</span> <span class="n">title_paragraph</span><span class="p">,</span>
+                      <span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
             <span class="s1">&#39;Could not find a title in first paragraph:</span><span class="se">\n</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">title_paragraph</span><span class="p">))</span>
-    <span class="n">title</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
     <span class="c1"># Use the title if no other paragraphs are provided</span>
     <span class="n">intro_paragraph</span> <span class="o">=</span> <span class="n">title</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">paragraphs</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span> <span class="k">else</span> <span class="n">paragraphs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
     <span class="c1"># Concatenate all lines of the first paragraph and truncate at 95 chars</span>
