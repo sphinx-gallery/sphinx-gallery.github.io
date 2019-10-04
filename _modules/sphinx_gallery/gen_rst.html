@@ -638,6 +638,10 @@
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">dont_inherit</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">):</span>
+            <span class="n">code_ast</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">Module</span><span class="p">([</span><span class="n">bcontent</span><span class="p">],</span> <span class="p">[])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">code_ast</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">Module</span><span class="p">([</span><span class="n">bcontent</span><span class="p">])</span>
         <span class="n">code_ast</span> <span class="o">=</span> <span class="nb">compile</span><span class="p">(</span><span class="n">bcontent</span><span class="p">,</span> <span class="n">src_file</span><span class="p">,</span> <span class="s1">&#39;exec&#39;</span><span class="p">,</span>
                            <span class="n">ast</span><span class="o">.</span><span class="n">PyCF_ONLY_AST</span> <span class="o">|</span> <span class="n">compiler</span><span class="o">.</span><span class="n">flags</span><span class="p">,</span> <span class="n">dont_inherit</span><span class="p">)</span>
         <span class="n">ast</span><span class="o">.</span><span class="n">increment_lineno</span><span class="p">(</span><span class="n">code_ast</span><span class="p">,</span> <span class="n">lineno</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
