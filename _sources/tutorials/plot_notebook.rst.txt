@@ -49,6 +49,7 @@ and script license continued by the import modules instructions.
 
 
 
+
 This code block is executed, although it produces no output. Lines starting
 with a simple hash are code comment and get treated as part of the code
 block. To include this new comment string we started the new block with a
@@ -78,12 +79,15 @@ inlined figure.
     plt.colorbar()
     plt.xlabel('$x$')
     plt.ylabel('$y$')
+    # To avoid matplotlib text output
+    plt.show()
 
 
 
 
 .. image:: /tutorials/images/sphx_glr_plot_notebook_001.png
     :class: sphx-glr-single-img
+
 
 
 
@@ -99,6 +103,8 @@ time to introduce the next code block generates 2 separate figures.
     plt.imshow(z, cmap=plt.cm.get_cmap('hot'))
     plt.figure()
     plt.imshow(z, cmap=plt.cm.get_cmap('Spectral'), interpolation='none')
+    # To avoid matplotlib text output
+    plt.show()
 
 
 
@@ -115,6 +121,7 @@ time to introduce the next code block generates 2 separate figures.
 
       .. image:: /tutorials/images/sphx_glr_plot_notebook_003.png
             :class: sphx-glr-multi-img
+
 
 
 
@@ -147,6 +154,7 @@ Comments in comment blocks remain nested in the text.
 
 
 
+
 Output of the script is captured:
 
 
@@ -169,14 +177,17 @@ Output of the script is captured:
 
 
 
-Finally, I'll call ``show`` at the end just so someone running the Python
-code directly will see the plots; this is not necessary for creating the docs
+
+Finally, I'll call ``show`` at the end to prevent Matplotlib text output
+and so that someone running the Python code ('.py') directly will see the
+plots:
 
 
 .. code-block:: python3
 
 
     plt.show()
+
 
 
 
@@ -199,9 +210,9 @@ You can also insert images:
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  1.153 seconds)
+   **Total running time of the script:** ( 0 minutes  1.378 seconds)
 
-**Estimated memory usage:**  13 MB
+**Estimated memory usage:**  17 MB
 
 
 .. _sphx_glr_download_tutorials_plot_notebook.py:
