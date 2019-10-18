@@ -188,12 +188,12 @@
 <div class="sphx-glr-example-title section" id="capturing-output-representations">
 <span id="sphx-glr-auto-examples-plot-capture-repr-py"></span><h1>Capturing output representations<a class="headerlink" href="#capturing-output-representations" title="Permalink to this headline">¶</a></h1>
 <p>This example demonstrates how the configuration <code class="docutils literal notranslate"><span class="pre">capture_repr</span></code>
-(<a class="reference internal" href="../configuration.html#capture-repr"><span class="std std-ref">Controlling what output is captured</span></a>) works. The setting used to build this Sphinx-Gallery
-documentation is <code class="docutils literal notranslate"><span class="pre">capture_repr:</span> <span class="pre">('_repr_html_',</span> <span class="pre">'__repr__')</span></code>. The output that
-is captured with this setting can be observed in this example. Differences in
-outputs that would be captured with other <code class="docutils literal notranslate"><span class="pre">capture_repr</span></code> tuples is also
-explained.</p>
-<p>Nothing is captured for the code block above because no data is directed to
+(<a class="reference internal" href="../configuration.html#capture-repr"><span class="std std-ref">Controlling what output is captured</span></a>) works. The default <code class="docutils literal notranslate"><span class="pre">capture_repr</span></code> setting is
+<code class="docutils literal notranslate"><span class="pre">capture_repr:</span> <span class="pre">('_repr_html_',</span> <span class="pre">'__repr__')</span></code> and this was used to build this
+documentation. The output that is captured with this setting can be observed in
+this example. Differences in outputs that would be captured with other
+<code class="docutils literal notranslate"><span class="pre">capture_repr</span></code> settings is also explained.</p>
+<p>Nothing is captured for the code block below because no data is directed to
 standard output and the last statement is not an expression.</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># example 1</span>
 <a href="https://docs.python.org/3/library/functions.html#int" title="View documentation for builtins.int"><span class="n">a</span></a> <span class="o">=</span> <span class="mi">2</span>
@@ -211,11 +211,11 @@ standard output and the last statement is not an expression.</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>10
 </pre></div>
 </div>
-<p>Technically, Sphinx-Gallery first attempts to capture the <code class="docutils literal notranslate"><span class="pre">_repr_html_</span></code>
-of <code class="docutils literal notranslate"><span class="pre">b</span></code> as this is the first ‘representation’ method in the <code class="docutils literal notranslate"><span class="pre">capture_repr</span></code>
-tuple. As this method does not exist for <code class="docutils literal notranslate"><span class="pre">b</span></code>, Sphinx-Gallery moves on to
-try and capture the <code class="docutils literal notranslate"><span class="pre">__repr__</span></code> method, which is second in the tuple. This
-does exist for <code class="docutils literal notranslate"><span class="pre">b</span></code> so it is captured and included above.</p>
+<p>Sphinx-Gallery first attempts to capture the <code class="docutils literal notranslate"><span class="pre">_repr_html_</span></code> of <code class="docutils literal notranslate"><span class="pre">b</span></code> as this
+is the first ‘representation’ method in the <code class="docutils literal notranslate"><span class="pre">capture_repr</span></code> tuple. As this
+method does not exist for <code class="docutils literal notranslate"><span class="pre">b</span></code>, Sphinx-Gallery moves on and tries to capture
+the <code class="docutils literal notranslate"><span class="pre">__repr__</span></code> method, which is second in the tuple. This does exist for
+<code class="docutils literal notranslate"><span class="pre">b</span></code> so it is captured and the output is seen above.</p>
 <p>A pandas dataframe is used in the code block below to provide an example of
 an expression with a <code class="docutils literal notranslate"><span class="pre">_repr_html_</span></code> method.</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># example 3</span>
@@ -264,9 +264,9 @@ an expression with a <code class="docutils literal notranslate"><span class="pre
 <br />
 <br /><p>The pandas dataframe <code class="docutils literal notranslate"><span class="pre">df</span></code> has both a <code class="docutils literal notranslate"><span class="pre">__repr__</span></code> and <code class="docutils literal notranslate"><span class="pre">_repr_html_</span></code>
 method. As <code class="docutils literal notranslate"><span class="pre">_repr_html_</span></code> appears first in the <code class="docutils literal notranslate"><span class="pre">capture_repr</span></code> tuple, the
-<code class="docutils literal notranslate"><span class="pre">_repr_html_</span></code> is captured in preference.</p>
-<p>For the example below, the last statement is an expression and there is
-standard output data:</p>
+<code class="docutils literal notranslate"><span class="pre">_repr_html_</span></code> is captured in preference to <code class="docutils literal notranslate"><span class="pre">__repr__</span></code>.</p>
+<p>For the example below, there is data directed to standard output and the last
+statement is an expression.</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># example 4</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Hello world&#39;</span><span class="p">)</span>
 <a href="https://docs.python.org/3/library/functions.html#int" title="View documentation for builtins.int"><span class="n">a</span></a> <span class="o">+</span> <a href="https://docs.python.org/3/library/functions.html#int" title="View documentation for builtins.int"><span class="n">b</span></a>
@@ -280,26 +280,31 @@ standard output data:</p>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">print()</span></code> outputs to standard output, which is always captured. The
 string <code class="docutils literal notranslate"><span class="pre">'Hello</span> <span class="pre">world'</span></code> is thus captured. A ‘representation’ of the last
-expression is also captured. Again, since this expression does not have a
-<code class="docutils literal notranslate"><span class="pre">_repr_html_</span></code> method, the <code class="docutils literal notranslate"><span class="pre">__repr__</span></code> method is captured.</p>
+expression is also captured. Again, since this expression <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">+</span> <span class="pre">b</span></code> does not
+have a <code class="docutils literal notranslate"><span class="pre">_repr_html_</span></code> method, the <code class="docutils literal notranslate"><span class="pre">__repr__</span></code> method is captured.</p>
 <div class="section" id="the-capture-repr-configuration">
 <h2>The <code class="docutils literal notranslate"><span class="pre">capture_repr</span></code> configuration<a class="headerlink" href="#the-capture-repr-configuration" title="Permalink to this headline">¶</a></h2>
-<p>The <code class="docutils literal notranslate"><span class="pre">capture_repr</span></code> configuration is an empty tuple by default. With this
-setting, only data directed to standard output is captured. Thus, output
-would only be captured for example 4.</p>
-<p>Adding ‘representations’ to the <code class="docutils literal notranslate"><span class="pre">capture_repr</span></code> tuple would direct
-Sphinx-Gallery to capture a ‘representation’ of the last statement, only if
-it is an expression. In examples 2, 3 and 4, the last statement is an
-expression. If the <code class="docutils literal notranslate"><span class="pre">capture_repr</span></code> configuration was <em>not</em> an empty tuple,
-Sphinx-Gallery would attempt to capture a ‘representation’ of the last
-expression for these examples. This would be performed according to the order
-that the ‘ ‘ methods are given in the tuple, with
-preference given to earlier methods.</p>
-<p>If no ‘representation’ in the <code class="docutils literal notranslate"><span class="pre">capture_repr</span></code> tuple is present for a last
-expression, nothing would be captured. For example, if the the configuration
-was set to <code class="docutils literal notranslate"><span class="pre">'capture_repr':</span> <span class="pre">('_repr_html_')</span></code> nothing would be captured for
-example 2 as <code class="docutils literal notranslate"><span class="pre">b</span></code> does not have a <code class="docutils literal notranslate"><span class="pre">_repr_html_</span></code>.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.598 seconds)</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">capture_repr</span></code> configuration is <code class="docutils literal notranslate"><span class="pre">('_repr_html_',</span> <span class="pre">'__repr__')</span></code> by
+default. This directs Sphinx-Gallery to capture ‘representations’ of the last
+statement of a code block, if it is an expression. Sphinx-Gallery does
+this according to the order ‘representations’ appear in the tuple. With the
+default <code class="docutils literal notranslate"><span class="pre">capture_repr</span></code> setting, <code class="docutils literal notranslate"><span class="pre">_repr_html_</span></code> is attempted to be captured
+first. If this method does not exist, the <code class="docutils literal notranslate"><span class="pre">__repr__</span></code> method would be
+captured. If the <code class="docutils literal notranslate"><span class="pre">__repr__</span></code> also does not exist (unlikely for non-user
+defined objects), nothing would be captured. For example, if the the
+configuration was set to <code class="docutils literal notranslate"><span class="pre">'capture_repr':</span> <span class="pre">('_repr_html_')</span></code> nothing would be
+captured for example 2 as <code class="docutils literal notranslate"><span class="pre">b</span></code> does not have a <code class="docutils literal notranslate"><span class="pre">_repr_html_</span></code>.
+You can change the ‘representations’ in the <code class="docutils literal notranslate"><span class="pre">capture_repr</span></code> tuple to finely
+tune what is captured in your example <code class="docutils literal notranslate"><span class="pre">.py</span></code> files.</p>
+<p>To only capture data directed to standard output you can set <code class="docutils literal notranslate"><span class="pre">capture_repr</span></code>
+to be an empty tuple: <code class="docutils literal notranslate"><span class="pre">capture_repr:</span> <span class="pre">()</span></code>. With this setting, only data
+directed to standard output is captured. For the examples above, output would
+only be captured for example 4. Although the last statement is an expression
+for examples 2, 3 and 4 no ‘representation’ of the last expression would be
+output. You would need to add <code class="docutils literal notranslate"><span class="pre">print()</span></code> to the last expression to capture
+a ‘representation’ of it. The empty tuple setting imitates the behaviour of
+Sphinx-Gallery prior to v0.5.0, when this configuration was introduced.</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.692 seconds)</p>
 <p><strong>Estimated memory usage:</strong>  31 MB</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-capture-repr-py">
 <div class="binder-badge docutils container">
