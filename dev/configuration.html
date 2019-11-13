@@ -264,6 +264,17 @@ rendered examples.</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">.sphx-glr-thumbcontainer</span></code> (<a class="reference internal" href="#setting-thumbnail-size"><span class="std std-ref">Setting gallery thumbnail size</span></a>)</p></li>
 </ul>
+<p>You can also use the package <code class="docutils literal notranslate"><span class="pre">warnings</span></code> in the <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file to prevent
+warnings from being captured and included in your built documentation. For
+example, to remove the specific Matplotlib agg warning, you can add:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">,</span>
+                        <span class="n">message</span><span class="o">=</span><span class="s1">&#39;Matplotlib is currently using agg, which is a&#39;</span>
+                                <span class="s1">&#39; non-GUI backend, so cannot show the figure.&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>to your <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file.</p>
 </div>
 <div class="section" id="manage-multiple-galleries">
 <span id="multiple-galleries-config"></span><h2>Manage multiple galleries<a class="headerlink" href="#manage-multiple-galleries" title="Permalink to this headline">¶</a></h2>
