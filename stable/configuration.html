@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Configuration &mdash; Sphinx-Gallery 0.5.0.dev0-git documentation</title>
+  <title>Configuration &mdash; Sphinx-Gallery 0.5.0-git documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.5.0.dev0
+                0.5.0
               </div>
             
           
@@ -82,6 +82,26 @@
 
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
+
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+      <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Versions</span>
+        v: stable
+        <span class="fa fa-caret-down"></span>
+      </span>
+      <div class="rst-other-versions">
+        <dl>
+          <dt>Versions</dt>
+          
+            <dd><a href="https://sphinx-gallery.github.io/dev">dev</a></dd>
+          
+            <dd><a href="https://sphinx-gallery.github.io/stable">stable</a></dd>
+          
+        </dl>
+      </div>
+    </div>
+
+    
             
             
               
@@ -137,7 +157,7 @@
 <p class="caption"><span class="caption-text">Example galleries</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html">Gallery of Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">Secondary gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">Notebook style example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="auto_mayavi_examples/index.html">Gallery of Examples using Mayavi</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API and developer reference</span></p>
@@ -149,6 +169,8 @@
 
             
           
+
+  
         </div>
       </div>
     </nav>
@@ -181,8 +203,6 @@
     <li>Configuration</li>
       <li class="wy-breadcrumbs-aside">
         
-          
-            <a href="_sources/configuration.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -244,6 +264,17 @@ rendered examples.</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">.sphx-glr-thumbcontainer</span></code> (<a class="reference internal" href="#setting-thumbnail-size"><span class="std std-ref">Setting gallery thumbnail size</span></a>)</p></li>
 </ul>
+<p>You can also use the package <code class="docutils literal notranslate"><span class="pre">warnings</span></code> in the <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file to prevent
+warnings from being captured and included in your built documentation. For
+example, to remove the specific Matplotlib agg warning, you can add:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">,</span>
+                        <span class="n">message</span><span class="o">=</span><span class="s1">&#39;Matplotlib is currently using agg, which is a&#39;</span>
+                                <span class="s1">&#39; non-GUI backend, so cannot show the figure.&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>to your <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file.</p>
 </div>
 <div class="section" id="manage-multiple-galleries">
 <span id="multiple-galleries-config"></span><h2>Manage multiple galleries<a class="headerlink" href="#manage-multiple-galleries" title="Permalink to this headline">¶</a></h2>
@@ -424,7 +455,7 @@ code snippets within the gallery appear like this</p>
 <span class="n">y</span> <span class="o">=</span> <a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.sin.html#numpy.sin"><span class="n">np</span><span class="o">.</span><span class="n">sin</span></a><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 </pre></div>
 </div><p>Have a look at this in full action
-in our example <a class="reference internal" href="auto_examples/plot_gallery_version.html#sphx-glr-auto-examples-plot-gallery-version-py"><span class="std std-ref">Sphinx-Gallery introduction</span></a>.</p>
+in our example <a class="reference internal" href="auto_examples/plot_0_sin.html#sphx-glr-auto-examples-plot-0-sin-py"><span class="std std-ref">Introductory example - Plotting sin</span></a>.</p>
 <p>To make this work in your documentation you need to include to the configuration
 dictionary within your Sphinx <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
@@ -437,7 +468,7 @@ dictionary within your Sphinx <code class="docutils literal notranslate"><span c
 </pre></div>
 </div>
 <p>To link to external modules, if you use the Sphinx extension
-<a class="reference external" href="http://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html#module-sphinx.ext.intersphinx" title="(in Sphinx v3.0.0+/c2d64a9b0)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sphinx.ext.intersphinx</span></code></a>, no additional changes are necessary,
+<a class="reference external" href="http://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html#module-sphinx.ext.intersphinx" title="(in Sphinx v3.0.0+/0b76cf838)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sphinx.ext.intersphinx</span></code></a>, no additional changes are necessary,
 as the <code class="docutils literal notranslate"><span class="pre">intersphinx</span></code> inventory will automatically be used.
 If you do not use <code class="docutils literal notranslate"><span class="pre">intersphinx</span></code>, then you should add entries that
 point to the directory containing <code class="docutils literal notranslate"><span class="pre">searchindex.js</span></code>, such as
@@ -461,25 +492,17 @@ within function calls).</p>
 refer to <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.exp.html#numpy.exp" title="(in NumPy v1.17)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.exp</span></code></a>, which looks like this:</p>
 <div class="section" id="examples-using-numpy-exp">
 <h3>Examples using <code class="docutils literal notranslate"><span class="pre">numpy.exp</span></code><a class="headerlink" href="#examples-using-numpy-exp" title="Permalink to this headline">¶</a></h3>
-<div class="sphx-glr-thumbcontainer" tooltip="Considering an atomic single orbital and how to fill it by use of the chemical potential. This ..."><div class="figure align-center" id="id6">
-<img alt="_images/sphx_glr_plot_quantum_thumb.png" src="_images/sphx_glr_plot_quantum_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="auto_examples/plot_quantum.html#sphx-glr-auto-examples-plot-quantum-py"><span class="std std-ref">Some Quantum Mechanics, filling an atomic orbital</span></a></span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
+<div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how to import a local module and how images are stacked when two plot..."><div class="figure align-center" id="id6">
+<img alt="_images/sphx_glr_plot_1_exp_thumb.png" src="_images/sphx_glr_plot_1_exp_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="auto_examples/plot_1_exp.html#sphx-glr-auto-examples-plot-1-exp-py"><span class="std std-ref">Plotting the exponential function</span></a></span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
 </div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="A simple example for ploting two figures of a exponential function in order to test the autonom..."><div class="figure align-center" id="id7">
-<img alt="_images/sphx_glr_plot_exp_thumb.png" src="_images/sphx_glr_plot_exp_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="auto_examples/plot_exp.html#sphx-glr-auto-examples-plot-exp-py"><span class="std std-ref">Plotting the exponential function</span></a></span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
+</div><div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how to choose the figure that is displayed as the thumbnail, if the e..."><div class="figure align-center" id="id7">
+<img alt="_images/sphx_glr_plot_4_choose_thumbnail_thumb.png" src="_images/sphx_glr_plot_4_choose_thumbnail_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="auto_examples/plot_4_choose_thumbnail.html#sphx-glr-auto-examples-plot-4-choose-thumbnail-py"><span class="std std-ref">Choosing the thumbnail figure</span></a></span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
 </div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="An example to demonstrate how to choose which figure is displayed as the thumbnail if the examp..."><div class="figure align-center" id="id8">
-<img alt="_images/sphx_glr_plot_choose_thumbnail_thumb.png" src="_images/sphx_glr_plot_choose_thumbnail_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="auto_examples/plot_choose_thumbnail.html#sphx-glr-auto-examples-plot-choose-thumbnail-py"><span class="std std-ref">Choosing the thumbnail figure</span></a></span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
-</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="Plot to present Sphinx-Gallery using itself to display its version. "><div class="figure align-center" id="id9">
-<img alt="_images/sphx_glr_plot_gallery_version_thumb.png" src="_images/sphx_glr_plot_gallery_version_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="auto_examples/plot_gallery_version.html#sphx-glr-auto-examples-plot-gallery-version-py"><span class="std std-ref">Sphinx-Gallery introduction</span></a></span><a class="headerlink" href="#id9" title="Permalink to this image">¶</a></p>
-</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="This demonstrates how Sphinx-Gallery identifies function names to figure out which functions ar..."><div class="figure align-center" id="id10">
-<img alt="_images/sphx_glr_plot_function_identifier_thumb.png" src="_images/sphx_glr_plot_function_identifier_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="auto_examples/plot_function_identifier.html#sphx-glr-auto-examples-plot-function-identifier-py"><span class="std std-ref">Identifying function names in a script</span></a></span><a class="headerlink" href="#id10" title="Permalink to this image">¶</a></p>
+</div><div class="sphx-glr-thumbcontainer" tooltip="This demonstrates how Sphinx-Gallery identifies function names to figure out which functions ar..."><div class="figure align-center" id="id8">
+<img alt="_images/sphx_glr_plot_6_function_identifier_thumb.png" src="_images/sphx_glr_plot_6_function_identifier_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="auto_examples/plot_6_function_identifier.html#sphx-glr-auto-examples-plot-6-function-identifier-py"><span class="std std-ref">Identifying function names in a script</span></a></span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
 </div>
 </div><div class="sphx-glr-clear"></div><p>For such behavior to be available, you have to activate it in
 your Sphinx-Gallery configuration <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file with:</p>
@@ -879,7 +902,7 @@ to use the 2nd figure created as the thumbnail:</p>
 </pre></div>
 </div>
 <p>The default behavior is <code class="docutils literal notranslate"><span class="pre">sphinx_gallery_thumbnail_number</span> <span class="pre">=</span> <span class="pre">1</span></code>. See
-<a class="reference internal" href="auto_examples/plot_choose_thumbnail.html#sphx-glr-auto-examples-plot-choose-thumbnail-py"><span class="std std-ref">Choosing the thumbnail figure</span></a> for an example
+<a class="reference internal" href="auto_examples/plot_4_choose_thumbnail.html#sphx-glr-auto-examples-plot-4-choose-thumbnail-py"><span class="std std-ref">Choosing the thumbnail figure</span></a> for an example
 of this functionality.</p>
 </div>
 <div class="section" id="generate-binder-links-for-gallery-notebooks-experimental">
@@ -1015,7 +1038,8 @@ to scrape both matplotlib and Mayavi images you can do:</p>
 </pre></div>
 </div>
 <p>The default value is <code class="docutils literal notranslate"><span class="pre">'image_scrapers':</span> <span class="pre">('matplotlib',)</span></code> which only scrapes
-matplotlib images.</p>
+Matplotlib images. Note that this includes any images produced by pacakges that
+are based on Matplotlib, for example Seaborn or Yellowbrick.</p>
 <p>The following scrapers are supported:</p>
 <ul class="simple">
 <li><dl class="simple">
@@ -1197,6 +1221,11 @@ you can do:</p>
 </div>
 <div class="section" id="controlling-what-output-is-captured">
 <span id="capture-repr"></span><h2>Controlling what output is captured<a class="headerlink" href="#controlling-what-output-is-captured" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Configure <code class="docutils literal notranslate"><span class="pre">capture_repr</span></code> to be an empty tuple (i.e.,``capture_repr: ()``)
+to return to the output capturing behaviour prior to release v0.5.0.</p>
+</div>
 <p>The <code class="docutils literal notranslate"><span class="pre">capture_repr</span></code> configuration allows the user to control what output
 is captured, while executing the example <code class="docutils literal notranslate"><span class="pre">.py</span></code> files, and subsequently
 incorporated into the built documentation. Data directed to standard output
@@ -1300,7 +1329,7 @@ tuple or does not contain <code class="docutils literal notranslate"><span class
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2014-2019, Óscar Nájera
+        &copy; Copyright 2014-2019, Sphinx-gallery developers
 
     </p>
   </div>

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Change Log &mdash; Sphinx-Gallery 0.5.0.dev0-git documentation</title>
+  <title>Change Log &mdash; Sphinx-Gallery 0.5.0-git documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.5.0.dev0
+                0.5.0
               </div>
             
           
@@ -81,6 +81,26 @@
 
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
+
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+      <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Versions</span>
+        v: stable
+        <span class="fa fa-caret-down"></span>
+      </span>
+      <div class="rst-other-versions">
+        <dl>
+          <dt>Versions</dt>
+          
+            <dd><a href="https://sphinx-gallery.github.io/dev">dev</a></dd>
+          
+            <dd><a href="https://sphinx-gallery.github.io/stable">stable</a></dd>
+          
+        </dl>
+      </div>
+    </div>
+
+    
             
             
               
@@ -102,7 +122,7 @@
 <p class="caption"><span class="caption-text">Example galleries</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html">Gallery of Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">Secondary gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">Notebook style example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="auto_mayavi_examples/index.html">Gallery of Examples using Mayavi</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API and developer reference</span></p>
@@ -219,6 +239,8 @@
 
             
           
+
+  
         </div>
       </div>
     </nav>
@@ -252,8 +274,6 @@
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="_sources/changes.rst.txt" rel="nofollow"> View page source</a>
-          
         
       </li>
   </ul>
@@ -269,7 +289,9 @@
 <div class="section" id="developer-changes">
 <h3>Developer changes<a class="headerlink" href="#developer-changes" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li><p>N/A</p></li>
+<li><p>Separated ‘dev’ documentation, which tracks master and ‘stable’ documentation,
+which follows releases.</p></li>
+<li><p>Added official jpeg support.</p></li>
 </ul>
 </div>
 <div class="section" id="incompatible-changes">
@@ -277,10 +299,76 @@
 <ul class="simple">
 <li><p>Dropped support for Sphinx &lt; 1.8.3.</p></li>
 <li><p>Dropped support for Python &lt; 3.5.</p></li>
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">capture_repr</span></code> configuration with the default setting
+<code class="docutils literal notranslate"><span class="pre">('_repr_html_',</span> <span class="pre">__repr__')</span></code>. This may result the capturing of unwanted output
+in existing projects. Set <code class="docutils literal notranslate"><span class="pre">capture_repr:</span> <span class="pre">()</span></code> to return to behaviour prior
+to this release.</p></li>
 </ul>
 <p><strong>Implemented enhancements:</strong></p>
 <ul class="simple">
-<li><p>ENH: Support <code class="docutils literal notranslate"><span class="pre">#%%</span></code> cell separator <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/518">#370</a> (<a class="reference external" href="https://github.com/lucyleeow">lucyleeow</a>)</p></li>
+<li><p>Explain the inputs of the image scrapers <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/issues/472">#472</a></p></li>
+<li><p>Capture HTML output as in Jupyter <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/issues/396">#396</a></p></li>
+<li><p>Feature request: Add an option for different cell separations <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/issues/370">#370</a></p></li>
+<li><p>Mark sphinx extension as parallel-safe for writing <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/561">#561</a> (<a class="reference external" href="https://github.com/astrofrog">astrofrog</a>)</p></li>
+<li><p>ENH: Support linking to builtin modules <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/558">#558</a> (<a class="reference external" href="https://github.com/larsoner">larsoner</a>)</p></li>
+<li><p>ENH: Add official JPG support and better tests <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/557">#557</a> (<a class="reference external" href="https://github.com/larsoner">larsoner</a>)</p></li>
+<li><p>[MRG] ENH: Capture ’repr’s of last expression <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/541">#541</a> (<a class="reference external" href="https://github.com/lucyleeow">lucyleeow</a>)</p></li>
+<li><p>look for both ‘README’ and ‘readme’ <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/535">#535</a> (<a class="reference external" href="https://github.com/revesansparole">revesansparole</a>)</p></li>
+<li><p>ENH: Speed up builds <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/526">#526</a> (<a class="reference external" href="https://github.com/larsoner">larsoner</a>)</p></li>
+<li><p>ENH: Add live object refs and methods <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/525">#525</a> (<a class="reference external" href="https://github.com/larsoner">larsoner</a>)</p></li>
+<li><p>ENH: Show memory usage, too <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/523">#523</a> (<a class="reference external" href="https://github.com/larsoner">larsoner</a>)</p></li>
+<li><p>[MRG] EHN support #%% cell separators <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/518">#518</a> (<a class="reference external" href="https://github.com/lucyleeow">lucyleeow</a>)</p></li>
+<li><p>MAINT: Remove support for old Python and Sphinx <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/513">#513</a> (<a class="reference external" href="https://github.com/larsoner">larsoner</a>)</p></li>
+</ul>
+<p><strong>Fixed bugs:</strong></p>
+<ul class="simple">
+<li><p>Documentation is ahead of current release <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/issues/559">#559</a></p></li>
+<li><p>Fix JPEG thumbnail generation <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/556">#556</a> (<a class="reference external" href="https://github.com/rgov">rgov</a>)</p></li>
+<li><p>[MRG] Fix terminal rst block last word <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/548">#548</a> (<a class="reference external" href="https://github.com/lucyleeow">lucyleeow</a>)</p></li>
+<li><p>[MRG][FIX] Remove output box from print(__doc__) <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/529">#529</a> (<a class="reference external" href="https://github.com/lucyleeow">lucyleeow</a>)</p></li>
+<li><p>BUG: Fix kwargs modification in loop <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/527">#527</a> (<a class="reference external" href="https://github.com/larsoner">larsoner</a>)</p></li>
+<li><p>MAINT: Fix AppVeyor <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/524">#524</a> (<a class="reference external" href="https://github.com/larsoner">larsoner</a>)</p></li>
+</ul>
+<p><strong>Closed issues:</strong></p>
+<ul class="simple">
+<li><p>Making sphinx-gallery parallel_write_safe <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/issues/560">#560</a></p></li>
+<li><p>Mayavi example cannot run in binder <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/issues/554">#554</a></p></li>
+<li><p>Support pyqtgraph plots <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/issues/553">#553</a></p></li>
+<li><p>Last word in rst used as code <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/issues/546">#546</a></p></li>
+<li><p>ENH capture ’repr’s of last expression <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/issues/540">#540</a></p></li>
+<li><p>Mention list of projects using sphinx-gallery in a documentation page <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/issues/536">#536</a></p></li>
+<li><p>consider looking also for ‘readme.*’ instead of only ‘README.*’ <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/issues/534">#534</a></p></li>
+<li><p>Small regression in 0.4.1: print(__doc__) creates empty output block <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/issues/528">#528</a></p></li>
+<li><p>Show memory usage in build output <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/issues/522">#522</a></p></li>
+<li><p>Linking to external examples <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/issues/519">#519</a></p></li>
+<li><p>Intro text gets truncated on ‘-’ character <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/issues/517">#517</a></p></li>
+<li><p>REL: New release <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/issues/507">#507</a></p></li>
+<li><p>Matplotlib raises warning when ‘pyplot.show()’ is called <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/issues/488">#488</a></p></li>
+<li><p>Only support the latest 2 or 3 Sphinx versions <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/issues/407">#407</a></p></li>
+<li><p>Drop Python 2.X support <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/issues/405">#405</a></p></li>
+<li><p>Inspiration from new gallery package for sphinx: sphinx-exhibit <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/issues/402">#402</a></p></li>
+<li><p>DOC: each example should start by explaining why it’s there <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/issues/143">#143</a></p></li>
+</ul>
+<p><strong>Merged pull requests:</strong></p>
+<ul class="simple">
+<li><p>[MRG] DOC: Add warning filter note in doc <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/564">#564</a> (<a class="reference external" href="https://github.com/lucyleeow">lucyleeow</a>)</p></li>
+<li><p>[MRG] DOC: Explain each example <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/563">#563</a> (<a class="reference external" href="https://github.com/lucyleeow">lucyleeow</a>)</p></li>
+<li><p>ENH: Add dev/stable distinction <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/562">#562</a> (<a class="reference external" href="https://github.com/larsoner">larsoner</a>)</p></li>
+<li><p>DOC update example capture_repr <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/552">#552</a> (<a class="reference external" href="https://github.com/lucyleeow">lucyleeow</a>)</p></li>
+<li><p>BUG: Fix index check <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/551">#551</a> (<a class="reference external" href="https://github.com/larsoner">larsoner</a>)</p></li>
+<li><p>FIX: Fix spurious failures <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/550">#550</a> (<a class="reference external" href="https://github.com/larsoner">larsoner</a>)</p></li>
+<li><p>MAINT: Update CIs <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/549">#549</a> (<a class="reference external" href="https://github.com/larsoner">larsoner</a>)</p></li>
+<li><p>list of projects using sphinx-gallery <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/547">#547</a> (<a class="reference external" href="https://github.com/emmanuelle">emmanuelle</a>)</p></li>
+<li><p>[MRG] DOC typos and clarifications <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/545">#545</a> (<a class="reference external" href="https://github.com/lucyleeow">lucyleeow</a>)</p></li>
+<li><p>add class to clear tag <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/543">#543</a> (<a class="reference external" href="https://github.com/dorafc">dorafc</a>)</p></li>
+<li><p>MAINT: Fix for 3.8 <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/542">#542</a> (<a class="reference external" href="https://github.com/larsoner">larsoner</a>)</p></li>
+<li><p>[MRG] DOC: Explain image scraper inputs <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/539">#539</a> (<a class="reference external" href="https://github.com/lucyleeow">lucyleeow</a>)</p></li>
+<li><p>[MRG] Allow punctuation marks in title <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/537">#537</a> (<a class="reference external" href="https://github.com/lucyleeow">lucyleeow</a>)</p></li>
+<li><p>Improve documentation <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/533">#533</a> (<a class="reference external" href="https://github.com/lucyleeow">lucyleeow</a>)</p></li>
+<li><p>ENH: Add direct link to artifact <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/532">#532</a> (<a class="reference external" href="https://github.com/larsoner">larsoner</a>)</p></li>
+<li><p>[MRG] Remove matplotlib agg backend + plt.show warnings from doc <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/521">#521</a> (<a class="reference external" href="https://github.com/lesteve">lesteve</a>)</p></li>
+<li><p>MAINT: Fixes for latest pytest <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/516">#516</a> (<a class="reference external" href="https://github.com/larsoner">larsoner</a>)</p></li>
+<li><p>Add FURY to the sphinx-gallery users list <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/515">#515</a> (<a class="reference external" href="https://github.com/skoudoro">skoudoro</a>)</p></li>
 </ul>
 </div>
 </div>
@@ -1002,7 +1090,7 @@ particular function. <a class="reference external" href="https://github.com/sphi
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2014-2019, Óscar Nájera
+        &copy; Copyright 2014-2019, Sphinx-gallery developers
 
     </p>
   </div>
