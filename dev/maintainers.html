@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Maintaining Sphinx Gallery &mdash; Sphinx-Gallery 0.5.0.dev0-git documentation</title>
+  <title>Maintaining Sphinx Gallery &mdash; Sphinx-Gallery 0.5.0-git documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.5.0.dev0
+                0.5.0
               </div>
             
           
@@ -84,7 +84,7 @@
   <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
       <span class="rst-current-version" data-toggle="rst-current-version">
         <span class="fa fa-book"> Versions</span>
-        v: dev
+        v: stable
         <span class="fa fa-caret-down"></span>
       </span>
       <div class="rst-other-versions">
@@ -218,9 +218,11 @@ bundle and push new Python package distributions to pip.</p></li>
 <div><ol class="arabic">
 <li><p>Use <a class="reference external" href="https://github.com/skywinder/github-changelog-generator#installation">github_changelog_generator</a> to
 gather all merged pull requests and closed issues during the development
-cycle. We do this because our failing discipline of writing in the
-CHANGES.rst all relevant changes, this helps our memory.</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">github_changelog_generator sphinx-gallery/sphinx-gallery --between-tags v0.3.0,v0.4.0</span>
+cycle. You will likely need to <a class="reference external" href="https://github.com/settings/tokens/new?description=GitHub%20Changelog%20Generator%20token">generate a Github token</a>
+as Github only allows 50 unauthenticated requests per hour. We do this
+because our failing discipline of writing in the CHANGES.rst all relevant
+changes, this helps our memory.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">github_changelog_generator sphinx-gallery/sphinx-gallery --since-tag=v0.5.0 --token &lt;your-40-digit-token&gt;</span>
 </pre></div>
 </div>
 </li>
@@ -247,9 +249,9 @@ everything looks right.</p>
 </li>
 <li><p>Update version</p>
 <blockquote>
-<div><p>Update the version in <code class="docutils literal notranslate"><span class="pre">sphinx_gallery/__init__.py</span></code>. It should end in
-<code class="docutils literal notranslate"><span class="pre">dev0</span></code>. You should remove this text, and the remaining number will become
-the version for this release.</p>
+<div><p>Update the version in <code class="docutils literal notranslate"><span class="pre">sphinx_gallery/__init__.py</span></code>, which should end in
+<code class="docutils literal notranslate"><span class="pre">.dev0</span></code>. You should remove <code class="docutils literal notranslate"><span class="pre">.dev0</span></code>, and the remaining numbers will
+become the version for this release.</p>
 </div></blockquote>
 </li>
 <li><p>Open a Pull Request that contains the two changes we’ve made above</p>
