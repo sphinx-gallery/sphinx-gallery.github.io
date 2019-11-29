@@ -372,19 +372,19 @@ disk</em>. In this case we won’t <em>generate</em> any image files, we’ll on
 the rST needed to embed them in the documentation.</p>
 <p>We’ll use a callable class in this case, and assume it is defined within your
 package in a module called <code class="docutils literal notranslate"><span class="pre">scraper</span></code>. Here is the scraper code:</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">glob</span> <span class="k">import</span> <span class="n">glob</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">sphinx_gallery.gen_rst</span> <span class="k">import</span> <span class="n">figure_rst</span>
+<span class="kn">from</span> <span class="nn">sphinx_gallery.gen_rst</span> <span class="kn">import</span> <span class="n">figure_rst</span>
 
 <span class="k">class</span> <span class="nc">PNGScraper</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">seen</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s1">&#39;PNGScraper&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">block_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">block_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
         <span class="c1"># Find all PNG files in the directory of this example.</span>
         <span class="n">path_current_example</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">block_vars</span><span class="p">[</span><span class="s1">&#39;src_file&#39;</span><span class="p">])</span>
         <span class="n">pngs</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="s1">&#39;*.png&#39;</span><span class="p">))</span>
@@ -403,7 +403,7 @@ package in a module called <code class="docutils literal notranslate"><span clas
 </pre></div>
 </div>
 <p>Then, in our <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file, we include the following code:</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mymodule</span> <span class="k">import</span> <span class="n">PNGScraper</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mymodule</span> <span class="kn">import</span> <span class="n">PNGScraper</span>
 
 <span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
@@ -418,14 +418,14 @@ package in a module called <code class="docutils literal notranslate"><span clas
 to pass to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure.savefig" title="(in Matplotlib v3.1.1)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">matplotlib.figure.Figure.savefig()</span></code></a>, one of which is the
 <code class="docutils literal notranslate"><span class="pre">format</span></code> argument. Currently sphinx-gallery supports PNG (default) and SVG
 output formats. To use SVG, you can do:</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sphinx_gallery.scrapers</span> <span class="k">import</span> <span class="n">matplotlib_scraper</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sphinx_gallery.scrapers</span> <span class="kn">import</span> <span class="n">matplotlib_scraper</span>
 
 <span class="k">class</span> <span class="nc">matplotlib_svg_scraper</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
 
-    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">matplotlib_scraper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;svg&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 <span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
@@ -481,7 +481,7 @@ to be used in order to perform whatever resetting behavior you want, but must
 be included in the function definition for compatibility reasons.</p>
 <p>For example, to reset matplotlib to always use the <code class="docutils literal notranslate"><span class="pre">ggplot</span></code> style, you could do:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">reset_mpl</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">style</span>
+    <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">style</span>
     <span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;ggplot&#39;</span><span class="p">)</span>
 </pre></div>
 </div>

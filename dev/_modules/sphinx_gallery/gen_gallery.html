@@ -191,26 +191,26 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">absolute_import</span>
 <span class="kn">import</span> <span class="nn">codecs</span>
 <span class="kn">import</span> <span class="nn">copy</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">timedelta</span><span class="p">,</span> <span class="n">datetime</span>
-<span class="kn">from</span> <span class="nn">importlib</span> <span class="k">import</span> <span class="n">import_module</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span><span class="p">,</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">importlib</span> <span class="kn">import</span> <span class="n">import_module</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">xml.sax.saxutils</span> <span class="k">import</span> <span class="n">quoteattr</span><span class="p">,</span> <span class="n">escape</span>
+<span class="kn">from</span> <span class="nn">xml.sax.saxutils</span> <span class="kn">import</span> <span class="n">quoteattr</span><span class="p">,</span> <span class="n">escape</span>
 
-<span class="kn">from</span> <span class="nn">sphinx.util.console</span> <span class="k">import</span> <span class="n">red</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">sphinx_compatibility</span><span class="p">,</span> <span class="n">glr_path_static</span><span class="p">,</span> <span class="n">__version__</span> <span class="k">as</span> <span class="n">_sg_version</span>
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="n">_replace_md5</span>
-<span class="kn">from</span> <span class="nn">.backreferences</span> <span class="k">import</span> <span class="n">_finalize_backreferences</span>
-<span class="kn">from</span> <span class="nn">.gen_rst</span> <span class="k">import</span> <span class="p">(</span><span class="n">generate_dir_rst</span><span class="p">,</span> <span class="n">SPHX_GLR_SIG</span><span class="p">,</span> <span class="n">_get_memory_base</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">sphinx.util.console</span> <span class="kn">import</span> <span class="n">red</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">sphinx_compatibility</span><span class="p">,</span> <span class="n">glr_path_static</span><span class="p">,</span> <span class="n">__version__</span> <span class="k">as</span> <span class="n">_sg_version</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">_replace_md5</span>
+<span class="kn">from</span> <span class="nn">.backreferences</span> <span class="kn">import</span> <span class="n">_finalize_backreferences</span>
+<span class="kn">from</span> <span class="nn">.gen_rst</span> <span class="kn">import</span> <span class="p">(</span><span class="n">generate_dir_rst</span><span class="p">,</span> <span class="n">SPHX_GLR_SIG</span><span class="p">,</span> <span class="n">_get_memory_base</span><span class="p">,</span>
                       <span class="n">_get_readme</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">.scrapers</span> <span class="k">import</span> <span class="n">_scraper_dict</span><span class="p">,</span> <span class="n">_reset_dict</span>
-<span class="kn">from</span> <span class="nn">.docs_resolv</span> <span class="k">import</span> <span class="n">embed_code_links</span>
-<span class="kn">from</span> <span class="nn">.downloads</span> <span class="k">import</span> <span class="n">generate_zipfiles</span>
-<span class="kn">from</span> <span class="nn">.sorting</span> <span class="k">import</span> <span class="n">NumberOfCodeLinesSortKey</span>
-<span class="kn">from</span> <span class="nn">.binder</span> <span class="k">import</span> <span class="n">copy_binder_files</span>
+<span class="kn">from</span> <span class="nn">.scrapers</span> <span class="kn">import</span> <span class="n">_scraper_dict</span><span class="p">,</span> <span class="n">_reset_dict</span>
+<span class="kn">from</span> <span class="nn">.docs_resolv</span> <span class="kn">import</span> <span class="n">embed_code_links</span>
+<span class="kn">from</span> <span class="nn">.downloads</span> <span class="kn">import</span> <span class="n">generate_zipfiles</span>
+<span class="kn">from</span> <span class="nn">.sorting</span> <span class="kn">import</span> <span class="n">NumberOfCodeLinesSortKey</span>
+<span class="kn">from</span> <span class="nn">.binder</span> <span class="kn">import</span> <span class="n">copy_binder_files</span>
 
 <span class="n">DEFAULT_GALLERY_CONF</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;filename_pattern&#39;</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;plot&#39;</span><span class="p">,</span>
@@ -304,7 +304,7 @@
     <span class="c1"># deal with show_memory</span>
     <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;show_memory&#39;</span><span class="p">]:</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">memory_profiler</span> <span class="k">import</span> <span class="n">memory_usage</span>  <span class="c1"># noqa, analysis:ignore</span>
+            <span class="kn">from</span> <span class="nn">memory_profiler</span> <span class="kn">import</span> <span class="n">memory_usage</span>  <span class="c1"># noqa, analysis:ignore</span>
         <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Please install &#39;memory_profiler&#39; to enable peak &quot;</span>
                            <span class="s2">&quot;memory measurements.&quot;</span><span class="p">)</span>
@@ -364,6 +364,11 @@
     <span class="c1"># Make it easy to know which builder we&#39;re in</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;builder_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">builder_name</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;titles&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="c1"># Ensure &#39;backreferences_dir&#39; is str or Noe</span>
+    <span class="n">backref</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;backreferences_dir&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">backref</span><span class="p">,</span> <span class="nb">str</span><span class="p">))</span> <span class="ow">and</span> <span class="p">(</span><span class="n">backref</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The &#39;backreferences_dir&#39; parameter must be of type&quot;</span>
+                         <span class="s2">&quot;str or None, found type </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">backref</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">gallery_conf</span>
 
 
