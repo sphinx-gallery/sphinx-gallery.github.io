@@ -439,7 +439,7 @@
 
     <span class="c1"># Check for duplicate filenames to make sure linking works as expected</span>
     <span class="n">examples_dirs</span> <span class="o">=</span> <span class="p">[</span><span class="n">ex_dir</span> <span class="k">for</span> <span class="n">ex_dir</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">workdirs</span><span class="p">]</span>
-    <span class="n">files</span> <span class="o">=</span> <span class="n">collect_gallery_files</span><span class="p">(</span><span class="n">examples_dirs</span><span class="p">)</span>
+    <span class="n">files</span> <span class="o">=</span> <span class="n">collect_gallery_files</span><span class="p">(</span><span class="n">examples_dirs</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
     <span class="n">check_duplicate_filenames</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">examples_dir</span><span class="p">,</span> <span class="n">gallery_dir</span> <span class="ow">in</span> <span class="n">workdirs</span><span class="p">:</span>
@@ -730,14 +730,16 @@
                          <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">79</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="collect_gallery_files"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.collect_gallery_files">[docs]</a><span class="k">def</span> <span class="nf">collect_gallery_files</span><span class="p">(</span><span class="n">examples_dirs</span><span class="p">):</span>
+<div class="viewcode-block" id="collect_gallery_files"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.collect_gallery_files">[docs]</a><span class="k">def</span> <span class="nf">collect_gallery_files</span><span class="p">(</span><span class="n">examples_dirs</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Collect python files from the gallery example directories.&quot;&quot;&quot;</span>
     <span class="n">files</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">example_dir</span> <span class="ow">in</span> <span class="n">examples_dirs</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">dirnames</span><span class="p">,</span> <span class="n">filenames</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">example_dir</span><span class="p">):</span>
             <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.py&#39;</span><span class="p">):</span>
-                    <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span>
+                    <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;ignore_pattern&#39;</span><span class="p">],</span>
+                                 <span class="n">filename</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">files</span></div>
 
 
