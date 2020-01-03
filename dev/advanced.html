@@ -263,6 +263,34 @@ its reference
 <code class="docutils literal notranslate"><span class="pre">:ref:`sphx_glr_auto_examples_plot_0_sin.py`</span></code>. The image
 it generated has the name <code class="docutils literal notranslate"><span class="pre">sphx_glr_plot_0_sin_001.png</span></code>
 and its thumbnail is <code class="docutils literal notranslate"><span class="pre">sphx_glr_plot_0_sin_thumb.png</span></code></p>
+<p>You can also include part of a gallery script elsewhere in your documentation
+using the <a class="reference external" href="http://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html#directive-literalinclude" title="(in Sphinx v3.0.0+/0319faf8f)"><code class="xref rst rst-dir docutils literal notranslate"><span class="pre">literalinclude</span></code></a> directive, in order to limit code duplication:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="o">..</span> <span class="n">literalinclude</span><span class="p">::</span> <span class="o">../</span><span class="n">examples</span><span class="o">/</span><span class="n">plot_0_sin</span><span class="o">.</span><span class="n">py</span>
+   <span class="p">:</span><span class="n">language</span><span class="p">:</span> <span class="n">python</span>
+   <span class="p">:</span><span class="n">start</span><span class="o">-</span><span class="n">after</span><span class="p">:</span> <span class="c1"># License: BSD 3 clause</span>
+   <span class="p">:</span><span class="n">end</span><span class="o">-</span><span class="n">before</span><span class="p">:</span> <span class="c1"># To avoid matplotlib</span>
+</pre></div>
+</div>
+<p>The above directive inserts the following block:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;$x$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;$\sin(x)$&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Using literalinclude is fragile and can break easily when examples are
+changed (all the more when line numbers are used instead of <code class="docutils literal notranslate"><span class="pre">start-after</span></code>
+and  <code class="docutils literal notranslate"><span class="pre">end-before</span></code>). Use with caution: linking directly to examples is
+a more robust alternative.</p>
+</div>
 </div>
 <div class="section" id="write-a-custom-image-scraper">
 <span id="custom-scraper"></span><h2><a class="toc-backref" href="#id6">Write a custom image scraper</a><a class="headerlink" href="#write-a-custom-image-scraper" title="Permalink to this headline">¶</a></h2>
@@ -523,7 +551,7 @@ that results between the rendered examples and local outputs.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2014-2019, Sphinx-gallery developers
+        &copy; Copyright 2014-2020, Sphinx-gallery developers
 
     </p>
   </div>
