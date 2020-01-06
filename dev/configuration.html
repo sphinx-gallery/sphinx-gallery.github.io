@@ -121,6 +121,8 @@
 <li class="toctree-l2"><a class="reference internal" href="#add-mini-galleries-for-api-documentation">Add mini-galleries for API documentation</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#examples-using-numpy-exp">Examples using <code class="docutils literal notranslate"><span class="pre">numpy.exp</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#auto-documenting-your-api-with-links-to-examples">Auto-documenting your API with links to examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#toggling-global-variable-inspection">Toggling global variable inspection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#stylizing-code-links-using-css">Stylizing code links using CSS</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#using-a-custom-default-thumbnail">Using a custom default thumbnail</a></li>
@@ -486,7 +488,7 @@ in a documentation block.</p></li>
 <p>The former is useful for auto-documenting functions that are used and classes
 that are explicitly instantiated. The latter is useful for classes that are
 typically implicitly returned rather than explicitly instantiated (e.g.,
-<a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.1.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a> which is most often instantiated only indirectly
+<a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.1.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a> which is most often instantiated only indirectly
 within function calls).</p>
 <p>For example, we can embed a small gallery of all examples that use or
 refer to <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.exp.html#numpy.exp" title="(in NumPy v1.17)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.exp</span></code></a>, which looks like this:</p>
@@ -727,8 +729,9 @@ configuration option setup for Sphinx-Gallery.</p>
    {% endblock %}
 </pre></div>
 </td></tr></table></div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
+</div>
+<div class="section" id="toggling-global-variable-inspection">
+<h3>Toggling global variable inspection<a class="headerlink" href="#toggling-global-variable-inspection" title="Permalink to this headline">¶</a></h3>
 <p>By default, Sphinx-gallery will inspect global variables (and code objects)
 at the end of each code block to try to find classes of variables and
 method calls. It also tries to find methods called on classes.
@@ -742,12 +745,12 @@ For example, this code:</p>
 properly):</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">lst</span></code></a></p></li>
-<li><p><a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="(in Matplotlib v3.1.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">plt.subplots</span></code></a></p></li>
-<li><p><a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v3.1.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">fig</span></code></a></p></li>
-<li><p><a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.1.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ax</span></code></a></p></li>
-<li><p><a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="(in Matplotlib v3.1.1)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ax.plot</span></code></a></p></li>
+<li><p><a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="(in Matplotlib v3.1.2)"><code class="xref py py-func docutils literal notranslate"><span class="pre">plt.subplots</span></code></a></p></li>
+<li><p><a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v3.1.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">fig</span></code></a></p></li>
+<li><p><a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.1.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ax</span></code></a></p></li>
+<li><p><a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="(in Matplotlib v3.1.2)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ax.plot</span></code></a></p></li>
 </ul>
-<p>However, this feature is might not work properly in all instances.
+<p>However, this feature might not work properly in all instances.
 Moreover, if variable names get reused in the same script to refer to
 different classes, it will break.</p>
 <p>To disable this global variable introspection, you can use the configuration
@@ -755,10 +758,64 @@ key:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
     <span class="s1">&#39;inspect_global_variables&#39;</span>  <span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
- <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </div>
+<div class="section" id="stylizing-code-links-using-css">
+<h3>Stylizing code links using CSS<a class="headerlink" href="#stylizing-code-links-using-css" title="Permalink to this headline">¶</a></h3>
+<p>Each link in the code blocks will be decorated with two or three CSS classes.</p>
+<ol class="arabic">
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">sphx-glr-backref-module-*</span></code></dt><dd><p>The module where the object is documented.
+For example, <code class="docutils literal notranslate"><span class="pre">sphx-glr-backref-module-matplotlib-figure</span></code>.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">sphx-glr-backref-type-*</span></code></dt><dd><p>The type of the object. This is a sanitized intersphinx type, for
+example a <code class="docutils literal notranslate"><span class="pre">py:class</span></code> will have the CSS class
+<code class="docutils literal notranslate"><span class="pre">sphx-glr-backref-type-py-class</span></code>.</p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt><code class="docutils literal notranslate"><span class="pre">sphx-glr-backref-instance</span></code></dt><dd><p>A class that is added if the object is an instance of a class
+(rather than, e.g., a class itself, method, or function).
+By default, Sphinx-Gallery adds the following CSS in <code class="docutils literal notranslate"><span class="pre">gallery.css</span></code>:</p>
+<div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="nt">a</span><span class="p">.</span><span class="nc">sphx-glr-backref-instance</span> <span class="p">{</span>
+    <span class="k">text-decoration</span><span class="p">:</span> <span class="kc">none</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This is done to reduce the visual impact of instance linking
+in example code. This means that for the following code:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">Figure</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>here <code class="docutils literal notranslate"><span class="pre">x</span></code> is an instance of a class, so it will have the
+<code class="docutils literal notranslate"><span class="pre">sphx-glr-backref-instance</span></code> CSS class, and it will not be decorated;
+and <code class="docutils literal notranslate"><span class="pre">Figure</span></code> is a class, so it will not have the
+<code class="docutils literal notranslate"><span class="pre">sphx-glr-backref-instance</span></code> CSS class, and will thus be decorated the
+standard way for links in the given parent styles.</p>
+</dd>
+</dl>
+</li>
+</ol>
+<p>These three CSS classes are meant to give fine-grained control over how
+different links are decorated. For example, using CSS selectors you could
+choose to avoid highlighting any <code class="docutils literal notranslate"><span class="pre">sphx-glr-backref-*</span></code> links except for ones
+that you whitelist (e.g., those from your own module). For example:</p>
+<div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="nt">a</span><span class="o">[</span><span class="nt">class</span><span class="o">^=</span><span class="s2">&quot;sphx-glr-backref-module-&quot;</span><span class="o">]</span> <span class="p">{</span>
+    <span class="k">text-decoration</span><span class="p">:</span> <span class="kc">none</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nt">a</span><span class="o">[</span><span class="nt">class</span><span class="o">^=</span><span class="s2">&quot;sphx-glr-backref-module-matplotlib&quot;</span><span class="o">]</span> <span class="p">{</span>
+    <span class="k">text-decoration</span><span class="p">:</span> <span class="kc">underline</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>There are likely elements other than <code class="docutils literal notranslate"><span class="pre">text-decoration</span></code> that might be worth
+setting, as well.</p>
 </div>
 </div>
 <div class="section" id="using-a-custom-default-thumbnail">
@@ -1044,7 +1101,7 @@ are based on Matplotlib, for example Seaborn or Yellowbrick.</p>
 <ul class="simple">
 <li><dl class="simple">
 <dt>matplotlib</dt><dd><p>Sphinx-gallery maintains a scraper for
-<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.html#module-matplotlib.pyplot" title="(in Matplotlib v3.1.1)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib</span></code></a> figures via the string
+<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.html#module-matplotlib.pyplot" title="(in Matplotlib v3.1.2)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib</span></code></a> figures via the string
 <code class="docutils literal notranslate"><span class="pre">'matplotlib'</span></code>.</p>
 </dd>
 </dl>
@@ -1084,7 +1141,7 @@ feel free to add it to the list above (see discussion
 to ensure that any changes made to plotting behavior in one example do not
 propagate to the other examples.</p>
 <p>By default, before each example file executes, Sphinx-gallery will
-reset <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> (by using <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.rcdefaults.html#matplotlib.pyplot.rcdefaults" title="(in Matplotlib v3.1.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.rcdefaults()</span></code></a>) and <code class="docutils literal notranslate"><span class="pre">seaborn</span></code>
+reset <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> (by using <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.rcdefaults.html#matplotlib.pyplot.rcdefaults" title="(in Matplotlib v3.1.2)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.rcdefaults()</span></code></a>) and <code class="docutils literal notranslate"><span class="pre">seaborn</span></code>
 (by trying to unload the module from <code class="docutils literal notranslate"><span class="pre">sys.modules</span></code>). This is equivalent to the
 following configuration:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>

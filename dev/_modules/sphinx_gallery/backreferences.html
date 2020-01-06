@@ -194,6 +194,7 @@
 <span class="kn">import</span> <span class="nn">codecs</span>
 <span class="kn">import</span> <span class="nn">collections</span>
 <span class="kn">from</span> <span class="nn">html</span> <span class="kn">import</span> <span class="n">escape</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
@@ -248,9 +249,18 @@
             <span class="k">if</span> <span class="n">local_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">imported_names</span><span class="p">:</span>
                 <span class="c1"># Join import path to relative path</span>
                 <span class="n">full_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">imported_names</span><span class="p">[</span><span class="n">local_name</span><span class="p">]</span> <span class="o">+</span> <span class="n">remainder</span>
-                <span class="k">yield</span> <span class="n">name</span><span class="p">,</span> <span class="n">full_name</span><span class="p">,</span> <span class="n">class_attr</span>
+                <span class="k">if</span> <span class="n">local_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_variables</span><span class="p">:</span>
+                    <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_variables</span><span class="p">[</span><span class="n">local_name</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">remainder</span><span class="p">:</span>
+                        <span class="k">for</span> <span class="n">level</span> <span class="ow">in</span> <span class="n">remainder</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">):</span>
+                            <span class="n">obj</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">level</span><span class="p">)</span>
+                    <span class="n">is_class</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isclass</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">is_class</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">yield</span> <span class="n">name</span><span class="p">,</span> <span class="n">full_name</span><span class="p">,</span> <span class="n">class_attr</span><span class="p">,</span> <span class="n">is_class</span>
             <span class="k">elif</span> <span class="n">local_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_variables</span><span class="p">:</span>
                 <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_variables</span><span class="p">[</span><span class="n">local_name</span><span class="p">]</span>
+                <span class="n">is_class</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isclass</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">remainder</span> <span class="ow">and</span> <span class="n">remainder</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;.&#39;</span><span class="p">:</span>  <span class="c1"># maybe meth or attr</span>
                     <span class="n">method</span> <span class="o">=</span> <span class="p">[</span><span class="n">remainder</span><span class="p">[</span><span class="mi">1</span><span class="p">:]]</span>
                     <span class="n">class_attr</span> <span class="o">=</span> <span class="kc">True</span>
@@ -272,7 +282,7 @@
                     <span class="k">for</span> <span class="n">depth</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">module</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
                         <span class="n">full_name</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
                             <span class="n">module</span><span class="p">[:</span><span class="n">depth</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">class_name</span><span class="p">]</span> <span class="o">+</span> <span class="n">method</span><span class="p">)</span>
-                        <span class="k">yield</span> <span class="n">name</span><span class="p">,</span> <span class="n">full_name</span><span class="p">,</span> <span class="n">class_attr</span></div>
+                        <span class="k">yield</span> <span class="n">name</span><span class="p">,</span> <span class="n">full_name</span><span class="p">,</span> <span class="n">class_attr</span><span class="p">,</span> <span class="n">is_class</span></div>
 
 
 <span class="k">def</span> <span class="nf">_from_import</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
@@ -338,10 +348,10 @@
     <span class="n">names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">finder</span><span class="o">.</span><span class="n">get_mapping</span><span class="p">())</span>
     <span class="c1"># Get matches from docstring inspection</span>
     <span class="n">text</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">txt</span> <span class="k">for</span> <span class="n">kind</span><span class="p">,</span> <span class="n">txt</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">script_blocks</span> <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s1">&#39;text&#39;</span><span class="p">)</span>
-    <span class="n">names</span><span class="o">.</span><span class="n">extend</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">_regex</span><span class="p">,</span> <span class="n">text</span><span class="p">))</span>
+    <span class="n">names</span><span class="o">.</span><span class="n">extend</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">_regex</span><span class="p">,</span> <span class="n">text</span><span class="p">))</span>
     <span class="n">example_code_obj</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">()</span>  <span class="c1"># order is important</span>
     <span class="n">fill_guess</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">full_name</span><span class="p">,</span> <span class="n">class_like</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">full_name</span><span class="p">,</span> <span class="n">class_like</span><span class="p">,</span> <span class="n">is_class</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">example_code_obj</span><span class="p">:</span>
             <span class="k">continue</span>  <span class="c1"># if someone puts it in the docstring and code</span>
         <span class="c1"># name is as written in file (e.g. np.asarray)</span>
@@ -359,7 +369,7 @@
         <span class="c1"># get shortened module name</span>
         <span class="n">module_short</span> <span class="o">=</span> <span class="n">_get_short_module_name</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">attribute</span><span class="p">)</span>
         <span class="n">cobj</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">attribute</span><span class="p">,</span> <span class="s1">&#39;module&#39;</span><span class="p">:</span> <span class="n">module</span><span class="p">,</span>
-                <span class="s1">&#39;module_short&#39;</span><span class="p">:</span> <span class="n">module_short</span><span class="p">}</span>
+                <span class="s1">&#39;module_short&#39;</span><span class="p">:</span> <span class="n">module_short</span><span class="p">,</span> <span class="s1">&#39;is_class&#39;</span><span class="p">:</span> <span class="n">is_class</span><span class="p">}</span>
         <span class="k">if</span> <span class="n">module_short</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">example_code_obj</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">cobj</span>
         <span class="k">elif</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">fill_guess</span><span class="p">:</span>
