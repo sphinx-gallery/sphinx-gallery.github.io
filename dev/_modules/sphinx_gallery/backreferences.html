@@ -242,47 +242,56 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">get_mapping</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">imported_names_split</span> <span class="o">=</span> \
+            <span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">imported_names</span><span class="p">]</span>
+        <span class="c1"># ensure that max is at least one</span>
+        <span class="n">max_import_splits</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">imported_names_split</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">],</span> <span class="n">key</span><span class="o">=</span><span class="nb">len</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">accessed_names</span><span class="p">:</span>
-            <span class="n">local_name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">remainder</span> <span class="o">=</span> <span class="n">name</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">local_name</span><span class="p">):]</span>
-            <span class="n">class_attr</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="k">if</span> <span class="n">local_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">imported_names</span><span class="p">:</span>
-                <span class="c1"># Join import path to relative path</span>
-                <span class="n">full_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">imported_names</span><span class="p">[</span><span class="n">local_name</span><span class="p">]</span> <span class="o">+</span> <span class="n">remainder</span>
-                <span class="k">if</span> <span class="n">local_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_variables</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">split_level</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_import_splits</span><span class="p">):</span>
+                <span class="n">local_name_split</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+                <span class="c1"># add the next &#39;.&#39; split to local_name</span>
+                <span class="c1"># ensures self.imported names with &#39;.&#39; are not missed</span>
+                <span class="n">local_name</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">local_name_split</span><span class="p">[:</span><span class="n">split_level</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
+                <span class="n">remainder</span> <span class="o">=</span> <span class="n">name</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">local_name</span><span class="p">):]</span>
+                <span class="n">class_attr</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">if</span> <span class="n">local_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">imported_names</span><span class="p">:</span>
+                    <span class="c1"># Join import path to relative path</span>
+                    <span class="n">full_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">imported_names</span><span class="p">[</span><span class="n">local_name</span><span class="p">]</span> <span class="o">+</span> <span class="n">remainder</span>
+                    <span class="k">if</span> <span class="n">local_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_variables</span><span class="p">:</span>
+                        <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_variables</span><span class="p">[</span><span class="n">local_name</span><span class="p">]</span>
+                        <span class="k">if</span> <span class="n">remainder</span><span class="p">:</span>
+                            <span class="k">for</span> <span class="n">level</span> <span class="ow">in</span> <span class="n">remainder</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">):</span>
+                                <span class="n">obj</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">level</span><span class="p">)</span>
+                        <span class="n">is_class</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isclass</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">is_class</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="k">yield</span> <span class="n">name</span><span class="p">,</span> <span class="n">full_name</span><span class="p">,</span> <span class="n">class_attr</span><span class="p">,</span> <span class="n">is_class</span>
+                    <span class="k">break</span>
+                <span class="k">elif</span> <span class="n">local_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_variables</span><span class="p">:</span>
                     <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_variables</span><span class="p">[</span><span class="n">local_name</span><span class="p">]</span>
-                    <span class="k">if</span> <span class="n">remainder</span><span class="p">:</span>
-                        <span class="k">for</span> <span class="n">level</span> <span class="ow">in</span> <span class="n">remainder</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">):</span>
-                            <span class="n">obj</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">level</span><span class="p">)</span>
                     <span class="n">is_class</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isclass</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">is_class</span> <span class="o">=</span> <span class="kc">False</span>
-                <span class="k">yield</span> <span class="n">name</span><span class="p">,</span> <span class="n">full_name</span><span class="p">,</span> <span class="n">class_attr</span><span class="p">,</span> <span class="n">is_class</span>
-            <span class="k">elif</span> <span class="n">local_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_variables</span><span class="p">:</span>
-                <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_variables</span><span class="p">[</span><span class="n">local_name</span><span class="p">]</span>
-                <span class="n">is_class</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isclass</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">remainder</span> <span class="ow">and</span> <span class="n">remainder</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;.&#39;</span><span class="p">:</span>  <span class="c1"># maybe meth or attr</span>
-                    <span class="n">method</span> <span class="o">=</span> <span class="p">[</span><span class="n">remainder</span><span class="p">[</span><span class="mi">1</span><span class="p">:]]</span>
-                    <span class="n">class_attr</span> <span class="o">=</span> <span class="kc">True</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">method</span> <span class="o">=</span> <span class="p">[]</span>
-                <span class="c1"># Recurse through all levels of bases</span>
-                <span class="n">classes</span> <span class="o">=</span> <span class="p">[</span><span class="n">obj</span><span class="o">.</span><span class="vm">__class__</span><span class="p">]</span>
-                <span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span>
-                <span class="k">while</span> <span class="n">offset</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">classes</span><span class="p">):</span>
-                    <span class="k">for</span> <span class="n">base</span> <span class="ow">in</span> <span class="n">classes</span><span class="p">[</span><span class="n">offset</span><span class="p">]</span><span class="o">.</span><span class="vm">__bases__</span><span class="p">:</span>
-                        <span class="k">if</span> <span class="n">base</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">classes</span><span class="p">:</span>
-                            <span class="n">classes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">base</span><span class="p">)</span>
-                    <span class="n">offset</span> <span class="o">+=</span> <span class="mi">1</span>
-                <span class="k">for</span> <span class="n">cc</span> <span class="ow">in</span> <span class="n">classes</span><span class="p">:</span>
-                    <span class="n">module</span> <span class="o">=</span> <span class="n">cc</span><span class="o">.</span><span class="vm">__module__</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
-                    <span class="n">class_name</span> <span class="o">=</span> <span class="n">cc</span><span class="o">.</span><span class="vm">__name__</span>
-                    <span class="c1"># a.b.C.meth could be documented as a.C.meth,</span>
-                    <span class="c1"># so go down the list</span>
-                    <span class="k">for</span> <span class="n">depth</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">module</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-                        <span class="n">full_name</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-                            <span class="n">module</span><span class="p">[:</span><span class="n">depth</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">class_name</span><span class="p">]</span> <span class="o">+</span> <span class="n">method</span><span class="p">)</span>
-                        <span class="k">yield</span> <span class="n">name</span><span class="p">,</span> <span class="n">full_name</span><span class="p">,</span> <span class="n">class_attr</span><span class="p">,</span> <span class="n">is_class</span></div>
+                    <span class="k">if</span> <span class="n">remainder</span> <span class="ow">and</span> <span class="n">remainder</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;.&#39;</span><span class="p">:</span>  <span class="c1"># maybe meth or attr</span>
+                        <span class="n">method</span> <span class="o">=</span> <span class="p">[</span><span class="n">remainder</span><span class="p">[</span><span class="mi">1</span><span class="p">:]]</span>
+                        <span class="n">class_attr</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">method</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="c1"># Recurse through all levels of bases</span>
+                    <span class="n">classes</span> <span class="o">=</span> <span class="p">[</span><span class="n">obj</span><span class="o">.</span><span class="vm">__class__</span><span class="p">]</span>
+                    <span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="k">while</span> <span class="n">offset</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">classes</span><span class="p">):</span>
+                        <span class="k">for</span> <span class="n">base</span> <span class="ow">in</span> <span class="n">classes</span><span class="p">[</span><span class="n">offset</span><span class="p">]</span><span class="o">.</span><span class="vm">__bases__</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">base</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">classes</span><span class="p">:</span>
+                                <span class="n">classes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">base</span><span class="p">)</span>
+                        <span class="n">offset</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">for</span> <span class="n">cc</span> <span class="ow">in</span> <span class="n">classes</span><span class="p">:</span>
+                        <span class="n">module</span> <span class="o">=</span> <span class="n">cc</span><span class="o">.</span><span class="vm">__module__</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+                        <span class="n">class_name</span> <span class="o">=</span> <span class="n">cc</span><span class="o">.</span><span class="vm">__name__</span>
+                        <span class="c1"># a.b.C.meth could be documented as a.C.meth,</span>
+                        <span class="c1"># so go down the list</span>
+                        <span class="k">for</span> <span class="n">depth</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">module</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+                            <span class="n">full_name</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                                <span class="n">module</span><span class="p">[:</span><span class="n">depth</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">class_name</span><span class="p">]</span> <span class="o">+</span> <span class="n">method</span><span class="p">)</span>
+                            <span class="k">yield</span> <span class="n">name</span><span class="p">,</span> <span class="n">full_name</span><span class="p">,</span> <span class="n">class_attr</span><span class="p">,</span> <span class="n">is_class</span></div>
 
 
 <span class="k">def</span> <span class="nf">_from_import</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
