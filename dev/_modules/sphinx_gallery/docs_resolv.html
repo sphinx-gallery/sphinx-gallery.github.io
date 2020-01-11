@@ -357,18 +357,19 @@
         <span class="n">sindex</span> <span class="o">=</span> <span class="n">get_data</span><span class="p">(</span><span class="n">searchindex_url</span><span class="p">,</span> <span class="n">gallery_dir</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_searchindex</span> <span class="o">=</span> <span class="n">js_index</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">sindex</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_get_link</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cobj</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get a valid link, False if not found.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">_get_link_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cobj</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get a valid link and type_, False if not found.&quot;&quot;&quot;</span>
         <span class="n">fullname</span> <span class="o">=</span> <span class="n">cobj</span><span class="p">[</span><span class="s1">&#39;module_short&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="n">cobj</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_searchindex</span><span class="p">[</span><span class="s1">&#39;objects&#39;</span><span class="p">][</span><span class="n">cobj</span><span class="p">[</span><span class="s1">&#39;module_short&#39;</span><span class="p">]]</span>
             <span class="n">match</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="n">cobj</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]]</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-            <span class="n">link</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">link</span><span class="p">,</span> <span class="n">type_</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">fname_idx</span> <span class="o">=</span> <span class="n">match</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">objname_idx</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">match</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
             <span class="n">anchor</span> <span class="o">=</span> <span class="n">match</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+            <span class="n">type_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_searchindex</span><span class="p">[</span><span class="s1">&#39;objtypes&#39;</span><span class="p">][</span><span class="n">objname_idx</span><span class="p">]</span>
 
             <span class="n">fname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_searchindex</span><span class="p">[</span><span class="s1">&#39;filenames&#39;</span><span class="p">][</span><span class="n">fname_idx</span><span class="p">]</span>
             <span class="c1"># In 1.5+ Sphinx seems to have changed from .rst.html to only</span>
@@ -389,9 +390,9 @@
 
             <span class="n">link</span> <span class="o">=</span> <span class="n">link</span> <span class="o">+</span> <span class="s1">&#39;#&#39;</span> <span class="o">+</span> <span class="n">anchor</span>
 
-        <span class="k">return</span> <span class="n">link</span>
+        <span class="k">return</span> <span class="n">link</span><span class="p">,</span> <span class="n">type_</span>
 
-<div class="viewcode-block" id="SphinxDocLinkResolver.resolve"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.docs_resolv.html#sphinx_gallery.docs_resolv.SphinxDocLinkResolver.resolve">[docs]</a>    <span class="k">def</span> <span class="nf">resolve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cobj</span><span class="p">,</span> <span class="n">this_url</span><span class="p">):</span>
+<div class="viewcode-block" id="SphinxDocLinkResolver.resolve"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.docs_resolv.html#sphinx_gallery.docs_resolv.SphinxDocLinkResolver.resolve">[docs]</a>    <span class="k">def</span> <span class="nf">resolve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cobj</span><span class="p">,</span> <span class="n">this_url</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Resolve the link to the documentation, returns None if not found</span>
 
 <span class="sd">        Parameters</span>
@@ -405,19 +406,21 @@
 <span class="sd">        this_url: str</span>
 <span class="sd">            URL of the current page. Needed to construct relative URLs</span>
 <span class="sd">            (only used if relative=True in constructor).</span>
+<span class="sd">        return_type : bool</span>
+<span class="sd">            If True, return the type as well.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        link : str or None</span>
 <span class="sd">            The link (URL) to the documentation.</span>
+<span class="sd">        type_ : str</span>
+<span class="sd">            The type. Only returned if return_type is True.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">full_name</span> <span class="o">=</span> <span class="n">cobj</span><span class="p">[</span><span class="s1">&#39;module_short&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="n">cobj</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
-        <span class="n">link</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_link_cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">full_name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">link</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">full_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_link_cache</span><span class="p">:</span>
             <span class="c1"># we don&#39;t have it cached</span>
-            <span class="n">link</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_link</span><span class="p">(</span><span class="n">cobj</span><span class="p">)</span>
-            <span class="c1"># cache it for the future</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_link_cache</span><span class="p">[</span><span class="n">full_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">link</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_link_cache</span><span class="p">[</span><span class="n">full_name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_link_type</span><span class="p">(</span><span class="n">cobj</span><span class="p">)</span>
+        <span class="n">link</span><span class="p">,</span> <span class="n">type_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_link_cache</span><span class="p">[</span><span class="n">full_name</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="n">link</span> <span class="ow">is</span> <span class="kc">False</span> <span class="ow">or</span> <span class="n">link</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># failed to resolve</span>
@@ -432,7 +435,7 @@
             <span class="c1"># for some reason, the relative link goes one directory too high up</span>
             <span class="n">link</span> <span class="o">=</span> <span class="n">link</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span>
 
-        <span class="k">return</span> <span class="n">link</span></div></div>
+        <span class="k">return</span> <span class="p">(</span><span class="n">link</span><span class="p">,</span> <span class="n">type_</span><span class="p">)</span> <span class="k">if</span> <span class="n">return_type</span> <span class="k">else</span> <span class="n">link</span></div></div>
 
 
 <span class="k">def</span> <span class="nf">_handle_http_url_error</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="s1">&#39;fetching&#39;</span><span class="p">):</span>
@@ -510,13 +513,13 @@
                     <span class="n">is_instance</span> <span class="o">=</span> <span class="kc">False</span>
                     <span class="k">if</span> <span class="n">this_module</span> <span class="ow">in</span> <span class="n">doc_resolvers</span><span class="p">:</span>
                         <span class="k">try</span><span class="p">:</span>
-                            <span class="n">link</span> <span class="o">=</span> <span class="n">doc_resolvers</span><span class="p">[</span><span class="n">this_module</span><span class="p">]</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span>
-                                <span class="n">cobj</span><span class="p">,</span> <span class="n">full_fname</span><span class="p">)</span>
+                            <span class="n">link</span><span class="p">,</span> <span class="n">type_</span> <span class="o">=</span> <span class="n">doc_resolvers</span><span class="p">[</span><span class="n">this_module</span><span class="p">]</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span>
+                                <span class="n">cobj</span><span class="p">,</span> <span class="n">full_fname</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
                         <span class="k">except</span> <span class="p">(</span><span class="n">HTTPError</span><span class="p">,</span> <span class="n">URLError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                             <span class="n">_handle_http_url_error</span><span class="p">(</span>
                                 <span class="n">e</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="s1">&#39;resolving </span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">modname</span><span class="p">,</span> <span class="n">cname</span><span class="p">))</span>
 
-                    <span class="c1"># next try intersphinx (which gives us the type_ as well)</span>
+                    <span class="c1"># next try intersphinx</span>
                     <span class="k">if</span> <span class="n">this_module</span> <span class="o">==</span> <span class="n">modname</span> <span class="o">==</span> <span class="s1">&#39;builtins&#39;</span><span class="p">:</span>
                         <span class="n">this_module</span> <span class="o">=</span> <span class="s1">&#39;python&#39;</span>
                     <span class="k">elif</span> <span class="n">modname</span> <span class="ow">in</span> <span class="n">builtin_modules</span><span class="p">:</span>
@@ -532,10 +535,12 @@
                             <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;py&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">want</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
                                 <span class="n">link</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="n">want</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
                                 <span class="n">type_</span> <span class="o">=</span> <span class="n">key</span>
-                                <span class="c1"># differentiate classes from instances</span>
-                                <span class="n">is_instance</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;py:class&#39;</span> <span class="ow">in</span> <span class="n">type_</span> <span class="ow">and</span>
-                                               <span class="ow">not</span> <span class="n">cobj</span><span class="p">[</span><span class="s1">&#39;is_class&#39;</span><span class="p">])</span>
                                 <span class="k">break</span>
+
+                    <span class="c1"># differentiate classes from instances</span>
+                    <span class="n">is_instance</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span>
+                                   <span class="s1">&#39;py:class&#39;</span> <span class="ow">in</span> <span class="n">type_</span> <span class="ow">and</span>
+                                   <span class="ow">not</span> <span class="n">cobj</span><span class="p">[</span><span class="s1">&#39;is_class&#39;</span><span class="p">])</span>
 
                     <span class="k">if</span> <span class="n">link</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                         <span class="n">parts</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
