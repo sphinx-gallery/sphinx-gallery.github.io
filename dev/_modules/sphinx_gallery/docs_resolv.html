@@ -364,7 +364,7 @@
             <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_searchindex</span><span class="p">[</span><span class="s1">&#39;objects&#39;</span><span class="p">][</span><span class="n">cobj</span><span class="p">[</span><span class="s1">&#39;module_short&#39;</span><span class="p">]]</span>
             <span class="n">match</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="n">cobj</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]]</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-            <span class="n">link</span><span class="p">,</span> <span class="n">type_</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">None</span>
+            <span class="n">link</span> <span class="o">=</span> <span class="n">type_</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">fname_idx</span> <span class="o">=</span> <span class="n">match</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">objname_idx</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">match</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
@@ -422,11 +422,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_link_cache</span><span class="p">[</span><span class="n">full_name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_link_type</span><span class="p">(</span><span class="n">cobj</span><span class="p">)</span>
         <span class="n">link</span><span class="p">,</span> <span class="n">type_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_link_cache</span><span class="p">[</span><span class="n">full_name</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="n">link</span> <span class="ow">is</span> <span class="kc">False</span> <span class="ow">or</span> <span class="n">link</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="c1"># failed to resolve</span>
-            <span class="k">return</span> <span class="kc">None</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">relative</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">relative</span> <span class="ow">and</span> <span class="n">link</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">link</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">link</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="n">this_url</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_windows</span><span class="p">:</span>
                 <span class="c1"># replace &#39;\&#39; with &#39;/&#39; so it on the web</span>
@@ -495,22 +491,25 @@
         <span class="n">subpath</span> <span class="o">=</span> <span class="n">dirpath</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">html_gallery_dir</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]</span>
         <span class="n">pickle_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">src_gallery_dir</span><span class="p">,</span> <span class="n">subpath</span><span class="p">,</span>
                                     <span class="n">fname</span><span class="p">[:</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_codeobj.pickle&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">pickle_fname</span><span class="p">):</span>
+            <span class="k">continue</span>
 
-        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">pickle_fname</span><span class="p">):</span>
-            <span class="c1"># we have a pickle file with the objects to embed links for</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">pickle_fname</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
-                <span class="n">example_code_obj</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fid</span><span class="p">)</span>
-            <span class="n">fid</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-            <span class="n">str_repl</span> <span class="o">=</span> <span class="p">{}</span>
-            <span class="c1"># generate replacement strings with the links</span>
-            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">cobj</span> <span class="ow">in</span> <span class="n">example_code_obj</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="c1"># we have a pickle file with the objects to embed links for</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">pickle_fname</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
+            <span class="n">example_code_obj</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fid</span><span class="p">)</span>
+        <span class="c1"># generate replacement strings with the links</span>
+        <span class="n">str_repl</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">example_code_obj</span><span class="p">):</span>
+            <span class="n">cobjs</span> <span class="o">=</span> <span class="n">example_code_obj</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+            <span class="c1"># possible names from identify_names, which in turn gets</span>
+            <span class="c1"># possibilites from NameFinder.get_mapping</span>
+            <span class="n">link</span> <span class="o">=</span> <span class="n">type_</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">for</span> <span class="n">cobj</span> <span class="ow">in</span> <span class="n">cobjs</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">modname</span> <span class="ow">in</span> <span class="p">(</span><span class="n">cobj</span><span class="p">[</span><span class="s1">&#39;module_short&#39;</span><span class="p">],</span> <span class="n">cobj</span><span class="p">[</span><span class="s1">&#39;module&#39;</span><span class="p">]):</span>
                     <span class="n">this_module</span> <span class="o">=</span> <span class="n">modname</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
                     <span class="n">cname</span> <span class="o">=</span> <span class="n">cobj</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
 
                     <span class="c1"># Try doc resolvers first</span>
-                    <span class="n">link</span> <span class="o">=</span> <span class="n">type_</span> <span class="o">=</span> <span class="kc">None</span>
-                    <span class="n">is_instance</span> <span class="o">=</span> <span class="kc">False</span>
                     <span class="k">if</span> <span class="n">this_module</span> <span class="ow">in</span> <span class="n">doc_resolvers</span><span class="p">:</span>
                         <span class="k">try</span><span class="p">:</span>
                             <span class="n">link</span><span class="p">,</span> <span class="n">type_</span> <span class="o">=</span> <span class="n">doc_resolvers</span><span class="p">[</span><span class="n">this_module</span><span class="p">]</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span>
@@ -543,9 +542,9 @@
                                    <span class="ow">not</span> <span class="n">cobj</span><span class="p">[</span><span class="s1">&#39;is_class&#39;</span><span class="p">])</span>
 
                     <span class="k">if</span> <span class="n">link</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                        <span class="n">parts</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+                        <span class="c1"># Add CSS classes</span>
                         <span class="n">name_html</span> <span class="o">=</span> <span class="n">period</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">orig_pattern</span> <span class="o">%</span> <span class="n">part</span>
-                                                <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">)</span>
+                                                <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">))</span>
                         <span class="n">full_function_name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">modname</span><span class="p">,</span> <span class="n">cname</span><span class="p">)</span>
                         <span class="n">css_class</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;sphx-glr-backref-module-&quot;</span> <span class="o">+</span>
                                      <span class="n">_sanitize_css_class</span><span class="p">(</span><span class="n">modname</span><span class="p">))</span>
@@ -559,22 +558,26 @@
                             <span class="n">css_class</span><span class="o">=</span><span class="n">css_class</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">name_html</span><span class="p">)</span>
                         <span class="k">break</span>  <span class="c1"># loop over possible module names</span>
 
-            <span class="c1"># do the replacement in the html file</span>
+                <span class="k">if</span> <span class="n">link</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">break</span>  <span class="c1"># loop over cobjs</span>
 
-            <span class="c1"># ensure greediness</span>
-            <span class="n">names</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">str_repl</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="nb">len</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="n">regex_str</span> <span class="o">=</span> <span class="s1">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">)</span>
-            <span class="n">regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">regex_str</span><span class="p">)</span>
+        <span class="c1"># do the replacement in the html file</span>
 
-            <span class="k">def</span> <span class="nf">substitute_link</span><span class="p">(</span><span class="n">match</span><span class="p">):</span>
-                <span class="k">return</span> <span class="n">str_repl</span><span class="p">[</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">()]</span>
+        <span class="c1"># ensure greediness</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">str_repl</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="nb">len</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">regex_str</span> <span class="o">=</span> <span class="s1">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">)</span>
+        <span class="n">regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">regex_str</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">str_repl</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="k">with</span> <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">full_fname</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
-                    <span class="n">lines_in</span> <span class="o">=</span> <span class="n">fid</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
-                <span class="k">with</span> <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">full_fname</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
-                    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines_in</span><span class="p">:</span>
-                        <span class="n">fid</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">regex</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">substitute_link</span><span class="p">,</span> <span class="n">line</span><span class="p">))</span>
+        <span class="k">def</span> <span class="nf">substitute_link</span><span class="p">(</span><span class="n">match</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">str_repl</span><span class="p">[</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">()]</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">str_repl</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">full_fname</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
+                <span class="n">lines_in</span> <span class="o">=</span> <span class="n">fid</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+            <span class="k">with</span> <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">full_fname</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines_in</span><span class="p">:</span>
+                    <span class="n">line_out</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">substitute_link</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
+                    <span class="n">fid</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line_out</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="embed_code_links"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.docs_resolv.html#sphinx_gallery.docs_resolv.embed_code_links">[docs]</a><span class="k">def</span> <span class="nf">embed_code_links</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">exception</span><span class="p">):</span>
