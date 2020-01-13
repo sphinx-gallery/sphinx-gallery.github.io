@@ -766,22 +766,24 @@ key:</p>
 <p>Each link in the code blocks will be decorated with two or three CSS classes.</p>
 <ol class="arabic">
 <li><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">sphx-glr-backref-module-*</span></code></dt><dd><p>The module where the object is documented.
-For example, <code class="docutils literal notranslate"><span class="pre">sphx-glr-backref-module-matplotlib-figure</span></code>.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">sphx-glr-backref-module-*</span></code></dt><dd><p>CSS class named after the module where the object is documented.
+<code class="docutils literal notranslate"><span class="pre">*</span></code> represents the module, e.g.,
+<code class="docutils literal notranslate"><span class="pre">sphx-glr-backref-module-matplotlib-figure</span></code>.</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">sphx-glr-backref-type-*</span></code></dt><dd><p>The type of the object. This is a sanitized intersphinx type, for
-example a <code class="docutils literal notranslate"><span class="pre">py:class</span></code> will have the CSS class
-<code class="docutils literal notranslate"><span class="pre">sphx-glr-backref-type-py-class</span></code>.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">sphx-glr-backref-type-*</span></code></dt><dd><p>CSS class named after the type of the object, where <code class="docutils literal notranslate"><span class="pre">*</span></code> represents
+the object type. This is a sanitized intersphinx type, e.g., a
+<code class="docutils literal notranslate"><span class="pre">py:class</span></code> will have the CSS class <code class="docutils literal notranslate"><span class="pre">sphx-glr-backref-type-py-class</span></code>.</p>
 </dd>
 </dl>
 </li>
 <li><dl>
-<dt><code class="docutils literal notranslate"><span class="pre">sphx-glr-backref-instance</span></code></dt><dd><p>A class that is added if the object is an instance of a class
-(rather than, e.g., a class itself, method, or function).
-By default, Sphinx-Gallery adds the following CSS in <code class="docutils literal notranslate"><span class="pre">gallery.css</span></code>:</p>
+<dt><code class="docutils literal notranslate"><span class="pre">sphx-glr-backref-instance</span></code></dt><dd><p>The third ‘optional’ class that is added only if the object is an
+instance of a class (rather than, e.g., a class itself, method, or
+function). By default, Sphinx-Gallery adds the following CSS in
+<code class="docutils literal notranslate"><span class="pre">gallery.css</span></code>:</p>
 <div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="nt">a</span><span class="p">.</span><span class="nc">sphx-glr-backref-instance</span> <span class="p">{</span>
     <span class="k">text-decoration</span><span class="p">:</span> <span class="kc">none</span><span class="p">;</span>
 <span class="p">}</span>
@@ -792,9 +794,9 @@ in example code. This means that for the following code:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">Figure</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>here <code class="docutils literal notranslate"><span class="pre">x</span></code> is an instance of a class, so it will have the
-<code class="docutils literal notranslate"><span class="pre">sphx-glr-backref-instance</span></code> CSS class, and it will not be decorated;
-and <code class="docutils literal notranslate"><span class="pre">Figure</span></code> is a class, so it will not have the
+<p><code class="docutils literal notranslate"><span class="pre">x</span></code>, an instance of a class, will have the
+<code class="docutils literal notranslate"><span class="pre">sphx-glr-backref-instance</span></code> CSS class, and will not be decorated.
+<code class="docutils literal notranslate"><span class="pre">Figure</span></code> however, is a class, so will not have the
 <code class="docutils literal notranslate"><span class="pre">sphx-glr-backref-instance</span></code> CSS class, and will thus be decorated the
 standard way for links in the given parent styles.</p>
 </dd>
@@ -804,7 +806,8 @@ standard way for links in the given parent styles.</p>
 <p>These three CSS classes are meant to give fine-grained control over how
 different links are decorated. For example, using CSS selectors you could
 choose to avoid highlighting any <code class="docutils literal notranslate"><span class="pre">sphx-glr-backref-*</span></code> links except for ones
-that you whitelist (e.g., those from your own module). For example:</p>
+that you whitelist (e.g., those from your own module). For example, the
+following css prevents any module except for matplotlib from being decorated:</p>
 <div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="nt">a</span><span class="o">[</span><span class="nt">class</span><span class="o">^=</span><span class="s2">&quot;sphx-glr-backref-module-&quot;</span><span class="o">]</span> <span class="p">{</span>
     <span class="k">text-decoration</span><span class="p">:</span> <span class="kc">none</span><span class="p">;</span>
 <span class="p">}</span>
