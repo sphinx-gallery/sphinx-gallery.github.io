@@ -359,11 +359,20 @@
 
     <span class="k">def</span> <span class="nf">_get_link_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cobj</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get a valid link and type_, False if not found.&quot;&quot;&quot;</span>
-        <span class="n">fullname</span> <span class="o">=</span> <span class="n">cobj</span><span class="p">[</span><span class="s1">&#39;module_short&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="n">cobj</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+        <span class="n">first</span><span class="p">,</span> <span class="n">second</span> <span class="o">=</span> <span class="n">cobj</span><span class="p">[</span><span class="s1">&#39;module_short&#39;</span><span class="p">],</span> <span class="n">cobj</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+        <span class="n">match</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_searchindex</span><span class="p">[</span><span class="s1">&#39;objects&#39;</span><span class="p">][</span><span class="n">cobj</span><span class="p">[</span><span class="s1">&#39;module_short&#39;</span><span class="p">]]</span>
-            <span class="n">match</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="n">cobj</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]]</span>
+            <span class="n">match</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_searchindex</span><span class="p">[</span><span class="s1">&#39;objects&#39;</span><span class="p">][</span><span class="n">first</span><span class="p">][</span><span class="n">second</span><span class="p">]</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s1">&#39;.&#39;</span> <span class="ow">in</span> <span class="n">second</span><span class="p">:</span>  <span class="c1"># possible class attribute</span>
+            <span class="n">first</span><span class="p">,</span> <span class="n">second</span> <span class="o">=</span> <span class="n">second</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">first</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">cobj</span><span class="p">[</span><span class="s1">&#39;module_short&#39;</span><span class="p">],</span> <span class="n">first</span><span class="p">])</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">match</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_searchindex</span><span class="p">[</span><span class="s1">&#39;objects&#39;</span><span class="p">][</span><span class="n">first</span><span class="p">][</span><span class="n">second</span><span class="p">]</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="k">pass</span>
+        <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">link</span> <span class="o">=</span> <span class="n">type_</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">fname_idx</span> <span class="o">=</span> <span class="n">match</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -382,6 +391,7 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">link</span> <span class="o">=</span> <span class="n">posixpath</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">doc_url</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
 
+            <span class="n">fullname</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">])</span>
             <span class="k">if</span> <span class="n">anchor</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
                 <span class="n">anchor</span> <span class="o">=</span> <span class="n">fullname</span>
             <span class="k">elif</span> <span class="n">anchor</span> <span class="o">==</span> <span class="s1">&#39;-&#39;</span><span class="p">:</span>
