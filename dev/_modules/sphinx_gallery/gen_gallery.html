@@ -206,7 +206,7 @@
 <span class="kn">from</span> <span class="nn">.backreferences</span> <span class="kn">import</span> <span class="n">_finalize_backreferences</span>
 <span class="kn">from</span> <span class="nn">.gen_rst</span> <span class="kn">import</span> <span class="p">(</span><span class="n">generate_dir_rst</span><span class="p">,</span> <span class="n">SPHX_GLR_SIG</span><span class="p">,</span> <span class="n">_get_memory_base</span><span class="p">,</span>
                       <span class="n">_get_readme</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">.scrapers</span> <span class="kn">import</span> <span class="n">_scraper_dict</span><span class="p">,</span> <span class="n">_reset_dict</span>
+<span class="kn">from</span> <span class="nn">.scrapers</span> <span class="kn">import</span> <span class="n">_scraper_dict</span><span class="p">,</span> <span class="n">_reset_dict</span><span class="p">,</span> <span class="n">_import_matplotlib</span>
 <span class="kn">from</span> <span class="nn">.docs_resolv</span> <span class="kn">import</span> <span class="n">embed_code_links</span>
 <span class="kn">from</span> <span class="nn">.downloads</span> <span class="kn">import</span> <span class="n">generate_zipfiles</span>
 <span class="kn">from</span> <span class="nn">.sorting</span> <span class="kn">import</span> <span class="n">NumberOfCodeLinesSortKey</span>
@@ -334,6 +334,19 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Scraper </span><span class="si">%r</span><span class="s1"> was not callable&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">scraper</span><span class="p">,))</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;image_scrapers&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">scrapers</span><span class="p">)</span>
     <span class="k">del</span> <span class="n">scrapers</span>
+    <span class="c1"># Here we try to set up matplotlib but don&#39;t raise an error,</span>
+    <span class="c1"># we will raise an error later when we actually try to use it</span>
+    <span class="c1"># (if we do so) in scrapers.py.</span>
+    <span class="c1"># In principle we could look to see if there is a matplotlib scraper</span>
+    <span class="c1"># in our scrapers list, but this would be backward incompatible with</span>
+    <span class="c1"># anyone using or relying on our Agg-setting behavior (e.g., for some</span>
+    <span class="c1"># custom matplotlib SVG scraper as in our docs).</span>
+    <span class="c1"># Eventually we can make this a config var like matplotlib_agg or something</span>
+    <span class="c1"># if people need us not to set it to Agg.</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">_import_matplotlib</span><span class="p">()</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">ImportError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
+        <span class="k">pass</span>
 
     <span class="c1"># deal with resetters</span>
     <span class="n">resetters</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;reset_modules&#39;</span><span class="p">]</span>
