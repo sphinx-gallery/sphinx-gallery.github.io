@@ -34,8 +34,10 @@
   
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/theme_override.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery-binder.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery-dataframe.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
 </head>
@@ -212,6 +214,9 @@
 <span class="kn">from</span> <span class="nn">.sorting</span> <span class="kn">import</span> <span class="n">NumberOfCodeLinesSortKey</span>
 <span class="kn">from</span> <span class="nn">.binder</span> <span class="kn">import</span> <span class="n">copy_binder_files</span>
 
+
+<span class="n">_KNOWN_CSS</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;gallery&#39;</span><span class="p">,</span> <span class="s1">&#39;gallery-binder&#39;</span><span class="p">,</span> <span class="s1">&#39;gallery-dataframe&#39;</span><span class="p">)</span>
+
 <span class="n">DEFAULT_GALLERY_CONF</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;filename_pattern&#39;</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;plot&#39;</span><span class="p">,</span>
     <span class="s1">&#39;ignore_pattern&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;__init__\.py&#39;</span><span class="p">,</span>
@@ -246,6 +251,7 @@
     <span class="s1">&#39;junit&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
     <span class="s1">&#39;log_level&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;backreference_missing&#39;</span><span class="p">:</span> <span class="s1">&#39;warning&#39;</span><span class="p">},</span>
     <span class="s1">&#39;inspect_global_variables&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s1">&#39;css&#39;</span><span class="p">:</span> <span class="n">_KNOWN_CSS</span><span class="p">,</span>
 <span class="p">}</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">sphinx_compatibility</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;sphinx-gallery&#39;</span><span class="p">)</span>
@@ -382,6 +388,17 @@
     <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">backref</span><span class="p">,</span> <span class="nb">str</span><span class="p">))</span> <span class="ow">and</span> <span class="p">(</span><span class="n">backref</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The &#39;backreferences_dir&#39; parameter must be of type&quot;</span>
                          <span class="s2">&quot;str or None, found type </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">backref</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;css&#39;</span><span class="p">],</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;gallery_conf[&quot;css&quot;] must be list or tuple, got </span><span class="si">%r</span><span class="s1">&#39;</span>
+                        <span class="o">%</span> <span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;css&#39;</span><span class="p">],))</span>
+    <span class="k">for</span> <span class="n">css</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;css&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">css</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_KNOWN_CSS</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown css </span><span class="si">%r</span><span class="s1">, must be one of </span><span class="si">%r</span><span class="s1">&#39;</span>
+                             <span class="o">%</span> <span class="p">(</span><span class="n">css</span><span class="p">,</span> <span class="n">_KNOWN_CSS</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;app&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># can be None in testing</span>
+            <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;app&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">add_css_file</span><span class="p">(</span><span class="n">css</span> <span class="o">+</span> <span class="s1">&#39;.css&#39;</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="n">gallery_conf</span>
 
 
@@ -788,8 +805,6 @@
     <span class="n">app</span><span class="o">.</span><span class="n">add_config_value</span><span class="p">(</span><span class="s1">&#39;sphinx_gallery_conf&#39;</span><span class="p">,</span> <span class="n">DEFAULT_GALLERY_CONF</span><span class="p">,</span> <span class="s1">&#39;html&#39;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;plot_gallery&#39;</span><span class="p">,</span> <span class="s1">&#39;abort_on_example_error&#39;</span><span class="p">]:</span>
         <span class="n">app</span><span class="o">.</span><span class="n">add_config_value</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">get_default_config_value</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="s1">&#39;html&#39;</span><span class="p">)</span>
-
-    <span class="n">app</span><span class="o">.</span><span class="n">add_css_file</span><span class="p">(</span><span class="s1">&#39;gallery.css&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="s1">&#39;sphinx.ext.autodoc&#39;</span> <span class="ow">in</span> <span class="n">app</span><span class="o">.</span><span class="n">extensions</span><span class="p">:</span>
         <span class="n">app</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;autodoc-process-docstring&#39;</span><span class="p">,</span> <span class="n">touch_empty_backreferences</span><span class="p">)</span>
