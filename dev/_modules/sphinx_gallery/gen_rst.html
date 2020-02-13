@@ -426,18 +426,28 @@
 <span class="sd">    gallery_conf : dict</span>
 <span class="sd">        Sphinx-Gallery configuration dictionary</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># read specification of the figure to display as thumbnail from main text</span>
-    <span class="n">thumbnail_number</span> <span class="o">=</span> <span class="n">file_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;thumbnail_number&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">thumbnail_number</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-            <span class="s1">&#39;sphinx_gallery_thumbnail_number setting is not a number, &#39;</span>
-            <span class="s1">&#39;got </span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">thumbnail_number</span><span class="p">,))</span>
-    <span class="n">thumbnail_image_path</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">_find_image_ext</span><span class="p">(</span><span class="n">image_path_template</span><span class="p">,</span>
-                                                <span class="n">thumbnail_number</span><span class="p">)</span>
 
-    <span class="n">thumb_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">thumbnail_image_path</span><span class="p">),</span> <span class="s1">&#39;thumb&#39;</span><span class="p">)</span>
+    <span class="n">thumb_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">image_path_template</span><span class="p">),</span> <span class="s1">&#39;thumb&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">thumb_dir</span><span class="p">):</span>
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">thumb_dir</span><span class="p">)</span>
+
+    <span class="c1"># read specification of the figure to display as thumbnail from main text</span>
+    <span class="n">thumbnail_number</span> <span class="o">=</span> <span class="n">file_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;thumbnail_number&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">thumbnail_path</span> <span class="o">=</span> <span class="n">file_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;thumbnail_path&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="c1"># thumbnail_number has priority.</span>
+    <span class="k">if</span> <span class="n">thumbnail_number</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">thumbnail_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># If no number AND no path, set to default thumbnail_number</span>
+        <span class="n">thumbnail_number</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">thumbnail_number</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">image_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">],</span> <span class="n">thumbnail_path</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">thumbnail_number</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s1">&#39;sphinx_gallery_thumbnail_number setting is not a number, &#39;</span>
+                <span class="s1">&#39;got </span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">thumbnail_number</span><span class="p">,))</span>
+        <span class="n">image_path</span> <span class="o">=</span> <span class="n">image_path_template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">thumbnail_number</span><span class="p">)</span>
+    <span class="k">del</span> <span class="n">thumbnail_number</span><span class="p">,</span> <span class="n">thumbnail_path</span><span class="p">,</span> <span class="n">image_path_template</span>
+    <span class="n">thumbnail_image_path</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">_find_image_ext</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span>
 
     <span class="n">base_image_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">src_file</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">thumb_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">thumb_dir</span><span class="p">,</span>

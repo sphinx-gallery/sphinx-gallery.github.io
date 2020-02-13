@@ -40,7 +40,7 @@
   <link rel="stylesheet" href="../_static/gallery-dataframe.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Using Unicode everywhere 🤗" href="plot_5_unicode_everywhere.html" />
+    <link rel="next" title="Providing a figure for the thumbnail image" href="plot_4b_provide_thumbnail.html" />
     <link rel="prev" title="Capturing output representations" href="plot_3_capture_repr.html" /> 
 </head>
 
@@ -132,6 +132,7 @@
 <li class="toctree-l3"><a class="reference internal" href="plot_2_seaborn.html">Seaborn example</a></li>
 <li class="toctree-l3"><a class="reference internal" href="plot_3_capture_repr.html">Capturing output representations</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Choosing the thumbnail figure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plot_4b_provide_thumbnail.html">Providing a figure for the thumbnail image</a></li>
 <li class="toctree-l3"><a class="reference internal" href="plot_5_unicode_everywhere.html">Using Unicode everywhere 🤗</a></li>
 <li class="toctree-l3"><a class="reference internal" href="plot_6_function_identifier.html">Identifying function names in a script</a></li>
 <li class="toctree-l3"><a class="reference internal" href="plot_7_sys_argv.html">Using <code class="docutils literal notranslate"><span class="pre">sys.argv</span></code> in examples</a></li>
@@ -223,8 +224,8 @@ specify that we wish for the second figure to be the thumbnail.</p>
 
 
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="n">x</span> <span class="o">=</span> <a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.linspace.html#numpy.linspace" title="numpy.linspace" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">linspace</span></a><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
-    <span class="n">y</span> <span class="o">=</span> <a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.exp.html#numpy.exp" title="numpy.exp" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">exp</span></a><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <a href="https://numpy.org/doc/1.18/reference/generated/numpy.linspace.html#numpy.linspace" title="numpy.linspace" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">linspace</span></a><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <a href="https://numpy.org/doc/1.18/reference/generated/numpy.exp.html#numpy.exp" title="numpy.exp" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">exp</span></a><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 
     <a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="matplotlib.pyplot.figure" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">()</span>
     <a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="matplotlib.pyplot.plot" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
@@ -235,7 +236,7 @@ specify that we wish for the second figure to be the thumbnail.</p>
     <span class="c1"># (plot with negative exponential in orange)</span>
     <span class="c1"># sphinx_gallery_thumbnail_number = 2</span>
     <a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="matplotlib.pyplot.figure" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">()</span>
-    <a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="matplotlib.pyplot.plot" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">-</span><a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.exp.html#numpy.exp" title="numpy.exp" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">exp</span></a><span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+    <a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="matplotlib.pyplot.plot" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">plot</span></a><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">-</span><a href="https://numpy.org/doc/1.18/reference/generated/numpy.exp.html#numpy.exp" title="numpy.exp" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">exp</span></a><span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
     <a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.xlabel.html#matplotlib.pyplot.xlabel" title="matplotlib.pyplot.xlabel" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span></a><span class="p">(</span><span class="s1">&#39;$x$&#39;</span><span class="p">)</span>
     <a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.ylabel.html#matplotlib.pyplot.ylabel" title="matplotlib.pyplot.ylabel" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span></a><span class="p">(</span><span class="s1">&#39;$-\exp(-x)$&#39;</span><span class="p">)</span>
     <span class="c1"># To avoid matplotlib text output</span>
@@ -246,7 +247,7 @@ specify that we wish for the second figure to be the thumbnail.</p>
     <span class="n">main</span><span class="p">()</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.293 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.242 seconds)</p>
 <p><strong>Estimated memory usage:</strong>  8 MB</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-4-choose-thumbnail-py">
 <div class="binder-badge docutils container">
@@ -270,7 +271,7 @@ specify that we wish for the second figure to be the thumbnail.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="plot_5_unicode_everywhere.html" class="btn btn-neutral float-right" title="Using Unicode everywhere 🤗" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="plot_4b_provide_thumbnail.html" class="btn btn-neutral float-right" title="Providing a figure for the thumbnail image" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="plot_3_capture_repr.html" class="btn btn-neutral float-left" title="Capturing output representations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
