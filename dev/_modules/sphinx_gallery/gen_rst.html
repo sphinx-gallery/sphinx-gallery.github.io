@@ -751,20 +751,27 @@
 
         <span class="n">last_repr</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">repr_meth</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;capture_repr&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="p">()</span> <span class="ow">and</span> <span class="n">is_last_expr</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">meth</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;capture_repr&#39;</span><span class="p">]:</span>
-                <span class="k">try</span><span class="p">:</span>
-                    <span class="n">last_repr</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">___</span><span class="p">,</span> <span class="n">meth</span><span class="p">)()</span>
-                    <span class="c1"># for case when last statement is print()</span>
-                    <span class="k">if</span> <span class="n">last_repr</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">last_repr</span> <span class="o">==</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>
-                        <span class="n">repr_meth</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">is_last_expr</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;ignore_repr_types&#39;</span><span class="p">]:</span>
+                <span class="n">ignore_repr</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
+                    <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;ignore_repr_types&#39;</span><span class="p">],</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">___</span><span class="p">))</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">ignore_repr</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;capture_repr&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">ignore_repr</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">meth</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;capture_repr&#39;</span><span class="p">]:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">last_repr</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">___</span><span class="p">,</span> <span class="n">meth</span><span class="p">)()</span>
+                        <span class="c1"># for case when last statement is print()</span>
+                        <span class="k">if</span> <span class="n">last_repr</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">last_repr</span> <span class="o">==</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>
+                            <span class="n">repr_meth</span> <span class="o">=</span> <span class="kc">None</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">repr_meth</span> <span class="o">=</span> <span class="n">meth</span>
+                    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                        <span class="k">pass</span>
                     <span class="k">else</span><span class="p">:</span>
-                        <span class="n">repr_meth</span> <span class="o">=</span> <span class="n">meth</span>
-                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-                    <span class="k">pass</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">last_repr</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-                        <span class="k">break</span>
+                        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">last_repr</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                            <span class="k">break</span>
         <span class="n">captured_std</span> <span class="o">=</span> <span class="n">captured_std</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span><span class="o">.</span><span class="n">expandtabs</span><span class="p">()</span>
         <span class="c1"># normal string output</span>
         <span class="k">if</span> <span class="n">repr_meth</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;__repr__&#39;</span><span class="p">,</span> <span class="s1">&#39;__str__&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">last_repr</span><span class="p">:</span>
