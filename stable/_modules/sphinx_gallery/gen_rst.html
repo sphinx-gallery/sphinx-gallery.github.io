@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>sphinx_gallery.gen_rst &mdash; Sphinx-Gallery 0.5.0-git documentation</title>
+  <title>sphinx_gallery.gen_rst &mdash; Sphinx-Gallery 0.6.0-git documentation</title>
   
 
   
@@ -34,8 +34,10 @@
   
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/theme_override.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery-binder.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/gallery-dataframe.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
 </head>
@@ -61,7 +63,7 @@
             
             
               <div class="version">
-                0.5.0
+                0.6.0
               </div>
             
           
@@ -193,39 +195,40 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="c1"># Don&#39;t use unicode_literals here (be explicit with u&quot;...&quot; instead) otherwise</span>
 <span class="c1"># tricky errors come up with exec(code_blocks, ...) calls</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">absolute_import</span>
-<span class="kn">from</span> <span class="nn">time</span> <span class="k">import</span> <span class="n">time</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">contextlib</span>
 <span class="kn">import</span> <span class="nn">ast</span>
 <span class="kn">import</span> <span class="nn">codecs</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">partial</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
 <span class="kn">import</span> <span class="nn">gc</span>
 <span class="kn">import</span> <span class="nn">pickle</span>
-<span class="kn">from</span> <span class="nn">io</span> <span class="k">import</span> <span class="n">StringIO</span>
+<span class="kn">import</span> <span class="nn">importlib</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">from</span> <span class="nn">textwrap</span> <span class="k">import</span> <span class="n">indent</span>
+<span class="kn">from</span> <span class="nn">textwrap</span> <span class="kn">import</span> <span class="n">indent</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
-<span class="kn">from</span> <span class="nn">shutil</span> <span class="k">import</span> <span class="n">copyfile</span>
+<span class="kn">from</span> <span class="nn">shutil</span> <span class="kn">import</span> <span class="n">copyfile</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">traceback</span>
 <span class="kn">import</span> <span class="nn">codeop</span>
 
-<span class="kn">from</span> <span class="nn">.scrapers</span> <span class="k">import</span> <span class="p">(</span><span class="n">save_figures</span><span class="p">,</span> <span class="n">ImagePathIterator</span><span class="p">,</span> <span class="n">clean_modules</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">.scrapers</span> <span class="kn">import</span> <span class="p">(</span><span class="n">save_figures</span><span class="p">,</span> <span class="n">ImagePathIterator</span><span class="p">,</span> <span class="n">clean_modules</span><span class="p">,</span>
                        <span class="n">_find_image_ext</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="n">replace_py_ipynb</span><span class="p">,</span> <span class="n">scale_image</span><span class="p">,</span> <span class="n">get_md5sum</span><span class="p">,</span> <span class="n">_replace_md5</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">glr_path_static</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">sphinx_compatibility</span>
-<span class="kn">from</span> <span class="nn">.backreferences</span> <span class="k">import</span> <span class="p">(</span><span class="n">_write_backreferences</span><span class="p">,</span> <span class="n">_thumbnail_div</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">replace_py_ipynb</span><span class="p">,</span> <span class="n">scale_image</span><span class="p">,</span> <span class="n">get_md5sum</span><span class="p">,</span> <span class="n">_replace_md5</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">glr_path_static</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">sphinx_compatibility</span>
+<span class="kn">from</span> <span class="nn">.backreferences</span> <span class="kn">import</span> <span class="p">(</span><span class="n">_write_backreferences</span><span class="p">,</span> <span class="n">_thumbnail_div</span><span class="p">,</span>
                              <span class="n">identify_names</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">.downloads</span> <span class="k">import</span> <span class="n">CODE_DOWNLOAD</span>
-<span class="kn">from</span> <span class="nn">.py_source_parser</span> <span class="k">import</span> <span class="p">(</span><span class="n">split_code_and_text_blocks</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">.downloads</span> <span class="kn">import</span> <span class="n">CODE_DOWNLOAD</span>
+<span class="kn">from</span> <span class="nn">.py_source_parser</span> <span class="kn">import</span> <span class="p">(</span><span class="n">split_code_and_text_blocks</span><span class="p">,</span>
                                <span class="n">remove_config_comments</span><span class="p">)</span>
 
-<span class="kn">from</span> <span class="nn">.notebook</span> <span class="k">import</span> <span class="n">jupyter_notebook</span><span class="p">,</span> <span class="n">save_notebook</span>
-<span class="kn">from</span> <span class="nn">.binder</span> <span class="k">import</span> <span class="n">check_binder_conf</span><span class="p">,</span> <span class="n">gen_binder_rst</span>
+<span class="kn">from</span> <span class="nn">.notebook</span> <span class="kn">import</span> <span class="n">jupyter_notebook</span><span class="p">,</span> <span class="n">save_notebook</span>
+<span class="kn">from</span> <span class="nn">.binder</span> <span class="kn">import</span> <span class="n">check_binder_conf</span><span class="p">,</span> <span class="n">gen_binder_rst</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">sphinx_compatibility</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;sphinx-gallery&#39;</span><span class="p">)</span>
 
@@ -236,7 +239,7 @@
 <div class="viewcode-block" id="LoggingTee"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.LoggingTee">[docs]</a><span class="k">class</span> <span class="nc">LoggingTee</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;A tee object to redirect streams to the logger&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">src_filename</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">src_filename</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">output_file</span> <span class="o">=</span> <span class="n">output_file</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">src_filename</span> <span class="o">=</span> <span class="n">src_filename</span>
@@ -317,7 +320,8 @@
 
 <span class="s2"> .. rst-class:: sphx-glr-signature</span>
 
-<span class="s2">    `Gallery generated by Sphinx-Gallery &lt;https://sphinx-gallery.github.io&gt;`_</span><span class="se">\n</span><span class="s2">&quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
+<span class="s2">    `Gallery generated by Sphinx-Gallery &lt;https://sphinx-gallery.github.io&gt;`_</span>
+<span class="s2">&quot;&quot;&quot;</span>
 
 <span class="c1"># Header used to include raw html</span>
 <span class="n">html_header</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;.. only:: builder_html</span>
@@ -424,18 +428,28 @@
 <span class="sd">    gallery_conf : dict</span>
 <span class="sd">        Sphinx-Gallery configuration dictionary</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># read specification of the figure to display as thumbnail from main text</span>
-    <span class="n">thumbnail_number</span> <span class="o">=</span> <span class="n">file_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;thumbnail_number&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">thumbnail_number</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-            <span class="s1">&#39;sphinx_gallery_thumbnail_number setting is not a number, &#39;</span>
-            <span class="s1">&#39;got </span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">thumbnail_number</span><span class="p">,))</span>
-    <span class="n">thumbnail_image_path</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">_find_image_ext</span><span class="p">(</span><span class="n">image_path_template</span><span class="p">,</span>
-                                                <span class="n">thumbnail_number</span><span class="p">)</span>
 
-    <span class="n">thumb_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">thumbnail_image_path</span><span class="p">),</span> <span class="s1">&#39;thumb&#39;</span><span class="p">)</span>
+    <span class="n">thumb_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">image_path_template</span><span class="p">),</span> <span class="s1">&#39;thumb&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">thumb_dir</span><span class="p">):</span>
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">thumb_dir</span><span class="p">)</span>
+
+    <span class="c1"># read specification of the figure to display as thumbnail from main text</span>
+    <span class="n">thumbnail_number</span> <span class="o">=</span> <span class="n">file_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;thumbnail_number&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">thumbnail_path</span> <span class="o">=</span> <span class="n">file_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;thumbnail_path&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="c1"># thumbnail_number has priority.</span>
+    <span class="k">if</span> <span class="n">thumbnail_number</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">thumbnail_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># If no number AND no path, set to default thumbnail_number</span>
+        <span class="n">thumbnail_number</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">thumbnail_number</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">image_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">],</span> <span class="n">thumbnail_path</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">thumbnail_number</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s1">&#39;sphinx_gallery_thumbnail_number setting is not a number, &#39;</span>
+                <span class="s1">&#39;got </span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">thumbnail_number</span><span class="p">,))</span>
+        <span class="n">image_path</span> <span class="o">=</span> <span class="n">image_path_template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">thumbnail_number</span><span class="p">)</span>
+    <span class="k">del</span> <span class="n">thumbnail_number</span><span class="p">,</span> <span class="n">thumbnail_path</span><span class="p">,</span> <span class="n">image_path_template</span>
+    <span class="n">thumbnail_image_path</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">_find_image_ext</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span>
 
     <span class="n">base_image_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">src_file</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">thumb_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">thumb_dir</span><span class="p">,</span>
@@ -529,7 +543,7 @@
 
 
 <div class="viewcode-block" id="handle_exception"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.handle_exception">[docs]</a><span class="k">def</span> <span class="nf">handle_exception</span><span class="p">(</span><span class="n">exc_info</span><span class="p">,</span> <span class="n">src_file</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">.gen_gallery</span> <span class="k">import</span> <span class="n">_expected_failing_examples</span>
+    <span class="kn">from</span> <span class="nn">.gen_gallery</span> <span class="kn">import</span> <span class="n">_expected_failing_examples</span>
     <span class="n">etype</span><span class="p">,</span> <span class="n">exc</span><span class="p">,</span> <span class="n">tb</span> <span class="o">=</span> <span class="n">exc_info</span>
     <span class="n">stack</span> <span class="o">=</span> <span class="n">traceback</span><span class="o">.</span><span class="n">extract_tb</span><span class="p">(</span><span class="n">tb</span><span class="p">)</span>
     <span class="c1"># Remove our code from traceback:</span>
@@ -559,6 +573,8 @@
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;failing_examples&#39;</span><span class="p">][</span><span class="n">src_file</span><span class="p">]</span> <span class="o">=</span> <span class="n">formatted_exception</span>
     <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;execute_script&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
 
+    <span class="c1"># Ensure it&#39;s marked as our style</span>
+    <span class="n">except_rst</span> <span class="o">=</span> <span class="s2">&quot;.. rst-class:: sphx-glr-script-out</span><span class="se">\n\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">except_rst</span>
     <span class="k">return</span> <span class="n">except_rst</span></div>
 
 
@@ -594,22 +610,28 @@
 <span class="k">class</span> <span class="nc">_exec_once</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Deal with memory_usage calling functions more than once (argh).&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">globals_</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">fake_main</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">code</span> <span class="o">=</span> <span class="n">code</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">globals</span> <span class="o">=</span> <span class="n">globals_</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fake_main</span> <span class="o">=</span> <span class="n">fake_main</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">run</span> <span class="o">=</span> <span class="kc">False</span>
 
-    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">run</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">old_main</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;__main__&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
             <span class="k">with</span> <span class="n">patch_warnings</span><span class="p">():</span>
-                <span class="n">exec</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">globals</span><span class="p">)</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="s1">&#39;__main__&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fake_main</span>
+                <span class="k">try</span><span class="p">:</span>
+                        <span class="n">exec</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fake_main</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
+                <span class="k">finally</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">old_main</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="s1">&#39;__main__&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">old_main</span>
 
 
 <span class="k">def</span> <span class="nf">_memory_usage</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Get memory usage of a function call.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;show_memory&#39;</span><span class="p">]:</span>
-        <span class="kn">from</span> <span class="nn">memory_profiler</span> <span class="k">import</span> <span class="n">memory_usage</span>
+        <span class="kn">from</span> <span class="nn">memory_profiler</span> <span class="kn">import</span> <span class="n">memory_usage</span>
         <span class="k">assert</span> <span class="n">callable</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
         <span class="n">mem</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="n">memory_usage</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">max_usage</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">retval</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                                 <span class="n">multiprocess</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -625,12 +647,15 @@
 
 <span class="k">def</span> <span class="nf">_get_memory_base</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Get the base amount of memory used by running a Python process.&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;show_memory&#39;</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;show_memory&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;plot_gallery&#39;</span><span class="p">]:</span>
         <span class="n">memory_base</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># There might be a cleaner way to do this at some point</span>
-        <span class="kn">from</span> <span class="nn">memory_profiler</span> <span class="k">import</span> <span class="n">memory_usage</span>
-        <span class="n">sleep</span><span class="p">,</span> <span class="n">timeout</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s1">&#39;win32&#39;</span> <span class="k">else</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="kn">from</span> <span class="nn">memory_profiler</span> <span class="kn">import</span> <span class="n">memory_usage</span>
+        <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;win32&#39;</span><span class="p">,</span> <span class="s1">&#39;darwin&#39;</span><span class="p">):</span>
+            <span class="n">sleep</span><span class="p">,</span> <span class="n">timeout</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sleep</span><span class="p">,</span> <span class="n">timeout</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span>
             <span class="p">[</span><span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span> <span class="s1">&#39;-c&#39;</span><span class="p">,</span>
              <span class="s1">&#39;import time, sys; time.sleep(</span><span class="si">%s</span><span class="s1">); sys.exit(0)&#39;</span> <span class="o">%</span> <span class="n">sleep</span><span class="p">],</span>
@@ -647,6 +672,8 @@
 <div class="viewcode-block" id="execute_code_block"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.execute_code_block">[docs]</a><span class="k">def</span> <span class="nf">execute_code_block</span><span class="p">(</span><span class="n">compiler</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">example_globals</span><span class="p">,</span>
                        <span class="n">script_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Executes the code block of the example file&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">example_globals</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># testing shortcut</span>
+        <span class="n">example_globals</span> <span class="o">=</span> <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;fake_main&#39;</span><span class="p">]</span><span class="o">.</span><span class="vm">__dict__</span>
     <span class="n">blabel</span><span class="p">,</span> <span class="n">bcontent</span><span class="p">,</span> <span class="n">lineno</span> <span class="o">=</span> <span class="n">block</span>
     <span class="c1"># If example is not suitable to run, skip executing its blocks</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;execute_script&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="n">blabel</span> <span class="o">==</span> <span class="s1">&#39;text&#39;</span><span class="p">:</span>
@@ -683,23 +710,29 @@
             <span class="n">is_last_expr</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="n">last_val</span> <span class="o">=</span> <span class="n">code_ast</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span><span class="o">.</span><span class="n">value</span>
             <span class="c1"># exec body minus last expression</span>
-            <span class="n">_</span><span class="p">,</span> <span class="n">mem_body</span> <span class="o">=</span> <span class="n">_memory_usage</span><span class="p">(</span><span class="n">_exec_once</span><span class="p">(</span>
-                <span class="n">compiler</span><span class="p">(</span><span class="n">code_ast</span><span class="p">,</span> <span class="n">src_file</span><span class="p">,</span> <span class="s1">&#39;exec&#39;</span><span class="p">),</span> <span class="n">example_globals</span><span class="p">),</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">mem_body</span> <span class="o">=</span> <span class="n">_memory_usage</span><span class="p">(</span>
+                <span class="n">_exec_once</span><span class="p">(</span>
+                    <span class="n">compiler</span><span class="p">(</span><span class="n">code_ast</span><span class="p">,</span> <span class="n">src_file</span><span class="p">,</span> <span class="s1">&#39;exec&#39;</span><span class="p">),</span>
+                    <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;fake_main&#39;</span><span class="p">]),</span>
                 <span class="n">gallery_conf</span><span class="p">)</span>
             <span class="c1"># exec last expression, made into assignment</span>
             <span class="n">body</span> <span class="o">=</span> <span class="p">[</span><span class="n">ast</span><span class="o">.</span><span class="n">Assign</span><span class="p">(</span>
                 <span class="n">targets</span><span class="o">=</span><span class="p">[</span><span class="n">ast</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;___&#39;</span><span class="p">,</span> <span class="n">ctx</span><span class="o">=</span><span class="n">ast</span><span class="o">.</span><span class="n">Store</span><span class="p">())],</span> <span class="n">value</span><span class="o">=</span><span class="n">last_val</span><span class="p">)]</span>
             <span class="n">last_val_ast</span> <span class="o">=</span> <span class="n">ast_Module</span><span class="p">(</span><span class="n">body</span><span class="o">=</span><span class="n">body</span><span class="p">)</span>
             <span class="n">ast</span><span class="o">.</span><span class="n">fix_missing_locations</span><span class="p">(</span><span class="n">last_val_ast</span><span class="p">)</span>
-            <span class="n">_</span><span class="p">,</span> <span class="n">mem_last</span> <span class="o">=</span> <span class="n">_memory_usage</span><span class="p">(</span><span class="n">_exec_once</span><span class="p">(</span>
-                <span class="n">compiler</span><span class="p">(</span><span class="n">last_val_ast</span><span class="p">,</span> <span class="n">src_file</span><span class="p">,</span> <span class="s1">&#39;exec&#39;</span><span class="p">),</span> <span class="n">example_globals</span><span class="p">),</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">mem_last</span> <span class="o">=</span> <span class="n">_memory_usage</span><span class="p">(</span>
+                <span class="n">_exec_once</span><span class="p">(</span>
+                    <span class="n">compiler</span><span class="p">(</span><span class="n">last_val_ast</span><span class="p">,</span> <span class="n">src_file</span><span class="p">,</span> <span class="s1">&#39;exec&#39;</span><span class="p">),</span>
+                    <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;fake_main&#39;</span><span class="p">]),</span>
                 <span class="n">gallery_conf</span><span class="p">)</span>
             <span class="c1"># capture the assigned variable</span>
             <span class="n">___</span> <span class="o">=</span> <span class="n">example_globals</span><span class="p">[</span><span class="s1">&#39;___&#39;</span><span class="p">]</span>
             <span class="n">mem_max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">mem_body</span><span class="p">,</span> <span class="n">mem_last</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">_</span><span class="p">,</span> <span class="n">mem_max</span> <span class="o">=</span> <span class="n">_memory_usage</span><span class="p">(</span><span class="n">_exec_once</span><span class="p">(</span>
-                <span class="n">compiler</span><span class="p">(</span><span class="n">code_ast</span><span class="p">,</span> <span class="n">src_file</span><span class="p">,</span> <span class="s1">&#39;exec&#39;</span><span class="p">),</span> <span class="n">example_globals</span><span class="p">),</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">mem_max</span> <span class="o">=</span> <span class="n">_memory_usage</span><span class="p">(</span>
+                <span class="n">_exec_once</span><span class="p">(</span>
+                    <span class="n">compiler</span><span class="p">(</span><span class="n">code_ast</span><span class="p">,</span> <span class="n">src_file</span><span class="p">,</span> <span class="s1">&#39;exec&#39;</span><span class="p">),</span>
+                    <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;fake_main&#39;</span><span class="p">]),</span>
                 <span class="n">gallery_conf</span><span class="p">)</span>
         <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;memory_delta&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mem_max</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
@@ -721,20 +754,27 @@
 
         <span class="n">last_repr</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">repr_meth</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;capture_repr&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="p">()</span> <span class="ow">and</span> <span class="n">is_last_expr</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">meth</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;capture_repr&#39;</span><span class="p">]:</span>
-                <span class="k">try</span><span class="p">:</span>
-                    <span class="n">last_repr</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">___</span><span class="p">,</span> <span class="n">meth</span><span class="p">)()</span>
-                    <span class="c1"># for case when last statement is print()</span>
-                    <span class="k">if</span> <span class="n">last_repr</span> <span class="o">==</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>
-                        <span class="n">repr_meth</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">is_last_expr</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;ignore_repr_types&#39;</span><span class="p">]:</span>
+                <span class="n">ignore_repr</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
+                    <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;ignore_repr_types&#39;</span><span class="p">],</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">___</span><span class="p">))</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">ignore_repr</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;capture_repr&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">ignore_repr</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">meth</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;capture_repr&#39;</span><span class="p">]:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">last_repr</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">___</span><span class="p">,</span> <span class="n">meth</span><span class="p">)()</span>
+                        <span class="c1"># for case when last statement is print()</span>
+                        <span class="k">if</span> <span class="n">last_repr</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">last_repr</span> <span class="o">==</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>
+                            <span class="n">repr_meth</span> <span class="o">=</span> <span class="kc">None</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">repr_meth</span> <span class="o">=</span> <span class="n">meth</span>
+                    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                        <span class="k">pass</span>
                     <span class="k">else</span><span class="p">:</span>
-                        <span class="n">repr_meth</span> <span class="o">=</span> <span class="n">meth</span>
-                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-                    <span class="k">pass</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">last_repr</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-                        <span class="k">break</span>
+                        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">last_repr</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                            <span class="k">break</span>
         <span class="n">captured_std</span> <span class="o">=</span> <span class="n">captured_std</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span><span class="o">.</span><span class="n">expandtabs</span><span class="p">()</span>
         <span class="c1"># normal string output</span>
         <span class="k">if</span> <span class="n">repr_meth</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;__repr__&#39;</span><span class="p">,</span> <span class="s1">&#39;__str__&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">last_repr</span><span class="p">:</span>
@@ -805,8 +845,15 @@
 <span class="sd">    time_elapsed : float</span>
 <span class="sd">        Time elapsed during execution</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Examples may contain if __name__ == &#39;__main__&#39; guards</span>
+    <span class="c1"># for in example scikit-learn if the example uses multiprocessing.</span>
+    <span class="c1"># Here we create a new __main__ module, and temporarily change</span>
+    <span class="c1"># sys.modules when running our example</span>
+    <span class="n">fake_main</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">module_from_spec</span><span class="p">(</span>
+        <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">spec_from_loader</span><span class="p">(</span><span class="s1">&#39;__main__&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+    <span class="n">example_globals</span> <span class="o">=</span> <span class="n">fake_main</span><span class="o">.</span><span class="vm">__dict__</span>
 
-    <span class="n">example_globals</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">example_globals</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
         <span class="c1"># A lot of examples contains &#39;print(__doc__)&#39; for example in</span>
         <span class="c1"># scikit-learn so that running the example prints some useful</span>
         <span class="c1"># information. Because the docstring has been separated from</span>
@@ -814,11 +861,8 @@
         <span class="c1"># __builtin__.__doc__ in the execution context and we do not</span>
         <span class="c1"># want to print it</span>
         <span class="s1">&#39;__doc__&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-        <span class="c1"># Examples may contain if __name__ == &#39;__main__&#39; guards</span>
-        <span class="c1"># for in example scikit-learn if the example uses multiprocessing</span>
-        <span class="s1">&#39;__name__&#39;</span><span class="p">:</span> <span class="s1">&#39;__main__&#39;</span><span class="p">,</span>
         <span class="c1"># Don&#39;t ever support __file__: Issues #166 #212</span>
-    <span class="p">}</span>
+    <span class="p">})</span>
     <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;example_globals&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">example_globals</span>
 
     <span class="n">argv_orig</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[:]</span>
@@ -837,6 +881,7 @@
     <span class="n">compiler</span> <span class="o">=</span> <span class="n">codeop</span><span class="o">.</span><span class="n">Compile</span><span class="p">()</span>
     <span class="c1"># include at least one entry to avoid max() ever failing</span>
     <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;memory_delta&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">memory_start</span><span class="p">]</span>
+    <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;fake_main&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fake_main</span>
     <span class="n">output_blocks</span> <span class="o">=</span> <span class="p">[</span><span class="n">execute_code_block</span><span class="p">(</span><span class="n">compiler</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span>
                                         <span class="n">example_globals</span><span class="p">,</span>
                                         <span class="n">script_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
@@ -950,9 +995,10 @@
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">codeobj_fname</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
             <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">example_code_obj</span><span class="p">,</span> <span class="n">fid</span><span class="p">,</span> <span class="n">pickle</span><span class="o">.</span><span class="n">HIGHEST_PROTOCOL</span><span class="p">)</span>
         <span class="n">_replace_md5</span><span class="p">(</span><span class="n">codeobj_fname</span><span class="p">)</span>
-    <span class="n">backrefs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{module_short}</span><span class="s1">.</span><span class="si">{name}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">entry</span><span class="p">)</span>
-                   <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">example_code_obj</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
-                   <span class="k">if</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;module&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;doc_module&#39;</span><span class="p">]))</span>
+    <span class="n">backrefs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{module_short}</span><span class="s1">.</span><span class="si">{name}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">cobj</span><span class="p">)</span>
+                   <span class="k">for</span> <span class="n">cobjs</span> <span class="ow">in</span> <span class="n">example_code_obj</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+                   <span class="k">for</span> <span class="n">cobj</span> <span class="ow">in</span> <span class="n">cobjs</span>
+                   <span class="k">if</span> <span class="n">cobj</span><span class="p">[</span><span class="s1">&#39;module&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;doc_module&#39;</span><span class="p">]))</span>
     <span class="c1"># Write backreferences</span>
     <span class="n">_write_backreferences</span><span class="p">(</span><span class="n">backrefs</span><span class="p">,</span> <span class="n">seen_backrefs</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span>
                           <span class="n">fname</span><span class="p">,</span> <span class="n">intro</span><span class="p">)</span>
@@ -1038,12 +1084,13 @@
 
     <span class="n">binder_text</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot; or to run this example in your browser via Binder&quot;</span>
                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">binder_conf</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-    <span class="n">example_rst</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;.. note::</span><span class="se">\n</span><span class="s2">&quot;</span>
-                   <span class="s2">&quot;    :class: sphx-glr-download-link-note</span><span class="se">\n\n</span><span class="s2">&quot;</span>
-                   <span class="s2">&quot;    Click :ref:`here &lt;sphx_glr_download_</span><span class="si">{0}</span><span class="s2">&gt;` &quot;</span>
-                   <span class="s2">&quot;to download the full example code</span><span class="si">{1}</span><span class="se">\n</span><span class="s2">&quot;</span>
-                   <span class="s2">&quot;.. rst-class:: sphx-glr-example-title</span><span class="se">\n\n</span><span class="s2">&quot;</span>
-                   <span class="s2">&quot;.. _sphx_glr_</span><span class="si">{0}</span><span class="s2">:</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+    <span class="n">example_rst</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;.. only:: html</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                   <span class="s2">&quot;    .. note::</span><span class="se">\n</span><span class="s2">&quot;</span>
+                   <span class="s2">&quot;        :class: sphx-glr-download-link-note</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                   <span class="s2">&quot;        Click :ref:`here &lt;sphx_glr_download_</span><span class="si">{0}</span><span class="s2">&gt;` &quot;</span>
+                   <span class="s2">&quot;    to download the full example code</span><span class="si">{1}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                   <span class="s2">&quot;    .. rst-class:: sphx-glr-example-title</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                   <span class="s2">&quot;    .. _sphx_glr_</span><span class="si">{0}</span><span class="s2">:</span><span class="se">\n\n</span><span class="s2">&quot;</span>
                    <span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ref_fname</span><span class="p">,</span> <span class="n">binder_text</span><span class="p">)</span> <span class="o">+</span> <span class="n">example_rst</span>
 
     <span class="k">if</span> <span class="n">time_elapsed</span> <span class="o">&gt;=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;min_reported_time&quot;</span><span class="p">]:</span>
@@ -1084,7 +1131,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2014-2019, Sphinx-gallery developers
+        &copy; Copyright 2014-2020, Sphinx-gallery developers
 
     </p>
   </div>

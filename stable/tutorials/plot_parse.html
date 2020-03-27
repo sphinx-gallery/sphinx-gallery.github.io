@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Alternating text and code &mdash; Sphinx-Gallery 0.5.0-git documentation</title>
+  <title>Alternating text and code &mdash; Sphinx-Gallery 0.6.0-git documentation</title>
   
 
   
@@ -34,8 +34,10 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
   <link rel="stylesheet" href="../_static/theme_override.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/gallery-binder.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/gallery-dataframe.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Gallery of Examples using Mayavi" href="../auto_mayavi_examples/index.html" />
@@ -63,7 +65,7 @@
             
             
               <div class="version">
-                0.5.0
+                0.6.0
               </div>
             
           
@@ -188,7 +190,7 @@
             
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
-<p>Click <a class="reference internal" href="#sphx-glr-download-tutorials-plot-parse-py"><span class="std std-ref">here</span></a> to download the full example code or to run this example in your browser via Binder</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-tutorials-plot-parse-py"><span class="std std-ref">here</span></a>     to download the full example code or to run this example in your browser via Binder</p>
 </div>
 <div class="sphx-glr-example-title section" id="alternating-text-and-code">
 <span id="sphx-glr-tutorials-plot-parse-py"></span><h1>Alternating text and code<a class="headerlink" href="#alternating-text-and-code" title="Permalink to this headline">¶</a></h1>
@@ -201,27 +203,28 @@ edge cases. It was designed to be compared with the
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 </pre></div>
 </div>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># a block separator (line of #&#39;s) allows you to create two separate code blocks</span>
-<a href="https://docs.python.org/3/library/functions.html#int" title="View documentation for builtins.int"><span class="n">A</span></a> <span class="o">=</span> <span class="mi">1</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># You can separate code blocks using either a single line of ``#``&#39;s</span>
+<span class="c1"># (&gt;=20 columns), ``#%%``, or ``# %%``. For consistency, it is recommend that</span>
+<span class="c1"># you use only one of the above three &#39;block splitter&#39; options in your project.</span>
+<a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">A</span></a> <span class="o">=</span> <span class="mi">1</span>
 
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 </pre></div>
 </div>
-<p>You can easily alternate between code and text blocks <strong>and</strong> separate
-sequential blocks of code (above) and text (below). Note that separated
-text blocks only shows as a new lines between text, in the rendered output.</p>
-<p>You can separate blocks using either a single line of <code class="docutils literal notranslate"><span class="pre">#</span></code>’s (&gt;=20 columns)
-or <code class="docutils literal notranslate"><span class="pre">#%%</span></code>. For compatibility reasons <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">%%</span></code> (with a space) can also be used
-but we recommend only using <code class="docutils literal notranslate"><span class="pre">#%%</span></code> for consistency. All future
-‘block splitters’ used in the source <code class="docutils literal notranslate"><span class="pre">.py</span></code> document will be <code class="docutils literal notranslate"><span class="pre">#%%</span></code>.</p>
+<p>Block splitters allow you alternate between code and text blocks <strong>and</strong>
+separate sequential blocks of code (above) and text (below).</p>
+<p>A line of <code class="docutils literal notranslate"><span class="pre">#</span></code>’s also works for separating blocks. The above line of <code class="docutils literal notranslate"><span class="pre">#</span></code>’s
+separates the text block above from this text block. Notice however, that
+separated text blocks only shows as a new lines between text, in the rendered
+output.</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">dummy</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;This should not be part of a &#39;text&#39; block&#39;&quot;&quot;&quot;</span>
 
-    <span class="c1">#############################################</span>
-    <span class="c1"># Comment inside code to remain in code block</span>
+    <span class="c1"># %%</span>
+    <span class="c1"># This comment inside a code block will remain in the code block</span>
     <span class="k">pass</span>
 
-<span class="c1"># this should not be part of a &#39;text&#39; block</span>
+<span class="c1"># this line should not be part of a &#39;text&#39; block</span>
 </pre></div>
 </div>
 <hr class="docutils" />
@@ -229,13 +232,14 @@ but we recommend only using <code class="docutils literal notranslate"><span cla
 <code class="docutils literal notranslate"><span class="pre">#</span></code> and the line of <code class="docutils literal notranslate"><span class="pre">#</span></code>’s.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>The next kind of comments are not supported and become too hard to escape
-so just don’t code like this:</p>
+<p>The next kind of comments are not supported (notice the line of <code class="docutils literal notranslate"><span class="pre">#</span></code>’s
+and the <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">%%</span></code> start at the margin instead of being indented like
+above) and become too hard to escape so just don’t use code like this:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">dummy2</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Function docstring&quot;&quot;&quot;</span>
 <span class="c1">####################################</span>
 <span class="c1"># This comment</span>
-<span class="c1">#%%</span>
+<span class="c1"># %%</span>
 <span class="c1"># and this comment inside python indentation</span>
 <span class="c1"># breaks the block structure and is not</span>
 <span class="c1"># supported</span>
@@ -265,7 +269,7 @@ block together using <code class="docutils literal notranslate"><span class="pre
 </pre></div>
 </div>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># another way to separate code blocks shown above</span>
-<a href="https://docs.python.org/3/library/functions.html#int" title="View documentation for builtins.int"><span class="n">B</span></a> <span class="o">=</span> <span class="mi">1</span>
+<a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">B</span></a> <span class="o">=</span> <span class="mi">1</span>
 </pre></div>
 </div>
 <p>Last text block.</p>
@@ -282,55 +286,57 @@ block together using <code class="docutils literal notranslate"><span class="pre
 <span class="sd">:download:`source Python script &lt;plot_parse.py&gt;`.&quot;&quot;&quot;</span>
 
 
-<span class="c1">##############################################################################</span>
+<span class="c1"># %%</span>
 <span class="c1"># This is the first text block and directly follows the header docstring above.</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="c1">##################################################</span>
+<span class="c1"># %%</span>
 
-<span class="c1"># a block separator (line of #&#39;s) allows you to create two separate code blocks</span>
-<a href="https://docs.python.org/3/library/functions.html#int" title="View documentation for builtins.int"><span class="n">A</span></a> <span class="o">=</span> <span class="mi">1</span>
+<span class="c1"># You can separate code blocks using either a single line of ``#``&#39;s</span>
+<span class="c1"># (&gt;=20 columns), ``#%%``, or ``# %%``. For consistency, it is recommend that</span>
+<span class="c1"># you use only one of the above three &#39;block splitter&#39; options in your project.</span>
+<a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">A</span></a> <span class="o">=</span> <span class="mi">1</span>
 
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
-<span class="c1">#####################################</span>
-<span class="c1"># You can easily alternate between code and text blocks **and** separate</span>
-<span class="c1"># sequential blocks of code (above) and text (below). Note that separated</span>
-<span class="c1"># text blocks only shows as a new lines between text, in the rendered output.</span>
+<span class="c1"># %%</span>
+<span class="c1"># Block splitters allow you alternate between code and text blocks **and**</span>
+<span class="c1"># separate sequential blocks of code (above) and text (below).</span>
 
-<span class="c1">#############################################</span>
-<span class="c1"># You can separate blocks using either a single line of ``#``&#39;s (&gt;=20 columns)</span>
-<span class="c1"># or ``#%%``. For compatibility reasons ``# %%`` (with a space) can also be used</span>
-<span class="c1"># but we recommend only using ``#%%`` for consistency. All future </span>
-<span class="c1"># &#39;block splitters&#39; used in the source ``.py`` document will be ``#%%``.</span>
+<span class="c1">##############################################################################</span>
+<span class="c1"># A line of ``#``&#39;s also works for separating blocks. The above line of ``#``&#39;s</span>
+<span class="c1"># separates the text block above from this text block. Notice however, that</span>
+<span class="c1"># separated text blocks only shows as a new lines between text, in the rendered</span>
+<span class="c1"># output.</span>
 
 <span class="k">def</span> <span class="nf">dummy</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;This should not be part of a &#39;text&#39; block&#39;&quot;&quot;&quot;</span>
 
-    <span class="c1">#############################################</span>
-    <span class="c1"># Comment inside code to remain in code block</span>
+    <span class="c1"># %%</span>
+    <span class="c1"># This comment inside a code block will remain in the code block</span>
     <span class="k">pass</span>
 
-<span class="c1"># this should not be part of a &#39;text&#39; block</span>
+<span class="c1"># this line should not be part of a &#39;text&#39; block</span>
 
-<span class="c1">#%%</span>
-<span class="c1"># </span>
+<span class="c1"># %%</span>
+<span class="c1">#</span>
 <span class="c1"># ####################################################################</span>
 <span class="c1">#</span>
 <span class="c1"># The above syntax makes a line cut in Sphinx. Note the space between the first</span>
 <span class="c1"># ``#`` and the line of ``#``&#39;s.</span>
 
-<span class="c1">#%%</span>
+<span class="c1"># %%</span>
 <span class="c1"># .. warning::</span>
-<span class="c1">#     The next kind of comments are not supported and become too hard to escape</span>
-<span class="c1">#     so just don&#39;t code like this::</span>
+<span class="c1">#     The next kind of comments are not supported (notice the line of ``#``&#39;s</span>
+<span class="c1">#     and the ``# %%`` start at the margin instead of being indented like</span>
+<span class="c1">#     above) and become too hard to escape so just don&#39;t use code like this::</span>
 <span class="c1">#</span>
 <span class="c1">#         def dummy2():</span>
 <span class="c1">#             &quot;&quot;&quot;Function docstring&quot;&quot;&quot;</span>
 <span class="c1">#         ####################################</span>
-<span class="c1">#         # This comment </span>
-<span class="c1">#         #%%</span>
+<span class="c1">#         # This comment</span>
+<span class="c1">#         # %%</span>
 <span class="c1">#         # and this comment inside python indentation</span>
 <span class="c1">#         # breaks the block structure and is not</span>
 <span class="c1">#         # supported</span>
@@ -339,7 +345,7 @@ block together using <code class="docutils literal notranslate"><span class="pre
 
 <span class="sd">&quot;&quot;&quot;Free strings are not supported. They will be rendered as a code block&quot;&quot;&quot;</span>
 
-<span class="c1">#%%</span>
+<span class="c1"># %%</span>
 <span class="c1"># New lines can be included in your text block and the parser</span>
 <span class="c1"># is capable of retaining this important whitespace to work with Sphinx.</span>
 <span class="c1"># Everything after a block splitter and starting with ``#`` then one space,</span>
@@ -351,13 +357,13 @@ block together using <code class="docutils literal notranslate"><span class="pre
 
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;one&#39;</span><span class="p">)</span>
 
-<span class="c1">#%%</span>
+<span class="c1"># %%</span>
 <span class="c1">#</span>
 
 <span class="c1"># another way to separate code blocks shown above</span>
-<a href="https://docs.python.org/3/library/functions.html#int" title="View documentation for builtins.int"><span class="n">B</span></a> <span class="o">=</span> <span class="mi">1</span>
+<a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">B</span></a> <span class="o">=</span> <span class="mi">1</span>
 
-<span class="c1">#%%</span>
+<span class="c1"># %%</span>
 <span class="c1"># Last text block.</span>
 <span class="c1">#</span>
 <span class="c1"># That&#39;s all folks !</span>
@@ -367,16 +373,16 @@ block together using <code class="docutils literal notranslate"><span class="pre
 <span class="c1">#</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.656 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.603 seconds)</p>
 <p><strong>Estimated memory usage:</strong>  8 MB</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-plot-parse-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/sphinx-gallery/sphinx-gallery.github.io/master?urlpath=lab/tree/notebooks/tutorials/plot_parse.ipynb"><img alt="https://mybinder.org/badge_logo.svg" src="https://mybinder.org/badge_logo.svg" width="150px" /></a>
 </div>
-<div class="sphx-glr-download docutils container">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/a21866f88df7b645bec2f3a77a6e667f/plot_parse.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_parse.py</span></code></a></p>
 </div>
-<div class="sphx-glr-download docutils container">
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/9abac490815a60e4650e5fa8bcef8af4/plot_parse.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_parse.ipynb</span></code></a></p>
 </div>
 </div>
@@ -404,7 +410,7 @@ block together using <code class="docutils literal notranslate"><span class="pre
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2014-2019, Sphinx-gallery developers
+        &copy; Copyright 2014-2020, Sphinx-gallery developers
 
     </p>
   </div>
