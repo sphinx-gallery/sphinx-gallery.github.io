@@ -224,11 +224,14 @@ cycle. You will likely need to <a class="reference external" href="https://githu
 as Github only allows 50 unauthenticated requests per hour. We do this
 because our failing discipline of writing in the CHANGES.rst all relevant
 changes, this helps our memory.</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">github_changelog_generator sphinx-gallery/sphinx-gallery --since-tag=v0.5.0 --token &lt;your-40-digit-token&gt;</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">github_changelog_generator -u sphinx-gallery -p sphinx-gallery --since-tag=v0.&lt;latest version&gt;.0 --token &lt;your-40-digit-token&gt;</span>
 </pre></div>
 </div>
 </li>
-<li><p>Edit CHANGELOG.md to look reasonable (it will be used later)</p></li>
+<li><p>Edit CHANGELOG.md to look reasonable (it will be used later). It’s a
+good idea to add labels to issues and pull requests so
+<cite>github_changelog_generator</cite> can correctly categorize them in in the
+CHANGES.rst file generated.</p></li>
 <li><p>Propagate the relevant changes to <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/blob/master/CHANGES.rst">CHANGES.rst</a>.
 You can easily convert it RST with pandoc:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pandoc CHANGELOG.md --wrap=none -o CHANGELOG.rst</span>
@@ -252,7 +255,7 @@ everything looks right.</p>
 <li><p>Update version</p>
 <blockquote>
 <div><p>Update the version in <code class="docutils literal notranslate"><span class="pre">sphinx_gallery/__init__.py</span></code>, which should end in
-<code class="docutils literal notranslate"><span class="pre">.dev0</span></code>. You should remove <code class="docutils literal notranslate"><span class="pre">.dev0</span></code>, and the remaining numbers will
+<code class="docutils literal notranslate"><span class="pre">.dev0</span></code>. You should remove <code class="docutils literal notranslate"><span class="pre">.dev0</span></code>, and the numbers that remain will
 become the version for this release.</p>
 </div></blockquote>
 </li>
@@ -292,16 +295,15 @@ Get somebody else to make sure all looks well, and merge this pull request.</p>
 <ul class="simple">
 <li><p>Go to the <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/releases/new">Draft a new release</a> page.</p></li>
 <li><p>The <strong>tag version</strong> is whatever the version is in <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> prepended with <code class="docutils literal notranslate"><span class="pre">v</span></code>. E.g., <code class="docutils literal notranslate"><span class="pre">v0.3.0</span></code>.</p></li>
-<li><p>The <strong>release title</strong> is <code class="docutils literal notranslate"><span class="pre">Release</span> <span class="pre">&lt;&lt;</span> <span class="pre">tag-version</span> <span class="pre">&gt;&gt;</span></code>.</p></li>
+<li><p>The <strong>release title</strong> is <code class="docutils literal notranslate"><span class="pre">Release</span> <span class="pre">&lt;tag-version&gt;</span></code>.</p></li>
 <li><p>The <strong>description</strong> should contain the markdown changelog
-you generated above (in the <code class="docutils literal notranslate"><span class="pre">CHANGELOG.md</span></code> file). Make sure to update any links to point
-to the tag that will be created for this release (e.g., change <code class="docutils literal notranslate"><span class="pre">HEAD</span></code> to <code class="docutils literal notranslate"><span class="pre">v0.3.0</span></code>).</p></li>
+you generated above (in the <code class="docutils literal notranslate"><span class="pre">CHANGELOG.md</span></code> file).</p></li>
 <li><p>Click <strong>Publish release</strong> when you are done.</p></li>
 </ul>
 </li>
 <li><p>Now that the releases are complete, we need to switch the “master” branch back into a developer
 mode. Bump the <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/blob/master/sphinx_gallery/__init__.py">Sphinx Gallery version number</a>
-to the next minor (or major) release and append <cite>dev0</cite> to the end, and make a PR for this change.</p></li>
+to the next minor (or major) release and append <code class="docutils literal notranslate"><span class="pre">.dev0</span></code> to the end, and make a PR for this change.</p></li>
 <li><p>Celebrate! You’ve just released a new version of Sphinx Gallery!</p></li>
 </ol>
 </div>
