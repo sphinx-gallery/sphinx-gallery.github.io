@@ -379,17 +379,17 @@
     <span class="c1"># Ensure the first cell text is a string if we have it</span>
     <span class="n">first_cell</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;first_notebook_cell&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">first_cell</span><span class="p">,</span> <span class="nb">str</span><span class="p">))</span> <span class="ow">and</span> <span class="p">(</span><span class="n">first_cell</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The &#39;first_notebook_cell&#39; parameter must be type str&quot;</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The &#39;first_notebook_cell&#39; parameter must be type str &quot;</span>
                          <span class="s2">&quot;or None, found type </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">first_cell</span><span class="p">))</span>
     <span class="c1"># Ensure the last cell text is a string if we have it</span>
     <span class="n">last_cell</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;last_notebook_cell&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">last_cell</span><span class="p">,</span> <span class="nb">str</span><span class="p">))</span> <span class="ow">and</span> <span class="p">(</span><span class="n">last_cell</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The &#39;last_notebook_cell&#39; parameter must be type str&quot;</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The &#39;last_notebook_cell&#39; parameter must be type str &quot;</span>
                          <span class="s2">&quot;or None, found type </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">last_cell</span><span class="p">))</span>
     <span class="c1"># Make it easy to know which builder we&#39;re in</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;builder_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">builder_name</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;titles&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="c1"># Ensure &#39;backreferences_dir&#39; is str or Noe</span>
+    <span class="c1"># Ensure &#39;backreferences_dir&#39; is str or None</span>
     <span class="n">backref</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;backreferences_dir&#39;</span><span class="p">]</span>
     <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">backref</span><span class="p">,</span> <span class="nb">str</span><span class="p">))</span> <span class="ow">and</span> <span class="p">(</span><span class="n">backref</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The &#39;backreferences_dir&#39; parameter must be of type &quot;</span>
@@ -477,6 +477,7 @@
     <span class="n">examples_dirs</span> <span class="o">=</span> <span class="p">[</span><span class="n">ex_dir</span> <span class="k">for</span> <span class="n">ex_dir</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">workdirs</span><span class="p">]</span>
     <span class="n">files</span> <span class="o">=</span> <span class="n">collect_gallery_files</span><span class="p">(</span><span class="n">examples_dirs</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
     <span class="n">check_duplicate_filenames</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
+    <span class="n">check_spaces_in_filenames</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">examples_dir</span><span class="p">,</span> <span class="n">gallery_dir</span> <span class="ow">in</span> <span class="n">workdirs</span><span class="p">:</span>
 
@@ -794,8 +795,20 @@
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dup_names</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-            <span class="s1">&#39;Duplicate file name(s) found. Having duplicate file names will &#39;</span>
-            <span class="s1">&#39;break some links. List of files: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">dup_names</span><span class="p">),))</span></div>
+            <span class="s1">&#39;Duplicate example file name(s) found. Having duplicate file &#39;</span>
+            <span class="s1">&#39;names will break some links. &#39;</span>
+            <span class="s1">&#39;List of files: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">dup_names</span><span class="p">),))</span></div>
+
+
+<div class="viewcode-block" id="check_spaces_in_filenames"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.check_spaces_in_filenames">[docs]</a><span class="k">def</span> <span class="nf">check_spaces_in_filenames</span><span class="p">(</span><span class="n">files</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Check for spaces in filenames across example directories.&quot;&quot;&quot;</span>
+    <span class="n">regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[\s]&#39;</span><span class="p">)</span>
+    <span class="n">files_with_space</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">,</span> <span class="n">files</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">files_with_space</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="s1">&#39;Example file name(s) with space(s) found. Having space(s) in &#39;</span>
+            <span class="s1">&#39;file names will break some links. &#39;</span>
+            <span class="s1">&#39;List of files: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">files_with_space</span><span class="p">),))</span></div>
 
 
 <div class="viewcode-block" id="get_default_config_value"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.get_default_config_value">[docs]</a><span class="k">def</span> <span class="nf">get_default_config_value</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
