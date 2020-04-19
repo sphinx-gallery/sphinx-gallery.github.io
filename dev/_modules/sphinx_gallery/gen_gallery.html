@@ -228,7 +228,7 @@
     <span class="s1">&#39;backreferences_dir&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
     <span class="s1">&#39;doc_module&#39;</span><span class="p">:</span> <span class="p">(),</span>
     <span class="s1">&#39;reference_url&#39;</span><span class="p">:</span> <span class="p">{},</span>
-    <span class="s1">&#39;capture_repr&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;_repr_html_&#39;</span><span class="p">,</span><span class="s1">&#39;__repr__&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;capture_repr&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;_repr_html_&#39;</span><span class="p">,</span> <span class="s1">&#39;__repr__&#39;</span><span class="p">),</span>
     <span class="c1"># Build options</span>
     <span class="c1"># -------------</span>
     <span class="c1"># We use a string for &#39;plot_gallery&#39; rather than simply the Python boolean</span>
@@ -380,8 +380,8 @@
     <span class="c1"># Ensure the first cell text is a string if we have it</span>
     <span class="n">first_cell</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;first_notebook_cell&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">first_cell</span><span class="p">,</span> <span class="nb">str</span><span class="p">))</span> <span class="ow">and</span> <span class="p">(</span><span class="n">first_cell</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The &#39;first_notebook_cell&#39; parameter must be type str &quot;</span>
-                         <span class="s2">&quot;or None, found type </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">first_cell</span><span class="p">))</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The &#39;first_notebook_cell&#39; parameter must be type &quot;</span>
+                         <span class="s2">&quot;str or None, found type </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">first_cell</span><span class="p">))</span>
     <span class="c1"># Ensure the last cell text is a string if we have it</span>
     <span class="n">last_cell</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;last_notebook_cell&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">last_cell</span><span class="p">,</span> <span class="nb">str</span><span class="p">))</span> <span class="ow">and</span> <span class="p">(</span><span class="n">last_cell</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
@@ -392,7 +392,8 @@
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;titles&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="c1"># Ensure &#39;backreferences_dir&#39; is str, pathlib.Path or None</span>
     <span class="n">backref</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;backreferences_dir&#39;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">backref</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">)))</span> <span class="ow">and</span> <span class="p">(</span><span class="n">backref</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">backref</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">)))</span> <span class="ow">and</span> \
+            <span class="p">(</span><span class="n">backref</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The &#39;backreferences_dir&#39; parameter must be of type &quot;</span>
                          <span class="s2">&quot;str, pathlib.Path or None, &quot;</span>
                          <span class="s2">&quot;found type </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">backref</span><span class="p">))</span>
