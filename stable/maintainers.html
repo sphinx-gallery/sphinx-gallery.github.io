@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Maintaining Sphinx Gallery &mdash; Sphinx-Gallery 0.6.1-git documentation</title>
+  <title>Maintaining Sphinx Gallery &mdash; Sphinx-Gallery 0.6.2-git documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.6.1
+                0.6.2
               </div>
             
           
@@ -221,10 +221,14 @@ bundle and push new Python package distributions to pip.</p></li>
 <li><p>Use <a class="reference external" href="https://github.com/skywinder/github-changelog-generator#installation">github_changelog_generator</a> to
 gather all merged pull requests and closed issues during the development
 cycle. You will likely need to <a class="reference external" href="https://github.com/settings/tokens/new?description=GitHub%20Changelog%20Generator%20token">generate a Github token</a>
-as Github only allows 50 unauthenticated requests per hour. We do this
-because our failing discipline of writing in the CHANGES.rst all relevant
-changes, this helps our memory.</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">github_changelog_generator -u sphinx-gallery -p sphinx-gallery --since-tag=v0.&lt;latest version&gt;.0 --token &lt;your-40-digit-token&gt;</span>
+as Github only allows 50 unauthenticated requests per hour. In the
+command below <code class="docutils literal notranslate"><span class="pre">&lt;version&gt;</span></code> is the current (not development) version of
+the package, e.g., <code class="docutils literal notranslate"><span class="pre">0.6.0</span></code>. We do this because our failing discipline
+of writing in the CHANGES.rst all relevant changes, this helps our
+memory. It is a good idea to add appropriate labels (e.g., ‘BUG’) to
+issues and pull requests so they are categorized correctly in the
+CHANGES.rst generated.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">github_changelog_generator -u sphinx-gallery -p sphinx-gallery --since-tag=v&lt;version&gt; --token &lt;your-40-digit-token&gt;</span>
 </pre></div>
 </div>
 </li>
@@ -278,14 +282,16 @@ Get somebody else to make sure all looks well, and merge this pull request.</p>
 </div>
 </li>
 <li><p>Check the release:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">twine check dist/sphinx-gallery-0.4.0.tar.gz</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">twine check dist/sphinx-gallery-&lt;version&gt;.tar.gz</span>
 </pre></div>
 </div>
+<p><code class="docutils literal notranslate"><span class="pre">&lt;version&gt;</span></code> should be the release version, e.g., <code class="docutils literal notranslate"><span class="pre">0.7.0</span></code>.</p>
 </li>
 <li><p>Upload to PyPI:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">twine upload dist/sphinx-gallery-&lt;version&gt;.tar.gz</span>
 </pre></div>
 </div>
+<p>Again, <code class="docutils literal notranslate"><span class="pre">&lt;version&gt;</span></code> should be the release version, e.g., <code class="docutils literal notranslate"><span class="pre">0.7.0</span></code>.</p>
 </li>
 <li><p>Confirm that the new version of Sphinx Gallery
 <a class="reference external" href="https://pypi.org/project/sphinx-gallery/">is posted to pypi</a>.</p></li>
@@ -294,7 +300,7 @@ Get somebody else to make sure all looks well, and merge this pull request.</p>
 <li><p>Create a new release on GitHub</p>
 <ul class="simple">
 <li><p>Go to the <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/releases/new">Draft a new release</a> page.</p></li>
-<li><p>The <strong>tag version</strong> is whatever the version is in <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> prepended with <code class="docutils literal notranslate"><span class="pre">v</span></code>. E.g., <code class="docutils literal notranslate"><span class="pre">v0.3.0</span></code>.</p></li>
+<li><p>The <strong>tag version</strong> is whatever the version is in <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> prepended with <code class="docutils literal notranslate"><span class="pre">v</span></code>. E.g., <code class="docutils literal notranslate"><span class="pre">v0.7.0</span></code>.</p></li>
 <li><p>The <strong>release title</strong> is <code class="docutils literal notranslate"><span class="pre">Release</span> <span class="pre">&lt;tag-version&gt;</span></code>.</p></li>
 <li><p>The <strong>description</strong> should contain the markdown changelog
 you generated above (in the <code class="docutils literal notranslate"><span class="pre">CHANGELOG.md</span></code> file).</p></li>
