@@ -517,24 +517,25 @@ refer to <a class="reference external" href="https://docs.scipy.org/doc/numpy/re
 your Sphinx-Gallery configuration <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file with:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="c1"># directory where function granular galleries are stored</span>
+    <span class="c1"># directory where function/class granular galleries are stored</span>
     <span class="s1">&#39;backreferences_dir&#39;</span>  <span class="p">:</span> <span class="s1">&#39;gen_modules/backreferences&#39;</span><span class="p">,</span>
 
-    <span class="c1"># Modules for which function level galleries are created.  In</span>
+    <span class="c1"># Modules for which function/class level galleries are created. In</span>
     <span class="c1"># this case sphinx_gallery and numpy in a tuple of strings.</span>
     <span class="s1">&#39;doc_module&#39;</span>          <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;sphinx_gallery&#39;</span><span class="p">,</span> <span class="s1">&#39;numpy&#39;</span><span class="p">)}</span>
 </pre></div>
 </div>
 <p>The path you specify in <code class="docutils literal notranslate"><span class="pre">backreferences_dir</span></code> (here we choose
 <code class="docutils literal notranslate"><span class="pre">gen_modules/backreferences</span></code>) will be populated with
-ReStructuredText files. Each will contain a reduced version of the
-gallery specific to every function used across all the examples
-galleries and belonging to the modules listed in <code class="docutils literal notranslate"><span class="pre">doc_module</span></code>.
-<code class="docutils literal notranslate"><span class="pre">backreferences_dir`</span> <span class="pre">should</span> <span class="pre">be</span> <span class="pre">a</span> <span class="pre">string</span> <span class="pre">or</span> <span class="pre">``pathlib.Path</span></code> object that is
+ReStructuredText files. Each .rst file will contain a reduced version of the
+gallery specific to every function/class that is used across all the examples
+and belonging to the modules listed in <code class="docutils literal notranslate"><span class="pre">doc_module</span></code>.
+<code class="docutils literal notranslate"><span class="pre">backreferences_dir</span></code> should be a string or <code class="docutils literal notranslate"><span class="pre">pathlib.Path</span></code> object that is
 <strong>relative</strong> to the <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file, or <code class="docutils literal notranslate"><span class="pre">None</span></code>. It is <code class="docutils literal notranslate"><span class="pre">None</span></code> by default.</p>
-<p>Then within your sphinx documentation <code class="docutils literal notranslate"><span class="pre">.rst</span></code> files you write these
-lines to include this reduced version of the Gallery, which has
-examples in use of a specific function, in this case <code class="docutils literal notranslate"><span class="pre">numpy.exp</span></code>:</p>
+<p>Within your sphinx documentation <code class="docutils literal notranslate"><span class="pre">.rst</span></code> files, you can use easily
+add this reduced version of the Gallery. For example, the rst below adds
+the reduced version of the Gallery for <code class="docutils literal notranslate"><span class="pre">numpy.exp</span></code>, which includes all
+examples that use the specific function <code class="docutils literal notranslate"><span class="pre">numpy.exp</span></code>:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="o">..</span> <span class="n">include</span><span class="p">::</span> <span class="n">gen_modules</span><span class="o">/</span><span class="n">backreferences</span><span class="o">/</span><span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="o">.</span><span class="n">examples</span>
 <span class="o">..</span> <span class="n">raw</span><span class="p">::</span> <span class="n">html</span>
 
@@ -1324,7 +1325,7 @@ you can do:</p>
 <span id="capture-repr"></span><h2>Controlling what output is captured<a class="headerlink" href="#controlling-what-output-is-captured" title="Permalink to this headline">¶</a></h2>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Configure <code class="docutils literal notranslate"><span class="pre">capture_repr</span></code> to be an empty tuple (i.e.,``capture_repr: ()``)
+<p>Configure <code class="docutils literal notranslate"><span class="pre">capture_repr</span></code> to be an empty tuple (i.e., <cite>capture_repr: ()</cite>)
 to return to the output capturing behaviour prior to release v0.5.0.</p>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">capture_repr</span></code> configuration allows the user to control what output
@@ -1425,7 +1426,7 @@ etc. Similarly subclasses of ‘matplotlib.axes’ (e.g. ‘matplotlib.axes.Axes
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
     <span class="s1">&#39;capture_repr&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;__repr__&#39;</span><span class="p">),</span>
-    <span class="s1">&#39;ignore_repr_types&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;matplotlib.text|matplotlib.axes&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;ignore_repr_types&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;matplotlib[text, axes]&#39;</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
