@@ -493,6 +493,7 @@
         <span class="c1"># replace - &amp; _ with \s</span>
         <span class="n">file_name_final</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[-,_]&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">file_name_noext</span><span class="p">)</span>
         <span class="n">alt</span> <span class="o">=</span> <span class="n">file_name_final</span>
+    <span class="n">alt</span> <span class="o">=</span> <span class="n">_single_line_sanitize</span><span class="p">(</span><span class="n">alt</span><span class="p">)</span>
 
     <span class="n">images_rst</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">figure_paths</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
@@ -503,6 +504,13 @@
         <span class="k">for</span> <span class="n">figure_name</span> <span class="ow">in</span> <span class="n">figure_paths</span><span class="p">:</span>
             <span class="n">images_rst</span> <span class="o">+=</span> <span class="n">HLIST_IMAGE_TEMPLATE</span> <span class="o">%</span> <span class="p">(</span><span class="n">figure_name</span><span class="p">,</span> <span class="n">alt</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">images_rst</span></div>
+
+
+<span class="k">def</span> <span class="nf">_single_line_sanitize</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Remove problematic newlines.&quot;&quot;&quot;</span>
+    <span class="c1"># For example, when setting a :alt: for an image, it shouldn&#39;t have \n</span>
+    <span class="c1"># This is a function in case we end up finding other things to replace</span>
+    <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span>
 
 
 <span class="c1"># The following strings are used when we have several pictures: we use</span>
