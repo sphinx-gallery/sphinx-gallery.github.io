@@ -423,6 +423,7 @@
 <span class="s2">.. only:: html</span>
 
 <span class="s2"> .. figure:: /</span><span class="si">{thumbnail}</span><span class="s2"></span>
+<span class="s2">     :alt: </span><span class="si">{title}</span><span class="s2"></span>
 
 <span class="s2">     :ref:`sphx_glr_</span><span class="si">{ref_name}</span><span class="s2">`</span>
 
@@ -438,8 +439,8 @@
 <span class="s2">&quot;&quot;&quot;</span>
 
 
-<span class="k">def</span> <span class="nf">_thumbnail_div</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">snippet</span><span class="p">,</span> <span class="n">is_backref</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                   <span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_thumbnail_div</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">snippet</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span>
+                   <span class="n">is_backref</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Generate RST to place a thumbnail in a gallery.&quot;&quot;&quot;</span>
     <span class="n">thumb</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_find_image_ext</span><span class="p">(</span>
         <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="s1">&#39;images&#39;</span><span class="p">,</span> <span class="s1">&#39;thumb&#39;</span><span class="p">,</span>
@@ -458,11 +459,11 @@
 
     <span class="n">template</span> <span class="o">=</span> <span class="n">BACKREF_THUMBNAIL_TEMPLATE</span> <span class="k">if</span> <span class="n">is_backref</span> <span class="k">else</span> <span class="n">THUMBNAIL_TEMPLATE</span>
     <span class="k">return</span> <span class="n">template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">snippet</span><span class="o">=</span><span class="n">escape</span><span class="p">(</span><span class="n">snippet</span><span class="p">),</span>
-                           <span class="n">thumbnail</span><span class="o">=</span><span class="n">thumb</span><span class="p">,</span> <span class="n">ref_name</span><span class="o">=</span><span class="n">ref_name</span><span class="p">)</span>
+                           <span class="n">thumbnail</span><span class="o">=</span><span class="n">thumb</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">ref_name</span><span class="o">=</span><span class="n">ref_name</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_write_backreferences</span><span class="p">(</span><span class="n">backrefs</span><span class="p">,</span> <span class="n">seen_backrefs</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span>
-                          <span class="n">target_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">snippet</span><span class="p">):</span>
+                          <span class="n">target_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">snippet</span><span class="p">,</span> <span class="n">title</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Write backreference file including a thumbnail list of examples.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;backreferences_dir&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span>
@@ -479,7 +480,8 @@
                 <span class="n">ex_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">heading</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
                 <span class="n">ex_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;^&#39;</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">heading</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
             <span class="n">ex_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">_thumbnail_div</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">],</span>
-                                         <span class="n">fname</span><span class="p">,</span> <span class="n">snippet</span><span class="p">,</span> <span class="n">is_backref</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+                                         <span class="n">fname</span><span class="p">,</span> <span class="n">snippet</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span>
+                                         <span class="n">is_backref</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
             <span class="n">seen_backrefs</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">backref</span><span class="p">)</span>
 
 
