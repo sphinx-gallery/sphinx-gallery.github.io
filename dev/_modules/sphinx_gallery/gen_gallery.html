@@ -311,14 +311,33 @@
             <span class="nb">type</span><span class="o">=</span><span class="ne">DeprecationWarning</span><span class="p">)</span>
 
     <span class="c1"># deal with show_memory</span>
+    <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;memory_base&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
     <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;show_memory&#39;</span><span class="p">]:</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">memory_profiler</span> <span class="kn">import</span> <span class="n">memory_usage</span>  <span class="c1"># noqa, analysis:ignore</span>
-        <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Please install &#39;memory_profiler&#39; to enable peak &quot;</span>
-                           <span class="s2">&quot;memory measurements.&quot;</span><span class="p">)</span>
-            <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;show_memory&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;memory_base&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_get_memory_base</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">callable</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;show_memory&#39;</span><span class="p">]):</span>  <span class="c1"># True-like</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="kn">from</span> <span class="nn">memory_profiler</span> <span class="kn">import</span> <span class="n">memory_usage</span>  <span class="c1"># noqa</span>
+            <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Please install &#39;memory_profiler&#39; to enable &quot;</span>
+                               <span class="s2">&quot;peak memory measurements.&quot;</span><span class="p">)</span>
+                <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;show_memory&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">def</span> <span class="nf">call_memory</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+                    <span class="n">mem</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="n">memory_usage</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">max_usage</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">retval</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                            <span class="n">multiprocess</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">mem</span> <span class="o">=</span> <span class="n">mem</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># old MP always returned a list</span>
+                    <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>  <span class="c1"># &#39;float&#39; object is not subscriptable</span>
+                        <span class="k">pass</span>
+                    <span class="k">return</span> <span class="n">mem</span><span class="p">,</span> <span class="n">out</span>
+                <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;call_memory&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">call_memory</span>
+                <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;memory_base&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_get_memory_base</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;call_memory&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;show_memory&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;show_memory&#39;</span><span class="p">]:</span>  <span class="c1"># can be set to False above</span>
+        <span class="k">def</span> <span class="nf">call_memory</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+            <span class="k">return</span> <span class="mf">0.</span><span class="p">,</span> <span class="n">func</span><span class="p">()</span>
+        <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;call_memory&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">call_memory</span>
+    <span class="k">assert</span> <span class="n">callable</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;call_memory&#39;</span><span class="p">])</span>
 
     <span class="c1"># deal with scrapers</span>
     <span class="n">scrapers</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;image_scrapers&#39;</span><span class="p">]</span>

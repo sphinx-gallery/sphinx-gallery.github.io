@@ -628,50 +628,32 @@
                         <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="s1">&#39;__main__&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">old_main</span>
 
 
-<span class="k">def</span> <span class="nf">_memory_usage</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Get memory usage of a function call.&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;show_memory&#39;</span><span class="p">]:</span>
-        <span class="kn">from</span> <span class="nn">memory_profiler</span> <span class="kn">import</span> <span class="n">memory_usage</span>
-        <span class="k">assert</span> <span class="n">callable</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
-        <span class="n">mem</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="n">memory_usage</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">max_usage</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">retval</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                                <span class="n">multiprocess</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">mem</span> <span class="o">=</span> <span class="n">mem</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># old MP always returned a list</span>
-        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>  <span class="c1"># &#39;float&#39; object is not subscriptable</span>
-            <span class="k">pass</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">out</span> <span class="o">=</span> <span class="n">func</span><span class="p">()</span>
-        <span class="n">mem</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">return</span> <span class="n">out</span><span class="p">,</span> <span class="n">mem</span>
-
-
 <span class="k">def</span> <span class="nf">_get_memory_base</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Get the base amount of memory used by running a Python process.&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;show_memory&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;plot_gallery&#39;</span><span class="p">]:</span>
-        <span class="n">memory_base</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;plot_gallery&#39;</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="mf">0.</span>
+    <span class="c1"># There might be a cleaner way to do this at some point</span>
+    <span class="kn">from</span> <span class="nn">memory_profiler</span> <span class="kn">import</span> <span class="n">memory_usage</span>
+    <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;win32&#39;</span><span class="p">,</span> <span class="s1">&#39;darwin&#39;</span><span class="p">):</span>
+        <span class="n">sleep</span><span class="p">,</span> <span class="n">timeout</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="c1"># There might be a cleaner way to do this at some point</span>
-        <span class="kn">from</span> <span class="nn">memory_profiler</span> <span class="kn">import</span> <span class="n">memory_usage</span>
-        <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;win32&#39;</span><span class="p">,</span> <span class="s1">&#39;darwin&#39;</span><span class="p">):</span>
-            <span class="n">sleep</span><span class="p">,</span> <span class="n">timeout</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">sleep</span><span class="p">,</span> <span class="n">timeout</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span>
-            <span class="p">[</span><span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span> <span class="s1">&#39;-c&#39;</span><span class="p">,</span>
-             <span class="s1">&#39;import time, sys; time.sleep(</span><span class="si">%s</span><span class="s1">); sys.exit(0)&#39;</span> <span class="o">%</span> <span class="n">sleep</span><span class="p">],</span>
-            <span class="n">close_fds</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">memories</span> <span class="o">=</span> <span class="n">memory_usage</span><span class="p">(</span><span class="n">proc</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
-        <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span> <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="k">else</span> <span class="p">{}</span>
-        <span class="n">proc</span><span class="o">.</span><span class="n">communicate</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="c1"># On OSX sometimes the last entry can be None</span>
-        <span class="n">memories</span> <span class="o">=</span> <span class="p">[</span><span class="n">mem</span> <span class="k">for</span> <span class="n">mem</span> <span class="ow">in</span> <span class="n">memories</span> <span class="k">if</span> <span class="n">mem</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="mf">0.</span><span class="p">]</span>
-        <span class="n">memory_base</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">memories</span><span class="p">)</span>
+        <span class="n">sleep</span><span class="p">,</span> <span class="n">timeout</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span> <span class="s1">&#39;-c&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;import time, sys; time.sleep(</span><span class="si">%s</span><span class="s1">); sys.exit(0)&#39;</span> <span class="o">%</span> <span class="n">sleep</span><span class="p">],</span>
+        <span class="n">close_fds</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">memories</span> <span class="o">=</span> <span class="n">memory_usage</span><span class="p">(</span><span class="n">proc</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+    <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span> <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="k">else</span> <span class="p">{}</span>
+    <span class="n">proc</span><span class="o">.</span><span class="n">communicate</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="c1"># On OSX sometimes the last entry can be None</span>
+    <span class="n">memories</span> <span class="o">=</span> <span class="p">[</span><span class="n">mem</span> <span class="k">for</span> <span class="n">mem</span> <span class="ow">in</span> <span class="n">memories</span> <span class="k">if</span> <span class="n">mem</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="mf">0.</span><span class="p">]</span>
+    <span class="n">memory_base</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">memories</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">memory_base</span>
 
 
 <div class="viewcode-block" id="execute_code_block"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.execute_code_block">[docs]</a><span class="k">def</span> <span class="nf">execute_code_block</span><span class="p">(</span><span class="n">compiler</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">example_globals</span><span class="p">,</span>
                        <span class="n">script_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Executes the code block of the example file&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Execute the code block of the example file.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">example_globals</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># testing shortcut</span>
         <span class="n">example_globals</span> <span class="o">=</span> <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;fake_main&#39;</span><span class="p">]</span><span class="o">.</span><span class="vm">__dict__</span>
     <span class="n">blabel</span><span class="p">,</span> <span class="n">bcontent</span><span class="p">,</span> <span class="n">lineno</span> <span class="o">=</span> <span class="n">block</span>
@@ -710,30 +692,27 @@
             <span class="n">is_last_expr</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="n">last_val</span> <span class="o">=</span> <span class="n">code_ast</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span><span class="o">.</span><span class="n">value</span>
             <span class="c1"># exec body minus last expression</span>
-            <span class="n">_</span><span class="p">,</span> <span class="n">mem_body</span> <span class="o">=</span> <span class="n">_memory_usage</span><span class="p">(</span>
+            <span class="n">mem_body</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;call_memory&#39;</span><span class="p">](</span>
                 <span class="n">_exec_once</span><span class="p">(</span>
                     <span class="n">compiler</span><span class="p">(</span><span class="n">code_ast</span><span class="p">,</span> <span class="n">src_file</span><span class="p">,</span> <span class="s1">&#39;exec&#39;</span><span class="p">),</span>
-                    <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;fake_main&#39;</span><span class="p">]),</span>
-                <span class="n">gallery_conf</span><span class="p">)</span>
+                    <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;fake_main&#39;</span><span class="p">]))</span>
             <span class="c1"># exec last expression, made into assignment</span>
             <span class="n">body</span> <span class="o">=</span> <span class="p">[</span><span class="n">ast</span><span class="o">.</span><span class="n">Assign</span><span class="p">(</span>
                 <span class="n">targets</span><span class="o">=</span><span class="p">[</span><span class="n">ast</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;___&#39;</span><span class="p">,</span> <span class="n">ctx</span><span class="o">=</span><span class="n">ast</span><span class="o">.</span><span class="n">Store</span><span class="p">())],</span> <span class="n">value</span><span class="o">=</span><span class="n">last_val</span><span class="p">)]</span>
             <span class="n">last_val_ast</span> <span class="o">=</span> <span class="n">ast_Module</span><span class="p">(</span><span class="n">body</span><span class="o">=</span><span class="n">body</span><span class="p">)</span>
             <span class="n">ast</span><span class="o">.</span><span class="n">fix_missing_locations</span><span class="p">(</span><span class="n">last_val_ast</span><span class="p">)</span>
-            <span class="n">_</span><span class="p">,</span> <span class="n">mem_last</span> <span class="o">=</span> <span class="n">_memory_usage</span><span class="p">(</span>
+            <span class="n">mem_last</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;call_memory&#39;</span><span class="p">](</span>
                 <span class="n">_exec_once</span><span class="p">(</span>
                     <span class="n">compiler</span><span class="p">(</span><span class="n">last_val_ast</span><span class="p">,</span> <span class="n">src_file</span><span class="p">,</span> <span class="s1">&#39;exec&#39;</span><span class="p">),</span>
-                    <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;fake_main&#39;</span><span class="p">]),</span>
-                <span class="n">gallery_conf</span><span class="p">)</span>
+                    <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;fake_main&#39;</span><span class="p">]))</span>
             <span class="c1"># capture the assigned variable</span>
             <span class="n">___</span> <span class="o">=</span> <span class="n">example_globals</span><span class="p">[</span><span class="s1">&#39;___&#39;</span><span class="p">]</span>
             <span class="n">mem_max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">mem_body</span><span class="p">,</span> <span class="n">mem_last</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">_</span><span class="p">,</span> <span class="n">mem_max</span> <span class="o">=</span> <span class="n">_memory_usage</span><span class="p">(</span>
+            <span class="n">mem_max</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;call_memory&#39;</span><span class="p">](</span>
                 <span class="n">_exec_once</span><span class="p">(</span>
                     <span class="n">compiler</span><span class="p">(</span><span class="n">code_ast</span><span class="p">,</span> <span class="n">src_file</span><span class="p">,</span> <span class="s1">&#39;exec&#39;</span><span class="p">),</span>
-                    <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;fake_main&#39;</span><span class="p">]),</span>
-                <span class="n">gallery_conf</span><span class="p">)</span>
+                    <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;fake_main&#39;</span><span class="p">]))</span>
         <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;memory_delta&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mem_max</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
@@ -873,7 +852,7 @@
         <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;src_file&#39;</span><span class="p">]</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">gc</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
-        <span class="n">_</span><span class="p">,</span> <span class="n">memory_start</span> <span class="o">=</span> <span class="n">_memory_usage</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
+        <span class="n">memory_start</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;call_memory&#39;</span><span class="p">](</span><span class="k">lambda</span><span class="p">:</span> <span class="kc">None</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">memory_start</span> <span class="o">=</span> <span class="mf">0.</span>
 

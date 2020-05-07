@@ -1334,6 +1334,22 @@ you can do:</p>
 <span class="p">}</span>
 </pre></div>
 </div>
+<p>It’s also possible to use your own custom memory reporter, for example
+if you would rather see the GPU memory. In that case, <code class="docutils literal notranslate"><span class="pre">show_memory</span></code> must
+be a callable that takes a single function to call (i.e., one generated
+internally to run an individual script code block), and returns a two-element
+tuple containing:</p>
+<ol class="arabic simple">
+<li><p>The memory used in MiB while running the function, and</p></li>
+<li><p>The function output</p></li>
+</ol>
+<p>A version of this that would always report 0 memory used would be:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">...</span>
+    <span class="s1">&#39;show_memory&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">func</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="n">func</span><span class="p">()),</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="controlling-what-output-is-captured">
 <span id="capture-repr"></span><h2>Controlling what output is captured<a class="headerlink" href="#controlling-what-output-is-captured" title="Permalink to this headline">¶</a></h2>
