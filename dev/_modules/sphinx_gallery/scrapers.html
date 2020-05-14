@@ -249,6 +249,17 @@
     <span class="k">return</span> <span class="n">fig_titles</span>
 
 
+<span class="n">_ANIMATION_RST</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">.. only:: builder_html</span>
+
+<span class="s1">    .. container:: sphx-glr-animation</span>
+
+<span class="s1">        .. raw:: html</span>
+
+<span class="s1">            </span><span class="si">{0}</span><span class="s1"></span>
+<span class="s1">&#39;&#39;&#39;</span>
+
+
 <div class="viewcode-block" id="matplotlib_scraper"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.matplotlib_scraper">[docs]</a><span class="k">def</span> <span class="nf">matplotlib_scraper</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">block_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Scrape Matplotlib images.</span>
 
@@ -274,8 +285,16 @@
 <span class="sd">        the images. This is often produced by :func:`figure_rst`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">matplotlib</span><span class="p">,</span> <span class="n">plt</span> <span class="o">=</span> <span class="n">_import_matplotlib</span><span class="p">()</span>
+    <span class="kn">from</span> <span class="nn">matplotlib.animation</span> <span class="kn">import</span> <span class="n">FuncAnimation</span>
     <span class="n">image_path_iterator</span> <span class="o">=</span> <span class="n">block_vars</span><span class="p">[</span><span class="s1">&#39;image_path_iterator&#39;</span><span class="p">]</span>
     <span class="n">image_rsts</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># Check for animations</span>
+    <span class="n">anims</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">gallery_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;matplotlib_animations&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">ani</span> <span class="ow">in</span> <span class="n">block_vars</span><span class="p">[</span><span class="s1">&#39;example_globals&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ani</span><span class="p">,</span> <span class="n">FuncAnimation</span><span class="p">):</span>
+                <span class="n">anims</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ani</span><span class="p">)</span>
+    <span class="c1"># Then standard images</span>
     <span class="k">for</span> <span class="n">fig_num</span><span class="p">,</span> <span class="n">image_path</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">get_fignums</span><span class="p">(),</span> <span class="n">image_path_iterator</span><span class="p">):</span>
         <span class="k">if</span> <span class="s1">&#39;format&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
             <span class="n">image_path</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">image_path</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span>
@@ -283,6 +302,15 @@
         <span class="c1"># Set the fig_num figure as the current figure as we can&#39;t</span>
         <span class="c1"># save a figure that&#39;s not the current figure.</span>
         <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">fig_num</span><span class="p">)</span>
+        <span class="c1"># Deal with animations</span>
+        <span class="n">cont</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">anim</span> <span class="ow">in</span> <span class="n">anims</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">anim</span><span class="o">.</span><span class="n">_fig</span> <span class="ow">is</span> <span class="n">fig</span><span class="p">:</span>
+                <span class="n">image_rsts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_anim_rst</span><span class="p">(</span><span class="n">anim</span><span class="p">,</span> <span class="n">image_path</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">))</span>
+                <span class="n">cont</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">break</span>
+        <span class="k">if</span> <span class="n">cont</span><span class="p">:</span>
+            <span class="k">continue</span>
         <span class="c1"># get fig titles</span>
         <span class="n">fig_titles</span> <span class="o">=</span> <span class="n">_matplotlib_fig_titles</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
         <span class="n">to_rgba</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">colorConverter</span><span class="o">.</span><span class="n">to_rgba</span>
@@ -310,6 +338,29 @@
                       <span class="k">for</span> <span class="n">image</span> <span class="ow">in</span> <span class="n">image_rsts</span><span class="p">]</span>
         <span class="n">rst</span> <span class="o">=</span> <span class="n">HLIST_HEADER</span> <span class="o">+</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">image_rsts</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">rst</span></div>
+
+
+<span class="k">def</span> <span class="nf">_anim_rst</span><span class="p">(</span><span class="n">anim</span><span class="p">,</span> <span class="n">image_path</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">matplotlib.animation</span> <span class="kn">import</span> <span class="n">ImageMagickWriter</span>
+    <span class="c1"># output the thumbnail as the image, as it will just be copied</span>
+    <span class="c1"># if it&#39;s the file thumbnail</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">anim</span><span class="o">.</span><span class="n">_fig</span>
+    <span class="n">image_path</span> <span class="o">=</span> <span class="n">image_path</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.png&#39;</span><span class="p">,</span> <span class="s1">&#39;.gif&#39;</span><span class="p">)</span>
+    <span class="n">fig_size</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">get_size_inches</span><span class="p">()</span>
+    <span class="n">thumb_size</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;thumbnail_size&#39;</span><span class="p">]</span>
+    <span class="n">use_dpi</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span>
+        <span class="nb">min</span><span class="p">(</span><span class="n">t_s</span> <span class="o">/</span> <span class="n">f_s</span> <span class="k">for</span> <span class="n">t_s</span><span class="p">,</span> <span class="n">f_s</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">thumb_size</span><span class="p">,</span> <span class="n">fig_size</span><span class="p">)))</span>
+    <span class="c1"># FFmpeg is buggy for GIFs</span>
+    <span class="k">if</span> <span class="n">ImageMagickWriter</span><span class="o">.</span><span class="n">isAvailable</span><span class="p">():</span>
+        <span class="n">writer</span> <span class="o">=</span> <span class="s1">&#39;imagemagick&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">writer</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">anim</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">writer</span><span class="o">=</span><span class="n">writer</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">use_dpi</span><span class="p">)</span>
+    <span class="n">html</span> <span class="o">=</span> <span class="n">anim</span><span class="o">.</span><span class="n">_repr_html_</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">html</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># plt.rcParams[&#39;animation.html&#39;] == &#39;none&#39;</span>
+        <span class="n">html</span> <span class="o">=</span> <span class="n">anim</span><span class="o">.</span><span class="n">to_jshtml</span><span class="p">()</span>
+    <span class="n">html</span> <span class="o">=</span> <span class="n">indent</span><span class="p">(</span><span class="n">html</span><span class="p">,</span> <span class="s1">&#39;         &#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_ANIMATION_RST</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">html</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="mayavi_scraper"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.mayavi_scraper">[docs]</a><span class="k">def</span> <span class="nf">mayavi_scraper</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">block_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
@@ -405,7 +456,7 @@
 
 
 <span class="c1"># For now, these are what we support</span>
-<span class="n">_KNOWN_IMG_EXTS</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;png&#39;</span><span class="p">,</span> <span class="s1">&#39;svg&#39;</span><span class="p">,</span> <span class="s1">&#39;jpg&#39;</span><span class="p">)</span>  <span class="c1"># XXX add gif next</span>
+<span class="n">_KNOWN_IMG_EXTS</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;png&#39;</span><span class="p">,</span> <span class="s1">&#39;svg&#39;</span><span class="p">,</span> <span class="s1">&#39;jpg&#39;</span><span class="p">,</span> <span class="s1">&#39;gif&#39;</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_find_image_ext</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
