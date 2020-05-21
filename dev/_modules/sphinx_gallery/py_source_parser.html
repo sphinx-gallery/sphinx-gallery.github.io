@@ -200,6 +200,7 @@
 <span class="kn">import</span> <span class="nn">tokenize</span>
 <span class="kn">from</span> <span class="nn">textwrap</span> <span class="kn">import</span> <span class="n">dedent</span>
 
+<span class="kn">from</span> <span class="nn">sphinx.errors</span> <span class="kn">import</span> <span class="n">ExtensionError</span>
 <span class="kn">from</span> <span class="nn">.sphinx_compatibility</span> <span class="kn">import</span> <span class="n">getLogger</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;sphinx-gallery&#39;</span><span class="p">)</span>
@@ -273,14 +274,16 @@
         <span class="k">return</span> <span class="n">SYNTAX_ERROR_DOCSTRING</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">node</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;This function only supports modules. &quot;</span>
-                        <span class="s2">&quot;You provided </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>
+        <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span><span class="s2">&quot;This function only supports modules. &quot;</span>
+                             <span class="s2">&quot;You provided </span><span class="si">{0}</span><span class="s2">&quot;</span>
+                             <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">body</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ast</span><span class="o">.</span><span class="n">Expr</span><span class="p">)</span> <span class="ow">and</span>
             <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Str</span><span class="p">)):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">((</span><span class="s1">&#39;Could not find docstring in file &quot;</span><span class="si">{0}</span><span class="s1">&quot;. &#39;</span>
-                          <span class="s1">&#39;A docstring is required by sphinx-gallery &#39;</span>
-                          <span class="s1">&#39;unless the file is ignored by &quot;ignore_pattern&quot;&#39;</span><span class="p">)</span>
-                         <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+        <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
+            <span class="s1">&#39;Could not find docstring in file &quot;</span><span class="si">{0}</span><span class="s1">&quot;. &#39;</span>
+            <span class="s1">&#39;A docstring is required by sphinx-gallery &#39;</span>
+            <span class="s1">&#39;unless the file is ignored by &quot;ignore_pattern&quot;&#39;</span>
+            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
 
     <span class="k">if</span> <span class="n">LooseVersion</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">version</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">LooseVersion</span><span class="p">(</span><span class="s1">&#39;3.7&#39;</span><span class="p">):</span>
         <span class="n">docstring</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">get_docstring</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>

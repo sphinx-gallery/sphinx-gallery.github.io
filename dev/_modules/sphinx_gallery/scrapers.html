@@ -199,6 +199,7 @@
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">from</span> <span class="nn">textwrap</span> <span class="kn">import</span> <span class="n">indent</span>
 
+<span class="kn">from</span> <span class="nn">sphinx.errors</span> <span class="kn">import</span> <span class="n">ExtensionError</span>
 <span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">scale_image</span><span class="p">,</span> <span class="n">optipng</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;save_figures&#39;</span><span class="p">,</span> <span class="s1">&#39;figure_rst&#39;</span><span class="p">,</span> <span class="s1">&#39;ImagePathIterator&#39;</span><span class="p">,</span> <span class="s1">&#39;clean_modules&#39;</span><span class="p">,</span>
@@ -217,7 +218,7 @@
     <span class="n">matplotlib_backend</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">get_backend</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">matplotlib_backend</span> <span class="o">!=</span> <span class="s1">&#39;agg&#39;</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+        <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
             <span class="s2">&quot;Sphinx-Gallery relies on the matplotlib &#39;agg&#39; backend to &quot;</span>
             <span class="s2">&quot;render figures and write them to files. You are &quot;</span>
             <span class="s2">&quot;currently using the </span><span class="si">{}</span><span class="s2"> backend. Sphinx-Gallery will &quot;</span>
@@ -447,7 +448,7 @@
         <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stop</span><span class="p">):</span>
             <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Generated over </span><span class="si">%s</span><span class="s1"> images&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stop</span><span class="p">,))</span>
+            <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span><span class="s1">&#39;Generated over </span><span class="si">%s</span><span class="s1"> images&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stop</span><span class="p">,))</span>
 
     <span class="k">def</span> <span class="nf">next</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__next__</span><span class="p">()</span>
@@ -498,16 +499,17 @@
     <span class="k">for</span> <span class="n">scraper</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;image_scrapers&#39;</span><span class="p">]:</span>
         <span class="n">rst</span> <span class="o">=</span> <span class="n">scraper</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">block_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rst</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;rst from scraper </span><span class="si">%r</span><span class="s1"> was not a string, &#39;</span>
-                            <span class="s1">&#39;got type </span><span class="si">%s</span><span class="s1">:</span><span class="se">\n</span><span class="si">%r</span><span class="s1">&#39;</span>
-                            <span class="o">%</span> <span class="p">(</span><span class="n">scraper</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">rst</span><span class="p">),</span> <span class="n">rst</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span><span class="s1">&#39;rst from scraper </span><span class="si">%r</span><span class="s1"> was not a string, &#39;</span>
+                                 <span class="s1">&#39;got type </span><span class="si">%s</span><span class="s1">:</span><span class="se">\n</span><span class="si">%r</span><span class="s1">&#39;</span>
+                                 <span class="o">%</span> <span class="p">(</span><span class="n">scraper</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">rst</span><span class="p">),</span> <span class="n">rst</span><span class="p">))</span>
         <span class="n">n_new</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">image_path_iterator</span><span class="p">)</span> <span class="o">-</span> <span class="n">prev_count</span>
         <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_new</span><span class="p">):</span>
             <span class="n">current_path</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_find_image_ext</span><span class="p">(</span>
                 <span class="n">image_path_iterator</span><span class="o">.</span><span class="n">paths</span><span class="p">[</span><span class="n">prev_count</span> <span class="o">+</span> <span class="n">ii</span><span class="p">])</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">current_path</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Scraper </span><span class="si">%s</span><span class="s1"> did not produce expected image:&#39;</span>
-                                   <span class="s1">&#39;</span><span class="se">\n</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">scraper</span><span class="p">,</span> <span class="n">current_path</span><span class="p">))</span>
+                <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
+                    <span class="s1">&#39;Scraper </span><span class="si">%s</span><span class="s1"> did not produce expected image:&#39;</span>
+                    <span class="s1">&#39;</span><span class="se">\n</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">scraper</span><span class="p">,</span> <span class="n">current_path</span><span class="p">))</span>
         <span class="n">all_rst</span> <span class="o">+=</span> <span class="n">rst</span>
     <span class="k">return</span> <span class="n">all_rst</span></div>
 

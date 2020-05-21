@@ -202,6 +202,7 @@
 <span class="kn">import</span> <span class="nn">urllib.parse</span> <span class="k">as</span> <span class="nn">urllib_parse</span>
 <span class="kn">from</span> <span class="nn">urllib.error</span> <span class="kn">import</span> <span class="n">HTTPError</span><span class="p">,</span> <span class="n">URLError</span>
 
+<span class="kn">from</span> <span class="nn">sphinx.errors</span> <span class="kn">import</span> <span class="n">ExtensionError</span>
 <span class="kn">from</span> <span class="nn">sphinx.search</span> <span class="kn">import</span> <span class="n">js_index</span>
 
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">sphinx_compatibility</span>
@@ -222,7 +223,7 @@
         <span class="k">if</span> <span class="n">encoding</span> <span class="o">==</span> <span class="s1">&#39;gzip&#39;</span><span class="p">:</span>
             <span class="n">data</span> <span class="o">=</span> <span class="n">gzip</span><span class="o">.</span><span class="n">GzipFile</span><span class="p">(</span><span class="n">fileobj</span><span class="o">=</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">data</span><span class="p">))</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
         <span class="k">elif</span> <span class="n">encoding</span> <span class="o">!=</span> <span class="s1">&#39;plain&#39;</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;unknown encoding </span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">encoding</span><span class="p">,))</span>
+            <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span><span class="s1">&#39;unknown encoding </span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">encoding</span><span class="p">,))</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">with</span> <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
@@ -266,13 +267,16 @@
 
     <span class="n">pos</span> <span class="o">=</span> <span class="n">index</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;var DOCUMENTATION_OPTIONS&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">pos</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Documentation options could not be found in index.&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
+            <span class="s1">&#39;Documentation options could not be found in index.&#39;</span><span class="p">)</span>
     <span class="n">pos</span> <span class="o">=</span> <span class="n">index</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;{&#39;</span><span class="p">,</span> <span class="n">pos</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">pos</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Documentation options could not be found in index.&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
+            <span class="s1">&#39;Documentation options could not be found in index.&#39;</span><span class="p">)</span>
     <span class="n">endpos</span> <span class="o">=</span> <span class="n">index</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;};&#39;</span><span class="p">,</span> <span class="n">pos</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">endpos</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Documentation options could not be found in index.&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
+            <span class="s1">&#39;Documentation options could not be found in index.&#39;</span><span class="p">)</span>
     <span class="n">block</span> <span class="o">=</span> <span class="n">index</span><span class="p">[</span><span class="n">pos</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span><span class="n">endpos</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
     <span class="n">docopts</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">block</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
@@ -323,8 +327,9 @@
 
         <span class="k">if</span> <span class="n">doc_url</span><span class="o">.</span><span class="n">startswith</span><span class="p">((</span><span class="s1">&#39;http://&#39;</span><span class="p">,</span> <span class="s1">&#39;https://&#39;</span><span class="p">)):</span>
             <span class="k">if</span> <span class="n">relative</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Relative links are only supported for local &#39;</span>
-                                 <span class="s1">&#39;URLs (doc_url cannot be absolute)&#39;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
+                    <span class="s1">&#39;Relative links are only supported for local &#39;</span>
+                    <span class="s1">&#39;URLs (doc_url cannot be absolute)&#39;</span><span class="p">)</span>
             <span class="n">index_url</span> <span class="o">=</span> <span class="n">doc_url</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span>
             <span class="n">searchindex_url</span> <span class="o">=</span> <span class="n">doc_url</span> <span class="o">+</span> <span class="s1">&#39;/searchindex.js&#39;</span>
             <span class="n">docopts_url</span> <span class="o">=</span> <span class="n">doc_url</span> <span class="o">+</span> <span class="s1">&#39;_static/documentation_options.js&#39;</span>
@@ -338,8 +343,9 @@
         <span class="k">if</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;nt&#39;</span> <span class="ow">and</span>
                 <span class="ow">not</span> <span class="n">doc_url</span><span class="o">.</span><span class="n">startswith</span><span class="p">((</span><span class="s1">&#39;http://&#39;</span><span class="p">,</span> <span class="s1">&#39;https://&#39;</span><span class="p">))):</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">relative</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;You have to use relative=True for the local&#39;</span>
-                                 <span class="s1">&#39; package on a Windows system.&#39;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
+                    <span class="s1">&#39;You have to use relative=True for the local&#39;</span>
+                    <span class="s1">&#39; package on a Windows system.&#39;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_is_windows</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_is_windows</span> <span class="o">=</span> <span class="kc">False</span>

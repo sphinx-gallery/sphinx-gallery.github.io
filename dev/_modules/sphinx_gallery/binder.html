@@ -201,6 +201,8 @@
 <span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">import</span> <span class="nn">os</span>
 
+<span class="kn">from</span> <span class="nn">sphinx.errors</span> <span class="kn">import</span> <span class="n">ConfigError</span>
+
 <span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">replace_py_ipynb</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">sphinx_compatibility</span>
 
@@ -317,9 +319,10 @@
     <span class="n">path_reqs</span> <span class="o">=</span> <span class="n">binder_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;dependencies&#39;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">path_reqs</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span> <span class="n">path</span><span class="p">)):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">((</span><span class="s2">&quot;Couldn&#39;t find the Binder requirements file: </span><span class="si">{}</span><span class="s2">,&quot;</span>
-                              <span class="s2">&quot; did you specify the path correctly?&quot;</span>
-                              <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">)))</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
+                <span class="s2">&quot;Couldn&#39;t find the Binder requirements file: </span><span class="si">{}</span><span class="s2">, &quot;</span>
+                <span class="s2">&quot;did you specify the path correctly?&quot;</span>
+                <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
 
     <span class="n">binder_folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">outdir</span><span class="p">,</span> <span class="s1">&#39;binder&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">binder_folder</span><span class="p">):</span>
@@ -379,7 +382,7 @@
     <span class="c1"># Grab the configuration and return None if it&#39;s not configured</span>
     <span class="n">binder_conf</span> <span class="o">=</span> <span class="p">{}</span> <span class="k">if</span> <span class="n">binder_conf</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">binder_conf</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">binder_conf</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;`binder_conf` must be a dictionary or None.&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s1">&#39;`binder_conf` must be a dictionary or None.&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">binder_conf</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">binder_conf</span>
 
@@ -392,19 +395,19 @@
             <span class="n">missing_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">missing_values</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;binder_conf is missing values for: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s1">&#39;binder_conf is missing values for: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="n">missing_values</span><span class="p">))</span>
 
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">binder_conf</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="n">req_values</span> <span class="o">+</span> <span class="n">optional_values</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unknown Binder config key: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s2">&quot;Unknown Binder config key: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
 
     <span class="c1"># Ensure we have http in the URL</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">binder_conf</span><span class="p">[</span><span class="s1">&#39;binderhub_url&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">ii</span><span class="p">)</span>
                <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;http://&#39;</span><span class="p">,</span> <span class="s1">&#39;https://&#39;</span><span class="p">]):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;did not supply a valid url, &#39;</span>
-                         <span class="s1">&#39;gave binderhub_url: </span><span class="si">{}</span><span class="s1">&#39;</span>
-                         <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">binder_conf</span><span class="p">[</span><span class="s1">&#39;binderhub_url&#39;</span><span class="p">]))</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s1">&#39;did not supply a valid url, &#39;</span>
+                          <span class="s1">&#39;gave binderhub_url: </span><span class="si">{}</span><span class="s1">&#39;</span>
+                          <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">binder_conf</span><span class="p">[</span><span class="s1">&#39;binderhub_url&#39;</span><span class="p">]))</span>
 
     <span class="c1"># Ensure we have at least one dependency file</span>
     <span class="c1"># Need at least one of these three files</span>
@@ -414,14 +417,14 @@
         <span class="n">path_reqs</span> <span class="o">=</span> <span class="p">[</span><span class="n">path_reqs</span><span class="p">]</span>
         <span class="n">binder_conf</span><span class="p">[</span><span class="s1">&#39;dependencies&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">path_reqs</span>
     <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">path_reqs</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`dependencies` value should be a list of strings. &quot;</span>
-                         <span class="s2">&quot;Got type </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">path_reqs</span><span class="p">)))</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s2">&quot;`dependencies` value should be a list of strings. &quot;</span>
+                          <span class="s2">&quot;Got type </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">path_reqs</span><span class="p">)))</span>
 
     <span class="n">binder_conf</span><span class="p">[</span><span class="s1">&#39;notebooks_dir&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">binder_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;notebooks_dir&#39;</span><span class="p">,</span>
                                                    <span class="s1">&#39;notebooks&#39;</span><span class="p">)</span>
     <span class="n">path_reqs_filenames</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">ii</span><span class="p">)</span> <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="n">path_reqs</span><span class="p">]</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">ii</span> <span class="ow">in</span> <span class="n">path_reqs_filenames</span> <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="n">required_reqs_files</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
             <span class="s1">&#39;Did not find one of `requirements.txt` or `environment.yml` &#39;</span>
             <span class="s1">&#39;in the &quot;dependencies&quot; section of the binder configuration &#39;</span>
             <span class="s1">&#39;for sphinx-gallery. A path to at least one of these files &#39;</span>

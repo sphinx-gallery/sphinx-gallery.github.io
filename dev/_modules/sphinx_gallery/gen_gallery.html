@@ -203,6 +203,7 @@
 <span class="kn">import</span> <span class="nn">pathlib</span>
 <span class="kn">from</span> <span class="nn">xml.sax.saxutils</span> <span class="kn">import</span> <span class="n">quoteattr</span><span class="p">,</span> <span class="n">escape</span>
 
+<span class="kn">from</span> <span class="nn">sphinx.errors</span> <span class="kn">import</span> <span class="n">ConfigError</span><span class="p">,</span> <span class="n">ExtensionError</span>
 <span class="kn">from</span> <span class="nn">sphinx.util.console</span> <span class="kn">import</span> <span class="n">red</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">sphinx_compatibility</span><span class="p">,</span> <span class="n">glr_path_static</span><span class="p">,</span> <span class="n">__version__</span> <span class="k">as</span> <span class="n">_sg_version</span>
 <span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">_replace_md5</span><span class="p">,</span> <span class="n">_has_optipng</span>
@@ -358,11 +359,11 @@
                     <span class="n">scraper</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">scraper</span><span class="p">,</span> <span class="s1">&#39;_get_sg_image_scraper&#39;</span><span class="p">)</span>
                     <span class="n">scraper</span> <span class="o">=</span> <span class="n">scraper</span><span class="p">()</span>
                 <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exp</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown image scraper </span><span class="si">%r</span><span class="s1">, got:</span><span class="se">\n</span><span class="si">%s</span><span class="s1">&#39;</span>
-                                     <span class="o">%</span> <span class="p">(</span><span class="n">orig_scraper</span><span class="p">,</span> <span class="n">exp</span><span class="p">))</span>
+                    <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s1">&#39;Unknown image scraper </span><span class="si">%r</span><span class="s1">, got:</span><span class="se">\n</span><span class="si">%s</span><span class="s1">&#39;</span>
+                                      <span class="o">%</span> <span class="p">(</span><span class="n">orig_scraper</span><span class="p">,</span> <span class="n">exp</span><span class="p">))</span>
             <span class="n">scrapers</span><span class="p">[</span><span class="n">si</span><span class="p">]</span> <span class="o">=</span> <span class="n">scraper</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">callable</span><span class="p">(</span><span class="n">scraper</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Scraper </span><span class="si">%r</span><span class="s1"> was not callable&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">scraper</span><span class="p">,))</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s1">&#39;Scraper </span><span class="si">%r</span><span class="s1"> was not callable&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">scraper</span><span class="p">,))</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;image_scrapers&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">scrapers</span><span class="p">)</span>
     <span class="k">del</span> <span class="n">scrapers</span>
     <span class="c1"># Here we try to set up matplotlib but don&#39;t raise an error,</span>
@@ -384,8 +385,8 @@
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">compress_images</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">compress_images</span> <span class="o">=</span> <span class="p">[</span><span class="n">compress_images</span><span class="p">]</span>
     <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">compress_images</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;compress_images must be a tuple, list, or str, got </span><span class="si">%s</span><span class="s1">&#39;</span>
-                        <span class="o">%</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">compress_images</span><span class="p">),))</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s1">&#39;compress_images must be a tuple, list, or str, &#39;</span>
+                          <span class="s1">&#39;got </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">compress_images</span><span class="p">),))</span>
     <span class="n">compress_images</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">compress_images</span><span class="p">)</span>
     <span class="n">allowed_values</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;images&#39;</span><span class="p">,</span> <span class="s1">&#39;thumbnails&#39;</span><span class="p">)</span>
     <span class="n">pops</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
@@ -394,9 +395,9 @@
             <span class="k">if</span> <span class="n">kind</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">):</span>
                 <span class="n">pops</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ki</span><span class="p">)</span>
                 <span class="k">continue</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;All entries in compress_images must be one of </span><span class="si">%s</span><span class="s1"> &#39;</span>
-                            <span class="s1">&#39;or a command-line switch starting with &quot;-&quot;, &#39;</span>
-                            <span class="s1">&#39;got </span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">allowed_values</span><span class="p">,</span> <span class="n">kind</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s1">&#39;All entries in compress_images must be one of &#39;</span>
+                              <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> or a command-line switch starting with &quot;-&quot;, &#39;</span>
+                              <span class="s1">&#39;got </span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">allowed_values</span><span class="p">,</span> <span class="n">kind</span><span class="p">))</span>
     <span class="n">compress_images_args</span> <span class="o">=</span> <span class="p">[</span><span class="n">compress_images</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pops</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">compress_images</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">_has_optipng</span><span class="p">():</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
@@ -414,12 +415,12 @@
     <span class="k">for</span> <span class="n">ri</span><span class="p">,</span> <span class="n">resetter</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">resetters</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">resetter</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">resetter</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_reset_dict</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown module resetter named </span><span class="si">%r</span><span class="s1">&#39;</span>
-                                 <span class="o">%</span> <span class="p">(</span><span class="n">resetter</span><span class="p">,))</span>
+                <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s1">&#39;Unknown module resetter named </span><span class="si">%r</span><span class="s1">&#39;</span>
+                                  <span class="o">%</span> <span class="p">(</span><span class="n">resetter</span><span class="p">,))</span>
             <span class="n">resetters</span><span class="p">[</span><span class="n">ri</span><span class="p">]</span> <span class="o">=</span> <span class="n">_reset_dict</span><span class="p">[</span><span class="n">resetter</span><span class="p">]</span>
         <span class="k">elif</span> <span class="ow">not</span> <span class="n">callable</span><span class="p">(</span><span class="n">resetter</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Module resetter </span><span class="si">%r</span><span class="s1"> was not callable&#39;</span>
-                             <span class="o">%</span> <span class="p">(</span><span class="n">resetter</span><span class="p">,))</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s1">&#39;Module resetter </span><span class="si">%r</span><span class="s1"> was not callable&#39;</span>
+                              <span class="o">%</span> <span class="p">(</span><span class="n">resetter</span><span class="p">,))</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;reset_modules&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">resetters</span><span class="p">)</span>
 
     <span class="n">lang</span> <span class="o">=</span> <span class="n">lang</span> <span class="k">if</span> <span class="n">lang</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;python&#39;</span><span class="p">,</span> <span class="s1">&#39;python3&#39;</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="s1">&#39;python&#39;</span>
@@ -429,13 +430,13 @@
     <span class="c1"># Ensure the first cell text is a string if we have it</span>
     <span class="n">first_cell</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;first_notebook_cell&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">first_cell</span><span class="p">,</span> <span class="nb">str</span><span class="p">))</span> <span class="ow">and</span> <span class="p">(</span><span class="n">first_cell</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The &#39;first_notebook_cell&#39; parameter must be type &quot;</span>
-                         <span class="s2">&quot;str or None, found type </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">first_cell</span><span class="p">))</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s2">&quot;The &#39;first_notebook_cell&#39; parameter must be type &quot;</span>
+                          <span class="s2">&quot;str or None, found type </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">first_cell</span><span class="p">))</span>
     <span class="c1"># Ensure the last cell text is a string if we have it</span>
     <span class="n">last_cell</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;last_notebook_cell&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">last_cell</span><span class="p">,</span> <span class="nb">str</span><span class="p">))</span> <span class="ow">and</span> <span class="p">(</span><span class="n">last_cell</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The &#39;last_notebook_cell&#39; parameter must be type str &quot;</span>
-                         <span class="s2">&quot;or None, found type </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">last_cell</span><span class="p">))</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s2">&quot;The &#39;last_notebook_cell&#39; parameter must be type str&quot;</span>
+                          <span class="s2">&quot; or None, found type </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">last_cell</span><span class="p">))</span>
     <span class="c1"># Make it easy to know which builder we&#39;re in</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;builder_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">builder_name</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;titles&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
@@ -443,21 +444,21 @@
     <span class="n">backref</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;backreferences_dir&#39;</span><span class="p">]</span>
     <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">backref</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">)))</span> <span class="ow">and</span> \
             <span class="p">(</span><span class="n">backref</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The &#39;backreferences_dir&#39; parameter must be of type &quot;</span>
-                         <span class="s2">&quot;str, pathlib.Path or None, &quot;</span>
-                         <span class="s2">&quot;found type </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">backref</span><span class="p">))</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s2">&quot;The &#39;backreferences_dir&#39; parameter must be of type &quot;</span>
+                          <span class="s2">&quot;str, pathlib.Path or None, &quot;</span>
+                          <span class="s2">&quot;found type </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">backref</span><span class="p">))</span>
     <span class="c1"># if &#39;backreferences_dir&#39; is pathlib.Path, make str for Python &lt;=3.5</span>
     <span class="c1"># compatibility</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">backref</span><span class="p">,</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">):</span>
         <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;backreferences_dir&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">backref</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;css&#39;</span><span class="p">],</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;gallery_conf[&quot;css&quot;] must be list or tuple, got </span><span class="si">%r</span><span class="s1">&#39;</span>
-                        <span class="o">%</span> <span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;css&#39;</span><span class="p">],))</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s1">&#39;gallery_conf[&quot;css&quot;] must be list or tuple, got </span><span class="si">%r</span><span class="s1">&#39;</span>
+                          <span class="o">%</span> <span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;css&#39;</span><span class="p">],))</span>
     <span class="k">for</span> <span class="n">css</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;css&#39;</span><span class="p">]:</span>
         <span class="k">if</span> <span class="n">css</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_KNOWN_CSS</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown css </span><span class="si">%r</span><span class="s1">, must be one of </span><span class="si">%r</span><span class="s1">&#39;</span>
-                             <span class="o">%</span> <span class="p">(</span><span class="n">css</span><span class="p">,</span> <span class="n">_KNOWN_CSS</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s1">&#39;Unknown css </span><span class="si">%r</span><span class="s1">, must be one of </span><span class="si">%r</span><span class="s1">&#39;</span>
+                              <span class="o">%</span> <span class="p">(</span><span class="n">css</span><span class="p">,</span> <span class="n">_KNOWN_CSS</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;app&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># can be None in testing</span>
             <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;app&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">add_css_file</span><span class="p">(</span><span class="n">css</span> <span class="o">+</span> <span class="s1">&#39;.css&#39;</span><span class="p">)</span>
 
@@ -819,9 +820,10 @@
                 <span class="n">color</span><span class="o">=</span><span class="s1">&#39;brown&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">fail_msgs</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Here is a summary of the problems encountered when &quot;</span>
-                         <span class="s2">&quot;running the examples</span><span class="se">\n\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fail_msgs</span><span class="p">)</span> <span class="o">+</span>
-                         <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">79</span><span class="p">)</span></div>
+        <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
+            <span class="s2">&quot;Here is a summary of the problems encountered &quot;</span>
+            <span class="s2">&quot;when running the examples</span><span class="se">\n\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fail_msgs</span><span class="p">)</span> <span class="o">+</span>
+            <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">79</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="collect_gallery_files"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.collect_gallery_files">[docs]</a><span class="k">def</span> <span class="nf">collect_gallery_files</span><span class="p">(</span><span class="n">examples_dirs</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>

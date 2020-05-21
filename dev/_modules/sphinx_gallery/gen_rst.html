@@ -216,6 +216,8 @@
 <span class="kn">import</span> <span class="nn">traceback</span>
 <span class="kn">import</span> <span class="nn">codeop</span>
 
+<span class="kn">from</span> <span class="nn">sphinx.errors</span> <span class="kn">import</span> <span class="n">ExtensionError</span>
+
 <span class="kn">from</span> <span class="nn">.scrapers</span> <span class="kn">import</span> <span class="p">(</span><span class="n">save_figures</span><span class="p">,</span> <span class="n">ImagePathIterator</span><span class="p">,</span> <span class="n">clean_modules</span><span class="p">,</span>
                        <span class="n">_find_image_ext</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="p">(</span><span class="n">replace_py_ipynb</span><span class="p">,</span> <span class="n">scale_image</span><span class="p">,</span> <span class="n">get_md5sum</span><span class="p">,</span> <span class="n">_replace_md5</span><span class="p">,</span>
@@ -395,7 +397,7 @@
     <span class="n">paragraphs</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">paragraphs</span>
                   <span class="k">if</span> <span class="ow">not</span> <span class="n">p</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;.. &#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">paragraphs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+        <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
             <span class="s2">&quot;Example docstring should have a header for the example title. &quot;</span>
             <span class="s2">&quot;Please check the example file:</span><span class="se">\n</span><span class="s2"> </span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
     <span class="c1"># Title is the first paragraph with any ReSTructuredText title chars</span>
@@ -407,7 +409,7 @@
                       <span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+        <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
             <span class="s1">&#39;Could not find a title in first paragraph:</span><span class="se">\n</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">title_paragraph</span><span class="p">))</span>
     <span class="n">title</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
@@ -464,7 +466,7 @@
         <span class="n">image_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">],</span> <span class="n">thumbnail_path</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">thumbnail_number</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+            <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
                 <span class="s1">&#39;sphinx_gallery_thumbnail_number setting is not a number, &#39;</span>
                 <span class="s1">&#39;got </span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">thumbnail_number</span><span class="p">,))</span>
         <span class="n">image_path</span> <span class="o">=</span> <span class="n">image_path_template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">thumbnail_number</span><span class="p">)</span>
@@ -501,7 +503,7 @@
             <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">fpth</span><span class="p">):</span>
                 <span class="k">return</span> <span class="n">fpth</span>
     <span class="k">if</span> <span class="n">raise_error</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
+        <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
             <span class="s2">&quot;Example directory </span><span class="si">{0}</span><span class="s2"> does not have a README file with one &quot;</span>
             <span class="s2">&quot;of the expected file extensions </span><span class="si">{1}</span><span class="s2">. Please write one to &quot;</span>
             <span class="s2">&quot;introduce your gallery.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dir_</span><span class="p">,</span> <span class="n">extensions</span><span class="p">))</span>
