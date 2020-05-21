@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>sphinx_gallery.scrapers &mdash; Sphinx-Gallery 0.6.2-git documentation</title>
+  <title>sphinx_gallery.scrapers &mdash; Sphinx-Gallery 0.7.0-git documentation</title>
   
 
   
@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.6.2
+                0.7.0
               </div>
             
           
@@ -149,6 +149,9 @@
 <li class="toctree-l2"><a class="reference internal" href="sphinx_gallery.downloads.html">sphinx_gallery.downloads</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sphinx_gallery.sorting.html">sphinx_gallery.sorting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sphinx_gallery.binder.html">sphinx_gallery.binder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sphinx_gallery.directives.html">sphinx_gallery.directives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference.html#utilities">Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sphinx_gallery.utils.optipng.html">sphinx_gallery.utils.optipng</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../changes.html">Change Log</a></li>
@@ -211,9 +214,9 @@
 live in modules that will support them (e.g., PyVista, Plotly).</p>
 <div class="section" id="functions">
 <h3>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h3>
-<dl class="function">
+<dl class="py function">
 <dt id="sphinx_gallery.scrapers.clean_modules">
-<code class="descclassname">sphinx_gallery.scrapers.</code><code class="descname">clean_modules</code><span class="sig-paren">(</span><em>gallery_conf</em>, <em>fname</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sphinx_gallery/scrapers.html#clean_modules"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sphinx_gallery.scrapers.clean_modules" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">sphinx_gallery.scrapers.</code><code class="sig-name descname">clean_modules</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gallery_conf</span></em>, <em class="sig-param"><span class="n">fname</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sphinx_gallery/scrapers.html#clean_modules"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sphinx_gallery.scrapers.clean_modules" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove, unload, or reset modules after running each example.</p>
 <p>After a script is executed it can load a variety of settings that one
 does not want to influence in other examples in the gallery.</p>
@@ -228,9 +231,11 @@ a directory of examples to be built.</p></li>
 </dl>
 </dd></dl>
 
-<div class="sphx-glr-clear"></div><dl class="function">
+<div class="section" id="examples-using-sphinx-gallery-scrapers-clean-modules">
+<span id="sphx-glr-backref-sphinx-gallery-scrapers-clean-modules"></span><h4>Examples using <code class="docutils literal notranslate"><span class="pre">sphinx_gallery.scrapers.clean_modules</span></code><a class="headerlink" href="#examples-using-sphinx-gallery-scrapers-clean-modules" title="Permalink to this headline">¶</a></h4>
+<div class="sphx-glr-clear"></div><dl class="py function">
 <dt id="sphinx_gallery.scrapers.figure_rst">
-<code class="descclassname">sphinx_gallery.scrapers.</code><code class="descname">figure_rst</code><span class="sig-paren">(</span><em>figure_list</em>, <em>sources_dir</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sphinx_gallery/scrapers.html#figure_rst"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sphinx_gallery.scrapers.figure_rst" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">sphinx_gallery.scrapers.</code><code class="sig-name descname">figure_rst</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">figure_list</span></em>, <em class="sig-param"><span class="n">sources_dir</span></em>, <em class="sig-param"><span class="n">fig_titles</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sphinx_gallery/scrapers.html#figure_rst"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sphinx_gallery.scrapers.figure_rst" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate RST for a list of image filenames.</p>
 <p>Depending on whether we have one or more figures, we use a
 single rst call to ‘image’ or a horizontal list.</p>
@@ -239,6 +244,8 @@ single rst call to ‘image’ or a horizontal list.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>figure_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of strings of the figures’ absolute paths.</p></li>
 <li><p><strong>sources_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – absolute path of Sphinx documentation sources</p></li>
+<li><p><strong>fig_titles</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Titles of figures, empty string if no titles found. Currently
+only supported for matplotlib figures, default = ‘’.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -250,9 +257,12 @@ single rst call to ‘image’ or a horizontal list.</p>
 </dl>
 </dd></dl>
 
-<div class="sphx-glr-clear"></div><dl class="function">
+</div>
+<div class="section" id="examples-using-sphinx-gallery-scrapers-figure-rst">
+<span id="sphx-glr-backref-sphinx-gallery-scrapers-figure-rst"></span><h4>Examples using <code class="docutils literal notranslate"><span class="pre">sphinx_gallery.scrapers.figure_rst</span></code><a class="headerlink" href="#examples-using-sphinx-gallery-scrapers-figure-rst" title="Permalink to this headline">¶</a></h4>
+<div class="sphx-glr-clear"></div><dl class="py function">
 <dt id="sphinx_gallery.scrapers.matplotlib_scraper">
-<code class="descclassname">sphinx_gallery.scrapers.</code><code class="descname">matplotlib_scraper</code><span class="sig-paren">(</span><em>block</em>, <em>block_vars</em>, <em>gallery_conf</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sphinx_gallery/scrapers.html#matplotlib_scraper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sphinx_gallery.scrapers.matplotlib_scraper" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">sphinx_gallery.scrapers.</code><code class="sig-name descname">matplotlib_scraper</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">block</span></em>, <em class="sig-param"><span class="n">block_vars</span></em>, <em class="sig-param"><span class="n">gallery_conf</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sphinx_gallery/scrapers.html#matplotlib_scraper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sphinx_gallery.scrapers.matplotlib_scraper" title="Permalink to this definition">¶</a></dt>
 <dd><p>Scrape Matplotlib images.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -277,9 +287,12 @@ the images. This is often produced by <a class="reference internal" href="#sphin
 </dl>
 </dd></dl>
 
-<div class="sphx-glr-clear"></div><dl class="function">
+</div>
+<div class="section" id="examples-using-sphinx-gallery-scrapers-matplotlib-scraper">
+<span id="sphx-glr-backref-sphinx-gallery-scrapers-matplotlib-scraper"></span><h4>Examples using <code class="docutils literal notranslate"><span class="pre">sphinx_gallery.scrapers.matplotlib_scraper</span></code><a class="headerlink" href="#examples-using-sphinx-gallery-scrapers-matplotlib-scraper" title="Permalink to this headline">¶</a></h4>
+<div class="sphx-glr-clear"></div><dl class="py function">
 <dt id="sphinx_gallery.scrapers.mayavi_scraper">
-<code class="descclassname">sphinx_gallery.scrapers.</code><code class="descname">mayavi_scraper</code><span class="sig-paren">(</span><em>block</em>, <em>block_vars</em>, <em>gallery_conf</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sphinx_gallery/scrapers.html#mayavi_scraper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sphinx_gallery.scrapers.mayavi_scraper" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">sphinx_gallery.scrapers.</code><code class="sig-name descname">mayavi_scraper</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">block</span></em>, <em class="sig-param"><span class="n">block_vars</span></em>, <em class="sig-param"><span class="n">gallery_conf</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sphinx_gallery/scrapers.html#mayavi_scraper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sphinx_gallery.scrapers.mayavi_scraper" title="Permalink to this definition">¶</a></dt>
 <dd><p>Scrape Mayavi images.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -299,9 +312,12 @@ the images. This is often produced by <a class="reference internal" href="#sphin
 </dl>
 </dd></dl>
 
-<div class="sphx-glr-clear"></div><dl class="function">
+</div>
+<div class="section" id="examples-using-sphinx-gallery-scrapers-mayavi-scraper">
+<span id="sphx-glr-backref-sphinx-gallery-scrapers-mayavi-scraper"></span><h4>Examples using <code class="docutils literal notranslate"><span class="pre">sphinx_gallery.scrapers.mayavi_scraper</span></code><a class="headerlink" href="#examples-using-sphinx-gallery-scrapers-mayavi-scraper" title="Permalink to this headline">¶</a></h4>
+<div class="sphx-glr-clear"></div><dl class="py function">
 <dt id="sphinx_gallery.scrapers.save_figures">
-<code class="descclassname">sphinx_gallery.scrapers.</code><code class="descname">save_figures</code><span class="sig-paren">(</span><em>block</em>, <em>block_vars</em>, <em>gallery_conf</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sphinx_gallery/scrapers.html#save_figures"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sphinx_gallery.scrapers.save_figures" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">sphinx_gallery.scrapers.</code><code class="sig-name descname">save_figures</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">block</span></em>, <em class="sig-param"><span class="n">block_vars</span></em>, <em class="sig-param"><span class="n">gallery_conf</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sphinx_gallery/scrapers.html#save_figures"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sphinx_gallery.scrapers.save_figures" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save all open figures of the example code-block.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -320,12 +336,16 @@ the images. This is often produced by <a class="reference internal" href="#sphin
 </dl>
 </dd></dl>
 
+</div>
+<div class="section" id="examples-using-sphinx-gallery-scrapers-save-figures">
+<span id="sphx-glr-backref-sphinx-gallery-scrapers-save-figures"></span><h4>Examples using <code class="docutils literal notranslate"><span class="pre">sphinx_gallery.scrapers.save_figures</span></code><a class="headerlink" href="#examples-using-sphinx-gallery-scrapers-save-figures" title="Permalink to this headline">¶</a></h4>
 <div class="sphx-glr-clear"></div></div>
+</div>
 <div class="section" id="classes">
 <h3>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h3>
-<dl class="class">
+<dl class="py class">
 <dt id="sphinx_gallery.scrapers.ImagePathIterator">
-<em class="property">class </em><code class="descclassname">sphinx_gallery.scrapers.</code><code class="descname">ImagePathIterator</code><span class="sig-paren">(</span><em>image_path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sphinx_gallery/scrapers.html#ImagePathIterator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sphinx_gallery.scrapers.ImagePathIterator" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">sphinx_gallery.scrapers.</code><code class="sig-name descname">ImagePathIterator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image_path</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sphinx_gallery/scrapers.html#ImagePathIterator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sphinx_gallery.scrapers.ImagePathIterator" title="Permalink to this definition">¶</a></dt>
 <dd><p>Iterate over image paths for a given example.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -334,7 +354,10 @@ the images. This is often produced by <a class="reference internal" href="#sphin
 </dl>
 </dd></dl>
 
+<div class="section" id="examples-using-sphinx-gallery-scrapers-imagepathiterator">
+<span id="sphx-glr-backref-sphinx-gallery-scrapers-imagepathiterator"></span><h4>Examples using <code class="docutils literal notranslate"><span class="pre">sphinx_gallery.scrapers.ImagePathIterator</span></code><a class="headerlink" href="#examples-using-sphinx-gallery-scrapers-imagepathiterator" title="Permalink to this headline">¶</a></h4>
 <div class="sphx-glr-clear"></div></div>
+</div>
 </div>
 </div>
 

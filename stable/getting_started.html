@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Getting Started with Sphinx-Gallery &mdash; Sphinx-Gallery 0.6.2-git documentation</title>
+  <title>Getting Started with Sphinx-Gallery &mdash; Sphinx-Gallery 0.7.0-git documentation</title>
   
 
   
@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.6.2
+                0.7.0
               </div>
             
           
@@ -202,7 +202,7 @@ rendering of the resulting rST will provide the users with <code class="docutils
 (Jupyter notebook) and <code class="docutils literal notranslate"><span class="pre">.py</span></code> files of each example, which users can
 download.</p></li>
 <li><p>Create a gallery with thumbnails for each of these examples
-(such as <a class="reference external" href="http://scikit-learn.org/stable/auto_examples/index.html">the one that scikit-learn</a> uses)</p></li>
+(such as <a class="reference external" href="http://scikit-learn.org/stable/auto_examples/index.html">the one that scikit-learn</a> uses).</p></li>
 </ul>
 <p>A <a class="reference external" href="https://github.com/sphinx-gallery/sample-project">template repository</a>,
 with sample example galleries and basic configurations is also available to
@@ -270,7 +270,7 @@ their outputs captured to incorporate them in the HTML (or another output
 format depending on the <a class="reference external" href="https://www.sphinx-doc.org/en/master/man/sphinx-build.html">Sphinx ‘builder’</a> selected)
 output of the script. Files without that prefix will be only parsed and
 presented in a rich literate programming fashion, without any output. To
-change the default pattern for execution and capture see
+change the default file pattern for execution and capture see
 <a class="reference internal" href="configuration.html#build-pattern"><span class="std std-ref">Parsing and executing examples via matching patterns</span></a>.</p></li>
 <li><p>The output that is captured while executing the <code class="docutils literal notranslate"><span class="pre">.py</span></code> files and
 subsequently incorporated into the built documentation can be finely
@@ -302,8 +302,9 @@ with Sphinx.</p>
 <p>This loads Sphinx-Gallery as one of your extensions, the ellipsis
 <code class="docutils literal notranslate"><span class="pre">...</span></code> represents your other loaded extensions.</p>
 <p>Next, create your configuration dictionary for Sphinx-Gallery. Here we will
-simply tell Sphinx-Gallery the location of the ‘examples’ directory
-(containing the gallery header file and our example Python scripts) and the
+simply set the minimal required configurations. We must set the location of
+the ‘examples’ directory (containing the gallery header file and our example
+Python scripts) and the
 directory to place the output files generated. The path to both of these
 directories should be relative to the <code class="docutils literal notranslate"><span class="pre">doc/conf.py</span></code> file.</p>
 <p>The following configuration declares the location of the ‘examples’ directory
@@ -318,8 +319,8 @@ directories should be relative to the <code class="docutils literal notranslate"
 <p>After building your documentation, <code class="docutils literal notranslate"><span class="pre">gallery_dirs</span></code> will contain the following
 files and directories:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">index.rst</span></code> - the master document of the gallery containing the Gallery
-Header, table of contents tree and thumbnails for each example. It will serve
+<li><p><code class="docutils literal notranslate"><span class="pre">index.rst</span></code> - the master document of the gallery containing the gallery
+header, table of contents tree and thumbnails for each example. It will serve
 as the welcome page for that gallery.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">sg_execution_times.rst</span></code> - execution time of all example <code class="docutils literal notranslate"><span class="pre">.py</span></code> files,
 summarised in table format (<a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/348">original pull request on GitHub</a>).</p></li>

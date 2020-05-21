@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>How to structure your Python scripts for Sphinx-Gallery &mdash; Sphinx-Gallery 0.6.2-git documentation</title>
+  <title>How to structure your Python scripts for Sphinx-Gallery &mdash; Sphinx-Gallery 0.7.0-git documentation</title>
   
 
   
@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.6.2
+                0.7.0
               </div>
             
           
@@ -224,13 +224,16 @@ Jupyter Notebook for each example that is built).</p>
 <p>You can embed rST in your Python examples by including a line of &gt;= 20 <code class="docutils literal notranslate"><span class="pre">#</span></code>
 symbols, <code class="docutils literal notranslate"><span class="pre">#%%</span></code>, or <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">%%</span></code>. For consistency, it is recommended that you use
 only one of the above three ‘block splitter’ options in your project. If using
-<code class="docutils literal notranslate"><span class="pre">#</span></code>’s, we recommend using 79 <code class="docutils literal notranslate"><span class="pre">#</span></code>’s, like this:</p>
+a line of <code class="docutils literal notranslate"><span class="pre">#</span></code>’s, we recommend using 79 <code class="docutils literal notranslate"><span class="pre">#</span></code>’s, like this:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="c1">###############################################################################</span>
 </pre></div>
 </div>
-<p>Any commented lines (a line beginning with <code class="docutils literal notranslate"><span class="pre">#</span></code> followed by a space, to be
-PEP8-compliant) that immediately follow a block splitter will be rendered as
-rST in the built gallery examples. For example:</p>
+<p>Any commented lines (line beginning with <code class="docutils literal notranslate"><span class="pre">#</span></code> followed by a space, to
+be PEP8-compliant) that immediately follow a block splitter will be rendered as
+rST in the built gallery examples. To switch back to writing code, either
+stop starting lines with <code class="docutils literal notranslate"><span class="pre">#</span></code> and a space or leave an empty line before writing
+code comments. You can thus easily alternate between text and code ‘blocks’.
+For example:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># This is commented python</span>
 <span class="n">myvariable</span> <span class="o">=</span> <span class="mi">2</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;my variable is </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">myvariable</span><span class="p">))</span>
@@ -239,21 +242,31 @@ rST in the built gallery examples. For example:</p>
 <span class="c1"># This is a section header</span>
 <span class="c1"># ------------------------</span>
 <span class="c1">#</span>
-<span class="c1"># In the built documentation, it will be rendered as rST.</span>
+<span class="c1"># In the built documentation, it will be rendered as rST. All rST lines</span>
+<span class="c1"># must begin with &#39;# &#39; (note the space) including underlines below section</span>
+<span class="c1"># headers.</span>
 
 <span class="c1"># These lines won&#39;t be rendered as rST because there is a gap after the last</span>
 <span class="c1"># commented rST block. Instead, they&#39;ll resolve as regular Python comments.</span>
+<span class="c1"># Normal Python code can follow these comments.</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;my variable plus 2 is </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">myvariable</span> <span class="o">+</span> <span class="mi">2</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">#%%</span></code> and <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">%%</span></code> syntax is consistent with the ‘code block’ (or
-‘code cell’) separator syntax in <a class="reference external" href="https://code.visualstudio.com/docs/python/jupyter-support-py">Jupyter VSCode plugin</a>, <a class="reference external" href="https://jupytext.readthedocs.io/en/latest/introduction.html">Jupytext</a>, <a class="reference external" href="https://www.jetbrains.com/help/pycharm/running-jupyter-notebook-cells.html">Pycharm</a>,
-<a class="reference external" href="https://nteract.gitbooks.io/hydrogen/">Hydrogen plugin (for Atom)</a> and <a class="reference external" href="https://docs.spyder-ide.org/editor.html">Spyder</a>. Note that although the
+‘code cell’) separator syntax in <a class="reference external" href="https://code.visualstudio.com/docs/python/jupyter-support-py#_jupyter-code-cells">Visual Studio Code Python extension</a>,
+<a class="reference external" href="https://docs.microsoft.com/en-us/visualstudio/python/python-interactive-repl-in-visual-studio?view=vs-2019#work-with-code-cells">Visual Studio Python Tools</a>,
+<a class="reference external" href="https://jupytext.readthedocs.io/en/latest/formats.html#the-percent-format">Jupytext</a>,
+<a class="reference external" href="https://www.jetbrains.com/help/pycharm/running-jupyter-notebook-cells.html">Pycharm Professional</a>,
+<a class="reference external" href="https://nteract.gitbooks.io/hydrogen/docs/Usage/Cells.html#example-definitions">Hydrogen plugin (for Atom)</a>
+and <a class="reference external" href="https://docs.spyder-ide.org/editor.html#defining-code-cells">Spyder</a>.
+Note that although the
 documentation may only mention one of <code class="docutils literal notranslate"><span class="pre">#%%</span></code> or <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">%%</span></code>, in practice both
-work in these editors. In these IDEs (or with these IDE plugins), <code class="docutils literal notranslate"><span class="pre">#%%</span></code> or
+work. With these editors/IDEs, <code class="docutils literal notranslate"><span class="pre">#%%</span></code> or
 <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">%%</span></code> at the start of a line signifies the start of a new code block.
-Code within a code block can be easily executed together, at the same time. This
-functionality can be helpful when writing a Sphinx-Gallery <code class="docutils literal notranslate"><span class="pre">.py</span></code> example as
+Code blocks allow you to separate your code into chunks, like in Jupyter
+Notebooks. All the code within a code block can be easily executed together.
+This functionality can be helpful when writing a Sphinx-Gallery <code class="docutils literal notranslate"><span class="pre">.py</span></code>
+example as
 the blocks allow you to easily create pairs of subsequent Sphinx-Gallery text
 and code blocks.</p>
 <p>Here are the contents of an example Python file using the ‘code block’
@@ -291,7 +304,7 @@ functionality:</p>
 </div>
 <p>For a clear example refer to the rendered example
 <a class="reference internal" href="tutorials/plot_parse.html#sphx-glr-tutorials-plot-parse-py"><span class="std std-ref">Alternating text and code</span></a> and compare it to the generated
-<a class="reference download internal" download="" href="_downloads/a21866f88df7b645bec2f3a77a6e667f/plot_parse.py"><code class="xref download docutils literal notranslate"><span class="pre">original</span> <span class="pre">python</span> <span class="pre">script</span></code></a></p>
+<a class="reference download internal" download="" href="_downloads/1159cf66576090dda850c8b297cae11c/plot_parse.py"><code class="xref download docutils literal notranslate"><span class="pre">original</span> <span class="pre">python</span> <span class="pre">script</span></code></a></p>
 </div>
 </div>
 

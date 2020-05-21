@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>sphinx_gallery.scrapers &mdash; Sphinx-Gallery 0.6.2-git documentation</title>
+  <title>sphinx_gallery.scrapers &mdash; Sphinx-Gallery 0.7.0-git documentation</title>
   
 
   
@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.6.2
+                0.7.0
               </div>
             
           
@@ -196,8 +196,11 @@
 
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">textwrap</span> <span class="kn">import</span> <span class="n">indent</span>
 
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">scale_image</span>
+<span class="kn">from</span> <span class="nn">sphinx.errors</span> <span class="kn">import</span> <span class="n">ExtensionError</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">scale_image</span><span class="p">,</span> <span class="n">optipng</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;save_figures&#39;</span><span class="p">,</span> <span class="s1">&#39;figure_rst&#39;</span><span class="p">,</span> <span class="s1">&#39;ImagePathIterator&#39;</span><span class="p">,</span> <span class="s1">&#39;clean_modules&#39;</span><span class="p">,</span>
            <span class="s1">&#39;matplotlib_scraper&#39;</span><span class="p">,</span> <span class="s1">&#39;mayavi_scraper&#39;</span><span class="p">]</span>
@@ -215,7 +218,7 @@
     <span class="n">matplotlib_backend</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">get_backend</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">matplotlib_backend</span> <span class="o">!=</span> <span class="s1">&#39;agg&#39;</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+        <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
             <span class="s2">&quot;Sphinx-Gallery relies on the matplotlib &#39;agg&#39; backend to &quot;</span>
             <span class="s2">&quot;render figures and write them to files. You are &quot;</span>
             <span class="s2">&quot;currently using the </span><span class="si">{}</span><span class="s2"> backend. Sphinx-Gallery will &quot;</span>
@@ -228,6 +231,34 @@
 
     <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
     <span class="k">return</span> <span class="n">matplotlib</span><span class="p">,</span> <span class="n">plt</span>
+
+
+<span class="k">def</span> <span class="nf">_matplotlib_fig_titles</span><span class="p">(</span><span class="n">fig</span><span class="p">):</span>
+    <span class="n">titles</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># get supertitle if exists</span>
+    <span class="n">suptitle</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="s2">&quot;_suptitle&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">suptitle</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">titles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">suptitle</span><span class="o">.</span><span class="n">get_text</span><span class="p">())</span>
+    <span class="c1"># get titles from all axes, for all locs</span>
+    <span class="n">title_locs</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">fig</span><span class="o">.</span><span class="n">axes</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">loc</span> <span class="ow">in</span> <span class="n">title_locs</span><span class="p">:</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_title</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">loc</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">text</span><span class="p">:</span>
+                <span class="n">titles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="n">fig_titles</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">titles</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig_titles</span>
+
+
+<span class="n">_ANIMATION_RST</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">.. only:: builder_html</span>
+
+<span class="s1">    .. container:: sphx-glr-animation</span>
+
+<span class="s1">        .. raw:: html</span>
+
+<span class="s1">            </span><span class="si">{0}</span><span class="s1"></span>
+<span class="s1">&#39;&#39;&#39;</span>
 
 
 <div class="viewcode-block" id="matplotlib_scraper"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.matplotlib_scraper">[docs]</a><span class="k">def</span> <span class="nf">matplotlib_scraper</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">block_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -255,8 +286,16 @@
 <span class="sd">        the images. This is often produced by :func:`figure_rst`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">matplotlib</span><span class="p">,</span> <span class="n">plt</span> <span class="o">=</span> <span class="n">_import_matplotlib</span><span class="p">()</span>
+    <span class="kn">from</span> <span class="nn">matplotlib.animation</span> <span class="kn">import</span> <span class="n">FuncAnimation</span>
     <span class="n">image_path_iterator</span> <span class="o">=</span> <span class="n">block_vars</span><span class="p">[</span><span class="s1">&#39;image_path_iterator&#39;</span><span class="p">]</span>
-    <span class="n">image_paths</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="n">image_rsts</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># Check for animations</span>
+    <span class="n">anims</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">gallery_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;matplotlib_animations&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">ani</span> <span class="ow">in</span> <span class="n">block_vars</span><span class="p">[</span><span class="s1">&#39;example_globals&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ani</span><span class="p">,</span> <span class="n">FuncAnimation</span><span class="p">):</span>
+                <span class="n">anims</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ani</span><span class="p">)</span>
+    <span class="c1"># Then standard images</span>
     <span class="k">for</span> <span class="n">fig_num</span><span class="p">,</span> <span class="n">image_path</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">get_fignums</span><span class="p">(),</span> <span class="n">image_path_iterator</span><span class="p">):</span>
         <span class="k">if</span> <span class="s1">&#39;format&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
             <span class="n">image_path</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">image_path</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span>
@@ -264,6 +303,17 @@
         <span class="c1"># Set the fig_num figure as the current figure as we can&#39;t</span>
         <span class="c1"># save a figure that&#39;s not the current figure.</span>
         <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">fig_num</span><span class="p">)</span>
+        <span class="c1"># Deal with animations</span>
+        <span class="n">cont</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">anim</span> <span class="ow">in</span> <span class="n">anims</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">anim</span><span class="o">.</span><span class="n">_fig</span> <span class="ow">is</span> <span class="n">fig</span><span class="p">:</span>
+                <span class="n">image_rsts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_anim_rst</span><span class="p">(</span><span class="n">anim</span><span class="p">,</span> <span class="n">image_path</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">))</span>
+                <span class="n">cont</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">break</span>
+        <span class="k">if</span> <span class="n">cont</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="c1"># get fig titles</span>
+        <span class="n">fig_titles</span> <span class="o">=</span> <span class="n">_matplotlib_fig_titles</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
         <span class="n">to_rgba</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">colorConverter</span><span class="o">.</span><span class="n">to_rgba</span>
         <span class="c1"># shallow copy should be fine here, just want to avoid changing</span>
         <span class="c1"># &quot;kwargs&quot; for subsequent figures processed by the loop</span>
@@ -275,9 +325,45 @@
                     <span class="n">attr</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
                 <span class="n">these_kwargs</span><span class="p">[</span><span class="n">attr</span><span class="p">]</span> <span class="o">=</span> <span class="n">fig_attr</span>
         <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="o">**</span><span class="n">these_kwargs</span><span class="p">)</span>
-        <span class="n">image_paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;images&#39;</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;compress_images&#39;</span><span class="p">]:</span>
+            <span class="n">optipng</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;compress_images_args&#39;</span><span class="p">])</span>
+        <span class="n">image_rsts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">figure_rst</span><span class="p">([</span><span class="n">image_path</span><span class="p">],</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">],</span> <span class="n">fig_titles</span><span class="p">))</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">figure_rst</span><span class="p">(</span><span class="n">image_paths</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">])</span></div>
+    <span class="n">rst</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">image_rsts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">rst</span> <span class="o">=</span> <span class="n">image_rsts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">image_rsts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">image_rsts</span> <span class="o">=</span> <span class="p">[</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;:class: sphx-glr-single-img&#39;</span><span class="p">,</span>
+                             <span class="s1">&#39;:class: sphx-glr-multi-img&#39;</span><span class="p">,</span>
+                             <span class="n">image</span><span class="p">)</span> <span class="k">for</span> <span class="n">image</span> <span class="ow">in</span> <span class="n">image_rsts</span><span class="p">]</span>
+        <span class="n">image_rsts</span> <span class="o">=</span> <span class="p">[</span><span class="n">HLIST_IMAGE_MATPLOTLIB</span> <span class="o">+</span> <span class="n">indent</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39; &#39;</span> <span class="o">*</span> <span class="mi">6</span><span class="p">)</span>
+                      <span class="k">for</span> <span class="n">image</span> <span class="ow">in</span> <span class="n">image_rsts</span><span class="p">]</span>
+        <span class="n">rst</span> <span class="o">=</span> <span class="n">HLIST_HEADER</span> <span class="o">+</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">image_rsts</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">rst</span></div>
+
+
+<span class="k">def</span> <span class="nf">_anim_rst</span><span class="p">(</span><span class="n">anim</span><span class="p">,</span> <span class="n">image_path</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">matplotlib.animation</span> <span class="kn">import</span> <span class="n">ImageMagickWriter</span>
+    <span class="c1"># output the thumbnail as the image, as it will just be copied</span>
+    <span class="c1"># if it&#39;s the file thumbnail</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">anim</span><span class="o">.</span><span class="n">_fig</span>
+    <span class="n">image_path</span> <span class="o">=</span> <span class="n">image_path</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.png&#39;</span><span class="p">,</span> <span class="s1">&#39;.gif&#39;</span><span class="p">)</span>
+    <span class="n">fig_size</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">get_size_inches</span><span class="p">()</span>
+    <span class="n">thumb_size</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;thumbnail_size&#39;</span><span class="p">]</span>
+    <span class="n">use_dpi</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span>
+        <span class="nb">min</span><span class="p">(</span><span class="n">t_s</span> <span class="o">/</span> <span class="n">f_s</span> <span class="k">for</span> <span class="n">t_s</span><span class="p">,</span> <span class="n">f_s</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">thumb_size</span><span class="p">,</span> <span class="n">fig_size</span><span class="p">)))</span>
+    <span class="c1"># FFmpeg is buggy for GIFs</span>
+    <span class="k">if</span> <span class="n">ImageMagickWriter</span><span class="o">.</span><span class="n">isAvailable</span><span class="p">():</span>
+        <span class="n">writer</span> <span class="o">=</span> <span class="s1">&#39;imagemagick&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">writer</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">anim</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">writer</span><span class="o">=</span><span class="n">writer</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">use_dpi</span><span class="p">)</span>
+    <span class="n">html</span> <span class="o">=</span> <span class="n">anim</span><span class="o">.</span><span class="n">_repr_html_</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">html</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># plt.rcParams[&#39;animation.html&#39;] == &#39;none&#39;</span>
+        <span class="n">html</span> <span class="o">=</span> <span class="n">anim</span><span class="o">.</span><span class="n">to_jshtml</span><span class="p">()</span>
+    <span class="n">html</span> <span class="o">=</span> <span class="n">indent</span><span class="p">(</span><span class="n">html</span><span class="p">,</span> <span class="s1">&#39;         &#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_ANIMATION_RST</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">html</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="mayavi_scraper"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.mayavi_scraper">[docs]</a><span class="k">def</span> <span class="nf">mayavi_scraper</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">block_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
@@ -306,6 +392,8 @@
         <span class="n">mlab</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">scene</span><span class="p">)</span>
         <span class="c1"># make sure the image is not too large</span>
         <span class="n">scale_image</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">image_path</span><span class="p">,</span> <span class="mi">850</span><span class="p">,</span> <span class="mi">999</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;images&#39;</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;compress_images&#39;</span><span class="p">]:</span>
+            <span class="n">optipng</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;compress_images_args&#39;</span><span class="p">])</span>
         <span class="n">image_paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span>
     <span class="n">mlab</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="nb">all</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">figure_rst</span><span class="p">(</span><span class="n">image_paths</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">])</span></div>
@@ -360,7 +448,7 @@
         <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stop</span><span class="p">):</span>
             <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Generated over </span><span class="si">%s</span><span class="s1"> images&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stop</span><span class="p">,))</span>
+            <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span><span class="s1">&#39;Generated over </span><span class="si">%s</span><span class="s1"> images&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stop</span><span class="p">,))</span>
 
     <span class="k">def</span> <span class="nf">next</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__next__</span><span class="p">()</span>
@@ -373,7 +461,7 @@
 
 
 <span class="c1"># For now, these are what we support</span>
-<span class="n">_KNOWN_IMG_EXTS</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;png&#39;</span><span class="p">,</span> <span class="s1">&#39;svg&#39;</span><span class="p">,</span> <span class="s1">&#39;jpg&#39;</span><span class="p">)</span>  <span class="c1"># XXX add gif next</span>
+<span class="n">_KNOWN_IMG_EXTS</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;png&#39;</span><span class="p">,</span> <span class="s1">&#39;svg&#39;</span><span class="p">,</span> <span class="s1">&#39;jpg&#39;</span><span class="p">,</span> <span class="s1">&#39;gif&#39;</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_find_image_ext</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
@@ -411,21 +499,22 @@
     <span class="k">for</span> <span class="n">scraper</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;image_scrapers&#39;</span><span class="p">]:</span>
         <span class="n">rst</span> <span class="o">=</span> <span class="n">scraper</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">block_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rst</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;rst from scraper </span><span class="si">%r</span><span class="s1"> was not a string, &#39;</span>
-                            <span class="s1">&#39;got type </span><span class="si">%s</span><span class="s1">:</span><span class="se">\n</span><span class="si">%r</span><span class="s1">&#39;</span>
-                            <span class="o">%</span> <span class="p">(</span><span class="n">scraper</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">rst</span><span class="p">),</span> <span class="n">rst</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span><span class="s1">&#39;rst from scraper </span><span class="si">%r</span><span class="s1"> was not a string, &#39;</span>
+                                 <span class="s1">&#39;got type </span><span class="si">%s</span><span class="s1">:</span><span class="se">\n</span><span class="si">%r</span><span class="s1">&#39;</span>
+                                 <span class="o">%</span> <span class="p">(</span><span class="n">scraper</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">rst</span><span class="p">),</span> <span class="n">rst</span><span class="p">))</span>
         <span class="n">n_new</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">image_path_iterator</span><span class="p">)</span> <span class="o">-</span> <span class="n">prev_count</span>
         <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_new</span><span class="p">):</span>
             <span class="n">current_path</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_find_image_ext</span><span class="p">(</span>
                 <span class="n">image_path_iterator</span><span class="o">.</span><span class="n">paths</span><span class="p">[</span><span class="n">prev_count</span> <span class="o">+</span> <span class="n">ii</span><span class="p">])</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">current_path</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Scraper </span><span class="si">%s</span><span class="s1"> did not produce expected image:&#39;</span>
-                                   <span class="s1">&#39;</span><span class="se">\n</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">scraper</span><span class="p">,</span> <span class="n">current_path</span><span class="p">))</span>
+                <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
+                    <span class="s1">&#39;Scraper </span><span class="si">%s</span><span class="s1"> did not produce expected image:&#39;</span>
+                    <span class="s1">&#39;</span><span class="se">\n</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">scraper</span><span class="p">,</span> <span class="n">current_path</span><span class="p">))</span>
         <span class="n">all_rst</span> <span class="o">+=</span> <span class="n">rst</span>
     <span class="k">return</span> <span class="n">all_rst</span></div>
 
 
-<div class="viewcode-block" id="figure_rst"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.figure_rst">[docs]</a><span class="k">def</span> <span class="nf">figure_rst</span><span class="p">(</span><span class="n">figure_list</span><span class="p">,</span> <span class="n">sources_dir</span><span class="p">):</span>
+<div class="viewcode-block" id="figure_rst"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.figure_rst">[docs]</a><span class="k">def</span> <span class="nf">figure_rst</span><span class="p">(</span><span class="n">figure_list</span><span class="p">,</span> <span class="n">sources_dir</span><span class="p">,</span> <span class="n">fig_titles</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Generate RST for a list of image filenames.</span>
 
 <span class="sd">    Depending on whether we have one or more figures, we use a</span>
@@ -437,6 +526,9 @@
 <span class="sd">        List of strings of the figures&#39; absolute paths.</span>
 <span class="sd">    sources_dir : str</span>
 <span class="sd">        absolute path of Sphinx documentation sources</span>
+<span class="sd">    fig_titles : str</span>
+<span class="sd">        Titles of figures, empty string if no titles found. Currently</span>
+<span class="sd">        only supported for matplotlib figures, default = &#39;&#39;.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -447,16 +539,35 @@
     <span class="n">figure_paths</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">figure_path</span><span class="p">,</span> <span class="n">sources_dir</span><span class="p">)</span>
                     <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
                     <span class="k">for</span> <span class="n">figure_path</span> <span class="ow">in</span> <span class="n">figure_list</span><span class="p">]</span>
+    <span class="c1"># Get alt text</span>
+    <span class="n">alt</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">fig_titles</span><span class="p">:</span>
+        <span class="n">alt</span> <span class="o">=</span> <span class="n">fig_titles</span>
+    <span class="k">elif</span> <span class="n">figure_list</span><span class="p">:</span>
+        <span class="n">file_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">figure_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># remove ext &amp; &#39;sphx_glr_&#39; from start &amp; n#&#39;s from end</span>
+        <span class="n">file_name_noext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">file_name</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">9</span><span class="p">:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span>
+        <span class="c1"># replace - &amp; _ with \s</span>
+        <span class="n">file_name_final</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[-,_]&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">file_name_noext</span><span class="p">)</span>
+        <span class="n">alt</span> <span class="o">=</span> <span class="n">file_name_final</span>
+    <span class="n">alt</span> <span class="o">=</span> <span class="n">_single_line_sanitize</span><span class="p">(</span><span class="n">alt</span><span class="p">)</span>
+
     <span class="n">images_rst</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">figure_paths</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">figure_name</span> <span class="o">=</span> <span class="n">figure_paths</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">images_rst</span> <span class="o">=</span> <span class="n">SINGLE_IMAGE</span> <span class="o">%</span> <span class="n">figure_name</span>
+        <span class="n">images_rst</span> <span class="o">=</span> <span class="n">SINGLE_IMAGE</span> <span class="o">%</span> <span class="p">(</span><span class="n">figure_name</span><span class="p">,</span> <span class="n">alt</span><span class="p">)</span>
     <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">figure_paths</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">images_rst</span> <span class="o">=</span> <span class="n">HLIST_HEADER</span>
         <span class="k">for</span> <span class="n">figure_name</span> <span class="ow">in</span> <span class="n">figure_paths</span><span class="p">:</span>
-            <span class="n">images_rst</span> <span class="o">+=</span> <span class="n">HLIST_IMAGE_TEMPLATE</span> <span class="o">%</span> <span class="n">figure_name</span>
-
+            <span class="n">images_rst</span> <span class="o">+=</span> <span class="n">HLIST_IMAGE_TEMPLATE</span> <span class="o">%</span> <span class="p">(</span><span class="n">figure_name</span><span class="p">,</span> <span class="n">alt</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">images_rst</span></div>
+
+
+<span class="k">def</span> <span class="nf">_single_line_sanitize</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Remove problematic newlines.&quot;&quot;&quot;</span>
+    <span class="c1"># For example, when setting a :alt: for an image, it shouldn&#39;t have \n</span>
+    <span class="c1"># This is a function in case we end up finding other things to replace</span>
+    <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span>
 
 
 <span class="c1"># The following strings are used when we have several pictures: we use</span>
@@ -467,15 +578,21 @@
 
 <span class="s2">&quot;&quot;&quot;</span>
 
+<span class="n">HLIST_IMAGE_MATPLOTLIB</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    *</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
 <span class="n">HLIST_IMAGE_TEMPLATE</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">    *</span>
 
 <span class="s2">      .. image:: /</span><span class="si">%s</span><span class="s2"></span>
-<span class="s2">            :class: sphx-glr-multi-img</span>
+<span class="s2">          :alt: </span><span class="si">%s</span><span class="s2"></span>
+<span class="s2">          :class: sphx-glr-multi-img</span>
 <span class="s2">&quot;&quot;&quot;</span>
 
 <span class="n">SINGLE_IMAGE</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">.. image:: /</span><span class="si">%s</span><span class="s2"></span>
+<span class="s2">    :alt: </span><span class="si">%s</span><span class="s2"></span>
 <span class="s2">    :class: sphx-glr-single-img</span>
 <span class="s2">&quot;&quot;&quot;</span>
 

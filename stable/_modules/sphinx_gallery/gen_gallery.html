@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>sphinx_gallery.gen_gallery &mdash; Sphinx-Gallery 0.6.2-git documentation</title>
+  <title>sphinx_gallery.gen_gallery &mdash; Sphinx-Gallery 0.7.0-git documentation</title>
   
 
   
@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.6.2
+                0.7.0
               </div>
             
           
@@ -203,9 +203,10 @@
 <span class="kn">import</span> <span class="nn">pathlib</span>
 <span class="kn">from</span> <span class="nn">xml.sax.saxutils</span> <span class="kn">import</span> <span class="n">quoteattr</span><span class="p">,</span> <span class="n">escape</span>
 
+<span class="kn">from</span> <span class="nn">sphinx.errors</span> <span class="kn">import</span> <span class="n">ConfigError</span><span class="p">,</span> <span class="n">ExtensionError</span>
 <span class="kn">from</span> <span class="nn">sphinx.util.console</span> <span class="kn">import</span> <span class="n">red</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">sphinx_compatibility</span><span class="p">,</span> <span class="n">glr_path_static</span><span class="p">,</span> <span class="n">__version__</span> <span class="k">as</span> <span class="n">_sg_version</span>
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">_replace_md5</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">_replace_md5</span><span class="p">,</span> <span class="n">_has_optipng</span>
 <span class="kn">from</span> <span class="nn">.backreferences</span> <span class="kn">import</span> <span class="n">_finalize_backreferences</span>
 <span class="kn">from</span> <span class="nn">.gen_rst</span> <span class="kn">import</span> <span class="p">(</span><span class="n">generate_dir_rst</span><span class="p">,</span> <span class="n">SPHX_GLR_SIG</span><span class="p">,</span> <span class="n">_get_memory_base</span><span class="p">,</span>
                       <span class="n">_get_readme</span><span class="p">)</span>
@@ -214,6 +215,7 @@
 <span class="kn">from</span> <span class="nn">.downloads</span> <span class="kn">import</span> <span class="n">generate_zipfiles</span>
 <span class="kn">from</span> <span class="nn">.sorting</span> <span class="kn">import</span> <span class="n">NumberOfCodeLinesSortKey</span>
 <span class="kn">from</span> <span class="nn">.binder</span> <span class="kn">import</span> <span class="n">copy_binder_files</span>
+<span class="kn">from</span> <span class="nn">.directives</span> <span class="kn">import</span> <span class="n">MiniGallery</span>
 
 
 <span class="n">_KNOWN_CSS</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;gallery&#39;</span><span class="p">,</span> <span class="s1">&#39;gallery-binder&#39;</span><span class="p">,</span> <span class="s1">&#39;gallery-dataframe&#39;</span><span class="p">)</span>
@@ -245,6 +247,7 @@
     <span class="s1">&#39;min_reported_time&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
     <span class="s1">&#39;binder&#39;</span><span class="p">:</span> <span class="p">{},</span>
     <span class="s1">&#39;image_scrapers&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;matplotlib&#39;</span><span class="p">,),</span>
+    <span class="s1">&#39;compress_images&#39;</span><span class="p">:</span> <span class="p">(),</span>
     <span class="s1">&#39;reset_modules&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;matplotlib&#39;</span><span class="p">,</span> <span class="s1">&#39;seaborn&#39;</span><span class="p">),</span>
     <span class="s1">&#39;first_notebook_cell&#39;</span><span class="p">:</span> <span class="s1">&#39;%matplotlib inline&#39;</span><span class="p">,</span>
     <span class="s1">&#39;last_notebook_cell&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
@@ -255,6 +258,7 @@
     <span class="s1">&#39;inspect_global_variables&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
     <span class="s1">&#39;ignore_repr_types&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
     <span class="s1">&#39;css&#39;</span><span class="p">:</span> <span class="n">_KNOWN_CSS</span><span class="p">,</span>
+    <span class="s1">&#39;matplotlib_animations&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">}</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">sphinx_compatibility</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;sphinx-gallery&#39;</span><span class="p">)</span>
@@ -311,14 +315,33 @@
             <span class="nb">type</span><span class="o">=</span><span class="ne">DeprecationWarning</span><span class="p">)</span>
 
     <span class="c1"># deal with show_memory</span>
+    <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;memory_base&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
     <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;show_memory&#39;</span><span class="p">]:</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">memory_profiler</span> <span class="kn">import</span> <span class="n">memory_usage</span>  <span class="c1"># noqa, analysis:ignore</span>
-        <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Please install &#39;memory_profiler&#39; to enable peak &quot;</span>
-                           <span class="s2">&quot;memory measurements.&quot;</span><span class="p">)</span>
-            <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;show_memory&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;memory_base&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_get_memory_base</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">callable</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;show_memory&#39;</span><span class="p">]):</span>  <span class="c1"># True-like</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="kn">from</span> <span class="nn">memory_profiler</span> <span class="kn">import</span> <span class="n">memory_usage</span>  <span class="c1"># noqa</span>
+            <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Please install &#39;memory_profiler&#39; to enable &quot;</span>
+                               <span class="s2">&quot;peak memory measurements.&quot;</span><span class="p">)</span>
+                <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;show_memory&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">def</span> <span class="nf">call_memory</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+                    <span class="n">mem</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="n">memory_usage</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">max_usage</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">retval</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                            <span class="n">multiprocess</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">mem</span> <span class="o">=</span> <span class="n">mem</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># old MP always returned a list</span>
+                    <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>  <span class="c1"># &#39;float&#39; object is not subscriptable</span>
+                        <span class="k">pass</span>
+                    <span class="k">return</span> <span class="n">mem</span><span class="p">,</span> <span class="n">out</span>
+                <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;call_memory&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">call_memory</span>
+                <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;memory_base&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_get_memory_base</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;call_memory&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;show_memory&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;show_memory&#39;</span><span class="p">]:</span>  <span class="c1"># can be set to False above</span>
+        <span class="k">def</span> <span class="nf">call_memory</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+            <span class="k">return</span> <span class="mf">0.</span><span class="p">,</span> <span class="n">func</span><span class="p">()</span>
+        <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;call_memory&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">call_memory</span>
+    <span class="k">assert</span> <span class="n">callable</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;call_memory&#39;</span><span class="p">])</span>
 
     <span class="c1"># deal with scrapers</span>
     <span class="n">scrapers</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;image_scrapers&#39;</span><span class="p">]</span>
@@ -336,11 +359,11 @@
                     <span class="n">scraper</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">scraper</span><span class="p">,</span> <span class="s1">&#39;_get_sg_image_scraper&#39;</span><span class="p">)</span>
                     <span class="n">scraper</span> <span class="o">=</span> <span class="n">scraper</span><span class="p">()</span>
                 <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exp</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown image scraper </span><span class="si">%r</span><span class="s1">, got:</span><span class="se">\n</span><span class="si">%s</span><span class="s1">&#39;</span>
-                                     <span class="o">%</span> <span class="p">(</span><span class="n">orig_scraper</span><span class="p">,</span> <span class="n">exp</span><span class="p">))</span>
+                    <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s1">&#39;Unknown image scraper </span><span class="si">%r</span><span class="s1">, got:</span><span class="se">\n</span><span class="si">%s</span><span class="s1">&#39;</span>
+                                      <span class="o">%</span> <span class="p">(</span><span class="n">orig_scraper</span><span class="p">,</span> <span class="n">exp</span><span class="p">))</span>
             <span class="n">scrapers</span><span class="p">[</span><span class="n">si</span><span class="p">]</span> <span class="o">=</span> <span class="n">scraper</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">callable</span><span class="p">(</span><span class="n">scraper</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Scraper </span><span class="si">%r</span><span class="s1"> was not callable&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">scraper</span><span class="p">,))</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s1">&#39;Scraper </span><span class="si">%r</span><span class="s1"> was not callable&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">scraper</span><span class="p">,))</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;image_scrapers&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">scrapers</span><span class="p">)</span>
     <span class="k">del</span> <span class="n">scrapers</span>
     <span class="c1"># Here we try to set up matplotlib but don&#39;t raise an error,</span>
@@ -357,6 +380,33 @@
     <span class="k">except</span> <span class="p">(</span><span class="ne">ImportError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
         <span class="k">pass</span>
 
+    <span class="c1"># compress_images</span>
+    <span class="n">compress_images</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;compress_images&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">compress_images</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">compress_images</span> <span class="o">=</span> <span class="p">[</span><span class="n">compress_images</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">compress_images</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s1">&#39;compress_images must be a tuple, list, or str, &#39;</span>
+                          <span class="s1">&#39;got </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">compress_images</span><span class="p">),))</span>
+    <span class="n">compress_images</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">compress_images</span><span class="p">)</span>
+    <span class="n">allowed_values</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;images&#39;</span><span class="p">,</span> <span class="s1">&#39;thumbnails&#39;</span><span class="p">)</span>
+    <span class="n">pops</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">ki</span><span class="p">,</span> <span class="n">kind</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">compress_images</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">kind</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">allowed_values</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">kind</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">):</span>
+                <span class="n">pops</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ki</span><span class="p">)</span>
+                <span class="k">continue</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s1">&#39;All entries in compress_images must be one of &#39;</span>
+                              <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> or a command-line switch starting with &quot;-&quot;, &#39;</span>
+                              <span class="s1">&#39;got </span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">allowed_values</span><span class="p">,</span> <span class="n">kind</span><span class="p">))</span>
+    <span class="n">compress_images_args</span> <span class="o">=</span> <span class="p">[</span><span class="n">compress_images</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pops</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">compress_images</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">_has_optipng</span><span class="p">():</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="s1">&#39;optipng binaries not found, PNG </span><span class="si">%s</span><span class="s1"> will not be optimized&#39;</span>
+            <span class="o">%</span> <span class="p">(</span><span class="s1">&#39; and &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">compress_images</span><span class="p">),))</span>
+        <span class="n">compress_images</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;compress_images&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">compress_images</span>
+    <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;compress_images_args&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">compress_images_args</span>
+
     <span class="c1"># deal with resetters</span>
     <span class="n">resetters</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;reset_modules&#39;</span><span class="p">]</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">resetters</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
@@ -365,12 +415,12 @@
     <span class="k">for</span> <span class="n">ri</span><span class="p">,</span> <span class="n">resetter</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">resetters</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">resetter</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">resetter</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_reset_dict</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown module resetter named </span><span class="si">%r</span><span class="s1">&#39;</span>
-                                 <span class="o">%</span> <span class="p">(</span><span class="n">resetter</span><span class="p">,))</span>
+                <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s1">&#39;Unknown module resetter named </span><span class="si">%r</span><span class="s1">&#39;</span>
+                                  <span class="o">%</span> <span class="p">(</span><span class="n">resetter</span><span class="p">,))</span>
             <span class="n">resetters</span><span class="p">[</span><span class="n">ri</span><span class="p">]</span> <span class="o">=</span> <span class="n">_reset_dict</span><span class="p">[</span><span class="n">resetter</span><span class="p">]</span>
         <span class="k">elif</span> <span class="ow">not</span> <span class="n">callable</span><span class="p">(</span><span class="n">resetter</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Module resetter </span><span class="si">%r</span><span class="s1"> was not callable&#39;</span>
-                             <span class="o">%</span> <span class="p">(</span><span class="n">resetter</span><span class="p">,))</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s1">&#39;Module resetter </span><span class="si">%r</span><span class="s1"> was not callable&#39;</span>
+                              <span class="o">%</span> <span class="p">(</span><span class="n">resetter</span><span class="p">,))</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;reset_modules&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">resetters</span><span class="p">)</span>
 
     <span class="n">lang</span> <span class="o">=</span> <span class="n">lang</span> <span class="k">if</span> <span class="n">lang</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;python&#39;</span><span class="p">,</span> <span class="s1">&#39;python3&#39;</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="s1">&#39;python&#39;</span>
@@ -380,13 +430,13 @@
     <span class="c1"># Ensure the first cell text is a string if we have it</span>
     <span class="n">first_cell</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;first_notebook_cell&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">first_cell</span><span class="p">,</span> <span class="nb">str</span><span class="p">))</span> <span class="ow">and</span> <span class="p">(</span><span class="n">first_cell</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The &#39;first_notebook_cell&#39; parameter must be type &quot;</span>
-                         <span class="s2">&quot;str or None, found type </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">first_cell</span><span class="p">))</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s2">&quot;The &#39;first_notebook_cell&#39; parameter must be type &quot;</span>
+                          <span class="s2">&quot;str or None, found type </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">first_cell</span><span class="p">))</span>
     <span class="c1"># Ensure the last cell text is a string if we have it</span>
     <span class="n">last_cell</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;last_notebook_cell&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">last_cell</span><span class="p">,</span> <span class="nb">str</span><span class="p">))</span> <span class="ow">and</span> <span class="p">(</span><span class="n">last_cell</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The &#39;last_notebook_cell&#39; parameter must be type str &quot;</span>
-                         <span class="s2">&quot;or None, found type </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">last_cell</span><span class="p">))</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s2">&quot;The &#39;last_notebook_cell&#39; parameter must be type str&quot;</span>
+                          <span class="s2">&quot; or None, found type </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">last_cell</span><span class="p">))</span>
     <span class="c1"># Make it easy to know which builder we&#39;re in</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;builder_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">builder_name</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;titles&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
@@ -394,21 +444,21 @@
     <span class="n">backref</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;backreferences_dir&#39;</span><span class="p">]</span>
     <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">backref</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">)))</span> <span class="ow">and</span> \
             <span class="p">(</span><span class="n">backref</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The &#39;backreferences_dir&#39; parameter must be of type &quot;</span>
-                         <span class="s2">&quot;str, pathlib.Path or None, &quot;</span>
-                         <span class="s2">&quot;found type </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">backref</span><span class="p">))</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s2">&quot;The &#39;backreferences_dir&#39; parameter must be of type &quot;</span>
+                          <span class="s2">&quot;str, pathlib.Path or None, &quot;</span>
+                          <span class="s2">&quot;found type </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">backref</span><span class="p">))</span>
     <span class="c1"># if &#39;backreferences_dir&#39; is pathlib.Path, make str for Python &lt;=3.5</span>
     <span class="c1"># compatibility</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">backref</span><span class="p">,</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">):</span>
         <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;backreferences_dir&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">backref</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;css&#39;</span><span class="p">],</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;gallery_conf[&quot;css&quot;] must be list or tuple, got </span><span class="si">%r</span><span class="s1">&#39;</span>
-                        <span class="o">%</span> <span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;css&#39;</span><span class="p">],))</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s1">&#39;gallery_conf[&quot;css&quot;] must be list or tuple, got </span><span class="si">%r</span><span class="s1">&#39;</span>
+                          <span class="o">%</span> <span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;css&#39;</span><span class="p">],))</span>
     <span class="k">for</span> <span class="n">css</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;css&#39;</span><span class="p">]:</span>
         <span class="k">if</span> <span class="n">css</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_KNOWN_CSS</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown css </span><span class="si">%r</span><span class="s1">, must be one of </span><span class="si">%r</span><span class="s1">&#39;</span>
-                             <span class="o">%</span> <span class="p">(</span><span class="n">css</span><span class="p">,</span> <span class="n">_KNOWN_CSS</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s1">&#39;Unknown css </span><span class="si">%r</span><span class="s1">, must be one of </span><span class="si">%r</span><span class="s1">&#39;</span>
+                              <span class="o">%</span> <span class="p">(</span><span class="n">css</span><span class="p">,</span> <span class="n">_KNOWN_CSS</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;app&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># can be None in testing</span>
             <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;app&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">add_css_file</span><span class="p">(</span><span class="n">css</span> <span class="o">+</span> <span class="s1">&#39;.css&#39;</span><span class="p">)</span>
 
@@ -584,7 +634,8 @@
             <span class="n">t</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%0.2f</span><span class="s1"> sec&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">cost</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],)</span>
         <span class="n">m</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{0:.1f}</span><span class="s1"> MB&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cost</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
         <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">name</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">m</span><span class="p">])</span>
-    <span class="n">lens</span> <span class="o">=</span> <span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="p">[[</span><span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">ll</span><span class="p">]</span> <span class="k">for</span> <span class="n">ll</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">])]</span>
+    <span class="n">lens</span> <span class="o">=</span> <span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="p">[[</span><span class="nb">len</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">cost</span><span class="p">]</span>
+                                  <span class="k">for</span> <span class="n">cost</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">])]</span>
     <span class="k">return</span> <span class="n">lines</span><span class="p">,</span> <span class="n">lens</span>
 
 
@@ -602,7 +653,7 @@
                   <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_sec_to_readable</span><span class="p">(</span><span class="n">total_time</span><span class="p">),</span> <span class="n">target_dir_clean</span><span class="p">))</span>
         <span class="n">lines</span><span class="p">,</span> <span class="n">lens</span> <span class="o">=</span> <span class="n">_format_for_writing</span><span class="p">(</span><span class="n">costs</span><span class="p">,</span> <span class="n">target_dir_clean</span><span class="p">)</span>
         <span class="k">del</span> <span class="n">costs</span>
-        <span class="n">hline</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="s1">&#39;+&#39;</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="p">(</span><span class="n">l</span> <span class="o">+</span> <span class="mi">2</span><span class="p">))</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lens</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;+</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="n">hline</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="s1">&#39;+&#39;</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="p">(</span><span class="n">length</span> <span class="o">+</span> <span class="mi">2</span><span class="p">))</span> <span class="k">for</span> <span class="n">length</span> <span class="ow">in</span> <span class="n">lens</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;+</span><span class="se">\n</span><span class="s1">&#39;</span>
         <span class="n">fid</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">hline</span><span class="p">)</span>
         <span class="n">format_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;| {</span><span class="si">%s</span><span class="s1">} &#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">ii</span><span class="p">,)</span>
                              <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span> <span class="o">+</span> <span class="s1">&#39;|</span><span class="se">\n</span><span class="s1">&#39;</span>
@@ -769,9 +820,10 @@
                 <span class="n">color</span><span class="o">=</span><span class="s1">&#39;brown&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">fail_msgs</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Here is a summary of the problems encountered when &quot;</span>
-                         <span class="s2">&quot;running the examples</span><span class="se">\n\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fail_msgs</span><span class="p">)</span> <span class="o">+</span>
-                         <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">79</span><span class="p">)</span></div>
+        <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
+            <span class="s2">&quot;Here is a summary of the problems encountered &quot;</span>
+            <span class="s2">&quot;when running the examples</span><span class="se">\n\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fail_msgs</span><span class="p">)</span> <span class="o">+</span>
+            <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">79</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="collect_gallery_files"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.collect_gallery_files">[docs]</a><span class="k">def</span> <span class="nf">collect_gallery_files</span><span class="p">(</span><span class="n">examples_dirs</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
@@ -834,6 +886,9 @@
 
     <span class="k">if</span> <span class="s1">&#39;sphinx.ext.autodoc&#39;</span> <span class="ow">in</span> <span class="n">app</span><span class="o">.</span><span class="n">extensions</span><span class="p">:</span>
         <span class="n">app</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;autodoc-process-docstring&#39;</span><span class="p">,</span> <span class="n">touch_empty_backreferences</span><span class="p">)</span>
+
+    <span class="c1"># Add the custom directive</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">add_directive</span><span class="p">(</span><span class="s1">&#39;minigallery&#39;</span><span class="p">,</span> <span class="n">MiniGallery</span><span class="p">)</span>
 
     <span class="n">app</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;builder-inited&#39;</span><span class="p">,</span> <span class="n">generate_gallery_rst</span><span class="p">)</span>
     <span class="n">app</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;build-finished&#39;</span><span class="p">,</span> <span class="n">copy_binder_files</span><span class="p">)</span>

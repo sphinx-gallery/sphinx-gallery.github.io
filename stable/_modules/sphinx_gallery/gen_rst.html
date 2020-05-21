@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>sphinx_gallery.gen_rst &mdash; Sphinx-Gallery 0.6.2-git documentation</title>
+  <title>sphinx_gallery.gen_rst &mdash; Sphinx-Gallery 0.7.0-git documentation</title>
   
 
   
@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.6.2
+                0.7.0
               </div>
             
           
@@ -216,9 +216,12 @@
 <span class="kn">import</span> <span class="nn">traceback</span>
 <span class="kn">import</span> <span class="nn">codeop</span>
 
+<span class="kn">from</span> <span class="nn">sphinx.errors</span> <span class="kn">import</span> <span class="n">ExtensionError</span>
+
 <span class="kn">from</span> <span class="nn">.scrapers</span> <span class="kn">import</span> <span class="p">(</span><span class="n">save_figures</span><span class="p">,</span> <span class="n">ImagePathIterator</span><span class="p">,</span> <span class="n">clean_modules</span><span class="p">,</span>
                        <span class="n">_find_image_ext</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">replace_py_ipynb</span><span class="p">,</span> <span class="n">scale_image</span><span class="p">,</span> <span class="n">get_md5sum</span><span class="p">,</span> <span class="n">_replace_md5</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="p">(</span><span class="n">replace_py_ipynb</span><span class="p">,</span> <span class="n">scale_image</span><span class="p">,</span> <span class="n">get_md5sum</span><span class="p">,</span> <span class="n">_replace_md5</span><span class="p">,</span>
+                    <span class="n">optipng</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">glr_path_static</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">sphinx_compatibility</span>
 <span class="kn">from</span> <span class="nn">.backreferences</span> <span class="kn">import</span> <span class="p">(</span><span class="n">_write_backreferences</span><span class="p">,</span> <span class="n">_thumbnail_div</span><span class="p">,</span>
@@ -236,18 +239,30 @@
 <span class="c1">###############################################################################</span>
 
 
-<div class="viewcode-block" id="LoggingTee"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.LoggingTee">[docs]</a><span class="k">class</span> <span class="nc">LoggingTee</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;A tee object to redirect streams to the logger&quot;&quot;&quot;</span>
+<span class="k">class</span> <span class="nc">_LoggingTee</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A tee object to redirect streams to the logger.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">src_filename</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">output_file</span> <span class="o">=</span> <span class="n">output_file</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src_filename</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">src_filename</span> <span class="o">=</span> <span class="n">src_filename</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">first_write</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger_buffer</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_std_and_reset_position</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">set_std_and_reset_position</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">_LoggingTee</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">origs</span> <span class="o">=</span> <span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">first_write</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">restore_std</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">origs</span>
 
     <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">output_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">first_write</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">verbose</span><span class="p">(</span><span class="s1">&#39;Output from </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">src_filename</span><span class="p">,</span>
@@ -268,14 +283,21 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">verbose</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">flush</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">output_file</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger_buffer</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">verbose</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger_buffer</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger_buffer</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 
     <span class="c1"># When called from a local terminal seaborn needs it in Python3</span>
     <span class="k">def</span> <span class="nf">isatty</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_file</span><span class="o">.</span><span class="n">isatty</span><span class="p">()</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">isatty</span><span class="p">()</span>
+
+    <span class="c1"># When called in gen_rst, conveniently use context managing</span>
+    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">type_</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">tb</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">restore_std</span><span class="p">()</span>
 
 
 <span class="c1">###############################################################################</span>
@@ -375,7 +397,7 @@
     <span class="n">paragraphs</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">paragraphs</span>
                   <span class="k">if</span> <span class="ow">not</span> <span class="n">p</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;.. &#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">paragraphs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+        <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
             <span class="s2">&quot;Example docstring should have a header for the example title. &quot;</span>
             <span class="s2">&quot;Please check the example file:</span><span class="se">\n</span><span class="s2"> </span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
     <span class="c1"># Title is the first paragraph with any ReSTructuredText title chars</span>
@@ -387,7 +409,7 @@
                       <span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+        <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
             <span class="s1">&#39;Could not find a title in first paragraph:</span><span class="se">\n</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">title_paragraph</span><span class="p">))</span>
     <span class="n">title</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
@@ -444,7 +466,7 @@
         <span class="n">image_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">],</span> <span class="n">thumbnail_path</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">thumbnail_number</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+            <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
                 <span class="s1">&#39;sphinx_gallery_thumbnail_number setting is not a number, &#39;</span>
                 <span class="s1">&#39;got </span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">thumbnail_number</span><span class="p">,))</span>
         <span class="n">image_path</span> <span class="o">=</span> <span class="n">image_path_template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">thumbnail_number</span><span class="p">)</span>
@@ -465,10 +487,12 @@
         <span class="n">img</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;default_thumb_file&quot;</span><span class="p">,</span> <span class="n">img</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span>
-    <span class="k">if</span> <span class="n">ext</span> <span class="o">==</span> <span class="s1">&#39;svg&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">ext</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;svg&#39;</span><span class="p">,</span> <span class="s1">&#39;gif&#39;</span><span class="p">):</span>
         <span class="n">copyfile</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">thumb_file</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">scale_image</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">thumb_file</span><span class="p">,</span> <span class="o">*</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;thumbnail_size&quot;</span><span class="p">])</span></div>
+        <span class="n">scale_image</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">thumb_file</span><span class="p">,</span> <span class="o">*</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;thumbnail_size&quot;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="s1">&#39;thumbnails&#39;</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;compress_images&#39;</span><span class="p">]:</span>
+            <span class="n">optipng</span><span class="p">(</span><span class="n">thumb_file</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;compress_images_args&#39;</span><span class="p">])</span></div>
 
 
 <span class="k">def</span> <span class="nf">_get_readme</span><span class="p">(</span><span class="n">dir_</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">raise_error</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
@@ -479,7 +503,7 @@
             <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">fpth</span><span class="p">):</span>
                 <span class="k">return</span> <span class="n">fpth</span>
     <span class="k">if</span> <span class="n">raise_error</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
+        <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
             <span class="s2">&quot;Example directory </span><span class="si">{0}</span><span class="s2"> does not have a README file with one &quot;</span>
             <span class="s2">&quot;of the expected file extensions </span><span class="si">{1}</span><span class="s2">. Please write one to &quot;</span>
             <span class="s2">&quot;introduce your gallery.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dir_</span><span class="p">,</span> <span class="n">extensions</span><span class="p">))</span>
@@ -519,12 +543,12 @@
         <span class="s1">&#39;generating gallery for </span><span class="si">%s</span><span class="s1">... &#39;</span> <span class="o">%</span> <span class="n">build_target_dir</span><span class="p">,</span>
         <span class="n">length</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">sorted_listdir</span><span class="p">))</span>
     <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">iterator</span><span class="p">:</span>
-        <span class="n">intro</span><span class="p">,</span> <span class="n">cost</span> <span class="o">=</span> <span class="n">generate_file_rst</span><span class="p">(</span>
+        <span class="n">intro</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">cost</span> <span class="o">=</span> <span class="n">generate_file_rst</span><span class="p">(</span>
             <span class="n">fname</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">seen_backrefs</span><span class="p">)</span>
         <span class="n">src_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">))</span>
         <span class="n">costs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">cost</span><span class="p">,</span> <span class="n">src_file</span><span class="p">))</span>
         <span class="n">this_entry</span> <span class="o">=</span> <span class="n">_thumbnail_div</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">],</span>
-                                    <span class="n">fname</span><span class="p">,</span> <span class="n">intro</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;&quot;&quot;</span>
+                                    <span class="n">fname</span><span class="p">,</span> <span class="n">intro</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;&quot;&quot;</span>
 
 <span class="s2">.. toctree::</span>
 <span class="s2">   :hidden:</span>
@@ -628,50 +652,32 @@
                         <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="s1">&#39;__main__&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">old_main</span>
 
 
-<span class="k">def</span> <span class="nf">_memory_usage</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Get memory usage of a function call.&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;show_memory&#39;</span><span class="p">]:</span>
-        <span class="kn">from</span> <span class="nn">memory_profiler</span> <span class="kn">import</span> <span class="n">memory_usage</span>
-        <span class="k">assert</span> <span class="n">callable</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
-        <span class="n">mem</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="n">memory_usage</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">max_usage</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">retval</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                                <span class="n">multiprocess</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">mem</span> <span class="o">=</span> <span class="n">mem</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># old MP always returned a list</span>
-        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>  <span class="c1"># &#39;float&#39; object is not subscriptable</span>
-            <span class="k">pass</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">out</span> <span class="o">=</span> <span class="n">func</span><span class="p">()</span>
-        <span class="n">mem</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">return</span> <span class="n">out</span><span class="p">,</span> <span class="n">mem</span>
-
-
 <span class="k">def</span> <span class="nf">_get_memory_base</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Get the base amount of memory used by running a Python process.&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;show_memory&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;plot_gallery&#39;</span><span class="p">]:</span>
-        <span class="n">memory_base</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;plot_gallery&#39;</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="mf">0.</span>
+    <span class="c1"># There might be a cleaner way to do this at some point</span>
+    <span class="kn">from</span> <span class="nn">memory_profiler</span> <span class="kn">import</span> <span class="n">memory_usage</span>
+    <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;win32&#39;</span><span class="p">,</span> <span class="s1">&#39;darwin&#39;</span><span class="p">):</span>
+        <span class="n">sleep</span><span class="p">,</span> <span class="n">timeout</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="c1"># There might be a cleaner way to do this at some point</span>
-        <span class="kn">from</span> <span class="nn">memory_profiler</span> <span class="kn">import</span> <span class="n">memory_usage</span>
-        <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;win32&#39;</span><span class="p">,</span> <span class="s1">&#39;darwin&#39;</span><span class="p">):</span>
-            <span class="n">sleep</span><span class="p">,</span> <span class="n">timeout</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">sleep</span><span class="p">,</span> <span class="n">timeout</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span>
-            <span class="p">[</span><span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span> <span class="s1">&#39;-c&#39;</span><span class="p">,</span>
-             <span class="s1">&#39;import time, sys; time.sleep(</span><span class="si">%s</span><span class="s1">); sys.exit(0)&#39;</span> <span class="o">%</span> <span class="n">sleep</span><span class="p">],</span>
-            <span class="n">close_fds</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">memories</span> <span class="o">=</span> <span class="n">memory_usage</span><span class="p">(</span><span class="n">proc</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
-        <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span> <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="k">else</span> <span class="p">{}</span>
-        <span class="n">proc</span><span class="o">.</span><span class="n">communicate</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="c1"># On OSX sometimes the last entry can be None</span>
-        <span class="n">memories</span> <span class="o">=</span> <span class="p">[</span><span class="n">mem</span> <span class="k">for</span> <span class="n">mem</span> <span class="ow">in</span> <span class="n">memories</span> <span class="k">if</span> <span class="n">mem</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="mf">0.</span><span class="p">]</span>
-        <span class="n">memory_base</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">memories</span><span class="p">)</span>
+        <span class="n">sleep</span><span class="p">,</span> <span class="n">timeout</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span> <span class="s1">&#39;-c&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;import time, sys; time.sleep(</span><span class="si">%s</span><span class="s1">); sys.exit(0)&#39;</span> <span class="o">%</span> <span class="n">sleep</span><span class="p">],</span>
+        <span class="n">close_fds</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">memories</span> <span class="o">=</span> <span class="n">memory_usage</span><span class="p">(</span><span class="n">proc</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+    <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span> <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="k">else</span> <span class="p">{}</span>
+    <span class="n">proc</span><span class="o">.</span><span class="n">communicate</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="c1"># On OSX sometimes the last entry can be None</span>
+    <span class="n">memories</span> <span class="o">=</span> <span class="p">[</span><span class="n">mem</span> <span class="k">for</span> <span class="n">mem</span> <span class="ow">in</span> <span class="n">memories</span> <span class="k">if</span> <span class="n">mem</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="mf">0.</span><span class="p">]</span>
+    <span class="n">memory_base</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">memories</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">memory_base</span>
 
 
 <div class="viewcode-block" id="execute_code_block"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.execute_code_block">[docs]</a><span class="k">def</span> <span class="nf">execute_code_block</span><span class="p">(</span><span class="n">compiler</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">example_globals</span><span class="p">,</span>
                        <span class="n">script_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Executes the code block of the example file&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Execute the code block of the example file.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">example_globals</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># testing shortcut</span>
         <span class="n">example_globals</span> <span class="o">=</span> <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;fake_main&#39;</span><span class="p">]</span><span class="o">.</span><span class="vm">__dict__</span>
     <span class="n">blabel</span><span class="p">,</span> <span class="n">bcontent</span><span class="p">,</span> <span class="n">lineno</span> <span class="o">=</span> <span class="n">block</span>
@@ -681,18 +687,18 @@
 
     <span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
     <span class="c1"># Redirect output to stdout and</span>
-    <span class="n">orig_stdout</span><span class="p">,</span> <span class="n">orig_stderr</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span>
+
     <span class="n">src_file</span> <span class="o">=</span> <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;src_file&#39;</span><span class="p">]</span>
+    <span class="n">logging_tee</span> <span class="o">=</span> <span class="n">_check_reset_logging_tee</span><span class="p">(</span><span class="n">src_file</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">logging_tee</span><span class="p">,</span> <span class="n">_LoggingTee</span><span class="p">)</span>
 
     <span class="c1"># First cd in the original example dir, so that any file</span>
     <span class="c1"># created by the example get created in this directory</span>
 
-    <span class="n">captured_std</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
     <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">src_file</span><span class="p">))</span>
 
     <span class="n">sys_path</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
     <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span>
-    <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span> <span class="o">=</span> <span class="n">LoggingTee</span><span class="p">(</span><span class="n">captured_std</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">src_file</span><span class="p">)</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">dont_inherit</span> <span class="o">=</span> <span class="mi">1</span>
@@ -710,35 +716,30 @@
             <span class="n">is_last_expr</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="n">last_val</span> <span class="o">=</span> <span class="n">code_ast</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span><span class="o">.</span><span class="n">value</span>
             <span class="c1"># exec body minus last expression</span>
-            <span class="n">_</span><span class="p">,</span> <span class="n">mem_body</span> <span class="o">=</span> <span class="n">_memory_usage</span><span class="p">(</span>
+            <span class="n">mem_body</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;call_memory&#39;</span><span class="p">](</span>
                 <span class="n">_exec_once</span><span class="p">(</span>
                     <span class="n">compiler</span><span class="p">(</span><span class="n">code_ast</span><span class="p">,</span> <span class="n">src_file</span><span class="p">,</span> <span class="s1">&#39;exec&#39;</span><span class="p">),</span>
-                    <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;fake_main&#39;</span><span class="p">]),</span>
-                <span class="n">gallery_conf</span><span class="p">)</span>
+                    <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;fake_main&#39;</span><span class="p">]))</span>
             <span class="c1"># exec last expression, made into assignment</span>
             <span class="n">body</span> <span class="o">=</span> <span class="p">[</span><span class="n">ast</span><span class="o">.</span><span class="n">Assign</span><span class="p">(</span>
                 <span class="n">targets</span><span class="o">=</span><span class="p">[</span><span class="n">ast</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;___&#39;</span><span class="p">,</span> <span class="n">ctx</span><span class="o">=</span><span class="n">ast</span><span class="o">.</span><span class="n">Store</span><span class="p">())],</span> <span class="n">value</span><span class="o">=</span><span class="n">last_val</span><span class="p">)]</span>
             <span class="n">last_val_ast</span> <span class="o">=</span> <span class="n">ast_Module</span><span class="p">(</span><span class="n">body</span><span class="o">=</span><span class="n">body</span><span class="p">)</span>
             <span class="n">ast</span><span class="o">.</span><span class="n">fix_missing_locations</span><span class="p">(</span><span class="n">last_val_ast</span><span class="p">)</span>
-            <span class="n">_</span><span class="p">,</span> <span class="n">mem_last</span> <span class="o">=</span> <span class="n">_memory_usage</span><span class="p">(</span>
+            <span class="n">mem_last</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;call_memory&#39;</span><span class="p">](</span>
                 <span class="n">_exec_once</span><span class="p">(</span>
                     <span class="n">compiler</span><span class="p">(</span><span class="n">last_val_ast</span><span class="p">,</span> <span class="n">src_file</span><span class="p">,</span> <span class="s1">&#39;exec&#39;</span><span class="p">),</span>
-                    <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;fake_main&#39;</span><span class="p">]),</span>
-                <span class="n">gallery_conf</span><span class="p">)</span>
+                    <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;fake_main&#39;</span><span class="p">]))</span>
             <span class="c1"># capture the assigned variable</span>
             <span class="n">___</span> <span class="o">=</span> <span class="n">example_globals</span><span class="p">[</span><span class="s1">&#39;___&#39;</span><span class="p">]</span>
             <span class="n">mem_max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">mem_body</span><span class="p">,</span> <span class="n">mem_last</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">_</span><span class="p">,</span> <span class="n">mem_max</span> <span class="o">=</span> <span class="n">_memory_usage</span><span class="p">(</span>
+            <span class="n">mem_max</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;call_memory&#39;</span><span class="p">](</span>
                 <span class="n">_exec_once</span><span class="p">(</span>
                     <span class="n">compiler</span><span class="p">(</span><span class="n">code_ast</span><span class="p">,</span> <span class="n">src_file</span><span class="p">,</span> <span class="s1">&#39;exec&#39;</span><span class="p">),</span>
-                    <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;fake_main&#39;</span><span class="p">]),</span>
-                <span class="n">gallery_conf</span><span class="p">)</span>
+                    <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;fake_main&#39;</span><span class="p">]))</span>
         <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;memory_delta&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mem_max</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span> <span class="o">=</span> <span class="n">orig_stdout</span><span class="p">,</span> <span class="n">orig_stderr</span>
+        <span class="n">logging_tee</span><span class="o">.</span><span class="n">restore_std</span><span class="p">()</span>
         <span class="n">except_rst</span> <span class="o">=</span> <span class="n">handle_exception</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">(),</span> <span class="n">src_file</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">,</span>
                                       <span class="n">gallery_conf</span><span class="p">)</span>
         <span class="n">code_output</span> <span class="o">=</span> <span class="sa">u</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{0}</span><span class="se">\n\n\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">except_rst</span><span class="p">)</span>
@@ -746,9 +747,7 @@
         <span class="c1"># figures are closed</span>
         <span class="n">save_figures</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">orig_stderr</span> <span class="o">=</span> <span class="n">orig_stdout</span><span class="p">,</span> <span class="n">orig_stderr</span>
+        <span class="n">logging_tee</span><span class="o">.</span><span class="n">restore_std</span><span class="p">()</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">sys_path</span>
         <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">cwd</span><span class="p">)</span>
 
@@ -775,7 +774,7 @@
                     <span class="k">else</span><span class="p">:</span>
                         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">last_repr</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
                             <span class="k">break</span>
-        <span class="n">captured_std</span> <span class="o">=</span> <span class="n">captured_std</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span><span class="o">.</span><span class="n">expandtabs</span><span class="p">()</span>
+        <span class="n">captured_std</span> <span class="o">=</span> <span class="n">logging_tee</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span><span class="o">.</span><span class="n">expandtabs</span><span class="p">()</span>
         <span class="c1"># normal string output</span>
         <span class="k">if</span> <span class="n">repr_meth</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;__repr__&#39;</span><span class="p">,</span> <span class="s1">&#39;__str__&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">last_repr</span><span class="p">:</span>
             <span class="n">captured_std</span> <span class="o">=</span> <span class="sa">u</span><span class="s2">&quot;</span><span class="si">{0}</span><span class="se">\n</span><span class="si">{1}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">captured_std</span><span class="p">,</span> <span class="n">last_repr</span><span class="p">)</span>
@@ -795,9 +794,20 @@
     <span class="k">finally</span><span class="p">:</span>
         <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">cwd</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">sys_path</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span> <span class="o">=</span> <span class="n">orig_stdout</span><span class="p">,</span> <span class="n">orig_stderr</span>
+        <span class="n">logging_tee</span><span class="o">.</span><span class="n">restore_std</span><span class="p">()</span>
 
     <span class="k">return</span> <span class="n">code_output</span></div>
+
+
+<span class="k">def</span> <span class="nf">_check_reset_logging_tee</span><span class="p">(</span><span class="n">src_file</span><span class="p">):</span>
+    <span class="c1"># Helper to deal with our tests not necessarily calling execute_script</span>
+    <span class="c1"># but rather execute_code_block directly</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">_LoggingTee</span><span class="p">):</span>
+        <span class="n">logging_tee</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logging_tee</span> <span class="o">=</span> <span class="n">_LoggingTee</span><span class="p">(</span><span class="n">src_file</span><span class="p">)</span>
+    <span class="n">logging_tee</span><span class="o">.</span><span class="n">set_std_and_reset_position</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">logging_tee</span>
 
 
 <div class="viewcode-block" id="executable_script"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.executable_script">[docs]</a><span class="k">def</span> <span class="nf">executable_script</span><span class="p">(</span><span class="n">src_file</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
@@ -873,7 +883,7 @@
         <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;src_file&#39;</span><span class="p">]</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">gc</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
-        <span class="n">_</span><span class="p">,</span> <span class="n">memory_start</span> <span class="o">=</span> <span class="n">_memory_usage</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
+        <span class="n">memory_start</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;call_memory&#39;</span><span class="p">](</span><span class="k">lambda</span><span class="p">:</span> <span class="kc">None</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">memory_start</span> <span class="o">=</span> <span class="mf">0.</span>
 
@@ -882,10 +892,12 @@
     <span class="c1"># include at least one entry to avoid max() ever failing</span>
     <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;memory_delta&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">memory_start</span><span class="p">]</span>
     <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;fake_main&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fake_main</span>
-    <span class="n">output_blocks</span> <span class="o">=</span> <span class="p">[</span><span class="n">execute_code_block</span><span class="p">(</span><span class="n">compiler</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span>
-                                        <span class="n">example_globals</span><span class="p">,</span>
-                                        <span class="n">script_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
-                     <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">script_blocks</span><span class="p">]</span>
+    <span class="n">output_blocks</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">_LoggingTee</span><span class="p">(</span><span class="n">script_vars</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;src_file&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span> <span class="k">as</span> <span class="n">logging_tee</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">script_blocks</span><span class="p">:</span>
+            <span class="n">logging_tee</span><span class="o">.</span><span class="n">set_std_and_reset_position</span><span class="p">()</span>
+            <span class="n">output_blocks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">execute_code_block</span><span class="p">(</span>
+                <span class="n">compiler</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">example_globals</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">))</span>
     <span class="n">time_elapsed</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t_start</span>
     <span class="n">sys</span><span class="o">.</span><span class="n">argv</span> <span class="o">=</span> <span class="n">argv_orig</span>
     <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;memory_delta&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;memory_delta&#39;</span><span class="p">])</span>
@@ -939,7 +951,7 @@
     <span class="k">if</span> <span class="n">md5sum_is_current</span><span class="p">(</span><span class="n">target_file</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">executable</span><span class="p">:</span>
             <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;stale_examples&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">target_file</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">intro</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">intro</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 
     <span class="n">image_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="s1">&#39;images&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">image_dir</span><span class="p">):</span>
@@ -1001,9 +1013,9 @@
                    <span class="k">if</span> <span class="n">cobj</span><span class="p">[</span><span class="s1">&#39;module&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;doc_module&#39;</span><span class="p">]))</span>
     <span class="c1"># Write backreferences</span>
     <span class="n">_write_backreferences</span><span class="p">(</span><span class="n">backrefs</span><span class="p">,</span> <span class="n">seen_backrefs</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span>
-                          <span class="n">fname</span><span class="p">,</span> <span class="n">intro</span><span class="p">)</span>
+                          <span class="n">fname</span><span class="p">,</span> <span class="n">intro</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">intro</span><span class="p">,</span> <span class="p">(</span><span class="n">time_elapsed</span><span class="p">,</span> <span class="n">memory_used</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">intro</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="p">(</span><span class="n">time_elapsed</span><span class="p">,</span> <span class="n">memory_used</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="rst_blocks"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.rst_blocks">[docs]</a><span class="k">def</span> <span class="nf">rst_blocks</span><span class="p">(</span><span class="n">script_blocks</span><span class="p">,</span> <span class="n">output_blocks</span><span class="p">,</span> <span class="n">file_conf</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
