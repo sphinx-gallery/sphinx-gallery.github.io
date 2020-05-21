@@ -286,14 +286,14 @@
 <span class="sd">        the images. This is often produced by :func:`figure_rst`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">matplotlib</span><span class="p">,</span> <span class="n">plt</span> <span class="o">=</span> <span class="n">_import_matplotlib</span><span class="p">()</span>
-    <span class="kn">from</span> <span class="nn">matplotlib.animation</span> <span class="kn">import</span> <span class="n">FuncAnimation</span>
+    <span class="kn">from</span> <span class="nn">matplotlib.animation</span> <span class="kn">import</span> <span class="n">Animation</span>
     <span class="n">image_path_iterator</span> <span class="o">=</span> <span class="n">block_vars</span><span class="p">[</span><span class="s1">&#39;image_path_iterator&#39;</span><span class="p">]</span>
     <span class="n">image_rsts</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="c1"># Check for animations</span>
     <span class="n">anims</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">gallery_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;matplotlib_animations&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">ani</span> <span class="ow">in</span> <span class="n">block_vars</span><span class="p">[</span><span class="s1">&#39;example_globals&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ani</span><span class="p">,</span> <span class="n">FuncAnimation</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ani</span><span class="p">,</span> <span class="n">Animation</span><span class="p">):</span>
                 <span class="n">anims</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ani</span><span class="p">)</span>
     <span class="c1"># Then standard images</span>
     <span class="k">for</span> <span class="n">fig_num</span><span class="p">,</span> <span class="n">image_path</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">get_fignums</span><span class="p">(),</span> <span class="n">image_path_iterator</span><span class="p">):</span>
