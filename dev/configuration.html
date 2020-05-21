@@ -138,6 +138,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#providing-a-figure-for-the-thumbnail-image">Providing a figure for the thumbnail image</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#generate-binder-links-for-gallery-notebooks-experimental">Generate Binder links for gallery notebooks (experimental)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#building-without-executing-examples">Building without executing examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#compressing-images">Compressing images</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#image-scrapers">Image scrapers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#resetting-modules">Resetting modules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#dealing-with-failing-gallery-example-scripts">Dealing with failing Gallery example scripts</a><ul>
@@ -245,6 +246,7 @@ file:</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">plot_gallery</span></code> (<a class="reference internal" href="#without-execution"><span class="std std-ref">Building without executing examples</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">image_scrapers</span></code> (and the deprecated <code class="docutils literal notranslate"><span class="pre">find_mayavi_figures</span></code>)
 (<a class="reference internal" href="#image-scrapers"><span class="std std-ref">Image scrapers</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">compress_images</span></code> (<a class="reference internal" href="#compress-images"><span class="std std-ref">Compressing images</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">reset_modules</span></code> (<a class="reference internal" href="#reset-modules"><span class="std std-ref">Resetting modules</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">abort_on_example_error</span></code> (<a class="reference internal" href="#abort-on-first"><span class="std std-ref">Abort build on first fail</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">expected_failing_examples</span></code> (<a class="reference internal" href="#dont-fail-exit"><span class="std std-ref">Don’t fail the build on exit</span></a>)</p></li>
@@ -498,7 +500,7 @@ typically implicitly returned rather than explicitly instantiated (e.g.,
 <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.2.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a> which is most often instantiated only indirectly
 within function calls).</p>
 <p>For example, we can embed a small gallery of all examples that use or
-refer to <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.exp.html#numpy.exp" title="(in NumPy v1.17)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.exp</span></code></a>, which looks like this:</p>
+refer to <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.exp.html#numpy.exp" title="(in NumPy v1.18)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.exp</span></code></a>, which looks like this:</p>
 <div class="section" id="examples-using-numpy-exp">
 <h3>Examples using <code class="docutils literal notranslate"><span class="pre">numpy.exp</span></code><a class="headerlink" href="#examples-using-numpy-exp" title="Permalink to this headline">¶</a></h3>
 <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how to import a local module and how images are stacked when two plot..."><div class="figure align-default" id="id6">
@@ -608,6 +610,20 @@ every module.
    sorting
    binder
    directives
+
+<span class="p">..</span> <span class="ow">currentmodule</span><span class="p">::</span> sphinx_gallery.utils
+
+<span class="p">..</span> <span class="ow">automodule</span><span class="p">::</span> sphinx_gallery.utils
+   <span class="nc">:no-members:</span>
+   <span class="nc">:no-inherited-members:</span>
+
+<span class="na">:py:mod:</span><span class="nv">`sphinx_gallery.utils`</span>:
+
+<span class="p">..</span> <span class="ow">autosummary</span><span class="p">::</span>
+   <span class="nc">:toctree:</span> gen_modules/
+   <span class="nc">:template:</span> module.rst
+
+   optipng
 </pre></div>
 </div>
 <p>The important directives are <code class="docutils literal notranslate"><span class="pre">currentmodule</span></code> where we specify which
@@ -1134,6 +1150,32 @@ a default:</p>
 </div>
 <p>The highest precedence is always given to the <cite>-D</cite> flag of the
 <code class="docutils literal notranslate"><span class="pre">sphinx-build</span></code> command.</p>
+</div>
+<div class="section" id="compressing-images">
+<span id="compress-images"></span><h2>Compressing images<a class="headerlink" href="#compressing-images" title="Permalink to this headline">¶</a></h2>
+<p>When writing PNG files (the default scraper format), sphinx-gallery can be
+configured to use <code class="docutils literal notranslate"><span class="pre">optipng</span></code> to optimize the PNG file sizes. Typically this
+yields roughly a 50% reduction in file sizes, thus reducing the loading time
+of galleries. However, it can increase build
+time. The allowed values are <code class="docutils literal notranslate"><span class="pre">'images'</span></code> and <code class="docutils literal notranslate"><span class="pre">'thumbnails'</span></code>, or a
+tuple/list (to optimize both), such as:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">...</span>
+    <span class="s1">&#39;compress_images&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;images&#39;</span><span class="p">,</span> <span class="s1">&#39;thumbnails&#39;</span><span class="p">),</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The default is <code class="docutils literal notranslate"><span class="pre">()</span></code> (no optimization) and a warning will be emitted if
+optimization is requested but <code class="docutils literal notranslate"><span class="pre">optipng</span></code> is not available. You can also pass
+additional command-line options (starting with <code class="docutils literal notranslate"><span class="pre">'-'</span></code>), for example to
+optimize less but speed up the build time you could do:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">...</span>
+    <span class="s1">&#39;compress_images&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;images&#39;</span><span class="p">,</span> <span class="s1">&#39;thumbnails&#39;</span><span class="p">,</span> <span class="s1">&#39;-o1&#39;</span><span class="p">),</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>See <code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">optipng</span> <span class="pre">--help</span></code> for a complete list of options.</p>
 </div>
 <div class="section" id="image-scrapers">
 <span id="id5"></span><h2>Image scrapers<a class="headerlink" href="#image-scrapers" title="Permalink to this headline">¶</a></h2>
