@@ -198,6 +198,7 @@
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">from</span> <span class="nn">textwrap</span> <span class="kn">import</span> <span class="n">indent</span>
+<span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">filterwarnings</span>
 
 <span class="kn">from</span> <span class="nn">sphinx.errors</span> <span class="kn">import</span> <span class="n">ExtensionError</span>
 <span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">scale_image</span><span class="p">,</span> <span class="n">optipng</span>
@@ -216,6 +217,10 @@
     <span class="kn">import</span> <span class="nn">matplotlib</span>
     <span class="n">matplotlib</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;agg&#39;</span><span class="p">)</span>
     <span class="n">matplotlib_backend</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">get_backend</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+    <span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">,</span>
+                   <span class="n">message</span><span class="o">=</span><span class="s1">&#39;Matplotlib is currently using agg, which is a&#39;</span>
+                           <span class="s1">&#39; non-GUI backend, so cannot show the figure.&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">matplotlib_backend</span> <span class="o">!=</span> <span class="s1">&#39;agg&#39;</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
