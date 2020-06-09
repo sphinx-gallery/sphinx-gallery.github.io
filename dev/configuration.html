@@ -25,7 +25,7 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -115,6 +115,7 @@
 <li class="toctree-l1"><a class="reference internal" href="syntax.html">How to structure your Python scripts for Sphinx-Gallery</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Configuration</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#list-of-config-options">List of config options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#removing-warnings">Removing warnings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#manage-multiple-galleries">Manage multiple galleries</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#parsing-and-executing-examples-via-matching-patterns">Parsing and executing examples via matching patterns</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#sorting-gallery-subsections">Sorting gallery subsections</a></li>
@@ -275,9 +276,12 @@ rendered examples.</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">.sphx-glr-thumbcontainer</span></code> (<a class="reference internal" href="#setting-thumbnail-size"><span class="std std-ref">Setting gallery thumbnail size</span></a>)</p></li>
 </ul>
-<p>You can also use the package <code class="docutils literal notranslate"><span class="pre">warnings</span></code> in the <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file to prevent
-warnings from being captured and included in your built documentation. For
-example, to remove the specific Matplotlib agg warning, you can add:</p>
+</div>
+<div class="section" id="removing-warnings">
+<span id="id2"></span><h2>Removing warnings<a class="headerlink" href="#removing-warnings" title="Permalink to this headline">¶</a></h2>
+<p>To prevent warnings from being captured and included in your built
+documentation, you can use the package <code class="docutils literal notranslate"><span class="pre">warnings</span></code> in the <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file.
+For example, to remove the specific Matplotlib agg warning, you can add:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
 
 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">,</span>
@@ -286,6 +290,7 @@ example, to remove the specific Matplotlib agg warning, you can add:</p>
 </pre></div>
 </div>
 <p>to your <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file.</p>
+<p>Note that the above Matplotlib warning is removed by default.</p>
 </div>
 <div class="section" id="manage-multiple-galleries">
 <span id="multiple-galleries-config"></span><h2>Manage multiple galleries<a class="headerlink" href="#manage-multiple-galleries" title="Permalink to this headline">¶</a></h2>
@@ -503,17 +508,17 @@ within function calls).</p>
 refer to <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.exp.html#numpy.exp" title="(in NumPy v1.18)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.exp</span></code></a>, which looks like this:</p>
 <div class="section" id="examples-using-numpy-exp">
 <h3>Examples using <code class="docutils literal notranslate"><span class="pre">numpy.exp</span></code><a class="headerlink" href="#examples-using-numpy-exp" title="Permalink to this headline">¶</a></h3>
-<div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how to import a local module and how images are stacked when two plot..."><div class="figure align-default" id="id6">
+<div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how to import a local module and how images are stacked when two plot..."><div class="figure align-default" id="id7">
 <img alt="Plotting the exponential function" src="_images/sphx_glr_plot_1_exp_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="auto_examples/plot_1_exp.html#sphx-glr-auto-examples-plot-1-exp-py"><span class="std std-ref">Plotting the exponential function</span></a></span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text"><a class="reference internal" href="auto_examples/plot_1_exp.html#sphx-glr-auto-examples-plot-1-exp-py"><span class="std std-ref">Plotting the exponential function</span></a></span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
 </div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how to choose the figure that is displayed as the thumbnail, if the e..."><div class="figure align-default" id="id7">
+</div><div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how to choose the figure that is displayed as the thumbnail, if the e..."><div class="figure align-default" id="id8">
 <img alt="Choosing the thumbnail figure" src="_images/sphx_glr_plot_4_choose_thumbnail_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="auto_examples/plot_4_choose_thumbnail.html#sphx-glr-auto-examples-plot-4-choose-thumbnail-py"><span class="std std-ref">Choosing the thumbnail figure</span></a></span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text"><a class="reference internal" href="auto_examples/plot_4_choose_thumbnail.html#sphx-glr-auto-examples-plot-4-choose-thumbnail-py"><span class="std std-ref">Choosing the thumbnail figure</span></a></span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
 </div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="This demonstrates how Sphinx-Gallery identifies function names to figure out which functions ar..."><div class="figure align-default" id="id8">
+</div><div class="sphx-glr-thumbcontainer" tooltip="This demonstrates how Sphinx-Gallery identifies function names to figure out which functions ar..."><div class="figure align-default" id="id9">
 <img alt="Identifying function names in a script" src="_images/sphx_glr_plot_6_function_identifier_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="auto_examples/plot_6_function_identifier.html#sphx-glr-auto-examples-plot-6-function-identifier-py"><span class="std std-ref">Identifying function names in a script</span></a></span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text"><a class="reference internal" href="auto_examples/plot_6_function_identifier.html#sphx-glr-auto-examples-plot-6-function-identifier-py"><span class="std std-ref">Identifying function names in a script</span></a></span><a class="headerlink" href="#id9" title="Permalink to this image">¶</a></p>
 </div>
 </div><div class="sphx-glr-clear"></div><p>For such behavior to be available, you have to activate it in
 your Sphinx-Gallery configuration <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file with:</p>
@@ -880,7 +885,7 @@ setting:</p>
 </div>
 </div>
 <div class="section" id="removing-config-comments">
-<span id="id4"></span><h2>Removing config comments<a class="headerlink" href="#removing-config-comments" title="Permalink to this headline">¶</a></h2>
+<span id="id5"></span><h2>Removing config comments<a class="headerlink" href="#removing-config-comments" title="Permalink to this headline">¶</a></h2>
 <p>Some configurations can be done on a file-by-file basis by adding a special
 comment with the pattern <code class="samp docutils literal notranslate"><span class="pre">#</span> <span class="pre">sphinx_gallery_</span><em><span class="pre">config</span></em> <span class="pre">=</span> <em><span class="pre">value</span></em></code> to the
 example source files. By default, the source files are parsed as is and thus
@@ -1178,7 +1183,7 @@ optimize less but speed up the build time you could do:</p>
 <p>See <code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">optipng</span> <span class="pre">--help</span></code> for a complete list of options.</p>
 </div>
 <div class="section" id="image-scrapers">
-<span id="id5"></span><h2>Image scrapers<a class="headerlink" href="#image-scrapers" title="Permalink to this headline">¶</a></h2>
+<span id="id6"></span><h2>Image scrapers<a class="headerlink" href="#image-scrapers" title="Permalink to this headline">¶</a></h2>
 <p>Image scrapers are plugins that allow Sphinx-gallery to detect images produced
 during execution of your examples, and then embed them into documentation.
 Scrapers can be activated by appending scraper names to the
