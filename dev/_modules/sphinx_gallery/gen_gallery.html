@@ -231,6 +231,7 @@
     <span class="s1">&#39;doc_module&#39;</span><span class="p">:</span> <span class="p">(),</span>
     <span class="s1">&#39;reference_url&#39;</span><span class="p">:</span> <span class="p">{},</span>
     <span class="s1">&#39;capture_repr&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;_repr_html_&#39;</span><span class="p">,</span> <span class="s1">&#39;__repr__&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;ignore_repr_types&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
     <span class="c1"># Build options</span>
     <span class="c1"># -------------</span>
     <span class="c1"># We use a string for &#39;plot_gallery&#39; rather than simply the Python boolean</span>
@@ -256,7 +257,6 @@
     <span class="s1">&#39;junit&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
     <span class="s1">&#39;log_level&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;backreference_missing&#39;</span><span class="p">:</span> <span class="s1">&#39;warning&#39;</span><span class="p">},</span>
     <span class="s1">&#39;inspect_global_variables&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="s1">&#39;ignore_repr_types&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
     <span class="s1">&#39;css&#39;</span><span class="p">:</span> <span class="n">_KNOWN_CSS</span><span class="p">,</span>
     <span class="s1">&#39;matplotlib_animations&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">}</span>
@@ -313,6 +313,22 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
             <span class="n">backreferences_warning</span><span class="p">,</span>
             <span class="nb">type</span><span class="o">=</span><span class="ne">DeprecationWarning</span><span class="p">)</span>
+
+    <span class="c1"># Check capture_repr</span>
+    <span class="n">capture_repr</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;capture_repr&#39;</span><span class="p">]</span>
+    <span class="n">supported_reprs</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;__repr__&#39;</span><span class="p">,</span> <span class="s1">&#39;__str__&#39;</span><span class="p">,</span> <span class="s1">&#39;_repr_html_&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">capture_repr</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">rep</span> <span class="ow">in</span> <span class="n">capture_repr</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">rep</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">supported_reprs</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s2">&quot;All entries in &#39;capture_repr&#39; must be one &quot;</span>
+                                  <span class="s2">&quot;of </span><span class="si">%s</span><span class="s2">, got: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">supported_reprs</span><span class="p">,</span> <span class="n">rep</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s2">&quot;&#39;capture_repr&#39; must be a tuple, got: </span><span class="si">%s</span><span class="s2">&quot;</span>
+                          <span class="o">%</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">capture_repr</span><span class="p">),))</span>
+    <span class="c1"># Check ignore_repr_types</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;ignore_repr_types&#39;</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s2">&quot;&#39;ignore_repr_types&#39; must be a string, got: </span><span class="si">%s</span><span class="s2">&quot;</span>
+                          <span class="o">%</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;ignore_repr_types&#39;</span><span class="p">]),))</span>
 
     <span class="c1"># deal with show_memory</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;memory_base&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
