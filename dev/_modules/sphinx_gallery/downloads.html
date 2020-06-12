@@ -278,7 +278,7 @@
             <span class="k">if</span> <span class="n">fname</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.py&#39;</span><span class="p">)]</span></div>
 
 
-<div class="viewcode-block" id="generate_zipfiles"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.downloads.html#sphinx_gallery.downloads.generate_zipfiles">[docs]</a><span class="k">def</span> <span class="nf">generate_zipfiles</span><span class="p">(</span><span class="n">gallery_dir</span><span class="p">):</span>
+<div class="viewcode-block" id="generate_zipfiles"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.downloads.html#sphinx_gallery.downloads.generate_zipfiles">[docs]</a><span class="k">def</span> <span class="nf">generate_zipfiles</span><span class="p">(</span><span class="n">gallery_dir</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Collects all Python source files and Jupyter notebooks in</span>
 <span class="sd">    gallery_dir and makes zipfiles of them</span>
@@ -287,6 +287,8 @@
 <span class="sd">    ----------</span>
 <span class="sd">    gallery_dir : str</span>
 <span class="sd">        path of the gallery to collect downloadable sources</span>
+<span class="sd">    src_dir : str</span>
+<span class="sd">        The build source directory. Needed to make the RST paths relative.</span>
 
 <span class="sd">    Return</span>
 <span class="sd">    ------</span>
@@ -304,6 +306,7 @@
     <span class="n">jy_zipfile</span> <span class="o">=</span> <span class="n">python_zip</span><span class="p">(</span><span class="n">listdir</span><span class="p">,</span> <span class="n">gallery_dir</span><span class="p">,</span> <span class="s2">&quot;.ipynb&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">rst_path</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
+        <span class="n">filepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">src_dir</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">filepath</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">)</span>
 
     <span class="n">dw_rst</span> <span class="o">=</span> <span class="n">CODE_ZIP_DOWNLOAD</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">py_zipfile</span><span class="p">),</span>
