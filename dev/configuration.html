@@ -132,6 +132,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#adding-line-numbers-to-examples">Adding line numbers to examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#removing-config-comments">Removing config comments</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#add-your-own-first-and-last-notebook-cell">Add your own first and last notebook cell</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-pypandoc-to-convert-rst-to-markdown">Using pypandoc to convert rST to markdown</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#using-junit-xml-files">Using JUnit XML files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#setting-log-level">Setting log level</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#disabling-download-button-of-all-scripts">Disabling download button of all scripts</a></li>
@@ -255,6 +256,7 @@ file:</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">show_memory</span></code> (<a class="reference internal" href="#show-memory"><span class="std std-ref">Showing memory consumption</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">binder</span></code> (<a class="reference internal" href="#binder-links"><span class="std std-ref">Generate Binder links for gallery notebooks (experimental)</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">first_notebook_cell</span></code> and <code class="docutils literal notranslate"><span class="pre">last_notebook_cell</span></code> (<a class="reference internal" href="#own-notebook-cell"><span class="std std-ref">Add your own first and last notebook cell</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pypandoc</span></code> (<a class="reference internal" href="#use-pypandoc"><span class="std std-ref">Using pypandoc to convert rST to markdown</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">junit</span></code> (<a class="reference internal" href="#junit-xml"><span class="std std-ref">Using JUnit XML files</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">log_level</span></code> (<a class="reference internal" href="#log-level"><span class="std std-ref">Setting log level</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">capture_repr</span></code> and <code class="docutils literal notranslate"><span class="pre">ignore_repr_types</span></code> (<a class="reference internal" href="#capture-repr"><span class="std std-ref">Controlling what output is captured</span></a>)</p></li>
@@ -948,6 +950,39 @@ parameter:</p>
 </div>
 <p>If the value of <code class="docutils literal notranslate"><span class="pre">first_notebook_cell</span></code> or <code class="docutils literal notranslate"><span class="pre">last_notebook_cell</span></code> is set to
 <code class="docutils literal notranslate"><span class="pre">None</span></code>, then no extra first or last cell will be added to the notebook.</p>
+</div>
+<div class="section" id="using-pypandoc-to-convert-rst-to-markdown">
+<span id="use-pypandoc"></span><h2>Using pypandoc to convert rST to markdown<a class="headerlink" href="#using-pypandoc-to-convert-rst-to-markdown" title="Permalink to this headline">¶</a></h2>
+<p>Sphinx-Gallery can use <a class="reference external" href="https://github.com/bebraw/pypandoc">pypandoc</a>
+(if installed) to convert rST text blocks to markdown for the iPython
+notebooks (<code class="docutils literal notranslate"><span class="pre">.ipynb</span></code> files) generated for each example. These are made
+available for download, along with the raw <code class="docutils literal notranslate"><span class="pre">.py</span></code> version, at the bottom
+of each example.</p>
+<p>The Sphinx-Gallery rST to markdown converter has limited support for more
+complex rST syntax. If your examples have more complex rST, <code class="docutils literal notranslate"><span class="pre">pypandoc</span></code> may
+produce better results. By default, the ‘pypandoc’ configuration is set to
+<code class="docutils literal notranslate"><span class="pre">False</span></code> and <code class="docutils literal notranslate"><span class="pre">pypandoc</span></code> is not used.</p>
+<p>To use <code class="docutils literal notranslate"><span class="pre">pypandoc</span></code> you can set:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">...</span>
+    <span class="s1">&#39;pypandoc&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>You can also use pandoc options by setting the <code class="docutils literal notranslate"><span class="pre">pypandoc.convert_text()</span></code>
+parameters <code class="docutils literal notranslate"><span class="pre">extra_args</span></code> and <code class="docutils literal notranslate"><span class="pre">filters</span></code>. To use these parameters, set the
+‘pypandoc’ configuration to be a dictionary of keyword argument(s):</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">...</span>
+    <span class="s1">&#39;pypandoc&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;extra_args&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;--mathjax&#39;</span><span class="p">,],</span>
+                 <span class="s1">&#39;filters&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;pandoc-citeproc&#39;</span><span class="p">,],</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Certain pandoc options may result in undesirable effects. Use with caution.</p>
+</div>
 </div>
 <div class="section" id="using-junit-xml-files">
 <span id="junit-xml"></span><h2>Using JUnit XML files<a class="headerlink" href="#using-junit-xml-files" title="Permalink to this headline">¶</a></h2>

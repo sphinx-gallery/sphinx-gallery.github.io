@@ -206,7 +206,7 @@
 <span class="kn">from</span> <span class="nn">sphinx.errors</span> <span class="kn">import</span> <span class="n">ConfigError</span><span class="p">,</span> <span class="n">ExtensionError</span>
 <span class="kn">from</span> <span class="nn">sphinx.util.console</span> <span class="kn">import</span> <span class="n">red</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">sphinx_compatibility</span><span class="p">,</span> <span class="n">glr_path_static</span><span class="p">,</span> <span class="n">__version__</span> <span class="k">as</span> <span class="n">_sg_version</span>
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">_replace_md5</span><span class="p">,</span> <span class="n">_has_optipng</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">_replace_md5</span><span class="p">,</span> <span class="n">_has_optipng</span><span class="p">,</span> <span class="n">_has_pypandoc</span>
 <span class="kn">from</span> <span class="nn">.backreferences</span> <span class="kn">import</span> <span class="n">_finalize_backreferences</span>
 <span class="kn">from</span> <span class="nn">.gen_rst</span> <span class="kn">import</span> <span class="p">(</span><span class="n">generate_dir_rst</span><span class="p">,</span> <span class="n">SPHX_GLR_SIG</span><span class="p">,</span> <span class="n">_get_memory_base</span><span class="p">,</span>
                       <span class="n">_get_readme</span><span class="p">)</span>
@@ -252,6 +252,7 @@
     <span class="s1">&#39;reset_modules&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;matplotlib&#39;</span><span class="p">,</span> <span class="s1">&#39;seaborn&#39;</span><span class="p">),</span>
     <span class="s1">&#39;first_notebook_cell&#39;</span><span class="p">:</span> <span class="s1">&#39;%matplotlib inline&#39;</span><span class="p">,</span>
     <span class="s1">&#39;last_notebook_cell&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="s1">&#39;pypandoc&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
     <span class="s1">&#39;remove_config_comments&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
     <span class="s1">&#39;show_memory&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
     <span class="s1">&#39;junit&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
@@ -453,6 +454,28 @@
     <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">last_cell</span><span class="p">,</span> <span class="nb">str</span><span class="p">))</span> <span class="ow">and</span> <span class="p">(</span><span class="n">last_cell</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s2">&quot;The &#39;last_notebook_cell&#39; parameter must be type str&quot;</span>
                           <span class="s2">&quot; or None, found type </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">last_cell</span><span class="p">))</span>
+    <span class="c1"># Check pypandoc</span>
+    <span class="n">pypandoc</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;pypandoc&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pypandoc</span><span class="p">,</span> <span class="p">(</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s2">&quot;&#39;pypandoc&#39; parameter must be of type bool or dict,&quot;</span>
+                          <span class="s2">&quot;got: </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">pypandoc</span><span class="p">))</span>
+    <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;pypandoc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span> <span class="k">if</span> <span class="n">pypandoc</span> <span class="ow">is</span> <span class="kc">True</span> <span class="k">else</span> <span class="n">pypandoc</span>
+    <span class="n">has_pypandoc</span><span class="p">,</span> <span class="n">version</span> <span class="o">=</span> <span class="n">_has_pypandoc</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;pypandoc&#39;</span><span class="p">],</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="n">has_pypandoc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;&#39;pypandoc&#39; not available. Using Sphinx-Gallery to &quot;</span>
+                       <span class="s2">&quot;convert rst text blocks to markdown for .ipynb files.&quot;</span><span class="p">)</span>
+        <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;pypandoc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Using pandoc version: </span><span class="si">%s</span><span class="s2"> to convert rst text blocks to &quot;</span>
+                    <span class="s2">&quot;markdown for .ipynb files&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">version</span><span class="p">,))</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pypandoc</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">accepted_keys</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;extra_args&#39;</span><span class="p">,</span> <span class="s1">&#39;filters&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">pypandoc</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">accepted_keys</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s2">&quot;&#39;pypandoc&#39; only accepts the following key &quot;</span>
+                                  <span class="s2">&quot;values: </span><span class="si">%s</span><span class="s2">, got: </span><span class="si">%s</span><span class="s2">.&quot;</span>
+                                  <span class="o">%</span> <span class="p">(</span><span class="n">accepted_keys</span><span class="p">,</span> <span class="n">key</span><span class="p">))</span>
+
     <span class="c1"># Make it easy to know which builder we&#39;re in</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;builder_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">builder_name</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;titles&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
