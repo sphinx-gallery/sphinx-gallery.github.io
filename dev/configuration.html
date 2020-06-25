@@ -1379,10 +1379,12 @@ the example runs without error.</p>
 </div>
 <div class="section" id="setting-gallery-thumbnail-size">
 <span id="setting-thumbnail-size"></span><h2>Setting gallery thumbnail size<a class="headerlink" href="#setting-gallery-thumbnail-size" title="Permalink to this headline">¶</a></h2>
-<p>By default Sphinx-gallery will generate thumbnails at size <code class="docutils literal notranslate"><span class="pre">(400,</span> <span class="pre">280)</span></code>,
-and add pillarboxes or letterboxes as necessary to scale the image while
-maintaining the original aspect ratio. This size can be controlled with the
-<code class="docutils literal notranslate"><span class="pre">thumbnail_size</span></code> entry as, e.g.:</p>
+<p>By default Sphinx-gallery will generate thumbnails at size <code class="docutils literal notranslate"><span class="pre">(400,</span> <span class="pre">280)</span></code>.
+The thumbnail image will then be scaled to the size specified by
+<code class="docutils literal notranslate"><span class="pre">'thumbnail_size</span></code>, adding pillarboxes or letterboxes as necessary to
+maintain the original aspect ratio. The default <code class="docutils literal notranslate"><span class="pre">thumbnail_size</span></code> is
+<code class="docutils literal notranslate"><span class="pre">(400,</span> <span class="pre">280)</span></code> (no scaling) and can be changed via the <code class="docutils literal notranslate"><span class="pre">thumbnail_size</span></code>
+configuration, e.g.:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
     <span class="s1">&#39;thumbnail_size&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">250</span><span class="p">,</span> <span class="mi">250</span><span class="p">),</span>
@@ -1390,9 +1392,9 @@ maintaining the original aspect ratio. This size can be controlled with the
 </pre></div>
 </div>
 <p>The gallery uses various CSS classes to display these thumbnails, which
-default to maximum 160x160px. To change this, e.g. to display the images
+default to maximum 160x112px. To change this, e.g. to display the images
 at 250x250px, you can modify the default CSS with something like the following
-in your own site’s CSS file:</p>
+in your <code class="docutils literal notranslate"><span class="pre">gallery.css`</span></code> file:</p>
 <div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="p">.</span><span class="nc">sphx-glr-thumbcontainer</span> <span class="p">{</span>
     <span class="k">min-height</span><span class="p">:</span> <span class="mi">320</span><span class="kt">px</span> <span class="cp">!important</span><span class="p">;</span>
     <span class="k">margin</span><span class="p">:</span> <span class="mi">20</span><span class="kt">px</span> <span class="cp">!important</span><span class="p">;</span>
@@ -1408,6 +1410,13 @@ in your own site’s CSS file:</p>
     <span class="k">padding</span><span class="p">:</span> <span class="mi">270</span><span class="kt">px</span> <span class="mi">10</span><span class="kt">px</span> <span class="mi">0</span> <span class="cp">!important</span><span class="p">;</span>
 <span class="p">}</span>
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The default value of <code class="docutils literal notranslate"><span class="pre">thumbnail_size</span></code> will change from
+<code class="docutils literal notranslate"><span class="pre">(400,</span> <span class="pre">280)</span></code> (2.5x maximum specified by CSS) to <code class="docutils literal notranslate"><span class="pre">(320,</span> <span class="pre">224)</span></code>
+(2x maximum specified by CSS) in version 0.9.0. This is to
+prevent unnecessary over-sampling.</p>
 </div>
 </div>
 <div class="section" id="minimal-reported-time">
