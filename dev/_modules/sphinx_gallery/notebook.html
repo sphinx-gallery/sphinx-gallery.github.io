@@ -196,7 +196,9 @@
 <span class="c1"># License: 3-clause BSD</span>
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span><span class="p">,</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">count</span>
 <span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">re</span>
@@ -248,12 +250,40 @@
                     <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()))</span></div>
 
 
-<div class="viewcode-block" id="rst2md"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.notebook.html#sphinx_gallery.notebook.rst2md">[docs]</a><span class="k">def</span> <span class="nf">rst2md</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Converts the RST text from the examples docstrigs and comments</span>
-<span class="sd">    into markdown text for the Jupyter notebooks&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="rst2md"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.notebook.html#sphinx_gallery.notebook.rst2md">[docs]</a><span class="k">def</span> <span class="nf">rst2md</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">heading_levels</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Converts the RST text from the examples docstrings and comments</span>
+<span class="sd">    into markdown text for the Jupyter notebooks</span>
 
-    <span class="n">top_heading</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^=+$\s^([\w\s-]+)^=+$&#39;</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">M</span><span class="p">)</span>
-    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">top_heading</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;# \1&#39;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    text: str</span>
+<span class="sd">        RST input to be converted to MD</span>
+<span class="sd">    heading_levels: dict</span>
+<span class="sd">        Mapping of heading style ``(over_char, under_char)`` to heading level.</span>
+<span class="sd">        Note that ``over_char`` is `None` when only underline is present.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Characters recommended for use with headings</span>
+    <span class="c1"># https://docutils.readthedocs.io/en/sphinx-docs/user/rst/quickstart.html#sections</span>
+    <span class="n">adornment_characters</span> <span class="o">=</span> <span class="s2">&quot;=`:.&#39;</span><span class="se">\&quot;</span><span class="s2">~^_*+#&lt;&gt;-&quot;</span>
+    <span class="n">headings</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+        <span class="c1"># Start of string or blank line</span>
+        <span class="sa">r</span><span class="s1">&#39;(?P&lt;pre&gt;\A|^[ \t]*\n)&#39;</span>
+        <span class="c1"># Optional over characters, allowing leading space on heading text</span>
+        <span class="sa">r</span><span class="s1">&#39;(?:(?P&lt;over&gt;[</span><span class="si">{0}</span><span class="s1">])(?P=over)*\n[ \t]*)?&#39;</span>
+        <span class="c1"># The heading itself, with at least one non-white space character</span>
+        <span class="sa">r</span><span class="s1">&#39;(?P&lt;heading&gt;\S[^\n]*)\n&#39;</span>
+        <span class="c1"># Under character, setting to same character if over present.</span>
+        <span class="sa">r</span><span class="s1">&#39;(?P&lt;under&gt;(?(over)(?P=over)|[</span><span class="si">{0}</span><span class="s1">]))(?P=under)*$&#39;</span>
+        <span class="sa">r</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">adornment_characters</span><span class="p">),</span>
+        <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">M</span><span class="p">)</span>
+
+    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span>
+        <span class="n">headings</span><span class="p">,</span>
+        <span class="k">lambda</span> <span class="n">match</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{1}{0}</span><span class="s1"> </span><span class="si">{2}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="s1">&#39;#&#39;</span><span class="o">*</span><span class="n">heading_levels</span><span class="p">[</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s1">&#39;over&#39;</span><span class="p">,</span> <span class="s1">&#39;under&#39;</span><span class="p">)],</span>
+            <span class="o">*</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s1">&#39;pre&#39;</span><span class="p">,</span> <span class="s1">&#39;heading&#39;</span><span class="p">)),</span>
+        <span class="n">text</span><span class="p">)</span>
 
     <span class="n">math_eq</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^\.\. math::((?:.+)?(?:\n+^  .+)*)&#39;</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">M</span><span class="p">)</span>
     <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">math_eq</span><span class="p">,</span>
@@ -357,12 +387,14 @@
 <span class="sd">    script_blocks : list</span>
 <span class="sd">        Each list element should be a tuple of (label, content, lineno).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">heading_level_counter</span> <span class="o">=</span> <span class="n">count</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">heading_levels</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="nb">next</span><span class="p">(</span><span class="n">heading_level_counter</span><span class="p">))</span>
     <span class="k">for</span> <span class="n">blabel</span><span class="p">,</span> <span class="n">bcontent</span><span class="p">,</span> <span class="n">lineno</span> <span class="ow">in</span> <span class="n">script_blocks</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">blabel</span> <span class="o">==</span> <span class="s1">&#39;code&#39;</span><span class="p">:</span>
             <span class="n">add_code_cell</span><span class="p">(</span><span class="n">work_notebook</span><span class="p">,</span> <span class="n">bcontent</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;pypandoc&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
-                <span class="n">markdown</span> <span class="o">=</span> <span class="n">rst2md</span><span class="p">(</span><span class="n">bcontent</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">markdown</span> <span class="o">=</span> <span class="n">rst2md</span><span class="p">(</span><span class="n">bcontent</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">heading_levels</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="kn">import</span> <span class="nn">pypandoc</span>
                 <span class="c1"># pandoc automatically addds \n to the end</span>
