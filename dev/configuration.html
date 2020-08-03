@@ -120,6 +120,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#removing-warnings">Removing warnings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#manage-multiple-galleries">Manage multiple galleries</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#parsing-and-executing-examples-via-matching-patterns">Parsing and executing examples via matching patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#passing-command-line-arguments-to-example-scripts">Passing command line arguments to example scripts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#sorting-gallery-subsections">Sorting gallery subsections</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#sorting-gallery-examples">Sorting gallery examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#add-intersphinx-links-to-your-examples">Add intersphinx links to your examples</a></li>
@@ -240,6 +241,7 @@ file:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">examples_dirs</span></code> and <code class="docutils literal notranslate"><span class="pre">gallery_dirs</span></code> (<a class="reference internal" href="#multiple-galleries-config"><span class="std std-ref">Manage multiple galleries</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">filename_pattern</span></code> and <code class="docutils literal notranslate"><span class="pre">ignore_pattern</span></code> (<a class="reference internal" href="#build-pattern"><span class="std std-ref">Parsing and executing examples via matching patterns</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">reset_argv</span></code> (<a class="reference internal" href="#reset-argv"><span class="std std-ref">Passing command line arguments to example scripts</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">subsection_order</span></code> (<a class="reference internal" href="#sub-gallery-order"><span class="std std-ref">Sorting gallery subsections</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">within_subsection_order</span></code> (<a class="reference internal" href="#within-gallery-order"><span class="std std-ref">Sorting gallery examples</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">reference_url</span></code> (<a class="reference internal" href="#link-to-documentation"><span class="std std-ref">Add intersphinx links to your examples</span></a>)</p></li>
@@ -394,6 +396,40 @@ line, so you can for example build a single example directly via something like:
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> sphinx-build -D sphinx_gallery_conf.filename_pattern<span class="o">=</span>plot_specific_example<span class="se">\.</span>py ...
 </pre></div>
 </div>
+</div>
+</div>
+<div class="section" id="passing-command-line-arguments-to-example-scripts">
+<span id="reset-argv"></span><h2>Passing command line arguments to example scripts<a class="headerlink" href="#passing-command-line-arguments-to-example-scripts" title="Permalink to this headline">¶</a></h2>
+<p>By default, Sphinx-Gallery will not pass any command line arguments to example
+scripts.  By setting the <code class="docutils literal notranslate"><span class="pre">reset_argv</span></code> option, it is possible to change this
+behavior and pass command line arguments to example scripts.  <code class="docutils literal notranslate"><span class="pre">reset_argv</span></code>
+needs to be a Callable that accepts the <code class="docutils literal notranslate"><span class="pre">gallery_conf</span></code> and <code class="docutils literal notranslate"><span class="pre">script_vars</span></code>
+dictionaries as input and returns a list of strings that are passed as
+additional command line arguments to the interpreter.</p>
+<p>An example could be:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ResetArgv</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;ResetArgv&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sphinx_gallery_conf</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;src_file&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;example1.py&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="s1">&#39;-a&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;src_file&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;example2.py&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="s1">&#39;-a&#39;</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>which is included in the configuration dictionary as:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">...</span>
+    <span class="s1">&#39;reset_argv&#39;</span><span class="p">:</span> <span class="n">ResetArgv</span><span class="p">(),</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>which is then used by Sphinx-Gallery as:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;src_file&#39;</span><span class="p">]</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;reset_argv&#39;</span><span class="p">](</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">)</span>
+</pre></div>
 </div>
 </div>
 <div class="section" id="sorting-gallery-subsections">
