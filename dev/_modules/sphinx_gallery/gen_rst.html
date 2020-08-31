@@ -598,7 +598,8 @@
             <span class="n">start</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">ii</span><span class="p">,</span> <span class="n">start</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">s</span><span class="o">.</span><span class="n">filename</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">root</span> <span class="o">+</span> <span class="s1">&#39;gen_rst.py&#39;</span><span class="p">):</span>
             <span class="c1"># SyntaxError</span>
-            <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;execute_code_block&#39;</span> <span class="ow">and</span> <span class="s1">&#39;compile(&#39;</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">line</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;execute_code_block&#39;</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;compile(&#39;</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">line</span> <span class="ow">or</span>
+                                                   <span class="s1">&#39;save_figures&#39;</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">line</span><span class="p">):</span>
                 <span class="n">start</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">ii</span><span class="p">,</span> <span class="n">start</span><span class="p">)</span>
             <span class="c1"># Any other error</span>
             <span class="k">elif</span> <span class="n">s</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;__call__&#39;</span><span class="p">:</span>
@@ -731,7 +732,7 @@
 
     <span class="n">sys_path</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
     <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span>
-
+    <span class="n">need_save_figures</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">dont_inherit</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">):</span>
@@ -770,6 +771,10 @@
                     <span class="n">compiler</span><span class="p">(</span><span class="n">code_ast</span><span class="p">,</span> <span class="n">src_file</span><span class="p">,</span> <span class="s1">&#39;exec&#39;</span><span class="p">),</span>
                     <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;fake_main&#39;</span><span class="p">]))</span>
         <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;memory_delta&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mem_max</span><span class="p">)</span>
+        <span class="c1"># This should be inside the try block, e.g., in case of a savefig error</span>
+        <span class="n">logging_tee</span><span class="o">.</span><span class="n">restore_std</span><span class="p">()</span>
+        <span class="n">need_save_figures</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">images_rst</span> <span class="o">=</span> <span class="n">save_figures</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
         <span class="n">logging_tee</span><span class="o">.</span><span class="n">restore_std</span><span class="p">()</span>
         <span class="n">except_rst</span> <span class="o">=</span> <span class="n">handle_exception</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">(),</span> <span class="n">src_file</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">,</span>
@@ -777,9 +782,9 @@
         <span class="n">code_output</span> <span class="o">=</span> <span class="sa">u</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{0}</span><span class="se">\n\n\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">except_rst</span><span class="p">)</span>
         <span class="c1"># still call this even though we won&#39;t use the images so that</span>
         <span class="c1"># figures are closed</span>
-        <span class="n">save_figures</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">need_save_figures</span><span class="p">:</span>
+            <span class="n">save_figures</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">logging_tee</span><span class="o">.</span><span class="n">restore_std</span><span class="p">()</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">sys_path</span>
         <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">cwd</span><span class="p">)</span>
 
@@ -814,7 +819,6 @@
             <span class="n">captured_std</span> <span class="o">=</span> <span class="n">CODE_OUTPUT</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">indent</span><span class="p">(</span><span class="n">captured_std</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39; &#39;</span> <span class="o">*</span> <span class="mi">4</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">captured_std</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-        <span class="n">images_rst</span> <span class="o">=</span> <span class="n">save_figures</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
         <span class="c1"># give html output its own header</span>
         <span class="k">if</span> <span class="n">repr_meth</span> <span class="o">==</span> <span class="s1">&#39;_repr_html_&#39;</span><span class="p">:</span>
             <span class="n">captured_html</span> <span class="o">=</span> <span class="n">html_header</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">indent</span><span class="p">(</span><span class="n">last_repr</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39; &#39;</span> <span class="o">*</span> <span class="mi">4</span><span class="p">))</span>
