@@ -214,21 +214,22 @@ their source directory.</p>
 </div>
 <div class="section" id="why-am-i-getting-text-output-for-matplotlib-functions">
 <h2><a class="toc-backref" href="#id2">Why am I getting text output for Matplotlib functions?</a><a class="headerlink" href="#why-am-i-getting-text-output-for-matplotlib-functions" title="Permalink to this headline">¶</a></h2>
-<p>The output capturing behaviour of Sphinx-Gallery changed with Sphinx-Gallery
-v0.5.0. Previous to this, only data directed to standard output (e.g., only
+<p>The output capturing behavior of Sphinx-Gallery changed with Sphinx-Gallery
+v0.5.0. Previous to v0.5.0, only data directed to standard output (e.g., only
 Matplotlib figures) was captured. In, v0.5.0, the configuration
 <code class="docutils literal notranslate"><span class="pre">'capture_repr'</span></code> (<a class="reference internal" href="configuration.html#capture-repr"><span class="std std-ref">Controlling what output is captured</span></a>) was added. This configuration allows a
 ‘representation’ of the last statement of each code block, if it is an
-expression, to be captured. The default setting,
+expression, to be captured. The default setting of this new configuration,
 <code class="docutils literal notranslate"><span class="pre">'capture_repr':</span> <span class="pre">('_repr_html_',</span> <span class="pre">'__repr__')</span></code>, first attempts to capture the
 <code class="docutils literal notranslate"><span class="pre">'_repr_html_'</span></code> and if this does not exist, the <code class="docutils literal notranslate"><span class="pre">'__repr__'</span></code>. This means
 that if the last statement was a Matplotlib function, which usually returns a
 value, the representation of that value will be captured as well.</p>
 <p>To prevent Matplotlib function calls from outputting text as well as the figure,
-you can assign the last plotting function to a temporary variable or add
-<code class="docutils literal notranslate"><span class="pre">matplotlib.show()</span></code> to the end of your code block (see <a class="reference internal" href="configuration.html#capture-repr"><span class="std std-ref">Controlling what output is captured</span></a>).
+you can assign the last plotting function to a temporary variable (e.g.
+<code class="docutils literal notranslate"><span class="pre">_</span> <span class="pre">=</span> <span class="pre">matplotlib.pyploy.plot()</span></code>) or add <code class="docutils literal notranslate"><span class="pre">matplotlib.pyplot.show()</span></code> to the
+end of your code block (see <a class="reference internal" href="configuration.html#capture-repr"><span class="std std-ref">Controlling what output is captured</span></a>).
 Alternatively, you can set <code class="docutils literal notranslate"><span class="pre">capture_repr</span></code> to be an empty tuple
-(<code class="docutils literal notranslate"><span class="pre">'capture_repr':</span> <span class="pre">()</span></code>), which will imitate the behaviour of Sphinx-Gallery
+(<code class="docutils literal notranslate"><span class="pre">'capture_repr':</span> <span class="pre">()</span></code>), which will imitate the behavior of Sphinx-Gallery
 prior to v0.5.0. This will also prevent you from getting any other unwanted
 output that did not occur prior to v0.5.0.</p>
 </div>
