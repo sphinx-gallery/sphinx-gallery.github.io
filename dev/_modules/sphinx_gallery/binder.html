@@ -208,6 +208,7 @@
 
 <span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">replace_py_ipynb</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">sphinx_compatibility</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">glr_path_static</span>
 
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">sphinx_compatibility</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;sphinx-gallery&#39;</span><span class="p">)</span>
@@ -267,6 +268,7 @@
 <span class="sd">    ----------</span>
 <span class="sd">    fpath: str</span>
 <span class="sd">        The path to the `.py` file for which a Binder badge will be generated.</span>
+
 <span class="sd">    binder_conf: dict or None</span>
 <span class="sd">        If a dictionary it must have the following keys:</span>
 
@@ -281,6 +283,9 @@
 <span class="sd">        &#39;dependencies&#39;</span>
 <span class="sd">            A list of paths to dependency files that match the Binderspec.</span>
 
+<span class="sd">    gallery_conf : dict</span>
+<span class="sd">        Sphinx-Gallery configuration dictionary.</span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    rst : str</span>
@@ -289,12 +294,15 @@
     <span class="n">binder_conf</span> <span class="o">=</span> <span class="n">check_binder_conf</span><span class="p">(</span><span class="n">binder_conf</span><span class="p">)</span>
     <span class="n">binder_url</span> <span class="o">=</span> <span class="n">gen_binder_url</span><span class="p">(</span><span class="n">fpath</span><span class="p">,</span> <span class="n">binder_conf</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
 
+    <span class="n">binder_logo</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">glr_path_static</span><span class="p">(),</span> <span class="s1">&#39;binder_badge_logo.svg&#39;</span><span class="p">)</span>
+    <span class="n">binder_logo_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">binder_logo</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">])</span>
+
     <span class="n">rst</span> <span class="o">=</span> <span class="p">(</span>
         <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="s2">&quot;  .. container:: binder-badge</span><span class="se">\n\n</span><span class="s2">&quot;</span>
-        <span class="s2">&quot;    .. image:: https://mybinder.org/badge_logo.svg</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="s2">&quot;    .. image:: /</span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="s2">&quot;      :target: </span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span>
-        <span class="s2">&quot;      :width: 150 px</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">binder_url</span><span class="p">)</span>
+        <span class="s2">&quot;      :width: 150 px</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">binder_logo_path</span><span class="p">,</span> <span class="n">binder_url</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">rst</span></div>
 
 
