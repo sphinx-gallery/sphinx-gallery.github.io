@@ -1,35 +1,14 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>sphinx_gallery.notebook &mdash; Sphinx-Gallery 0.7.0-git documentation</title>
+  <title>sphinx_gallery.notebook &mdash; Sphinx-Gallery 0.8.0-git documentation</title>
   
-
-  
-  
-  
-  
-
-  
-  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
-    
 
   
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
@@ -38,6 +17,28 @@
   <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/gallery-binder.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/gallery-dataframe.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
 </head>
@@ -53,7 +54,7 @@
           
 
           
-            <a href="../../index.html" class="icon icon-home"> Sphinx-Gallery
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> Sphinx-Gallery
           
 
           
@@ -63,7 +64,7 @@
             
             
               <div class="version">
-                0.7.0
+                0.8.0
               </div>
             
           
@@ -80,6 +81,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
 
@@ -138,6 +140,7 @@
 
   
         </div>
+        
       </div>
     </nav>
 
@@ -193,15 +196,25 @@
 <span class="c1"># License: 3-clause BSD</span>
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span><span class="p">,</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">count</span>
 <span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">base64</span>
 <span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">mimetypes</span>
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">copy</span>
 
+<span class="kn">from</span> <span class="nn">sphinx.errors</span> <span class="kn">import</span> <span class="n">ExtensionError</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">sphinx_compatibility</span>
 <span class="kn">from</span> <span class="nn">.py_source_parser</span> <span class="kn">import</span> <span class="n">split_code_and_text_blocks</span>
 <span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">replace_py_ipynb</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">sphinx_compatibility</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;sphinx-gallery&#39;</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="jupyter_notebook_skeleton"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.notebook.html#sphinx_gallery.notebook.jupyter_notebook_skeleton">[docs]</a><span class="k">def</span> <span class="nf">jupyter_notebook_skeleton</span><span class="p">():</span>
@@ -242,12 +255,45 @@
                     <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()))</span></div>
 
 
-<div class="viewcode-block" id="rst2md"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.notebook.html#sphinx_gallery.notebook.rst2md">[docs]</a><span class="k">def</span> <span class="nf">rst2md</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Converts the RST text from the examples docstrigs and comments</span>
-<span class="sd">    into markdown text for the Jupyter notebooks&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="rst2md"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.notebook.html#sphinx_gallery.notebook.rst2md">[docs]</a><span class="k">def</span> <span class="nf">rst2md</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">heading_levels</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Converts the RST text from the examples docstrings and comments</span>
+<span class="sd">    into markdown text for the Jupyter notebooks</span>
 
-    <span class="n">top_heading</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^=+$\s^([\w\s-]+)^=+$&#39;</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">M</span><span class="p">)</span>
-    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">top_heading</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;# \1&#39;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    text: str</span>
+<span class="sd">        RST input to be converted to MD</span>
+<span class="sd">    gallery_conf : dict</span>
+<span class="sd">        The sphinx-gallery configuration dictionary.</span>
+<span class="sd">    target_dir : str</span>
+<span class="sd">        Path that notebook is intended for. Used where relative paths</span>
+<span class="sd">        may be required.</span>
+<span class="sd">    heading_levels: dict</span>
+<span class="sd">        Mapping of heading style ``(over_char, under_char)`` to heading level.</span>
+<span class="sd">        Note that ``over_char`` is `None` when only underline is present.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Characters recommended for use with headings</span>
+    <span class="c1"># https://docutils.readthedocs.io/en/sphinx-docs/user/rst/quickstart.html#sections</span>
+    <span class="n">adornment_characters</span> <span class="o">=</span> <span class="s2">&quot;=`:.&#39;</span><span class="se">\&quot;</span><span class="s2">~^_*+#&lt;&gt;-&quot;</span>
+    <span class="n">headings</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+        <span class="c1"># Start of string or blank line</span>
+        <span class="sa">r</span><span class="s1">&#39;(?P&lt;pre&gt;\A|^[ \t]*\n)&#39;</span>
+        <span class="c1"># Optional over characters, allowing leading space on heading text</span>
+        <span class="sa">r</span><span class="s1">&#39;(?:(?P&lt;over&gt;[</span><span class="si">{0}</span><span class="s1">])(?P=over)*\n[ \t]*)?&#39;</span>
+        <span class="c1"># The heading itself, with at least one non-white space character</span>
+        <span class="sa">r</span><span class="s1">&#39;(?P&lt;heading&gt;\S[^\n]*)\n&#39;</span>
+        <span class="c1"># Under character, setting to same character if over present.</span>
+        <span class="sa">r</span><span class="s1">&#39;(?P&lt;under&gt;(?(over)(?P=over)|[</span><span class="si">{0}</span><span class="s1">]))(?P=under)*$&#39;</span>
+        <span class="sa">r</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">adornment_characters</span><span class="p">),</span>
+        <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">M</span><span class="p">)</span>
+
+    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span>
+        <span class="n">headings</span><span class="p">,</span>
+        <span class="k">lambda</span> <span class="n">match</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{1}{0}</span><span class="s1"> </span><span class="si">{2}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="s1">&#39;#&#39;</span><span class="o">*</span><span class="n">heading_levels</span><span class="p">[</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s1">&#39;over&#39;</span><span class="p">,</span> <span class="s1">&#39;under&#39;</span><span class="p">)],</span>
+            <span class="o">*</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s1">&#39;pre&#39;</span><span class="p">,</span> <span class="s1">&#39;heading&#39;</span><span class="p">)),</span>
+        <span class="n">text</span><span class="p">)</span>
 
     <span class="n">math_eq</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^\.\. math::((?:.+)?(?:\n+^  .+)*)&#39;</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">M</span><span class="p">)</span>
     <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">math_eq</span><span class="p">,</span>
@@ -275,16 +321,53 @@
     <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">contents</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
 
     <span class="n">images</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
-        <span class="sa">r</span><span class="s1">&#39;^\.\. image::(.*$)(?:\n *:alt:(.*$)\n)?(?: +:\S+:.*$\n)*&#39;</span><span class="p">,</span>
+        <span class="sa">r</span><span class="s1">&#39;^\.\. image::(.*$)((?:\n +:\S+:.*$)*)\n&#39;</span><span class="p">,</span>
         <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">M</span><span class="p">)</span>
+    <span class="n">image_opts</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\n +:(\S+): +(.*)$&#39;</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">M</span><span class="p">)</span>
     <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span>
-        <span class="n">images</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">match</span><span class="p">:</span> <span class="s1">&#39;![</span><span class="si">{1}</span><span class="s1">](</span><span class="si">{0}</span><span class="s1">)</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-            <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="ow">or</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()),</span> <span class="n">text</span><span class="p">)</span>
+        <span class="n">images</span><span class="p">,</span>
+        <span class="k">lambda</span> <span class="n">match</span><span class="p">:</span> <span class="s1">&#39;&lt;img src=&quot;</span><span class="si">{}</span><span class="s1">&quot;</span><span class="si">{}</span><span class="s1">&gt;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">generate_image_src</span><span class="p">(</span>
+                <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">),</span>
+            <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">image_opts</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39; \1=&quot;\2&quot;&#39;</span><span class="p">,</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="ow">or</span> <span class="s1">&#39;&#39;</span><span class="p">)),</span>
+        <span class="n">text</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">text</span></div>
 
 
-<div class="viewcode-block" id="jupyter_notebook"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.notebook.html#sphinx_gallery.notebook.jupyter_notebook">[docs]</a><span class="k">def</span> <span class="nf">jupyter_notebook</span><span class="p">(</span><span class="n">script_blocks</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
+<div class="viewcode-block" id="generate_image_src"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.notebook.html#sphinx_gallery.notebook.generate_image_src">[docs]</a><span class="k">def</span> <span class="nf">generate_image_src</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;https?://&#39;</span><span class="p">,</span> <span class="n">image_path</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">image_path</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;notebook_images&#39;</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="s2">&quot;file://&quot;</span> <span class="o">+</span> <span class="n">image_path</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+
+    <span class="c1"># If absolute path from source directory given</span>
+    <span class="k">if</span> <span class="n">image_path</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">):</span>
+        <span class="c1"># Path should now be relative to source dir, not target dir</span>
+        <span class="n">target_dir</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">]</span>
+        <span class="n">image_path</span> <span class="o">=</span> <span class="n">image_path</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+    <span class="n">full_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">image_path</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;notebook_images&#39;</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="c1"># Use as prefix e.g. URL</span>
+        <span class="n">prefix</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;notebook_images&#39;</span><span class="p">]</span>
+        <span class="n">rel_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">full_path</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">prefix</span> <span class="o">+</span> <span class="n">rel_path</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># True, but not string. Embed as data URI.</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">full_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">image_file</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">image_file</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+        <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
+                <span class="s1">&#39;Unable to open </span><span class="si">{}</span><span class="s1"> to generate notebook data URI&#39;</span>
+                <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">full_path</span><span class="p">))</span>
+        <span class="n">mime_type</span> <span class="o">=</span> <span class="n">mimetypes</span><span class="o">.</span><span class="n">guess_type</span><span class="p">(</span><span class="n">full_path</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s1">&#39;data:</span><span class="si">{}</span><span class="s1">;base64,</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mime_type</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="jupyter_notebook"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.notebook.html#sphinx_gallery.notebook.jupyter_notebook">[docs]</a><span class="k">def</span> <span class="nf">jupyter_notebook</span><span class="p">(</span><span class="n">script_blocks</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Generate a Jupyter notebook file cell-by-cell</span>
 
 <span class="sd">    Parameters</span>
@@ -293,13 +376,16 @@
 <span class="sd">        Script execution cells.</span>
 <span class="sd">    gallery_conf : dict</span>
 <span class="sd">        The sphinx-gallery configuration dictionary.</span>
+<span class="sd">    target_dir : str</span>
+<span class="sd">        Path that notebook is intended for. Used where relative paths</span>
+<span class="sd">        may be required.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">first_cell</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;first_notebook_cell&quot;</span><span class="p">]</span>
     <span class="n">last_cell</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;last_notebook_cell&quot;</span><span class="p">]</span>
     <span class="n">work_notebook</span> <span class="o">=</span> <span class="n">jupyter_notebook_skeleton</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">first_cell</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">add_code_cell</span><span class="p">(</span><span class="n">work_notebook</span><span class="p">,</span> <span class="n">first_cell</span><span class="p">)</span>
-    <span class="n">fill_notebook</span><span class="p">(</span><span class="n">work_notebook</span><span class="p">,</span> <span class="n">script_blocks</span><span class="p">)</span>
+    <span class="n">fill_notebook</span><span class="p">(</span><span class="n">work_notebook</span><span class="p">,</span> <span class="n">script_blocks</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">last_cell</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">add_code_cell</span><span class="p">(</span><span class="n">work_notebook</span><span class="p">,</span> <span class="n">last_cell</span><span class="p">)</span>
 
@@ -325,36 +411,48 @@
     <span class="n">work_notebook</span><span class="p">[</span><span class="s2">&quot;cells&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">code_cell</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="add_markdown_cell"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.notebook.html#sphinx_gallery.notebook.add_markdown_cell">[docs]</a><span class="k">def</span> <span class="nf">add_markdown_cell</span><span class="p">(</span><span class="n">work_notebook</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+<div class="viewcode-block" id="add_markdown_cell"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.notebook.html#sphinx_gallery.notebook.add_markdown_cell">[docs]</a><span class="k">def</span> <span class="nf">add_markdown_cell</span><span class="p">(</span><span class="n">work_notebook</span><span class="p">,</span> <span class="n">markdown</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Add a markdown cell to the notebook</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    code : str</span>
-<span class="sd">        Cell content</span>
+<span class="sd">    markdown : str</span>
+<span class="sd">        Markdown cell content.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">markdown_cell</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;cell_type&quot;</span><span class="p">:</span> <span class="s2">&quot;markdown&quot;</span><span class="p">,</span>
         <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{},</span>
-        <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">rst2md</span><span class="p">(</span><span class="n">text</span><span class="p">)]</span>
+        <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">markdown</span><span class="p">]</span>
     <span class="p">}</span>
     <span class="n">work_notebook</span><span class="p">[</span><span class="s2">&quot;cells&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">markdown_cell</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="fill_notebook"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.notebook.html#sphinx_gallery.notebook.fill_notebook">[docs]</a><span class="k">def</span> <span class="nf">fill_notebook</span><span class="p">(</span><span class="n">work_notebook</span><span class="p">,</span> <span class="n">script_blocks</span><span class="p">):</span>
+<div class="viewcode-block" id="fill_notebook"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.notebook.html#sphinx_gallery.notebook.fill_notebook">[docs]</a><span class="k">def</span> <span class="nf">fill_notebook</span><span class="p">(</span><span class="n">work_notebook</span><span class="p">,</span> <span class="n">script_blocks</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Writes the Jupyter notebook cells</span>
+
+<span class="sd">    If available, uses pypandoc to convert rst to markdown.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    script_blocks : list</span>
 <span class="sd">        Each list element should be a tuple of (label, content, lineno).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
+    <span class="n">heading_level_counter</span> <span class="o">=</span> <span class="n">count</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">heading_levels</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="nb">next</span><span class="p">(</span><span class="n">heading_level_counter</span><span class="p">))</span>
     <span class="k">for</span> <span class="n">blabel</span><span class="p">,</span> <span class="n">bcontent</span><span class="p">,</span> <span class="n">lineno</span> <span class="ow">in</span> <span class="n">script_blocks</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">blabel</span> <span class="o">==</span> <span class="s1">&#39;code&#39;</span><span class="p">:</span>
             <span class="n">add_code_cell</span><span class="p">(</span><span class="n">work_notebook</span><span class="p">,</span> <span class="n">bcontent</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">add_markdown_cell</span><span class="p">(</span><span class="n">work_notebook</span><span class="p">,</span> <span class="n">bcontent</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></div>
+            <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;pypandoc&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="n">markdown</span> <span class="o">=</span> <span class="n">rst2md</span><span class="p">(</span>
+                    <span class="n">bcontent</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">heading_levels</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="kn">import</span> <span class="nn">pypandoc</span>
+                <span class="c1"># pandoc automatically addds \n to the end</span>
+                <span class="n">markdown</span> <span class="o">=</span> <span class="n">pypandoc</span><span class="o">.</span><span class="n">convert_text</span><span class="p">(</span>
+                    <span class="n">bcontent</span><span class="p">,</span> <span class="n">to</span><span class="o">=</span><span class="s1">&#39;md&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;rst&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;pypandoc&quot;</span><span class="p">]</span>
+                <span class="p">)</span>
+            <span class="n">add_markdown_cell</span><span class="p">(</span><span class="n">work_notebook</span><span class="p">,</span> <span class="n">markdown</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="save_notebook"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.notebook.html#sphinx_gallery.notebook.save_notebook">[docs]</a><span class="k">def</span> <span class="nf">save_notebook</span><span class="p">(</span><span class="n">work_notebook</span><span class="p">,</span> <span class="n">write_file</span><span class="p">):</span>
@@ -384,7 +482,8 @@
         <span class="n">file_conf</span><span class="p">,</span> <span class="n">blocks</span> <span class="o">=</span> <span class="n">split_code_and_text_blocks</span><span class="p">(</span><span class="n">src_file</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Converting </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">src_file</span><span class="p">))</span>
         <span class="n">gallery_conf</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">gen_gallery</span><span class="o">.</span><span class="n">DEFAULT_GALLERY_CONF</span><span class="p">)</span>
-        <span class="n">example_nb</span> <span class="o">=</span> <span class="n">jupyter_notebook</span><span class="p">(</span><span class="n">blocks</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
+        <span class="n">target_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">src_file</span><span class="p">)</span>
+        <span class="n">example_nb</span> <span class="o">=</span> <span class="n">jupyter_notebook</span><span class="p">(</span><span class="n">blocks</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">)</span>
         <span class="n">save_notebook</span><span class="p">(</span><span class="n">example_nb</span><span class="p">,</span> <span class="n">replace_py_ipynb</span><span class="p">(</span><span class="n">src_file</span><span class="p">))</span></div>
 </pre></div>
 
@@ -398,11 +497,19 @@
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2014-2020, Sphinx-gallery developers
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -413,7 +520,6 @@
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

@@ -1,35 +1,14 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>sphinx_gallery.gen_gallery &mdash; Sphinx-Gallery 0.7.0-git documentation</title>
+  <title>sphinx_gallery.gen_gallery &mdash; Sphinx-Gallery 0.8.0-git documentation</title>
   
-
-  
-  
-  
-  
-
-  
-  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
-    
 
   
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
@@ -38,6 +17,28 @@
   <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/gallery-binder.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/gallery-dataframe.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
 </head>
@@ -53,7 +54,7 @@
           
 
           
-            <a href="../../index.html" class="icon icon-home"> Sphinx-Gallery
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> Sphinx-Gallery
           
 
           
@@ -63,7 +64,7 @@
             
             
               <div class="version">
-                0.7.0
+                0.8.0
               </div>
             
           
@@ -80,6 +81,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
 
@@ -138,6 +140,7 @@
 
   
         </div>
+        
       </div>
     </nav>
 
@@ -206,7 +209,7 @@
 <span class="kn">from</span> <span class="nn">sphinx.errors</span> <span class="kn">import</span> <span class="n">ConfigError</span><span class="p">,</span> <span class="n">ExtensionError</span>
 <span class="kn">from</span> <span class="nn">sphinx.util.console</span> <span class="kn">import</span> <span class="n">red</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">sphinx_compatibility</span><span class="p">,</span> <span class="n">glr_path_static</span><span class="p">,</span> <span class="n">__version__</span> <span class="k">as</span> <span class="n">_sg_version</span>
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">_replace_md5</span><span class="p">,</span> <span class="n">_has_optipng</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">_replace_md5</span><span class="p">,</span> <span class="n">_has_optipng</span><span class="p">,</span> <span class="n">_has_pypandoc</span>
 <span class="kn">from</span> <span class="nn">.backreferences</span> <span class="kn">import</span> <span class="n">_finalize_backreferences</span>
 <span class="kn">from</span> <span class="nn">.gen_rst</span> <span class="kn">import</span> <span class="p">(</span><span class="n">generate_dir_rst</span><span class="p">,</span> <span class="n">SPHX_GLR_SIG</span><span class="p">,</span> <span class="n">_get_memory_base</span><span class="p">,</span>
                       <span class="n">_get_readme</span><span class="p">)</span>
@@ -220,10 +223,20 @@
 
 <span class="n">_KNOWN_CSS</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;gallery&#39;</span><span class="p">,</span> <span class="s1">&#39;gallery-binder&#39;</span><span class="p">,</span> <span class="s1">&#39;gallery-dataframe&#39;</span><span class="p">)</span>
 
+
+<div class="viewcode-block" id="DefaultResetArgv"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.DefaultResetArgv">[docs]</a><span class="k">class</span> <span class="nc">DefaultResetArgv</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;DefaultResetArgv&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[]</span></div>
+
+
 <span class="n">DEFAULT_GALLERY_CONF</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;filename_pattern&#39;</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;plot&#39;</span><span class="p">,</span>
     <span class="s1">&#39;ignore_pattern&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;__init__\.py&#39;</span><span class="p">,</span>
     <span class="s1">&#39;examples_dirs&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;examples&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;reset_argv&#39;</span><span class="p">:</span> <span class="n">DefaultResetArgv</span><span class="p">(),</span>
     <span class="s1">&#39;subsection_order&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
     <span class="s1">&#39;within_subsection_order&#39;</span><span class="p">:</span> <span class="n">NumberOfCodeLinesSortKey</span><span class="p">,</span>
     <span class="s1">&#39;gallery_dirs&#39;</span><span class="p">:</span> <span class="s1">&#39;auto_examples&#39;</span><span class="p">,</span>
@@ -231,6 +244,7 @@
     <span class="s1">&#39;doc_module&#39;</span><span class="p">:</span> <span class="p">(),</span>
     <span class="s1">&#39;reference_url&#39;</span><span class="p">:</span> <span class="p">{},</span>
     <span class="s1">&#39;capture_repr&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;_repr_html_&#39;</span><span class="p">,</span> <span class="s1">&#39;__repr__&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;ignore_repr_types&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
     <span class="c1"># Build options</span>
     <span class="c1"># -------------</span>
     <span class="c1"># We use a string for &#39;plot_gallery&#39; rather than simply the Python boolean</span>
@@ -251,12 +265,13 @@
     <span class="s1">&#39;reset_modules&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;matplotlib&#39;</span><span class="p">,</span> <span class="s1">&#39;seaborn&#39;</span><span class="p">),</span>
     <span class="s1">&#39;first_notebook_cell&#39;</span><span class="p">:</span> <span class="s1">&#39;%matplotlib inline&#39;</span><span class="p">,</span>
     <span class="s1">&#39;last_notebook_cell&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="s1">&#39;notebook_images&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s1">&#39;pypandoc&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
     <span class="s1">&#39;remove_config_comments&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
     <span class="s1">&#39;show_memory&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
     <span class="s1">&#39;junit&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
     <span class="s1">&#39;log_level&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;backreference_missing&#39;</span><span class="p">:</span> <span class="s1">&#39;warning&#39;</span><span class="p">},</span>
     <span class="s1">&#39;inspect_global_variables&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="s1">&#39;ignore_repr_types&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
     <span class="s1">&#39;css&#39;</span><span class="p">:</span> <span class="n">_KNOWN_CSS</span><span class="p">,</span>
     <span class="s1">&#39;matplotlib_animations&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">}</span>
@@ -313,6 +328,22 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
             <span class="n">backreferences_warning</span><span class="p">,</span>
             <span class="nb">type</span><span class="o">=</span><span class="ne">DeprecationWarning</span><span class="p">)</span>
+
+    <span class="c1"># Check capture_repr</span>
+    <span class="n">capture_repr</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;capture_repr&#39;</span><span class="p">]</span>
+    <span class="n">supported_reprs</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;__repr__&#39;</span><span class="p">,</span> <span class="s1">&#39;__str__&#39;</span><span class="p">,</span> <span class="s1">&#39;_repr_html_&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">capture_repr</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">rep</span> <span class="ow">in</span> <span class="n">capture_repr</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">rep</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">supported_reprs</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s2">&quot;All entries in &#39;capture_repr&#39; must be one &quot;</span>
+                                  <span class="s2">&quot;of </span><span class="si">%s</span><span class="s2">, got: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">supported_reprs</span><span class="p">,</span> <span class="n">rep</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s2">&quot;&#39;capture_repr&#39; must be a tuple, got: </span><span class="si">%s</span><span class="s2">&quot;</span>
+                          <span class="o">%</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">capture_repr</span><span class="p">),))</span>
+    <span class="c1"># Check ignore_repr_types</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;ignore_repr_types&#39;</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s2">&quot;&#39;ignore_repr_types&#39; must be a string, got: </span><span class="si">%s</span><span class="s2">&quot;</span>
+                          <span class="o">%</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;ignore_repr_types&#39;</span><span class="p">]),))</span>
 
     <span class="c1"># deal with show_memory</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;memory_base&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
@@ -437,6 +468,31 @@
     <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">last_cell</span><span class="p">,</span> <span class="nb">str</span><span class="p">))</span> <span class="ow">and</span> <span class="p">(</span><span class="n">last_cell</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s2">&quot;The &#39;last_notebook_cell&#39; parameter must be type str&quot;</span>
                           <span class="s2">&quot; or None, found type </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">last_cell</span><span class="p">))</span>
+    <span class="c1"># Check pypandoc</span>
+    <span class="n">pypandoc</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;pypandoc&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pypandoc</span><span class="p">,</span> <span class="p">(</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s2">&quot;&#39;pypandoc&#39; parameter must be of type bool or dict,&quot;</span>
+                          <span class="s2">&quot;got: </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">pypandoc</span><span class="p">))</span>
+    <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;pypandoc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span> <span class="k">if</span> <span class="n">pypandoc</span> <span class="ow">is</span> <span class="kc">True</span> <span class="k">else</span> <span class="n">pypandoc</span>
+    <span class="n">has_pypandoc</span><span class="p">,</span> <span class="n">version</span> <span class="o">=</span> <span class="n">_has_pypandoc</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;pypandoc&#39;</span><span class="p">],</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="n">has_pypandoc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;&#39;pypandoc&#39; not available. Using Sphinx-Gallery to &quot;</span>
+                       <span class="s2">&quot;convert rst text blocks to markdown for .ipynb files.&quot;</span><span class="p">)</span>
+        <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;pypandoc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;pypandoc&#39;</span><span class="p">],</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Using pandoc version: </span><span class="si">%s</span><span class="s2"> to convert rst text blocks to &quot;</span>
+                    <span class="s2">&quot;markdown for .ipynb files&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">version</span><span class="p">,))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Using Sphinx-Gallery to convert rst text blocks to &quot;</span>
+                    <span class="s2">&quot;markdown for .ipynb files.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pypandoc</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">accepted_keys</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;extra_args&#39;</span><span class="p">,</span> <span class="s1">&#39;filters&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">pypandoc</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">accepted_keys</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s2">&quot;&#39;pypandoc&#39; only accepts the following key &quot;</span>
+                                  <span class="s2">&quot;values: </span><span class="si">%s</span><span class="s2">, got: </span><span class="si">%s</span><span class="s2">.&quot;</span>
+                                  <span class="o">%</span> <span class="p">(</span><span class="n">accepted_keys</span><span class="p">,</span> <span class="n">key</span><span class="p">))</span>
+
     <span class="c1"># Make it easy to know which builder we&#39;re in</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;builder_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">builder_name</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;titles&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
@@ -567,11 +623,12 @@
                 <span class="n">write_computation_times</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">this_costs</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;download_all_examples&#39;</span><span class="p">]:</span>
-                <span class="n">download_fhindex</span> <span class="o">=</span> <span class="n">generate_zipfiles</span><span class="p">(</span><span class="n">gallery_dir</span><span class="p">)</span>
+                <span class="n">download_fhindex</span> <span class="o">=</span> <span class="n">generate_zipfiles</span><span class="p">(</span>
+                    <span class="n">gallery_dir</span><span class="p">,</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">)</span>
                 <span class="n">fhindex</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">download_fhindex</span><span class="p">)</span>
 
             <span class="n">fhindex</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">SPHX_GLR_SIG</span><span class="p">)</span>
-        <span class="n">_replace_md5</span><span class="p">(</span><span class="n">index_rst_new</span><span class="p">)</span>
+        <span class="n">_replace_md5</span><span class="p">(</span><span class="n">index_rst_new</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;t&#39;</span><span class="p">)</span>
     <span class="n">_finalize_backreferences</span><span class="p">(</span><span class="n">seen_backrefs</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;plot_gallery&#39;</span><span class="p">]:</span>
@@ -915,11 +972,19 @@
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2014-2020, Sphinx-gallery developers
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -930,7 +995,6 @@
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

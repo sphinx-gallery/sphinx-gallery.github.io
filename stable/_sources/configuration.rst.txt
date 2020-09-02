@@ -19,6 +19,7 @@ file:
 
 - ``examples_dirs`` and ``gallery_dirs`` (:ref:`multiple_galleries_config`)
 - ``filename_pattern`` and ``ignore_pattern`` (:ref:`build_pattern`)
+- ``reset_argv`` (:ref:`reset_argv`)
 - ``subsection_order`` (:ref:`sub_gallery_order`)
 - ``within_subsection_order`` (:ref:`within_gallery_order`)
 - ``reference_url`` (:ref:`link_to_documentation`)
@@ -39,6 +40,8 @@ file:
 - ``show_memory`` (:ref:`show_memory`)
 - ``binder`` (:ref:`binder_links`)
 - ``first_notebook_cell`` and ``last_notebook_cell`` (:ref:`own_notebook_cell`)
+- ``notebook_images`` (:ref:`notebook_images`)
+- ``pypandoc`` (:ref:`use_pypandoc`)
 - ``junit`` (:ref:`junit_xml`)
 - ``log_level`` (:ref:`log_level`)
 - ``capture_repr`` and ``ignore_repr_types`` (:ref:`capture_repr`)
@@ -61,9 +64,14 @@ And some things can be tweaked directly in CSS:
 
 - ``.sphx-glr-thumbcontainer`` (:ref:`setting_thumbnail_size`)
 
-You can also use the package ``warnings`` in the ``conf.py`` file to prevent
-warnings from being captured and included in your built documentation. For
-example, to remove the specific Matplotlib agg warning, you can add::
+.. _removing_warnings:
+
+Removing warnings
+=================
+
+To prevent warnings from being captured and included in your built
+documentation, you can use the package ``warnings`` in the ``conf.py`` file.
+For example, to remove the specific Matplotlib agg warning, you can add::
 
     import warnings
 
@@ -72,6 +80,8 @@ example, to remove the specific Matplotlib agg warning, you can add::
                                     ' non-GUI backend, so cannot show the figure.')
 
 to your ``conf.py`` file.
+
+Note that the above Matplotlib warning is removed by default.
 
 .. _multiple_galleries_config:
 
@@ -175,6 +185,45 @@ As the patterns are parsed as `regular expressions`_, users are advised to consu
 
         $ sphinx-build -D sphinx_gallery_conf.filename_pattern=plot_specific_example\.py ...
 
+.. _reset_argv:
+
+Passing command line arguments to example scripts
+=================================================
+
+By default, Sphinx-Gallery will not pass any command line arguments to example
+scripts.  By setting the ``reset_argv`` option, it is possible to change this
+behavior and pass command line arguments to example scripts.  ``reset_argv``
+needs to be a Callable that accepts the ``gallery_conf`` and ``script_vars``
+dictionaries as input and returns a list of strings that are passed as
+additional command line arguments to the interpreter.
+
+An example could be::
+
+    class ResetArgv:
+        def __repr__(self):
+	    return 'ResetArgv'
+
+	def __call__(self, sphinx_gallery_conf, script_vars):
+            if script_vars['src_file'] == 'example1.py':
+	        return ['-a', '1']
+            elif script_vars['src_file'] == 'example2.py':
+	        return ['-a', '2']
+
+which is included in the configuration dictionary as::
+
+    sphinx_gallery_conf = {
+        ...
+        'reset_argv': ResetArgv(),
+    }
+
+which is then used by Sphinx-Gallery as::
+
+    import sys
+    sys.argv[0] = script_vars['src_file']
+    sys.argv[1:] = gallery_conf['reset_argv'](gallery_conf, script_vars)
+
+
+    
 .. _sub_gallery_order:
 
 Sorting gallery subsections
@@ -614,6 +663,105 @@ parameter::
 If the value of ``first_notebook_cell`` or ``last_notebook_cell`` is set to
 ``None``, then no extra first or last cell will be added to the notebook.
 
+.. _notebook_images:
+
+Adding images to notebooks
+==========================
+
+When notebooks are produced, by default (``notebook_images = False``) image
+paths from the `image` directive in rST documentation blocks (not images
+generated fom code) are included in markdown using their original paths. This
+includes paths to images expected to be present on the local filesystem which
+is unlikely to be the case for those downloading the notebook.
+
+By setting ``notebook_images = True``, images will be embedded in the generated
+notebooks via Base64-encoded `data URIs <https://en.wikipedia.org/wiki/Data_URI_scheme>`_.
+As inclusion of images via data URIs can significantly increase size of the
+notebook, it's suggested this only be used when small images are used throughout
+galleries.
+
+An alternative is to instead provide a prefix string that'll be used for images
+e.g. the root URL of where your documentation is hosted. So for example the
+following configuration::
+
+    sphinx_gallery_conf = {
+        ...
+        'examples_dirs': ['../examples'],
+        'gallery_dirs': ['auto_examples'],
+        ...
+        'notebook_images': 'https://project.example.com/en/latest/',
+        ...
+    }
+
+with an example `image` directive in an rST documentation block being:
+
+.. code-block:: rst
+
+    .. image:: ../_static/example.jpg
+        :alt: An example image
+
+The image will be added to the generated notebook pointing to the source URL
+``https://project.example.com/en/latest/_static/example.jpg``. Note the image
+path in the rST examples above is a relative path, therefore the URL doesn't
+contain ``auto_examples`` as ``../`` moved up a directory to the documentation
+source directory. Both relative and absolute (from source directory) paths are
+supported; so in the example above ``/_static/example.jpg`` would have resulted
+in the same URL being produced.
+
+Note that the prefix is applied directly, so a trailing ``/`` should be
+included in the prefix if it's required.
+
+.. tip::
+
+    If building multiple versions of your documentation on a hosted service and
+    using prefix, consider using `sphinx build -D <https://www.sphinx-doc.org/en/master/man/sphinx-build.html#cmdoption-sphinx-build-D>`_
+    command line option to ensure links point to the correct version. For
+    example:
+
+    .. code-block:: sh
+
+        sphinx-build \
+            -b html \
+            -D sphinx_gallery_conf.notebook_images="https://project.example.com/docs/${VERSION}/" \
+            source_dir build_dir
+
+
+.. _use_pypandoc:
+
+Using pypandoc to convert rST to markdown
+=========================================
+
+Sphinx-Gallery can use `pypandoc <https://github.com/bebraw/pypandoc>`_
+(if installed) to convert rST text blocks to markdown for the iPython
+notebooks (``.ipynb`` files) generated for each example. These are made
+available for download, along with the raw ``.py`` version, at the bottom
+of each example.
+
+The Sphinx-Gallery rST to markdown converter has limited support for more
+complex rST syntax. If your examples have more complex rST, ``pypandoc`` may
+produce better results. By default, the 'pypandoc' configuration is set to
+``False`` and ``pypandoc`` is not used.
+
+To use ``pypandoc`` you can set::
+
+    sphinx_gallery_conf = {
+        ...
+        'pypandoc': True,
+    }
+
+You can also use pandoc options by setting the ``pypandoc.convert_text()``
+parameters ``extra_args`` and ``filters``. To use these parameters, set the
+'pypandoc' configuration to be a dictionary of keyword argument(s)::
+
+    sphinx_gallery_conf = {
+        ...
+        'pypandoc': {'extra_args': ['--mathjax',],
+                     'filters': ['pandoc-citeproc',],
+    }
+
+.. warning::
+
+    Certain pandoc options may result in undesirable effects. Use with caution.
 
 .. _junit_xml:
 
@@ -716,7 +864,7 @@ the path to the figure you would like to use as the thumbnail. For example, the
 following defines that the figure ``demo.png`` in the folder ``_static/``
 should be used to create the thumbnail::
 
-    # sphinx_gallery_thumbnail_path = ``_static/demo.png``
+    # sphinx_gallery_thumbnail_path = '_static/demo.png'
 
 Note that ``sphinx_gallery_thumbnail_number`` overrules
 ``sphinx_gallery_thumbnail_path``. See
@@ -906,7 +1054,7 @@ to scrape both matplotlib and Mayavi images you can do::
 The default value is ``'image_scrapers': ('matplotlib',)`` which only scrapes
 Matplotlib images. Note that this includes any images produced by packages that
 are based on Matplotlib, for example Seaborn or Yellowbrick. If you want
-to embed :class:`matplotlib.animation.FuncAnimation`\s as animations rather
+to embed :class:`matplotlib.animation.Animation`\s as animations rather
 than a single static image of the animation figure, you should add::
 
       sphinx_gallery_conf = {
@@ -1060,10 +1208,12 @@ the example script.
 Setting gallery thumbnail size
 ==============================
 
-By default Sphinx-gallery will generate thumbnails at size ``(400, 280)``,
-and add pillarboxes or letterboxes as necessary to scale the image while
-maintaining the original aspect ratio. This size can be controlled with the
-``thumbnail_size`` entry as, e.g.::
+By default Sphinx-gallery will generate thumbnails at size ``(400, 280)``.
+The thumbnail image will then be scaled to the size specified by
+``'thumbnail_size``, adding pillarboxes or letterboxes as necessary to
+maintain the original aspect ratio. The default ``thumbnail_size`` is
+``(400, 280)`` (no scaling) and can be changed via the ``thumbnail_size``
+configuration, e.g.::
 
     sphinx_gallery_conf = {
         ...
@@ -1071,9 +1221,9 @@ maintaining the original aspect ratio. This size can be controlled with the
     }
 
 The gallery uses various CSS classes to display these thumbnails, which
-default to maximum 160x160px. To change this, e.g. to display the images
+default to maximum 160x112px. To change this, e.g. to display the images
 at 250x250px, you can modify the default CSS with something like the following
-in your own site's CSS file:
+in your ``gallery.css``` file:
 
 .. code-block:: css
 
@@ -1092,6 +1242,10 @@ in your own site's CSS file:
         padding: 270px 10px 0 !important;
     }
 
+.. note:: The default value of ``thumbnail_size`` will change from
+          ``(400, 280)`` (2.5x maximum specified by CSS) to ``(320, 224)``
+          (2x maximum specified by CSS) in version 0.9.0. This is to
+          prevent unnecessary over-sampling.
 
 .. _min_reported_time:
 

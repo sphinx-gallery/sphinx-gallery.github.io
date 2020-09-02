@@ -1,35 +1,14 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>sphinx_gallery.scrapers &mdash; Sphinx-Gallery 0.7.0-git documentation</title>
+  <title>sphinx_gallery.scrapers &mdash; Sphinx-Gallery 0.8.0-git documentation</title>
   
-
-  
-  
-  
-  
-
-  
-  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
-    
 
   
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
@@ -38,6 +17,28 @@
   <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/gallery-binder.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/gallery-dataframe.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
 </head>
@@ -53,7 +54,7 @@
           
 
           
-            <a href="../../index.html" class="icon icon-home"> Sphinx-Gallery
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> Sphinx-Gallery
           
 
           
@@ -63,7 +64,7 @@
             
             
               <div class="version">
-                0.7.0
+                0.8.0
               </div>
             
           
@@ -80,6 +81,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
 
@@ -138,6 +140,7 @@
 
   
         </div>
+        
       </div>
     </nav>
 
@@ -197,7 +200,9 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">distutils.version</span> <span class="kn">import</span> <span class="n">LooseVersion</span>
 <span class="kn">from</span> <span class="nn">textwrap</span> <span class="kn">import</span> <span class="n">indent</span>
+<span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">filterwarnings</span>
 
 <span class="kn">from</span> <span class="nn">sphinx.errors</span> <span class="kn">import</span> <span class="n">ExtensionError</span>
 <span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">scale_image</span><span class="p">,</span> <span class="n">optipng</span>
@@ -216,6 +221,10 @@
     <span class="kn">import</span> <span class="nn">matplotlib</span>
     <span class="n">matplotlib</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;agg&#39;</span><span class="p">)</span>
     <span class="n">matplotlib_backend</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">get_backend</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+    <span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">,</span>
+                   <span class="n">message</span><span class="o">=</span><span class="s1">&#39;Matplotlib is currently using agg, which is a&#39;</span>
+                           <span class="s1">&#39; non-GUI backend, so cannot show the figure.&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">matplotlib_backend</span> <span class="o">!=</span> <span class="s1">&#39;agg&#39;</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
@@ -286,14 +295,14 @@
 <span class="sd">        the images. This is often produced by :func:`figure_rst`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">matplotlib</span><span class="p">,</span> <span class="n">plt</span> <span class="o">=</span> <span class="n">_import_matplotlib</span><span class="p">()</span>
-    <span class="kn">from</span> <span class="nn">matplotlib.animation</span> <span class="kn">import</span> <span class="n">FuncAnimation</span>
+    <span class="kn">from</span> <span class="nn">matplotlib.animation</span> <span class="kn">import</span> <span class="n">Animation</span>
     <span class="n">image_path_iterator</span> <span class="o">=</span> <span class="n">block_vars</span><span class="p">[</span><span class="s1">&#39;image_path_iterator&#39;</span><span class="p">]</span>
     <span class="n">image_rsts</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="c1"># Check for animations</span>
     <span class="n">anims</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">gallery_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;matplotlib_animations&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">ani</span> <span class="ow">in</span> <span class="n">block_vars</span><span class="p">[</span><span class="s1">&#39;example_globals&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ani</span><span class="p">,</span> <span class="n">FuncAnimation</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ani</span><span class="p">,</span> <span class="n">Animation</span><span class="p">):</span>
                 <span class="n">anims</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ani</span><span class="p">)</span>
     <span class="c1"># Then standard images</span>
     <span class="k">for</span> <span class="n">fig_num</span><span class="p">,</span> <span class="n">image_path</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">get_fignums</span><span class="p">(),</span> <span class="n">image_path_iterator</span><span class="p">):</span>
@@ -324,7 +333,11 @@
             <span class="k">if</span> <span class="n">to_rgba</span><span class="p">(</span><span class="n">fig_attr</span><span class="p">)</span> <span class="o">!=</span> <span class="n">to_rgba</span><span class="p">(</span><span class="n">default_attr</span><span class="p">)</span> <span class="ow">and</span> \
                     <span class="n">attr</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
                 <span class="n">these_kwargs</span><span class="p">[</span><span class="n">attr</span><span class="p">]</span> <span class="o">=</span> <span class="n">fig_attr</span>
-        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="o">**</span><span class="n">these_kwargs</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="o">**</span><span class="n">these_kwargs</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
+            <span class="k">raise</span>
         <span class="k">if</span> <span class="s1">&#39;images&#39;</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;compress_images&#39;</span><span class="p">]:</span>
             <span class="n">optipng</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;compress_images_args&#39;</span><span class="p">])</span>
         <span class="n">image_rsts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
@@ -344,7 +357,8 @@
 
 
 <span class="k">def</span> <span class="nf">_anim_rst</span><span class="p">(</span><span class="n">anim</span><span class="p">,</span> <span class="n">image_path</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">matplotlib.animation</span> <span class="kn">import</span> <span class="n">ImageMagickWriter</span>
+    <span class="kn">import</span> <span class="nn">matplotlib</span>
+    <span class="kn">from</span> <span class="nn">matplotlib.animation</span> <span class="kn">import</span> <span class="n">FFMpegWriter</span><span class="p">,</span> <span class="n">ImageMagickWriter</span>
     <span class="c1"># output the thumbnail as the image, as it will just be copied</span>
     <span class="c1"># if it&#39;s the file thumbnail</span>
     <span class="n">fig</span> <span class="o">=</span> <span class="n">anim</span><span class="o">.</span><span class="n">_fig</span>
@@ -353,8 +367,11 @@
     <span class="n">thumb_size</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;thumbnail_size&#39;</span><span class="p">]</span>
     <span class="n">use_dpi</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span>
         <span class="nb">min</span><span class="p">(</span><span class="n">t_s</span> <span class="o">/</span> <span class="n">f_s</span> <span class="k">for</span> <span class="n">t_s</span><span class="p">,</span> <span class="n">f_s</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">thumb_size</span><span class="p">,</span> <span class="n">fig_size</span><span class="p">)))</span>
-    <span class="c1"># FFmpeg is buggy for GIFs</span>
-    <span class="k">if</span> <span class="n">ImageMagickWriter</span><span class="o">.</span><span class="n">isAvailable</span><span class="p">():</span>
+    <span class="c1"># FFmpeg is buggy for GIFs before Matplotlib 3.3.1</span>
+    <span class="k">if</span> <span class="n">LooseVersion</span><span class="p">(</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">LooseVersion</span><span class="p">(</span><span class="s1">&#39;3.3.1&#39;</span><span class="p">)</span> <span class="ow">and</span> \
+            <span class="n">FFMpegWriter</span><span class="o">.</span><span class="n">isAvailable</span><span class="p">():</span>
+        <span class="n">writer</span> <span class="o">=</span> <span class="s1">&#39;ffmpeg&#39;</span>
+    <span class="k">elif</span> <span class="n">ImageMagickWriter</span><span class="o">.</span><span class="n">isAvailable</span><span class="p">():</span>
         <span class="n">writer</span> <span class="o">=</span> <span class="s1">&#39;imagemagick&#39;</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">writer</span> <span class="o">=</span> <span class="kc">None</span>
@@ -389,7 +406,11 @@
     <span class="n">image_paths</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
     <span class="n">e</span> <span class="o">=</span> <span class="n">mlab</span><span class="o">.</span><span class="n">get_engine</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">scene</span><span class="p">,</span> <span class="n">image_path</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">scenes</span><span class="p">,</span> <span class="n">image_path_iterator</span><span class="p">):</span>
-        <span class="n">mlab</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">scene</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">mlab</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">scene</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">mlab</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="nb">all</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">raise</span>
         <span class="c1"># make sure the image is not too large</span>
         <span class="n">scale_image</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">image_path</span><span class="p">,</span> <span class="mi">850</span><span class="p">,</span> <span class="mi">999</span><span class="p">)</span>
         <span class="k">if</span> <span class="s1">&#39;images&#39;</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;compress_images&#39;</span><span class="p">]:</span>
@@ -651,11 +672,19 @@
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2014-2020, Sphinx-gallery developers
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -666,7 +695,6 @@
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {
