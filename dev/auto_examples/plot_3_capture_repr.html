@@ -17,6 +17,7 @@
   <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
   <link rel="stylesheet" href="../_static/gallery-binder.css" type="text/css" />
   <link rel="stylesheet" href="../_static/gallery-dataframe.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/gallery-rendered-html.css" type="text/css" />
 
   
   
@@ -213,7 +214,7 @@
 to download the full example code or to run this example in your browser via Binder</p>
 </div>
 <div class="sphx-glr-example-title section" id="capturing-output-representations">
-<span id="sphx-glr-auto-examples-plot-3-capture-repr-py"></span><h1>Capturing output representations<a class="headerlink" href="#capturing-output-representations" title="Permalink to this headline">¶</a></h1>
+<span id="capture-repr-examples"></span><span id="sphx-glr-auto-examples-plot-3-capture-repr-py"></span><h1>Capturing output representations<a class="headerlink" href="#capturing-output-representations" title="Permalink to this headline">¶</a></h1>
 <p>This example demonstrates how the configuration <code class="docutils literal notranslate"><span class="pre">capture_repr</span></code>
 (<a class="reference internal" href="../configuration.html#capture-repr"><span class="std std-ref">Controlling what output is captured</span></a>) works. The default <code class="docutils literal notranslate"><span class="pre">capture_repr</span></code> setting is
 <code class="docutils literal notranslate"><span class="pre">capture_repr:</span> <span class="pre">('_repr_html_',</span> <span class="pre">'__repr__')</span></code> and was used when building the
@@ -252,6 +253,7 @@ an expression with a <code class="docutils literal notranslate"><span class="pre
 <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">df</span></a>
 </pre></div>
 </div>
+<div class="output_subarea output_html rendered_html output_result">
 <div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -288,6 +290,7 @@ an expression with a <code class="docutils literal notranslate"><span class="pre
   </tbody>
 </table>
 </div>
+</div>
 <br />
 <br /><p>The pandas dataframe <code class="docutils literal notranslate"><span class="pre">df</span></code> has both a <code class="docutils literal notranslate"><span class="pre">__repr__</span></code> and <code class="docutils literal notranslate"><span class="pre">_repr_html_</span></code>
 method. As <code class="docutils literal notranslate"><span class="pre">_repr_html_</span></code> appears first in the <code class="docutils literal notranslate"><span class="pre">capture_repr</span></code> tuple, the
@@ -305,7 +308,28 @@ statement is an expression.</p>
 12
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">print()</span></code> outputs to standard output, which is always captured. The
+<p>Statsmodels tables should also be styled appropriately:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># example 5</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">statsmodels.iolib.table</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class"><span class="n">statsmodels</span><span class="o">.</span><span class="n">iolib</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">SimpleTable</span></a><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.zeros.html#numpy.zeros" title="numpy.zeros" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">zeros</span></a><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)))</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<table class="simpletable">
+<tr>
+  <td>0.0</td> <td>0.0</td> <td>0.0</td>
+</tr>
+<tr>
+  <td>0.0</td> <td>0.0</td> <td>0.0</td>
+</tr>
+<tr>
+  <td>0.0</td> <td>0.0</td> <td>0.0</td>
+</tr>
+</table>
+</div>
+<br />
+<br /><p><code class="docutils literal notranslate"><span class="pre">print()</span></code> outputs to standard output, which is always captured. The
 string <code class="docutils literal notranslate"><span class="pre">'Hello</span> <span class="pre">world'</span></code> is thus captured. A ‘representation’ of the last
 expression is also captured. Again, since this expression <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">+</span> <span class="pre">b</span></code> does not
 have a <code class="docutils literal notranslate"><span class="pre">_repr_html_</span></code> method, the <code class="docutils literal notranslate"><span class="pre">__repr__</span></code> method is captured.</p>
@@ -327,7 +351,7 @@ list is captured as well as the figure:</p>
 </div>
 <img alt="plot 3 capture repr" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_3_capture_repr_001.png" />
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D object at 0x7f6d16143050&gt;]
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D object at 0x7fb16aeaf5d0&gt;]
 </pre></div>
 </div>
 <p>To avoid capturing the text representation, you can assign the last Matplotlib
@@ -366,8 +390,8 @@ for examples 2, 3 and 4 no ‘representation’ of the last expression would be
 output. You would need to add <code class="docutils literal notranslate"><span class="pre">print()</span></code> to the last expression to capture
 a ‘representation’ of it. The empty tuple setting imitates the behaviour of
 Sphinx-Gallery prior to v0.5.0, when this configuration was introduced.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  4.058 seconds)</p>
-<p><strong>Estimated memory usage:</strong>  8 MB</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  3.802 seconds)</p>
+<p><strong>Estimated memory usage:</strong>  9 MB</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-3-capture-repr-py">
 <div class="binder-badge docutils container">
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/sphinx-gallery/sphinx-gallery.github.io/master?urlpath=lab/tree/notebooks/auto_examples/plot_3_capture_repr.ipynb"><img alt="Launch binder" src="../_images/binder_badge_logo.svg" width="150px" /></a>

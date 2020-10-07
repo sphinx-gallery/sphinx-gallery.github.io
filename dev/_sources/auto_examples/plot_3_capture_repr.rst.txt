@@ -18,6 +18,8 @@
 .. _sphx_glr_auto_examples_plot_3_capture_repr.py:
 
 
+.. _capture_repr_examples:
+
 Capturing output representations
 ================================
 
@@ -28,12 +30,12 @@ Sphinx-Gallery documentation. The output that is captured with this setting
 is demonstrated in this example. Differences in outputs that would be captured
 with other ``capture_repr`` settings is also explained.
 
-.. GENERATED FROM PYTHON SOURCE LINES 14-16
+.. GENERATED FROM PYTHON SOURCE LINES 16-18
 
 Nothing is captured for the code block below because no data is directed to
 standard output and the last statement is an assignment, not an expression.
 
-.. GENERATED FROM PYTHON SOURCE LINES 16-21
+.. GENERATED FROM PYTHON SOURCE LINES 18-23
 
 .. code-block:: python3
 
@@ -49,11 +51,11 @@ standard output and the last statement is an assignment, not an expression.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 22-23
+.. GENERATED FROM PYTHON SOURCE LINES 24-25
 
 If you did wish to capture the value of ``b``, you would need to use:
 
-.. GENERATED FROM PYTHON SOURCE LINES 23-29
+.. GENERATED FROM PYTHON SOURCE LINES 25-31
 
 .. code-block:: python3
 
@@ -78,7 +80,7 @@ If you did wish to capture the value of ``b``, you would need to use:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 30-38
+.. GENERATED FROM PYTHON SOURCE LINES 32-40
 
 Sphinx-Gallery first attempts to capture the ``_repr_html_`` of ``b`` as this
 is the first 'representation' method in the ``capture_repr`` tuple. As this
@@ -89,7 +91,7 @@ the ``__repr__`` method, which is second in the tuple. This does exist for
 A pandas dataframe is used in the code block below to provide an example of
 an expression with a ``_repr_html_`` method.
 
-.. GENERATED FROM PYTHON SOURCE LINES 38-45
+.. GENERATED FROM PYTHON SOURCE LINES 40-47
 
 .. code-block:: python3
 
@@ -107,6 +109,7 @@ an expression with a ``_repr_html_`` method.
 
 .. raw:: html
 
+    <div class="output_subarea output_html rendered_html output_result">
     <div>
     <style scoped>
         .dataframe tbody tr th:only-of-type {
@@ -143,10 +146,11 @@ an expression with a ``_repr_html_`` method.
       </tbody>
     </table>
     </div>
+    </div>
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 46-52
+.. GENERATED FROM PYTHON SOURCE LINES 48-54
 
 The pandas dataframe ``df`` has both a ``__repr__`` and ``_repr_html_``
 method. As ``_repr_html_`` appears first in the ``capture_repr`` tuple, the
@@ -155,7 +159,7 @@ method. As ``_repr_html_`` appears first in the ``capture_repr`` tuple, the
 For the example below, there is data directed to standard output and the last
 statement is an expression.
 
-.. GENERATED FROM PYTHON SOURCE LINES 52-57
+.. GENERATED FROM PYTHON SOURCE LINES 54-59
 
 .. code-block:: python3
 
@@ -180,7 +184,44 @@ statement is an expression.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 58-76
+.. GENERATED FROM PYTHON SOURCE LINES 60-61
+
+Statsmodels tables should also be styled appropriately:
+
+.. GENERATED FROM PYTHON SOURCE LINES 61-67
+
+.. code-block:: python3
+
+
+    # example 5
+    import numpy as np
+    import statsmodels.iolib.table
+    statsmodels.iolib.table.SimpleTable(np.zeros((3, 3)))
+
+
+
+
+
+
+.. raw:: html
+
+    <div class="output_subarea output_html rendered_html output_result">
+    <table class="simpletable">
+    <tr>
+      <td>0.0</td> <td>0.0</td> <td>0.0</td>
+    </tr>
+    <tr>
+      <td>0.0</td> <td>0.0</td> <td>0.0</td>
+    </tr>
+    <tr>
+      <td>0.0</td> <td>0.0</td> <td>0.0</td>
+    </tr>
+    </table>
+    </div>
+    <br />
+    <br />
+
+.. GENERATED FROM PYTHON SOURCE LINES 68-86
 
 ``print()`` outputs to standard output, which is always captured. The
 string ``'Hello world'`` is thus captured. A 'representation' of the last
@@ -201,7 +242,7 @@ In the example below, ``matplotlib.pyplot.plot()`` returns a list of
 ``Line2D`` objects representing the plotted data and the ``__repr__`` of the
 list is captured as well as the figure:
 
-.. GENERATED FROM PYTHON SOURCE LINES 76-81
+.. GENERATED FROM PYTHON SOURCE LINES 86-91
 
 .. code-block:: python3
 
@@ -225,16 +266,16 @@ list is captured as well as the figure:
  .. code-block:: none
 
 
-    [<matplotlib.lines.Line2D object at 0x7f6d16143050>]
+    [<matplotlib.lines.Line2D object at 0x7fb16aeaf5d0>]
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 82-84
+.. GENERATED FROM PYTHON SOURCE LINES 92-94
 
 To avoid capturing the text representation, you can assign the last Matplotlib
 expression to a temporary variable:
 
-.. GENERATED FROM PYTHON SOURCE LINES 84-87
+.. GENERATED FROM PYTHON SOURCE LINES 94-97
 
 .. code-block:: python3
 
@@ -252,12 +293,12 @@ expression to a temporary variable:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 88-90
+.. GENERATED FROM PYTHON SOURCE LINES 98-100
 
 Alternatively, you can add ``plt.show()``, which does not return anything,
 to the end of the code block:
 
-.. GENERATED FROM PYTHON SOURCE LINES 90-94
+.. GENERATED FROM PYTHON SOURCE LINES 100-104
 
 .. code-block:: python3
 
@@ -276,7 +317,7 @@ to the end of the code block:
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 95-119
+.. GENERATED FROM PYTHON SOURCE LINES 105-129
 
 The ``capture_repr`` configuration
 ##################################
@@ -306,9 +347,9 @@ Sphinx-Gallery prior to v0.5.0, when this configuration was introduced.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  4.058 seconds)
+   **Total running time of the script:** ( 0 minutes  3.802 seconds)
 
-**Estimated memory usage:**  8 MB
+**Estimated memory usage:**  9 MB
 
 
 .. _sphx_glr_download_auto_examples_plot_3_capture_repr.py:
