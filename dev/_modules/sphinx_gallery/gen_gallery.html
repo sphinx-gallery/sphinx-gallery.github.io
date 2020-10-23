@@ -258,6 +258,7 @@
     <span class="s1">&#39;failing_examples&#39;</span><span class="p">:</span> <span class="p">{},</span>
     <span class="s1">&#39;passing_examples&#39;</span><span class="p">:</span> <span class="p">[],</span>
     <span class="s1">&#39;stale_examples&#39;</span><span class="p">:</span> <span class="p">[],</span>  <span class="c1"># ones that did not need to be run due to md5sum</span>
+    <span class="s1">&#39;run_stale_examples&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
     <span class="s1">&#39;expected_failing_examples&#39;</span><span class="p">:</span> <span class="nb">set</span><span class="p">(),</span>
     <span class="s1">&#39;thumbnail_size&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="mi">280</span><span class="p">),</span>  <span class="c1"># Default CSS does 0.4 scaling (160, 112)</span>
     <span class="s1">&#39;min_reported_time&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
@@ -282,14 +283,21 @@
 <span class="n">logger</span> <span class="o">=</span> <span class="n">sphinx_compatibility</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;sphinx-gallery&#39;</span><span class="p">)</span>
 
 
+<span class="k">def</span> <span class="nf">_bool_eval</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="k">pass</span>
+    <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+
 <div class="viewcode-block" id="parse_config"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.parse_config">[docs]</a><span class="k">def</span> <span class="nf">parse_config</span><span class="p">(</span><span class="n">app</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Process the Sphinx Gallery configuration&quot;&quot;&quot;</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">plot_gallery</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">plot_gallery</span><span class="p">)</span>
-    <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
-        <span class="n">plot_gallery</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">plot_gallery</span><span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot;Process the Sphinx Gallery configuration.&quot;&quot;&quot;</span>
+    <span class="n">plot_gallery</span> <span class="o">=</span> <span class="n">_bool_eval</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">plot_gallery</span><span class="p">)</span>
     <span class="n">src_dir</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span>
-    <span class="n">abort_on_example_error</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">abort_on_example_error</span>
+    <span class="n">abort_on_example_error</span> <span class="o">=</span> <span class="n">_bool_eval</span><span class="p">(</span>
+        <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">abort_on_example_error</span><span class="p">)</span>
     <span class="n">lang</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">highlight_language</span>
     <span class="n">gallery_conf</span> <span class="o">=</span> <span class="n">_complete_gallery_conf</span><span class="p">(</span>
         <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">,</span> <span class="n">plot_gallery</span><span class="p">,</span>
@@ -315,6 +323,10 @@
         <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;image_scrapers&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span><span class="s1">&#39;mayavi&#39;</span><span class="p">,)</span>
     <span class="n">gallery_conf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">plot_gallery</span><span class="o">=</span><span class="n">plot_gallery</span><span class="p">)</span>
     <span class="n">gallery_conf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">abort_on_example_error</span><span class="o">=</span><span class="n">abort_on_example_error</span><span class="p">)</span>
+    <span class="c1"># XXX anything that can only be a bool (rather than str) should probably be</span>
+    <span class="c1"># evaluated this way as it allows setting via -D on the command line</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;run_stale_examples&#39;</span><span class="p">,):</span>
+        <span class="n">gallery_conf</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">_bool_eval</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">src_dir</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;app&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">app</span>
 

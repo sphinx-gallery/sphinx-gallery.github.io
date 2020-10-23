@@ -121,6 +121,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#removing-warnings">Removing warnings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#manage-multiple-galleries">Manage multiple galleries</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#parsing-and-executing-examples-via-matching-patterns">Parsing and executing examples via matching patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#rerunning-stale-examples">Rerunning stale examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#passing-command-line-arguments-to-example-scripts">Passing command line arguments to example scripts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#sorting-gallery-subsections">Sorting gallery subsections</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#sorting-gallery-examples">Sorting gallery examples</a></li>
@@ -243,6 +244,7 @@ file:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">examples_dirs</span></code> and <code class="docutils literal notranslate"><span class="pre">gallery_dirs</span></code> (<a class="reference internal" href="#multiple-galleries-config"><span class="std std-ref">Manage multiple galleries</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">filename_pattern</span></code> and <code class="docutils literal notranslate"><span class="pre">ignore_pattern</span></code> (<a class="reference internal" href="#build-pattern"><span class="std std-ref">Parsing and executing examples via matching patterns</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">run_stale_examples</span></code> (<a class="reference internal" href="#run-stale-examples"><span class="std std-ref">Rerunning stale examples</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">reset_argv</span></code> (<a class="reference internal" href="#reset-argv"><span class="std std-ref">Passing command line arguments to example scripts</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">subsection_order</span></code> (<a class="reference internal" href="#sub-gallery-order"><span class="std std-ref">Sorting gallery subsections</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">within_subsection_order</span></code> (<a class="reference internal" href="#within-gallery-order"><span class="std std-ref">Sorting gallery examples</span></a>)</p></li>
@@ -370,10 +372,7 @@ one is targeting a specific file, it would match the dot in the filename even wi
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Sphinx-gallery only re-runs examples that have changed (according to their
-md5 hash). You can delete the associated MD5 files (e.g.,
-<code class="docutils literal notranslate"><span class="pre">./auto_examples/plot_awesome_example.py.md5</span></code>) to force a rebuild if
-you have not changed the example itself between subsequent <code class="docutils literal notranslate"><span class="pre">sphinx</span></code>
-calls.</p>
+md5 hash). See <a class="reference internal" href="#run-stale-examples"><span class="std std-ref">Rerunning stale examples</span></a> below for information.</p>
 </div>
 <p>Similarly, to build only examples in a specific directory, you can do:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
@@ -400,6 +399,43 @@ line, so you can for example build a single example directly via something like:
 </pre></div>
 </div>
 </div>
+</div>
+<div class="section" id="rerunning-stale-examples">
+<span id="run-stale-examples"></span><h2>Rerunning stale examples<a class="headerlink" href="#rerunning-stale-examples" title="Permalink to this headline">¶</a></h2>
+<p>By default, sphinx-gallery only rebuilds examples that have changed.
+For example, when starting from a clean <code class="docutils literal notranslate"><span class="pre">doc/</span></code> directory, running your HTML
+build once will result in Sphinx-gallery executing all examples that match your
+given <a class="reference internal" href="#build-pattern"><span class="std std-ref">filename/ignore patterns</span></a>. Then, running
+the exact same command a second time <em>should not run any examples</em>, because the
+MD5 hash of each example will be checked against the MD5 hash (saved to disk
+as <code class="docutils literal notranslate"><span class="pre">&lt;filename&gt;.md5</span></code> in the generated directory) that the example file had
+during the first build. These will match and thus the example will be
+determined to be “stale”, and it will not be rebuilt by Sphinx-gallery.
+This design feature allows for more rapid documentation iteration by only
+rebuilding examples when they change.</p>
+<p>However, this presents a problem during some modes of debugging and
+iteration. Let’s say that you have one particular
+example that you want to rebuild repeatedly while modifying some function in
+your underlying library but do not want to change the example file contents
+themselves. To do this, you’d either need to make some change (e.g., add/delete
+a newline) to your example or delete the <code class="docutils literal notranslate"><span class="pre">.md5</span></code> file to force Sphinx-gallery
+to rebuild the example. Instead, you can use the configuration value:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">...</span>
+    <span class="s1">&#39;run_stale_examples&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>With this configuration, all examples matching the filename/ignore pattern will
+be rebuilt, even if their MD5 hash shows that the example did not change.
+You can combine this with <a class="reference internal" href="#build-pattern"><span class="std std-ref">filename/ignore patterns</span></a>
+to repeatedly rerun a single example.
+This could be done from the command line, for example:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> make html <span class="nv">SPHINXOPTS</span><span class="o">=</span><span class="s1">&#39;-D sphinx_gallery_conf.run_stale_examples=True&#39;</span> -Dsphinx_gallery_conf.filename_pattern<span class="o">=</span><span class="s1">&#39;my_example_name&#39;</span><span class="sb">``</span>
+</pre></div>
+</div>
+<p>This command will cause any examples matching the filename pattern
+<code class="docutils literal notranslate"><span class="pre">'my_example_name'</span></code> to be rebuilt, regardless of their MD5 hashes.</p>
 </div>
 <div class="section" id="passing-command-line-arguments-to-example-scripts">
 <span id="reset-argv"></span><h2>Passing command line arguments to example scripts<a class="headerlink" href="#passing-command-line-arguments-to-example-scripts" title="Permalink to this headline">¶</a></h2>

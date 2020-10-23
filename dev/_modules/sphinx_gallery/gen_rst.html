@@ -996,9 +996,14 @@
     <span class="n">executable</span> <span class="o">=</span> <span class="n">executable_script</span><span class="p">(</span><span class="n">src_file</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">md5sum_is_current</span><span class="p">(</span><span class="n">target_file</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;t&#39;</span><span class="p">):</span>
+        <span class="n">do_return</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">if</span> <span class="n">executable</span><span class="p">:</span>
-            <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;stale_examples&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">target_file</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">intro</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;run_stale_examples&#39;</span><span class="p">]:</span>
+                <span class="n">do_return</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;stale_examples&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">target_file</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">do_return</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">intro</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 
     <span class="n">image_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="s1">&#39;images&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">image_dir</span><span class="p">):</span>
