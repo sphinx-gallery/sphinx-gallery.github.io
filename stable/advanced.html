@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Advanced usage &mdash; Sphinx-Gallery 0.8.1-git documentation</title>
+  <title>Advanced usage &mdash; Sphinx-Gallery 0.8.2-git documentation</title>
   
 
   
@@ -17,6 +17,7 @@
   <link rel="stylesheet" href="_static/gallery.css" type="text/css" />
   <link rel="stylesheet" href="_static/gallery-binder.css" type="text/css" />
   <link rel="stylesheet" href="_static/gallery-dataframe.css" type="text/css" />
+  <link rel="stylesheet" href="_static/gallery-rendered-html.css" type="text/css" />
 
   
   
@@ -66,7 +67,7 @@
             
             
               <div class="version">
-                0.8.1
+                0.8.2
               </div>
             
           
@@ -132,11 +133,11 @@
 <li class="toctree-l3"><a class="reference internal" href="#example-1-a-matplotlib-and-mayavi-style-scraper">Example 1: a Matplotlib and Mayavi-style scraper</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#example-2-detecting-image-files-on-disk">Example 2: detecting image files on disk</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#example-3-matplotlib-with-svg-format">Example 3: matplotlib with SVG format</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#integrate-custom-scrapers-with-sphinx-gallery">Integrate custom scrapers with Sphinx-gallery</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#integrate-custom-scrapers-with-sphinx-gallery">Integrate custom scrapers with Sphinx-Gallery</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#define-resetting-behavior-e-g-for-custom-libraries">Define resetting behavior (e.g., for custom libraries)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#using-only-sphinx-gallery-styles">Using (only) Sphinx-gallery styles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-only-sphinx-gallery-styles">Using (only) Sphinx-Gallery styles</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="faq.html">Frequently Asked Questions</a></li>
@@ -152,7 +153,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">Sphinx-Gallery API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changes.html">Change Log</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery">Fork sphinx-gallery on Github</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery">Fork Sphinx-Gallery on Github</a></li>
 </ul>
 
             
@@ -221,11 +222,11 @@ to use Sphinx-Gallery more deeply.</p>
 <li><p><a class="reference internal" href="#example-1-a-matplotlib-and-mayavi-style-scraper" id="id8">Example 1: a Matplotlib and Mayavi-style scraper</a></p></li>
 <li><p><a class="reference internal" href="#example-2-detecting-image-files-on-disk" id="id9">Example 2: detecting image files on disk</a></p></li>
 <li><p><a class="reference internal" href="#example-3-matplotlib-with-svg-format" id="id10">Example 3: matplotlib with SVG format</a></p></li>
-<li><p><a class="reference internal" href="#integrate-custom-scrapers-with-sphinx-gallery" id="id11">Integrate custom scrapers with Sphinx-gallery</a></p></li>
+<li><p><a class="reference internal" href="#integrate-custom-scrapers-with-sphinx-gallery" id="id11">Integrate custom scrapers with Sphinx-Gallery</a></p></li>
 </ul>
 </li>
 <li><p><a class="reference internal" href="#define-resetting-behavior-e-g-for-custom-libraries" id="id12">Define resetting behavior (e.g., for custom libraries)</a></p></li>
-<li><p><a class="reference internal" href="#using-only-sphinx-gallery-styles" id="id13">Using (only) Sphinx-gallery styles</a></p></li>
+<li><p><a class="reference internal" href="#using-only-sphinx-gallery-styles" id="id13">Using (only) Sphinx-Gallery styles</a></p></li>
 </ul>
 </div>
 <div class="section" id="extend-your-makefile-for-sphinx-gallery">
@@ -338,7 +339,7 @@ allowing for quick iteration.</p>
 <p class="admonition-title">Warning</p>
 <p>The API for custom scrapers is currently experimental.</p>
 </div>
-<p>By default, Sphinx-gallery supports image scrapers for Matplotlib
+<p>By default, Sphinx-Gallery supports image scrapers for Matplotlib
 (<a class="reference internal" href="gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.matplotlib_scraper" title="sphinx_gallery.scrapers.matplotlib_scraper"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib_scraper()</span></code></a>) and Mayavi
 (<a class="reference internal" href="gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.mayavi_scraper" title="sphinx_gallery.scrapers.mayavi_scraper"><code class="xref py py-func docutils literal notranslate"><span class="pre">mayavi_scraper()</span></code></a>). If you wish to capture
 output from other python packages, first determine if the object you wish to
@@ -374,7 +375,7 @@ starts at.</p></li>
 interest for image scrapers is the element <code class="docutils literal notranslate"><span class="pre">'image_path_iterator'</span></code> which
 is an iterable object which returns an absolute path to an image file name
 adhering to Sphinx-Gallery naming convention. The path directs to the
-<code class="docutils literal notranslate"><span class="pre">gallery_dirs/images</span></code> directory (<a class="reference internal" href="getting_started.html#configure-and-use-sphinx-gallery"><span class="std std-ref">Configure and use sphinx-gallery</span></a>)
+<code class="docutils literal notranslate"><span class="pre">gallery_dirs/images</span></code> directory (<a class="reference internal" href="getting_started.html#configure-and-use-sphinx-gallery"><span class="std std-ref">Configure and use Sphinx-Gallery</span></a>)
 and the image file name is <code class="docutils literal notranslate"><span class="pre">'sphx_glr_'</span></code> followed by the name of the
 source <code class="docutils literal notranslate"><span class="pre">.py</span></code> file then a number, which starts at 1 and increases by 1 at
 each iteration. The default file format is <code class="docutils literal notranslate"><span class="pre">.'png'</span></code>. For example:
@@ -389,7 +390,7 @@ the source code). The <a class="reference internal" href="gen_modules/sphinx_gal
 the helper function <a class="reference internal" href="gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.figure_rst" title="sphinx_gallery.scrapers.figure_rst"><code class="xref py py-func docutils literal notranslate"><span class="pre">sphinx_gallery.scrapers.figure_rst()</span></code></a> to help generate
 rST (see below).</p>
 <p>This function will be called once for each code block of your examples.
-Sphinx-gallery will take care of scaling images for the gallery
+Sphinx-Gallery will take care of scaling images for the gallery
 index page thumbnails. PNG images are scaled using Pillow, and
 SVG images are copied.</p>
 <div class="admonition warning">
@@ -409,8 +410,8 @@ to disk (e.g., PNG or JPEG), we recommend you use a similar approach.</p>
     <span class="kn">import</span> <span class="nn">mymodule</span>
     <span class="c1"># We use a list to collect references to image names</span>
     <span class="n">image_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
-    <span class="c1"># The `image_path_iterator` is created by Sphinx-gallery, it will yield</span>
-    <span class="c1"># a path to a file name that adheres to Sphinx-gallery naming convention.</span>
+    <span class="c1"># The `image_path_iterator` is created by Sphinx-Gallery, it will yield</span>
+    <span class="c1"># a path to a file name that adheres to Sphinx-Gallery naming convention.</span>
     <span class="n">image_path_iterator</span> <span class="o">=</span> <span class="n">block_vars</span><span class="p">[</span><span class="s1">&#39;image_path_iterator&#39;</span><span class="p">]</span>
 
     <span class="c1"># Define a list of our already-created figure objects.</span>
@@ -491,8 +492,8 @@ package in a module called <code class="docutils literal notranslate"><span clas
 <div class="section" id="example-3-matplotlib-with-svg-format">
 <h3><a class="toc-backref" href="#id10">Example 3: matplotlib with SVG format</a><a class="headerlink" href="#example-3-matplotlib-with-svg-format" title="Permalink to this headline">¶</a></h3>
 <p>The <a class="reference internal" href="gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.matplotlib_scraper" title="sphinx_gallery.scrapers.matplotlib_scraper"><code class="xref py py-func docutils literal notranslate"><span class="pre">sphinx_gallery.scrapers.matplotlib_scraper()</span></code></a> supports <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>
-to pass to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure.savefig" title="(in Matplotlib v3.3.1)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">matplotlib.figure.Figure.savefig()</span></code></a>, one of which is the
-<code class="docutils literal notranslate"><span class="pre">format</span></code> argument. Currently sphinx-gallery supports PNG (default) and SVG
+to pass to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure.savefig" title="(in Matplotlib v3.3.3)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">matplotlib.figure.Figure.savefig()</span></code></a>, one of which is the
+<code class="docutils literal notranslate"><span class="pre">format</span></code> argument. Currently Sphinx-Gallery supports PNG (default) and SVG
 output formats. To use SVG, you can do:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sphinx_gallery.scrapers</span> <span class="kn">import</span> <span class="n">matplotlib_scraper</span>
 
@@ -515,21 +516,21 @@ output formats. To use SVG, you can do:</p>
 writing a customized scraper class or function.</p>
 </div>
 <div class="section" id="integrate-custom-scrapers-with-sphinx-gallery">
-<h3><a class="toc-backref" href="#id11">Integrate custom scrapers with Sphinx-gallery</a><a class="headerlink" href="#integrate-custom-scrapers-with-sphinx-gallery" title="Permalink to this headline">¶</a></h3>
-<p>Sphinx-gallery plans to internally maintain only two scrapers: matplotlib and
+<h3><a class="toc-backref" href="#id11">Integrate custom scrapers with Sphinx-Gallery</a><a class="headerlink" href="#integrate-custom-scrapers-with-sphinx-gallery" title="Permalink to this headline">¶</a></h3>
+<p>Sphinx-Gallery plans to internally maintain only two scrapers: matplotlib and
 mayavi. If you have extended or fixed bugs with these scrapers, we welcome PRs
 to improve them!</p>
 <p>On the other hand, if you have developed a custom scraper for a different
 plotting library that would be useful to the broader community, we encourage
-you to get it working with Sphinx-gallery and then maintain it externally
+you to get it working with Sphinx-Gallery and then maintain it externally
 (probably in the package that it scrapes), and then integrate and advertise
-it with Sphinx-gallery. You can:</p>
+it with Sphinx-Gallery. You can:</p>
 <ol class="arabic">
 <li><p>Contribute it to the list of externally supported scrapers located in
 <a class="reference internal" href="configuration.html#reset-modules"><span class="std std-ref">Resetting modules</span></a>.</p></li>
 <li><p>Optional: add a custom hook to your module root to simplify scraper use.
 Taking PyVista as an example, adding <code class="docutils literal notranslate"><span class="pre">pyvista._get_sg_image_scraper()</span></code>
-that returns the <code class="docutils literal notranslate"><span class="pre">callable</span></code> scraper to be used by Sphinx-gallery allows
+that returns the <code class="docutils literal notranslate"><span class="pre">callable</span></code> scraper to be used by Sphinx-Gallery allows
 PyVista users to just use strings as they already can for
 <code class="docutils literal notranslate"><span class="pre">'matplotlib'</span></code> and <code class="docutils literal notranslate"><span class="pre">'mayavi'</span></code>:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
@@ -538,7 +539,7 @@ PyVista users to just use strings as they already can for
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Sphinx-gallery will look for this custom function and call it to get the
+<p>Sphinx-Gallery will look for this custom function and call it to get the
 PyVista image scraper to use before running any examples.</p>
 </li>
 </ol>
@@ -546,12 +547,12 @@ PyVista image scraper to use before running any examples.</p>
 </div>
 <div class="section" id="define-resetting-behavior-e-g-for-custom-libraries">
 <span id="custom-reset"></span><h2><a class="toc-backref" href="#id12">Define resetting behavior (e.g., for custom libraries)</a><a class="headerlink" href="#define-resetting-behavior-e-g-for-custom-libraries" title="Permalink to this headline">¶</a></h2>
-<p>Sphinx-gallery natively supports resetting <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> and <code class="docutils literal notranslate"><span class="pre">seaborn</span></code>.
+<p>Sphinx-Gallery natively supports resetting <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> and <code class="docutils literal notranslate"><span class="pre">seaborn</span></code>.
 However, if you’d like to support resetting for other libraries (or would like
 to modify the resetting behavior for a natively-supported library), you can
 add a custom function to the resetting tuple defined in <code class="docutils literal notranslate"><span class="pre">conf.py</span></code>.</p>
 <p>The function takes two variables: a dictionary called <code class="docutils literal notranslate"><span class="pre">gallery_conf</span></code> (which is
-your Sphinx-gallery configuration) and a string called <code class="docutils literal notranslate"><span class="pre">fname</span></code> (which is the
+your Sphinx-Gallery configuration) and a string called <code class="docutils literal notranslate"><span class="pre">fname</span></code> (which is the
 file name of the currently-executed Python script). These generally don’t need
 to be used in order to perform whatever resetting behavior you want, but must
 be included in the function definition for compatibility reasons.</p>
@@ -578,8 +579,8 @@ that results between the rendered examples and local outputs.</p>
 </div>
 </div>
 <div class="section" id="using-only-sphinx-gallery-styles">
-<h2><a class="toc-backref" href="#id13">Using (only) Sphinx-gallery styles</a><a class="headerlink" href="#using-only-sphinx-gallery-styles" title="Permalink to this headline">¶</a></h2>
-<p>If you just want to make use of sphinx-gallery CSS files, instead of using
+<h2><a class="toc-backref" href="#id13">Using (only) Sphinx-Gallery styles</a><a class="headerlink" href="#using-only-sphinx-gallery-styles" title="Permalink to this headline">¶</a></h2>
+<p>If you just want to make use of sphinx-Gallery CSS files, instead of using
 the <code class="docutils literal notranslate"><span class="pre">sphinx_gallery.gen_gallery</span></code> extension, you can use in <code class="docutils literal notranslate"><span class="pre">conf.py</span></code>:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">extensions</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;sphinx_gallery.load_style&#39;</span><span class="p">]</span>
 </pre></div>
