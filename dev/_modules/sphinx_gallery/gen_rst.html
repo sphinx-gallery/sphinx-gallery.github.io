@@ -444,7 +444,8 @@
     <span class="k">return</span> <span class="kc">False</span></div>
 
 
-<div class="viewcode-block" id="save_thumbnail"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.save_thumbnail">[docs]</a><span class="k">def</span> <span class="nf">save_thumbnail</span><span class="p">(</span><span class="n">image_path_template</span><span class="p">,</span> <span class="n">src_file</span><span class="p">,</span> <span class="n">file_conf</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
+<div class="viewcode-block" id="save_thumbnail"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.save_thumbnail">[docs]</a><span class="k">def</span> <span class="nf">save_thumbnail</span><span class="p">(</span><span class="n">image_path_template</span><span class="p">,</span> <span class="n">src_file</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">,</span> <span class="n">file_conf</span><span class="p">,</span>
+                   <span class="n">gallery_conf</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Generate and Save the thumbnail image</span>
 
 <span class="sd">    Parameters</span>
@@ -453,6 +454,11 @@
 <span class="sd">        holds the template where to save and how to name the image</span>
 <span class="sd">    src_file : str</span>
 <span class="sd">        path to source python file</span>
+<span class="sd">    script_vars : dict</span>
+<span class="sd">        Configuration and run time variables</span>
+<span class="sd">    file_conf : dict</span>
+<span class="sd">        File-specific settings given in source file comments as:</span>
+<span class="sd">        ``# sphinx_gallery_&lt;name&gt; = &lt;value&gt;``</span>
 <span class="sd">    gallery_conf : dict</span>
 <span class="sd">        Sphinx-Gallery configuration dictionary</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -475,6 +481,9 @@
             <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
                 <span class="s1">&#39;sphinx_gallery_thumbnail_number setting is not a number, &#39;</span>
                 <span class="s1">&#39;got </span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">thumbnail_number</span><span class="p">,))</span>
+        <span class="c1"># negative index means counting from the last one</span>
+        <span class="k">if</span> <span class="n">thumbnail_number</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">thumbnail_number</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">script_vars</span><span class="p">[</span><span class="s2">&quot;image_path_iterator&quot;</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="n">image_path</span> <span class="o">=</span> <span class="n">image_path_template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">thumbnail_number</span><span class="p">)</span>
     <span class="k">del</span> <span class="n">thumbnail_number</span><span class="p">,</span> <span class="n">thumbnail_path</span><span class="p">,</span> <span class="n">image_path_template</span>
     <span class="n">thumbnail_image_path</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">_find_image_ext</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span>
@@ -1048,7 +1057,8 @@
     <span class="n">save_rst_example</span><span class="p">(</span><span class="n">example_rst</span><span class="p">,</span> <span class="n">target_file</span><span class="p">,</span> <span class="n">time_elapsed</span><span class="p">,</span> <span class="n">memory_used</span><span class="p">,</span>
                      <span class="n">gallery_conf</span><span class="p">)</span>
 
-    <span class="n">save_thumbnail</span><span class="p">(</span><span class="n">image_path_template</span><span class="p">,</span> <span class="n">src_file</span><span class="p">,</span> <span class="n">file_conf</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
+    <span class="n">save_thumbnail</span><span class="p">(</span><span class="n">image_path_template</span><span class="p">,</span> <span class="n">src_file</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">,</span> <span class="n">file_conf</span><span class="p">,</span>
+                   <span class="n">gallery_conf</span><span class="p">)</span>
 
     <span class="n">example_nb</span> <span class="o">=</span> <span class="n">jupyter_notebook</span><span class="p">(</span><span class="n">script_blocks</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">)</span>
     <span class="n">ipy_fname</span> <span class="o">=</span> <span class="n">replace_py_ipynb</span><span class="p">(</span><span class="n">target_file</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.new&#39;</span>
