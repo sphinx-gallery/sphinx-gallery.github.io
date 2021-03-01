@@ -152,7 +152,8 @@
 <li class="toctree-l2"><a class="reference internal" href="#resetting-modules">Resetting modules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#dealing-with-failing-gallery-example-scripts">Dealing with failing Gallery example scripts</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#abort-build-on-first-fail">Abort build on first fail</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#don-t-fail-the-build-on-exit">Don’t fail the build on exit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#don-t-fail-the-build-if-specific-examples-error">Don’t fail the build if specific examples error</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#never-fail-the-build-on-error">Never fail the build on error</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#setting-gallery-thumbnail-size">Setting gallery thumbnail size</a></li>
@@ -262,7 +263,8 @@ file:</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">compress_images</span></code> (<a class="reference internal" href="#compress-images"><span class="std std-ref">Compressing images</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">reset_modules</span></code> (<a class="reference internal" href="#reset-modules"><span class="std std-ref">Resetting modules</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">abort_on_example_error</span></code> (<a class="reference internal" href="#abort-on-first"><span class="std std-ref">Abort build on first fail</span></a>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">expected_failing_examples</span></code> (<a class="reference internal" href="#dont-fail-exit"><span class="std std-ref">Don’t fail the build on exit</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">only_warn_on_example_error</span></code> (<a class="reference internal" href="#warning-on-error"><span class="std std-ref">Never fail the build on error</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">expected_failing_examples</span></code> (<a class="reference internal" href="#dont-fail-exit"><span class="std std-ref">Don’t fail the build if specific examples error</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">min_reported_time</span></code> (<a class="reference internal" href="#min-reported-time"><span class="std std-ref">Minimal reported time</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">show_memory</span></code> (<a class="reference internal" href="#show-memory"><span class="std std-ref">Showing memory consumption</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">show_signature</span></code> (<a class="reference internal" href="#show-signature"><span class="std std-ref">Show signature</span></a>)</p></li>
@@ -1488,8 +1490,8 @@ configuration file to have it as a default:</p>
 <p>The highest precedence is always given to the <cite>-D</cite> flag of
 the <code class="docutils literal notranslate"><span class="pre">sphinx-build</span></code> command.</p>
 </div>
-<div class="section" id="don-t-fail-the-build-on-exit">
-<span id="dont-fail-exit"></span><h3>Don’t fail the build on exit<a class="headerlink" href="#don-t-fail-the-build-on-exit" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="don-t-fail-the-build-if-specific-examples-error">
+<span id="dont-fail-exit"></span><h3>Don’t fail the build if specific examples error<a class="headerlink" href="#don-t-fail-the-build-if-specific-examples-error" title="Permalink to this headline">¶</a></h3>
 <p>It might be the case that you want to keep the gallery even with
 failed examples. Thus you can configure Sphinx-Gallery to allow
 certain examples to fail and still exit with a 0 exit code. For this
@@ -1508,6 +1510,16 @@ the example script.</p>
 <p class="admonition-title">Note</p>
 <p>If an example is expected to fail, Sphinx-Gallery will error if
 the example runs without error.</p>
+</div>
+</div>
+<div class="section" id="never-fail-the-build-on-error">
+<span id="warning-on-error"></span><h3>Never fail the build on error<a class="headerlink" href="#never-fail-the-build-on-error" title="Permalink to this headline">¶</a></h3>
+<p>Sphinx-Gallery can be configured to only log warnings when examples fail. This means that sphinx will only exit with a non-zero exit code if the <code class="docutils literal notranslate"><span class="pre">-W</span></code> flag is passed to <code class="docutils literal notranslate"><span class="pre">sphinx-build</span></code>. This can be enabled by setting:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">...</span>
+    <span class="s1">&#39;only_warn_on_example_error&#39;</span><span class="p">:</span> <span class="kc">True</span>
+<span class="p">}</span>
+</pre></div>
 </div>
 </div>
 </div>

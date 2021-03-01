@@ -257,6 +257,7 @@
     <span class="s1">&#39;plot_gallery&#39;</span><span class="p">:</span> <span class="s1">&#39;True&#39;</span><span class="p">,</span>
     <span class="s1">&#39;download_all_examples&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
     <span class="s1">&#39;abort_on_example_error&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s1">&#39;only_warn_on_example_error&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
     <span class="s1">&#39;failing_examples&#39;</span><span class="p">:</span> <span class="p">{},</span>
     <span class="s1">&#39;passing_examples&#39;</span><span class="p">:</span> <span class="p">[],</span>
     <span class="s1">&#39;stale_examples&#39;</span><span class="p">:</span> <span class="p">[],</span>  <span class="c1"># ones that did not need to be run due to md5sum</span>
@@ -900,10 +901,13 @@
                 <span class="n">color</span><span class="o">=</span><span class="s1">&#39;brown&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">fail_msgs</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
-            <span class="s2">&quot;Here is a summary of the problems encountered &quot;</span>
-            <span class="s2">&quot;when running the examples</span><span class="se">\n\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fail_msgs</span><span class="p">)</span> <span class="o">+</span>
-            <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">79</span><span class="p">)</span></div>
+        <span class="n">fail_message</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Here is a summary of the problems encountered &quot;</span>
+                        <span class="s2">&quot;when running the examples</span><span class="se">\n\n</span><span class="s2">&quot;</span> <span class="o">+</span>
+                        <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fail_msgs</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">79</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;only_warn_on_example_error&#39;</span><span class="p">]:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">fail_message</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span><span class="n">fail_message</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="collect_gallery_files"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.collect_gallery_files">[docs]</a><span class="k">def</span> <span class="nf">collect_gallery_files</span><span class="p">(</span><span class="n">examples_dirs</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
