@@ -149,6 +149,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#building-without-executing-examples">Building without executing examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#compressing-images">Compressing images</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#image-scrapers">Image scrapers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-multiple-code-blocks-to-create-a-single-figure">Using multiple code blocks to create a single figure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#resetting-modules">Resetting modules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#dealing-with-failing-gallery-example-scripts">Dealing with failing Gallery example scripts</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#abort-build-on-first-fail">Abort build on first fail</a></li>
@@ -282,8 +283,12 @@ file:</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">sphinx_gallery_thumbnail_number</span></code> (<a class="reference internal" href="#choosing-thumbnail"><span class="std std-ref">Choosing the thumbnail image</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">sphinx_gallery_thumbnail_path</span></code> (<a class="reference internal" href="#providing-thumbnail"><span class="std std-ref">Providing an image for the thumbnail image</span></a>)</p></li>
 </ul>
-<p>See also <a class="reference internal" href="#removing-config-comments"><span class="std std-ref">Removing config comments</span></a> to hide these comments from the
-rendered examples.</p>
+<p>Some options can be set on a per-code-block basis in a file:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">sphinx_gallery_defer_figures</span></code> (<a class="reference internal" href="#defer-figures"><span class="std std-ref">Using multiple code blocks to create a single figure</span></a>)</p></li>
+</ul>
+<p>See also <a class="reference internal" href="#removing-config-comments"><span class="std std-ref">Removing config comments</span></a> to hide config comments in files from
+the rendered examples.</p>
 <p>Some options can be set during the build execution step, e.g. using a Makefile:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">html-noplot</span></code> (<a class="reference internal" href="#without-execution"><span class="std std-ref">Building without executing examples</span></a>)</p></li>
@@ -974,8 +979,8 @@ setting:</p>
 </div>
 <div class="section" id="removing-config-comments">
 <span id="id5"></span><h2>Removing config comments<a class="headerlink" href="#removing-config-comments" title="Permalink to this headline">¶</a></h2>
-<p>Some configurations can be done on a file-by-file basis by adding a special
-comment with the pattern <code class="samp docutils literal notranslate"><span class="pre">#</span> <span class="pre">sphinx_gallery_</span><em><span class="pre">config</span></em> <span class="pre">=</span> <em><span class="pre">value</span></em></code> to the
+<p>Some configurations can be specified within a file by adding a special
+comment with the pattern <code class="samp docutils literal notranslate"><span class="pre">#</span> <span class="pre">sphinx_gallery_</span><em><span class="pre">config</span></em> <span class="pre">[=</span> <em><span class="pre">value</span></em><span class="pre">]</span></code> to the
 example source files. By default, the source files are parsed as is and thus
 the comment will appear in the example.</p>
 <p>To remove the comment from the rendered example set the option:</p>
@@ -986,8 +991,8 @@ the comment will appear in the example.</p>
 </pre></div>
 </div>
 <p>This only removes configuration comments from code blocks, not from text
-blocks. However, note that technically, configuration comments will work when
-put in either code blocks or text blocks.</p>
+blocks. However, note that technically, file-level configuration comments will
+work when put in either code blocks or text blocks.</p>
 </div>
 <div class="section" id="add-your-own-first-and-last-notebook-cell">
 <span id="own-notebook-cell"></span><h2>Add your own first and last notebook cell<a class="headerlink" href="#add-your-own-first-and-last-notebook-cell" title="Permalink to this headline">¶</a></h2>
@@ -1428,6 +1433,46 @@ images produced by an arbitrary package. For instructions, see
 useful for general use (e.g., a custom scraper for a plotting library)
 feel free to add it to the list above (see discussion
 <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/issues/441#issuecomment-493782430">here</a>)!</p>
+</div>
+<div class="section" id="using-multiple-code-blocks-to-create-a-single-figure">
+<span id="defer-figures"></span><h2>Using multiple code blocks to create a single figure<a class="headerlink" href="#using-multiple-code-blocks-to-create-a-single-figure" title="Permalink to this headline">¶</a></h2>
+<p>By default, images are scraped following each code block in an example.  Thus,
+the following produces two plots, with one plot per code block:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># %%</span>
+<span class="c1"># This first code block produces a plot with two lines</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+
+<span class="c1"># %%</span>
+<span class="c1"># This second code block produces a plot with one line</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>However, sometimes it can be useful to use multiple code blocks to create a
+single figure, particularly if the figure takes a large number commands that
+would benefit from being interleaved with text blocks.  The optional flag
+<code class="docutils literal notranslate"><span class="pre">sphinx_gallery_defer_figures</span></code> can be inserted as a comment anywhere in a code
+block to defer the scraping of images to the next code block (where it can be
+further deferred, if desired).  The following produces only one plot:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># %%</span>
+<span class="c1"># This first code block does not produce any plot</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="c1"># sphinx_gallery_defer_figures</span>
+
+<span class="c1"># %%</span>
+<span class="c1"># This second code block produces a plot with three lines</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="resetting-modules">
 <span id="reset-modules"></span><h2>Resetting modules<a class="headerlink" href="#resetting-modules" title="Permalink to this headline">¶</a></h2>

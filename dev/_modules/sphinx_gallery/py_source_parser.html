@@ -228,7 +228,7 @@
 <span class="c1">#</span>
 <span class="c1">#     b = 2</span>
 <span class="n">INFILE_CONFIG_PATTERN</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
-    <span class="sa">r</span><span class="s2">&quot;^[\ \t]*#\s*sphinx_gallery_([A-Za-z0-9_]+)\s*=\s*(.+)[\ \t]*\n?&quot;</span><span class="p">,</span>
+    <span class="sa">r</span><span class="s2">&quot;^[\ \t]*#\s*sphinx_gallery_([A-Za-z0-9_]+)(\s*=\s*(.+))?[\ \t]*\n?&quot;</span><span class="p">,</span>
     <span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span><span class="p">)</span>
 
 
@@ -325,7 +325,9 @@
     <span class="n">file_conf</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="n">INFILE_CONFIG_PATTERN</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
         <span class="n">name</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">value</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># a flag rather than a config setting</span>
+            <span class="k">continue</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">value</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
         <span class="k">except</span> <span class="p">(</span><span class="ne">SyntaxError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
