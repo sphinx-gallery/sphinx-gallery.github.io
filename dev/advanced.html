@@ -141,6 +141,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#define-resetting-behavior-e-g-for-custom-libraries">Define resetting behavior (e.g., for custom libraries)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#altering-sphinx-gallery-css">Altering Sphinx-Gallery CSS</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#using-only-sphinx-gallery-styles">Using (only) Sphinx-Gallery styles</a></li>
 </ul>
 </li>
@@ -234,7 +235,8 @@ to use Sphinx-Gallery more deeply.</p>
 </ul>
 </li>
 <li><p><a class="reference internal" href="#define-resetting-behavior-e-g-for-custom-libraries" id="id13">Define resetting behavior (e.g., for custom libraries)</a></p></li>
-<li><p><a class="reference internal" href="#using-only-sphinx-gallery-styles" id="id14">Using (only) Sphinx-Gallery styles</a></p></li>
+<li><p><a class="reference internal" href="#altering-sphinx-gallery-css" id="id14">Altering Sphinx-Gallery CSS</a></p></li>
+<li><p><a class="reference internal" href="#using-only-sphinx-gallery-styles" id="id15">Using (only) Sphinx-Gallery styles</a></p></li>
 </ul>
 </div>
 <div class="section" id="extend-your-makefile-for-sphinx-gallery">
@@ -595,8 +597,35 @@ examples themselves is discouraged due to the inconsistency
 that results between the rendered examples and local outputs.</p>
 </div>
 </div>
+<div class="section" id="altering-sphinx-gallery-css">
+<h2><a class="toc-backref" href="#id14">Altering Sphinx-Gallery CSS</a><a class="headerlink" href="#altering-sphinx-gallery-css" title="Permalink to this headline">¶</a></h2>
+<p>The Sphinx-Gallery <code class="docutils literal notranslate"><span class="pre">.css</span></code> files that control the appearance of your example
+gallery can be found <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/tree/master/sphinx_gallery/_static">here</a>.
+These default <code class="docutils literal notranslate"><span class="pre">.css</span></code> files are added to your build. Specifically, they are
+copied into <code class="docutils literal notranslate"><span class="pre">_build/html/_static/</span></code> of your <code class="docutils literal notranslate"><span class="pre">gallery_dir</span></code>. You can add your
+own custom <code class="docutils literal notranslate"><span class="pre">.css</span></code> files by using the <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/configuration.html" title="(in Sphinx v5.0.0+)"><span class="xref std std-doc">Sphinx configuration</span></a> <code class="docutils literal notranslate"><span class="pre">html_static_path</span></code>. For example,
+list any path(s) that contain your custom static files, using the
+<code class="docutils literal notranslate"><span class="pre">html_static_path</span></code> configuration, in your <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">html_static_path</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;_static&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>You can also directly overwrite the default static files. The static files in
+the path(s) listed will be copied over after the builtin Sphinx-Gallery files,
+so if you have a file named “gallery.css”, it will overwrite the builtin
+“gallery.css”.</p>
+<p>The appearance of <a class="reference internal" href="configuration.html#stylizing-code-links"><span class="std std-ref">code links</span></a> and
+<a class="reference internal" href="configuration.html#setting-thumbnail-size"><span class="std std-ref">thumbnail size</span></a> can be altered via addition
+of your own CSS. Can also do things like hide the download buttons in the
+example headers using:</p>
+<div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="nt">div</span><span class="p">.</span><span class="nc">sphx-glr-download-link-note</span> <span class="p">{</span>
+<span class="k">height</span><span class="p">:</span> <span class="mi">0</span><span class="kt">px</span><span class="p">;</span>
+<span class="k">visibility</span><span class="p">:</span> <span class="kc">hidden</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="using-only-sphinx-gallery-styles">
-<h2><a class="toc-backref" href="#id14">Using (only) Sphinx-Gallery styles</a><a class="headerlink" href="#using-only-sphinx-gallery-styles" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id15">Using (only) Sphinx-Gallery styles</a><a class="headerlink" href="#using-only-sphinx-gallery-styles" title="Permalink to this headline">¶</a></h2>
 <p>If you just want to make use of sphinx-Gallery CSS files, instead of using
 the <code class="docutils literal notranslate"><span class="pre">sphinx_gallery.gen_gallery</span></code> extension, you can use in <code class="docutils literal notranslate"><span class="pre">conf.py</span></code>:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">extensions</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;sphinx_gallery.load_style&#39;</span><span class="p">]</span>
