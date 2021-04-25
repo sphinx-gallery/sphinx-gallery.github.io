@@ -3,11 +3,11 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Configuration &mdash; Sphinx-Gallery 0.8.2-git documentation</title>
+  <title>Configuration &mdash; Sphinx-Gallery 0.9.0-git documentation</title>
   
 
   
@@ -21,7 +21,10 @@
 
   
   
+
   
+  
+
   
 
   
@@ -34,8 +37,6 @@
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -57,7 +58,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home" alt="Documentation Home"> Sphinx-Gallery
+            <a href="index.html" class="icon icon-home"> Sphinx-Gallery
           
 
           
@@ -67,7 +68,7 @@
             
             
               <div class="version">
-                0.8.2
+                0.9.0
               </div>
             
           
@@ -148,10 +149,12 @@
 <li class="toctree-l2"><a class="reference internal" href="#building-without-executing-examples">Building without executing examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#compressing-images">Compressing images</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#image-scrapers">Image scrapers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-multiple-code-blocks-to-create-a-single-figure">Using multiple code blocks to create a single figure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#resetting-modules">Resetting modules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#dealing-with-failing-gallery-example-scripts">Dealing with failing Gallery example scripts</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#abort-build-on-first-fail">Abort build on first fail</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#don-t-fail-the-build-on-exit">Don’t fail the build on exit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#don-t-fail-the-build-if-specific-examples-error">Don’t fail the build if specific examples error</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#never-fail-the-build-on-error">Never fail the build on error</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#setting-gallery-thumbnail-size">Setting gallery thumbnail size</a></li>
@@ -261,7 +264,8 @@ file:</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">compress_images</span></code> (<a class="reference internal" href="#compress-images"><span class="std std-ref">Compressing images</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">reset_modules</span></code> (<a class="reference internal" href="#reset-modules"><span class="std std-ref">Resetting modules</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">abort_on_example_error</span></code> (<a class="reference internal" href="#abort-on-first"><span class="std std-ref">Abort build on first fail</span></a>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">expected_failing_examples</span></code> (<a class="reference internal" href="#dont-fail-exit"><span class="std std-ref">Don’t fail the build on exit</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">only_warn_on_example_error</span></code> (<a class="reference internal" href="#warning-on-error"><span class="std std-ref">Never fail the build on error</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">expected_failing_examples</span></code> (<a class="reference internal" href="#dont-fail-exit"><span class="std std-ref">Don’t fail the build if specific examples error</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">min_reported_time</span></code> (<a class="reference internal" href="#min-reported-time"><span class="std std-ref">Minimal reported time</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">show_memory</span></code> (<a class="reference internal" href="#show-memory"><span class="std std-ref">Showing memory consumption</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">show_signature</span></code> (<a class="reference internal" href="#show-signature"><span class="std std-ref">Show signature</span></a>)</p></li>
@@ -279,8 +283,12 @@ file:</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">sphinx_gallery_thumbnail_number</span></code> (<a class="reference internal" href="#choosing-thumbnail"><span class="std std-ref">Choosing the thumbnail image</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">sphinx_gallery_thumbnail_path</span></code> (<a class="reference internal" href="#providing-thumbnail"><span class="std std-ref">Providing an image for the thumbnail image</span></a>)</p></li>
 </ul>
-<p>See also <a class="reference internal" href="#removing-config-comments"><span class="std std-ref">Removing config comments</span></a> to hide these comments from the
-rendered examples.</p>
+<p>Some options can be set on a per-code-block basis in a file:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">sphinx_gallery_defer_figures</span></code> (<a class="reference internal" href="#defer-figures"><span class="std std-ref">Using multiple code blocks to create a single figure</span></a>)</p></li>
+</ul>
+<p>See also <a class="reference internal" href="#removing-config-comments"><span class="std std-ref">Removing config comments</span></a> to hide config comments in files from
+the rendered examples.</p>
 <p>Some options can be set during the build execution step, e.g. using a Makefile:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">html-noplot</span></code> (<a class="reference internal" href="#without-execution"><span class="std std-ref">Building without executing examples</span></a>)</p></li>
@@ -353,7 +361,7 @@ executed, you can modify <code class="docutils literal notranslate"><span class=
 </pre></div>
 </div>
 <p>will build all examples starting with <code class="docutils literal notranslate"><span class="pre">plot_compute_</span></code>. The key
-<code class="docutils literal notranslate"><span class="pre">filename_pattern</span></code> (and <code class="docutils literal notranslate"><span class="pre">ignore_pattern</span></code>) accepts <a class="reference external" href="https://docs.python.org/2/library/re.html">regular expressions</a>
+<code class="docutils literal notranslate"><span class="pre">filename_pattern</span></code> (and <code class="docutils literal notranslate"><span class="pre">ignore_pattern</span></code>) accepts <a class="reference external" href="https://docs.python.org/library/re.html">regular expressions</a>
 which will be matched with the full path of the example. This is the reason
 the leading <code class="docutils literal notranslate"><span class="pre">'/'</span></code> is required. Users are advised to use <code class="docutils literal notranslate"><span class="pre">re.escape(os.sep)</span></code>
 instead of <code class="docutils literal notranslate"><span class="pre">'/'</span></code> if they want to be agnostic to the operating system.</p>
@@ -367,7 +375,7 @@ you would do:</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Here, one should escape the dot <code class="docutils literal notranslate"><span class="pre">r'\.'</span></code> as otherwise python <a class="reference external" href="https://docs.python.org/2/library/re.html">regular expressions</a> matches any character. Nevertheless, as
+<p>Here, one should escape the dot <code class="docutils literal notranslate"><span class="pre">r'\.'</span></code> as otherwise python <a class="reference external" href="https://docs.python.org/library/re.html">regular expressions</a> matches any character. Nevertheless, as
 one is targeting a specific file, it would match the dot in the filename even without this escape character.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -389,13 +397,13 @@ starting with <code class="docutils literal notranslate"><span class="pre">plot_
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>As the patterns are parsed as <a class="reference external" href="https://docs.python.org/2/library/re.html">regular expressions</a>, users are advised to consult the
-<a class="reference external" href="https://docs.python.org/2/library/re.html">regular expressions</a> module for more details.</p>
+<p>As the patterns are parsed as <a class="reference external" href="https://docs.python.org/library/re.html">regular expressions</a>, users are advised to consult the
+<a class="reference external" href="https://docs.python.org/library/re.html">regular expressions</a> module for more details.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Remember that Sphinx allows overriding <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> values from the command
 line, so you can for example build a single example directly via something like:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> sphinx-build -D sphinx_gallery_conf.filename_pattern<span class="o">=</span>plot_specific_example<span class="se">\.</span>py ...
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>sphinx-build -D sphinx_gallery_conf.filename_pattern<span class="o">=</span>plot_specific_example<span class="se">\.</span>py ...
 </pre></div>
 </div>
 </div>
@@ -431,7 +439,7 @@ be rebuilt, even if their MD5 hash shows that the example did not change.
 You can combine this with <a class="reference internal" href="#build-pattern"><span class="std std-ref">filename/ignore patterns</span></a>
 to repeatedly rerun a single example.
 This could be done from the command line, for example:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> make html <span class="nv">SPHINXOPTS</span><span class="o">=</span><span class="s2">&quot;-D sphinx_gallery_conf.run_stale_examples=True -D sphinx_gallery_conf.filename_pattern=&#39;my_example_name&#39;&quot;</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>make html <span class="nv">SPHINXOPTS</span><span class="o">=</span><span class="s2">&quot;-D sphinx_gallery_conf.run_stale_examples=True -D sphinx_gallery_conf.filename_pattern=&#39;my_example_name&#39;&quot;</span>
 </pre></div>
 </div>
 <p>This command will cause any examples matching the filename pattern
@@ -566,7 +574,7 @@ dictionary within your Sphinx <code class="docutils literal notranslate"><span c
 </pre></div>
 </div>
 <p>To link to external modules, if you use the Sphinx extension
-<a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html#module-sphinx.ext.intersphinx" title="(in Sphinx v4.0.0+)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sphinx.ext.intersphinx</span></code></a>, no additional changes are necessary,
+<a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html#module-sphinx.ext.intersphinx" title="(in Sphinx v5.0.0+)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sphinx.ext.intersphinx</span></code></a>, no additional changes are necessary,
 as the <code class="docutils literal notranslate"><span class="pre">intersphinx</span></code> inventory will automatically be used.
 If you do not use <code class="docutils literal notranslate"><span class="pre">intersphinx</span></code>, then you should add entries that
 point to the directory containing <code class="docutils literal notranslate"><span class="pre">searchindex.js</span></code>, such as
@@ -584,23 +592,23 @@ in a documentation block.</p></li>
 <p>The former is useful for auto-documenting functions that are used and classes
 that are explicitly instantiated. The latter is useful for classes that are
 typically implicitly returned rather than explicitly instantiated (e.g.,
-<a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a> which is most often instantiated only indirectly
+<a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.4.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a> which is most often instantiated only indirectly
 within function calls).</p>
 <p>For example, we can embed a small gallery of all examples that use or
-refer to <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.exp.html#numpy.exp" title="(in NumPy v1.19)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.exp</span></code></a>, which looks like this:</p>
+refer to <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.exp.html#numpy.exp" title="(in NumPy v1.20)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.exp</span></code></a>, which looks like this:</p>
 <div class="section" id="examples-using-numpy-exp">
 <h3>Examples using <code class="docutils literal notranslate"><span class="pre">numpy.exp</span></code><a class="headerlink" href="#examples-using-numpy-exp" title="Permalink to this headline">¶</a></h3>
-<div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how to import a local module and how images are stacked when two plot..."><div class="figure align-default" id="id8">
+<div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how to import a local module and how images are stacked when two plot..."><div class="figure align-default" id="id9">
 <img alt="Plotting the exponential function" src="_images/sphx_glr_plot_1_exp_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="auto_examples/plot_1_exp.html#sphx-glr-auto-examples-plot-1-exp-py"><span class="std std-ref">Plotting the exponential function</span></a></span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text"><a class="reference internal" href="auto_examples/plot_1_exp.html#sphx-glr-auto-examples-plot-1-exp-py"><span class="std std-ref">Plotting the exponential function</span></a></span><a class="headerlink" href="#id9" title="Permalink to this image">¶</a></p>
 </div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how to choose the figure that is displayed as the thumbnail, if the e..."><div class="figure align-default" id="id9">
+</div><div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how to choose the figure that is displayed as the thumbnail, if the e..."><div class="figure align-default" id="id10">
 <img alt="Choosing the thumbnail figure" src="_images/sphx_glr_plot_4_choose_thumbnail_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="auto_examples/plot_4_choose_thumbnail.html#sphx-glr-auto-examples-plot-4-choose-thumbnail-py"><span class="std std-ref">Choosing the thumbnail figure</span></a></span><a class="headerlink" href="#id9" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text"><a class="reference internal" href="auto_examples/plot_4_choose_thumbnail.html#sphx-glr-auto-examples-plot-4-choose-thumbnail-py"><span class="std std-ref">Choosing the thumbnail figure</span></a></span><a class="headerlink" href="#id10" title="Permalink to this image">¶</a></p>
 </div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="This demonstrates how Sphinx-Gallery identifies function names to figure out which functions ar..."><div class="figure align-default" id="id10">
+</div><div class="sphx-glr-thumbcontainer" tooltip="This demonstrates how Sphinx-Gallery identifies function names to figure out which functions ar..."><div class="figure align-default" id="id11">
 <img alt="Identifying function names in a script" src="_images/sphx_glr_plot_6_function_identifier_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="auto_examples/plot_6_function_identifier.html#sphx-glr-auto-examples-plot-6-function-identifier-py"><span class="std std-ref">Identifying function names in a script</span></a></span><a class="headerlink" href="#id10" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text"><a class="reference internal" href="auto_examples/plot_6_function_identifier.html#sphx-glr-auto-examples-plot-6-function-identifier-py"><span class="std std-ref">Identifying function names in a script</span></a></span><a class="headerlink" href="#id11" title="Permalink to this image">¶</a></p>
 </div>
 </div><div class="sphx-glr-clear"></div><p>For such behavior to be available, you have to activate it in
 your Sphinx-Gallery configuration <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file with:</p>
@@ -633,7 +641,8 @@ examples that use the specific function <code class="docutils literal notranslat
 default generated message if no string is provided as an argument.  The example
 mini-gallery shown above uses the default heading.  The level of the heading
 defaults to <code class="docutils literal notranslate"><span class="pre">^</span></code>, but can be changed using the <code class="docutils literal notranslate"><span class="pre">heading-level</span></code> option, which
-accepts a single character (e.g., <code class="docutils literal notranslate"><span class="pre">-</span></code>).</p>
+accepts a single character (e.g., <code class="docutils literal notranslate"><span class="pre">-</span></code>). The mini-gallery will only be shown
+if the item (here <code class="docutils literal notranslate"><span class="pre">numpy.exp</span></code>) is actually used or referred to in an example.</p>
 <p>You can also list multiple items, separated by spaces, which will merge all
 examples into a single mini-gallery, e.g.:</p>
 <div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="p">..</span> <span class="ow">minigallery</span><span class="p">::</span> numpy.exp numpy.sin
@@ -734,61 +743,61 @@ all functions/classes of the module using
 to the function/class using dot notation (e.g.,
 <code class="docutils literal notranslate"><span class="pre">sphinx_gallery.backreferences.identify_names</span></code>). For example, see:
 <a class="reference internal" href="gen_modules/sphinx_gallery.backreferences.html#sphx-glr-backref-sphinx-gallery-backreferences-identify-names"><span class="std std-ref">Examples using sphinx_gallery.backreferences.identify_names</span></a>.</p>
-<div class="highlight-rst notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31
-32
-33
-34
-35
-36
-37
-38
-39
-40
-41
-42
-43
-44
-45
-46
-47
-48
-49
-50
-51
-52
-53
-54
-55</pre></div></td><td class="code"><div class="highlight"><pre><span></span>{{ fullname }}
+<div class="highlight-rst notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span>{{ fullname }}
 {{ underline }}
 
 <span class="p">..</span> <span class="ow">automodule</span><span class="p">::</span> {{ fullname }}
@@ -861,10 +870,10 @@ For example, this code:</p>
 properly):</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">lst</span></code></a></p></li>
-<li><p><a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="(in Matplotlib v3.3.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">plt.subplots</span></code></a></p></li>
-<li><p><a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">fig</span></code></a></p></li>
-<li><p><a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ax</span></code></a></p></li>
-<li><p><a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="(in Matplotlib v3.3.3)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ax.plot</span></code></a></p></li>
+<li><p><a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="(in Matplotlib v3.4.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">plt.subplots</span></code></a></p></li>
+<li><p><a class="reference external" href="https://matplotlib.org/api/figure_api.html#matplotlib.figure.Figure" title="(in Matplotlib v3.4.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">fig</span></code></a></p></li>
+<li><p><a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.4.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ax</span></code></a></p></li>
+<li><p><a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="(in Matplotlib v3.4.1)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ax.plot</span></code></a></p></li>
 </ul>
 <p>However, this feature might not work properly in all instances.
 Moreover, if variable names get reused in the same script to refer to
@@ -879,7 +888,7 @@ key:</p>
 </div>
 </div>
 <div class="section" id="stylizing-code-links-using-css">
-<h3>Stylizing code links using CSS<a class="headerlink" href="#stylizing-code-links-using-css" title="Permalink to this headline">¶</a></h3>
+<span id="stylizing-code-links"></span><h3>Stylizing code links using CSS<a class="headerlink" href="#stylizing-code-links-using-css" title="Permalink to this headline">¶</a></h3>
 <p>Each link in the code blocks will be decorated with two or three CSS classes.</p>
 <ol class="arabic">
 <li><dl class="simple">
@@ -935,6 +944,9 @@ following css prevents any module except for matplotlib from being decorated:</p
 </div>
 <p>There are likely elements other than <code class="docutils literal notranslate"><span class="pre">text-decoration</span></code> that might be worth
 setting, as well.</p>
+<p>You can add these CSS classes by including your own CSS file via the Sphinx
+configuration <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-html_static_path" title="(in Sphinx v5.0.0+)"><code class="docutils literal notranslate"><span class="pre">html_static_path</span></code></a>, which will override the
+default CSS classes in <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/tree/master/sphinx_gallery/_static">Sphinx-Gallery CSS files</a>.</p>
 </div>
 </div>
 <div class="section" id="using-a-custom-default-thumbnail">
@@ -968,8 +980,8 @@ setting:</p>
 </div>
 <div class="section" id="removing-config-comments">
 <span id="id5"></span><h2>Removing config comments<a class="headerlink" href="#removing-config-comments" title="Permalink to this headline">¶</a></h2>
-<p>Some configurations can be done on a file-by-file basis by adding a special
-comment with the pattern <code class="samp docutils literal notranslate"><span class="pre">#</span> <span class="pre">sphinx_gallery_</span><em><span class="pre">config</span></em> <span class="pre">=</span> <em><span class="pre">value</span></em></code> to the
+<p>Some configurations can be specified within a file by adding a special
+comment with the pattern <code class="samp docutils literal notranslate"><span class="pre">#</span> <span class="pre">sphinx_gallery_</span><em><span class="pre">config</span></em> <span class="pre">[=</span> <em><span class="pre">value</span></em><span class="pre">]</span></code> to the
 example source files. By default, the source files are parsed as is and thus
 the comment will appear in the example.</p>
 <p>To remove the comment from the rendered example set the option:</p>
@@ -980,8 +992,8 @@ the comment will appear in the example.</p>
 </pre></div>
 </div>
 <p>This only removes configuration comments from code blocks, not from text
-blocks. However, note that technically, configuration comments will work when
-put in either code blocks or text blocks.</p>
+blocks. However, note that technically, file-level configuration comments will
+work when put in either code blocks or text blocks.</p>
 </div>
 <div class="section" id="add-your-own-first-and-last-notebook-cell">
 <span id="own-notebook-cell"></span><h2>Add your own first and last notebook cell<a class="headerlink" href="#add-your-own-first-and-last-notebook-cell" title="Permalink to this headline">¶</a></h2>
@@ -989,25 +1001,19 @@ put in either code blocks or text blocks.</p>
 generated notebook. Adding a first cell can be useful for including code that
 is required to run properly in the notebook, but not in a <code class="docutils literal notranslate"><span class="pre">.py</span></code> file. By
 default, the following first cell is added to each notebook:</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="o">..</span> <span class="n">code</span><span class="o">-</span><span class="n">block</span><span class="p">::</span> <span class="n">ipython</span>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
 </pre></div>
 </div>
-<blockquote>
-<div><p>%matplotlib inline</p>
-</div></blockquote>
 <p>Adding a last cell can be useful for performing a desired action such as
 reporting on the user’s environment. By default no last cell is added.</p>
 <p>You can choose whatever text you like by modifying the <code class="docutils literal notranslate"><span class="pre">first_notebook_cell</span></code>
 and <code class="docutils literal notranslate"><span class="pre">last_notebook_cell</span></code> configuration parameters. For example, the gallery
 of this documentation adds the following first cell:</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="o">..</span> <span class="n">code</span><span class="o">-</span><span class="n">block</span><span class="p">::</span> <span class="n">ipython</span>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="c1"># This cell is added by sphinx-gallery</span>
+<span class="c1"># It can be customized to whatever you like</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
 </pre></div>
 </div>
-<blockquote>
-<div><p># This cell is added by sphinx-gallery
-# It can be customized to whatever you like
-%matplotlib inline</p>
-</div></blockquote>
 <p>Which is achieved by the following configuration:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
@@ -1184,6 +1190,12 @@ an example script, add a comment to the example script to specify the
 number of the figure you would like to use as the thumbnail. For example,
 to use the 2nd figure created as the thumbnail:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># sphinx_gallery_thumbnail_number = 2</span>
+</pre></div>
+</div>
+<p>You can also use negative numbers, which counts from the last figure.
+For example -1 means using the last figure created in the example
+as the thumbnail:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># sphinx_gallery_thumbnail_number = -1</span>
 </pre></div>
 </div>
 <p>The default behavior is <code class="docutils literal notranslate"><span class="pre">sphinx_gallery_thumbnail_number</span> <span class="pre">=</span> <span class="pre">1</span></code>. See
@@ -1369,7 +1381,7 @@ to scrape both matplotlib and Mayavi images you can do:</p>
 <p>The default value is <code class="docutils literal notranslate"><span class="pre">'image_scrapers':</span> <span class="pre">('matplotlib',)</span></code> which only scrapes
 Matplotlib images. Note that this includes any images produced by packages that
 are based on Matplotlib, for example Seaborn or Yellowbrick. If you want
-to embed <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.animation.Animation.html#matplotlib.animation.Animation" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.animation.Animation</span></code></a>s as animations rather
+to embed <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.animation.Animation.html#matplotlib.animation.Animation" title="(in Matplotlib v3.4.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.animation.Animation</span></code></a>s as animations rather
 than a single static image of the animation figure, you should add:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
@@ -1379,17 +1391,17 @@ than a single static image of the animation figure, you should add:</p>
 </div>
 <p>HTML embedding options can be changed by setting <code class="docutils literal notranslate"><span class="pre">rcParams['animation.html']</span></code>
 and related options in your
-<a class="reference external" href="https://matplotlib.org/tutorials/introductory/customizing.html#matplotlib-rcparams" title="(in Matplotlib v3.3.3)"><span class="xref std std-ref">matplotlib rcParams</span></a>.
+<a class="reference external" href="https://matplotlib.org/tutorials/introductory/customizing.html#matplotlib-rcparams" title="(in Matplotlib v3.4.1)"><span class="xref std std-ref">matplotlib rcParams</span></a>.
 It’s also recommended to ensure that “imagemagick” is available as a
 <code class="docutils literal notranslate"><span class="pre">writer</span></code>, which you can check with
-<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.animation.ImageMagickWriter.html#matplotlib.animation.ImageMagickWriter" title="(in Matplotlib v3.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.animation.ImageMagickWriter.isAvailable()</span></code></a>.
+<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.animation.ImageMagickWriter.html#matplotlib.animation.ImageMagickWriter" title="(in Matplotlib v3.4.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.animation.ImageMagickWriter.isAvailable()</span></code></a>.
 The FFmpeg writer in some light testing did not work as well for
 creating GIF thumbnails for the gallery pages.</p>
 <p>The following scrapers are supported:</p>
 <ul class="simple">
 <li><dl class="simple">
 <dt>matplotlib</dt><dd><p>Sphinx-Gallery maintains a scraper for
-<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.html#module-matplotlib.pyplot" title="(in Matplotlib v3.3.3)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib</span></code></a> figures via the string
+<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.html#module-matplotlib.pyplot" title="(in Matplotlib v3.4.1)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib</span></code></a> figures via the string
 <code class="docutils literal notranslate"><span class="pre">'matplotlib'</span></code>.</p>
 </dd>
 </dl>
@@ -1423,13 +1435,53 @@ useful for general use (e.g., a custom scraper for a plotting library)
 feel free to add it to the list above (see discussion
 <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/issues/441#issuecomment-493782430">here</a>)!</p>
 </div>
+<div class="section" id="using-multiple-code-blocks-to-create-a-single-figure">
+<span id="defer-figures"></span><h2>Using multiple code blocks to create a single figure<a class="headerlink" href="#using-multiple-code-blocks-to-create-a-single-figure" title="Permalink to this headline">¶</a></h2>
+<p>By default, images are scraped following each code block in an example.  Thus,
+the following produces two plots, with one plot per code block:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># %%</span>
+<span class="c1"># This first code block produces a plot with two lines</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+
+<span class="c1"># %%</span>
+<span class="c1"># This second code block produces a plot with one line</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>However, sometimes it can be useful to use multiple code blocks to create a
+single figure, particularly if the figure takes a large number commands that
+would benefit from being interleaved with text blocks.  The optional flag
+<code class="docutils literal notranslate"><span class="pre">sphinx_gallery_defer_figures</span></code> can be inserted as a comment anywhere in a code
+block to defer the scraping of images to the next code block (where it can be
+further deferred, if desired).  The following produces only one plot:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># %%</span>
+<span class="c1"># This first code block does not produce any plot</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="c1"># sphinx_gallery_defer_figures</span>
+
+<span class="c1"># %%</span>
+<span class="c1"># This second code block produces a plot with three lines</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="resetting-modules">
 <span id="reset-modules"></span><h2>Resetting modules<a class="headerlink" href="#resetting-modules" title="Permalink to this headline">¶</a></h2>
 <p>Often you wish to “reset” the behavior of your visualization packages in order
 to ensure that any changes made to plotting behavior in one example do not
 propagate to the other examples.</p>
 <p>By default, before each example file executes, Sphinx-Gallery will
-reset <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> (by using <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.rcdefaults.html#matplotlib.pyplot.rcdefaults" title="(in Matplotlib v3.3.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.rcdefaults()</span></code></a>) and <code class="docutils literal notranslate"><span class="pre">seaborn</span></code>
+reset <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> (by using <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.rcdefaults.html#matplotlib.pyplot.rcdefaults" title="(in Matplotlib v3.4.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.rcdefaults()</span></code></a>) and <code class="docutils literal notranslate"><span class="pre">seaborn</span></code>
 (by trying to unload the module from <code class="docutils literal notranslate"><span class="pre">sys.modules</span></code>). This is equivalent to the
 following configuration:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
@@ -1487,8 +1539,8 @@ configuration file to have it as a default:</p>
 <p>The highest precedence is always given to the <cite>-D</cite> flag of
 the <code class="docutils literal notranslate"><span class="pre">sphinx-build</span></code> command.</p>
 </div>
-<div class="section" id="don-t-fail-the-build-on-exit">
-<span id="dont-fail-exit"></span><h3>Don’t fail the build on exit<a class="headerlink" href="#don-t-fail-the-build-on-exit" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="don-t-fail-the-build-if-specific-examples-error">
+<span id="dont-fail-exit"></span><h3>Don’t fail the build if specific examples error<a class="headerlink" href="#don-t-fail-the-build-if-specific-examples-error" title="Permalink to this headline">¶</a></h3>
 <p>It might be the case that you want to keep the gallery even with
 failed examples. Thus you can configure Sphinx-Gallery to allow
 certain examples to fail and still exit with a 0 exit code. For this
@@ -1509,12 +1561,22 @@ the example script.</p>
 the example runs without error.</p>
 </div>
 </div>
+<div class="section" id="never-fail-the-build-on-error">
+<span id="warning-on-error"></span><h3>Never fail the build on error<a class="headerlink" href="#never-fail-the-build-on-error" title="Permalink to this headline">¶</a></h3>
+<p>Sphinx-Gallery can be configured to only log warnings when examples fail. This means that sphinx will only exit with a non-zero exit code if the <code class="docutils literal notranslate"><span class="pre">-W</span></code> flag is passed to <code class="docutils literal notranslate"><span class="pre">sphinx-build</span></code>. This can be enabled by setting:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">...</span>
+    <span class="s1">&#39;only_warn_on_example_error&#39;</span><span class="p">:</span> <span class="kc">True</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
 </div>
 <div class="section" id="setting-gallery-thumbnail-size">
 <span id="setting-thumbnail-size"></span><h2>Setting gallery thumbnail size<a class="headerlink" href="#setting-gallery-thumbnail-size" title="Permalink to this headline">¶</a></h2>
 <p>By default Sphinx-Gallery will generate thumbnails at size <code class="docutils literal notranslate"><span class="pre">(400,</span> <span class="pre">280)</span></code>.
 The thumbnail image will then be scaled to the size specified by
-<code class="docutils literal notranslate"><span class="pre">'thumbnail_size</span></code>, adding pillarboxes or letterboxes as necessary to
+<code class="docutils literal notranslate"><span class="pre">thumbnail_size</span></code>, adding pillarboxes or letterboxes as necessary to
 maintain the original aspect ratio. The default <code class="docutils literal notranslate"><span class="pre">thumbnail_size</span></code> is
 <code class="docutils literal notranslate"><span class="pre">(400,</span> <span class="pre">280)</span></code> (no scaling) and can be changed via the <code class="docutils literal notranslate"><span class="pre">thumbnail_size</span></code>
 configuration, e.g.:</p>
@@ -1525,9 +1587,12 @@ configuration, e.g.:</p>
 </pre></div>
 </div>
 <p>The gallery uses various CSS classes to display these thumbnails, which
-default to maximum 160x112px. To change this, e.g. to display the images
-at 250x250px, you can modify the default CSS with something like the following
-in your <code class="docutils literal notranslate"><span class="pre">gallery.css`</span></code> file:</p>
+default to maximum 160x112px. To change this you can modify the default CSS by
+including your own CSS file via the Sphinx configuration
+<a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-html_static_path" title="(in Sphinx v5.0.0+)"><code class="docutils literal notranslate"><span class="pre">html_static_path</span></code></a> (which will override default CSS classes
+in <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/tree/master/sphinx_gallery/_static">Sphinx-Gallery CSS files</a>).
+The following CSS would display the images at 250x250px instead of the default
+160x112px:</p>
 <div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="p">.</span><span class="nc">sphx-glr-thumbcontainer</span> <span class="p">{</span>
     <span class="k">min-height</span><span class="p">:</span> <span class="mi">320</span><span class="kt">px</span> <span class="cp">!important</span><span class="p">;</span>
     <span class="k">margin</span><span class="p">:</span> <span class="mi">20</span><span class="kt">px</span> <span class="cp">!important</span><span class="p">;</span>
@@ -1590,7 +1655,7 @@ tuple containing:</p>
 </div>
 </div>
 <div class="section" id="show-signature">
-<span id="id7"></span><h2>Show signature<a class="headerlink" href="#show-signature" title="Permalink to this headline">¶</a></h2>
+<span id="id8"></span><h2>Show signature<a class="headerlink" href="#show-signature" title="Permalink to this headline">¶</a></h2>
 <p>By default, Sphinx-Gallery writes a <strong>Generated by …</strong> notice in the
 generated output.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">show_signature</span></code> parameter can be used to disable it.</p>
@@ -1713,37 +1778,29 @@ etc. Similarly subclasses of ‘matplotlib.axes’ (e.g. ‘matplotlib.axes.Axes
            
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="projects_list.html" class="btn btn-neutral float-right" title="Who uses Sphinx-Gallery" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="syntax.html" class="btn btn-neutral float-left" title="How to structure your Python scripts for Sphinx-Gallery" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="projects_list.html" class="btn btn-neutral float-right" title="Who uses Sphinx-Gallery" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="syntax.html" class="btn btn-neutral float-left" title="How to structure your Python scripts for Sphinx-Gallery" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        
-        &copy; Copyright 2014-2020, Sphinx-gallery developers
+        &#169; Copyright 2014-2021, Sphinx-gallery developers.
 
     </p>
   </div>
     
     
     
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     
     provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 

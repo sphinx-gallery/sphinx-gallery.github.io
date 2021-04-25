@@ -36,6 +36,7 @@ file:
 - ``compress_images`` (:ref:`compress_images`)
 - ``reset_modules`` (:ref:`reset_modules`)
 - ``abort_on_example_error`` (:ref:`abort_on_first`)
+- ``only_warn_on_example_error`` (:ref:`warning_on_error`)
 - ``expected_failing_examples`` (:ref:`dont_fail_exit`)
 - ``min_reported_time`` (:ref:`min_reported_time`)
 - ``show_memory`` (:ref:`show_memory`)
@@ -54,8 +55,12 @@ Some options can also be set or overridden on a file-by-file basis:
 - ``# sphinx_gallery_thumbnail_number`` (:ref:`choosing_thumbnail`)
 - ``# sphinx_gallery_thumbnail_path`` (:ref:`providing_thumbnail`)
 
-See also :ref:`removing_config_comments` to hide these comments from the
-rendered examples.
+Some options can be set on a per-code-block basis in a file:
+
+- ``# sphinx_gallery_defer_figures`` (:ref:`defer_figures`)
+
+See also :ref:`removing_config_comments` to hide config comments in files from
+the rendered examples.
 
 Some options can be set during the build execution step, e.g. using a Makefile:
 
@@ -439,7 +444,8 @@ The ``add-heading`` option adds a heading for the mini-gallery, which will be a
 default generated message if no string is provided as an argument.  The example
 mini-gallery shown above uses the default heading.  The level of the heading
 defaults to ``^``, but can be changed using the ``heading-level`` option, which
-accepts a single character (e.g., ``-``).
+accepts a single character (e.g., ``-``). The mini-gallery will only be shown
+if the item (here ``numpy.exp``) is actually used or referred to in an example.
 
 You can also list multiple items, separated by spaces, which will merge all
 examples into a single mini-gallery, e.g.:
@@ -546,6 +552,8 @@ key::
         'inspect_global_variables'  : False,
     }
 
+.. _stylizing_code_links:
+
 Stylizing code links using CSS
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -600,6 +608,11 @@ following css prevents any module except for matplotlib from being decorated:
 There are likely elements other than ``text-decoration`` that might be worth
 setting, as well.
 
+You can add these CSS classes by including your own CSS file via the Sphinx
+configuration :confval:`sphinx:html_static_path`, which will override the
+default CSS classes in `Sphinx-Gallery CSS files
+<https://github.com/sphinx-gallery/sphinx-gallery/tree/master/sphinx_gallery/_static>`_.
+
 .. _custom_default_thumb:
 
 Using a custom default thumbnail
@@ -639,8 +652,8 @@ setting::
 Removing config comments
 ========================
 
-Some configurations can be done on a file-by-file basis by adding a special
-comment with the pattern :samp:`# sphinx_gallery_{config} = {value}` to the
+Some configurations can be specified within a file by adding a special
+comment with the pattern :samp:`# sphinx_gallery_{config} [= {value}]` to the
 example source files. By default, the source files are parsed as is and thus
 the comment will appear in the example.
 
@@ -652,8 +665,8 @@ To remove the comment from the rendered example set the option::
     }
 
 This only removes configuration comments from code blocks, not from text
-blocks. However, note that technically, configuration comments will work when
-put in either code blocks or text blocks.
+blocks. However, note that technically, file-level configuration comments will
+work when put in either code blocks or text blocks.
 
 .. _own_notebook_cell:
 
@@ -663,24 +676,24 @@ Add your own first and last notebook cell
 Sphinx-Gallery allows you to add your own first and/or last cell to *every*
 generated notebook. Adding a first cell can be useful for including code that
 is required to run properly in the notebook, but not in a ``.py`` file. By
-default, the following first cell is added to each notebook::
+default, the following first cell is added to each notebook:
 
 .. code-block:: ipython
 
-   %matplotlib inline
+    %matplotlib inline
 
 Adding a last cell can be useful for performing a desired action such as
 reporting on the user's environment. By default no last cell is added.
 
 You can choose whatever text you like by modifying the ``first_notebook_cell``
 and ``last_notebook_cell`` configuration parameters. For example, the gallery
-of this documentation adds the following first cell::
+of this documentation adds the following first cell:
 
 .. code-block:: ipython
 
-  # This cell is added by sphinx-gallery
-  # It can be customized to whatever you like
-  %matplotlib inline
+    # This cell is added by sphinx-gallery
+    # It can be customized to whatever you like
+    %matplotlib inline
 
 Which is achieved by the following configuration::
 
@@ -890,6 +903,12 @@ to use the 2nd figure created as the thumbnail::
 
     # sphinx_gallery_thumbnail_number = 2
 
+You can also use negative numbers, which counts from the last figure.
+For example -1 means using the last figure created in the example
+as the thumbnail::
+
+    # sphinx_gallery_thumbnail_number = -1
+
 The default behavior is ``sphinx_gallery_thumbnail_number = 1``. See
 :ref:`sphx_glr_auto_examples_plot_4_choose_thumbnail.py` for an example
 of this functionality.
@@ -1080,7 +1099,6 @@ optimize less but speed up the build time you could do::
 
 See ``$ optipng --help`` for a complete list of options.
 
-
 .. _image_scrapers:
 
 Image scrapers
@@ -1143,6 +1161,48 @@ images produced by an arbitrary package. For instructions, see
 useful for general use (e.g., a custom scraper for a plotting library)
 feel free to add it to the list above (see discussion
 `here <https://github.com/sphinx-gallery/sphinx-gallery/issues/441#issuecomment-493782430>`__)!
+
+.. _defer_figures:
+
+Using multiple code blocks to create a single figure
+====================================================
+
+By default, images are scraped following each code block in an example.  Thus,
+the following produces two plots, with one plot per code block::
+
+  # %%
+  # This first code block produces a plot with two lines
+
+  import matplotlib.pyplot as plt
+  plt.plot([1, 0])
+  plt.plot([0, 1])
+
+  # %%
+  # This second code block produces a plot with one line
+
+  plt.plot([2, 2])
+  plt.show()
+
+However, sometimes it can be useful to use multiple code blocks to create a
+single figure, particularly if the figure takes a large number commands that
+would benefit from being interleaved with text blocks.  The optional flag
+``sphinx_gallery_defer_figures`` can be inserted as a comment anywhere in a code
+block to defer the scraping of images to the next code block (where it can be
+further deferred, if desired).  The following produces only one plot::
+
+  # %%
+  # This first code block does not produce any plot
+
+  import matplotlib.pyplot as plt
+  plt.plot([1, 0])
+  plt.plot([0, 1])
+  # sphinx_gallery_defer_figures
+
+  # %%
+  # This second code block produces a plot with three lines
+
+  plt.plot([2, 2])
+  plt.show()
 
 .. _reset_modules:
 
@@ -1227,8 +1287,8 @@ the ``sphinx-build`` command.
 
 .. _dont_fail_exit:
 
-Don't fail the build on exit
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Don't fail the build if specific examples error
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 It might be the case that you want to keep the gallery even with
 failed examples. Thus you can configure Sphinx-Gallery to allow
@@ -1248,6 +1308,18 @@ the example script.
 .. note:: If an example is expected to fail, Sphinx-Gallery will error if
           the example runs without error.
 
+.. _warning_on_error:
+
+Never fail the build on error
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Sphinx-Gallery can be configured to only log warnings when examples fail. This means that sphinx will only exit with a non-zero exit code if the ``-W`` flag is passed to ``sphinx-build``. This can be enabled by setting::
+
+    sphinx_gallery_conf = {
+        ...
+        'only_warn_on_example_error': True
+    }
+
 
 .. _setting_thumbnail_size:
 
@@ -1256,7 +1328,7 @@ Setting gallery thumbnail size
 
 By default Sphinx-Gallery will generate thumbnails at size ``(400, 280)``.
 The thumbnail image will then be scaled to the size specified by
-``'thumbnail_size``, adding pillarboxes or letterboxes as necessary to
+``thumbnail_size``, adding pillarboxes or letterboxes as necessary to
 maintain the original aspect ratio. The default ``thumbnail_size`` is
 ``(400, 280)`` (no scaling) and can be changed via the ``thumbnail_size``
 configuration, e.g.::
@@ -1267,9 +1339,13 @@ configuration, e.g.::
     }
 
 The gallery uses various CSS classes to display these thumbnails, which
-default to maximum 160x112px. To change this, e.g. to display the images
-at 250x250px, you can modify the default CSS with something like the following
-in your ``gallery.css``` file:
+default to maximum 160x112px. To change this you can modify the default CSS by
+including your own CSS file via the Sphinx configuration
+:confval:`sphinx:html_static_path` (which will override default CSS classes
+in `Sphinx-Gallery CSS files
+<https://github.com/sphinx-gallery/sphinx-gallery/tree/master/sphinx_gallery/_static>`_).
+The following CSS would display the images at 250x250px instead of the default
+160x112px:
 
 .. code-block:: css
 
@@ -1437,7 +1513,7 @@ method which would thus be captured. You can prevent this by:
 The unwanted string output will not occur if ``'capture_repr'`` is an empty
 tuple or does not contain ``__repr__`` or ``__str__``.
 
-.. _regular expressions: https://docs.python.org/2/library/re.html
+.. _regular expressions: https://docs.python.org/library/re.html
 
 Prevent capture of certain classes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

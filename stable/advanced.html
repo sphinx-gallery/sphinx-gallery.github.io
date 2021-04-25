@@ -3,11 +3,11 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Advanced usage &mdash; Sphinx-Gallery 0.8.2-git documentation</title>
+  <title>Advanced usage &mdash; Sphinx-Gallery 0.9.0-git documentation</title>
   
 
   
@@ -21,7 +21,10 @@
 
   
   
+
   
+  
+
   
 
   
@@ -34,8 +37,6 @@
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -57,7 +58,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home" alt="Documentation Home"> Sphinx-Gallery
+            <a href="index.html" class="icon icon-home"> Sphinx-Gallery
           
 
           
@@ -67,7 +68,7 @@
             
             
               <div class="version">
-                0.8.2
+                0.9.0
               </div>
             
           
@@ -127,7 +128,10 @@
 <li class="toctree-l3"><a class="reference internal" href="#build-the-gallery-without-running-any-examples">Build the gallery without running any examples</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#know-your-gallery-files">Know your Gallery files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#know-your-gallery-files">Know your Gallery files</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#cross-referencing">Cross referencing</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#understanding-warning-and-error-outputs">Understanding warning and error outputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#write-a-custom-image-scraper">Write a custom image scraper</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#example-1-a-matplotlib-and-mayavi-style-scraper">Example 1: a Matplotlib and Mayavi-style scraper</a></li>
@@ -137,6 +141,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#define-resetting-behavior-e-g-for-custom-libraries">Define resetting behavior (e.g., for custom libraries)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#altering-sphinx-gallery-css">Altering Sphinx-Gallery CSS</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#using-only-sphinx-gallery-styles">Using (only) Sphinx-Gallery styles</a></li>
 </ul>
 </li>
@@ -215,18 +220,23 @@ to use Sphinx-Gallery more deeply.</p>
 <li><p><a class="reference internal" href="#build-the-gallery-without-running-any-examples" id="id4">Build the gallery without running any examples</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#know-your-gallery-files" id="id5">Know your Gallery files</a></p></li>
-<li><p><a class="reference internal" href="#understanding-warning-and-error-outputs" id="id6">Understanding warning and error outputs</a></p></li>
-<li><p><a class="reference internal" href="#write-a-custom-image-scraper" id="id7">Write a custom image scraper</a></p>
+<li><p><a class="reference internal" href="#know-your-gallery-files" id="id5">Know your Gallery files</a></p>
 <ul>
-<li><p><a class="reference internal" href="#example-1-a-matplotlib-and-mayavi-style-scraper" id="id8">Example 1: a Matplotlib and Mayavi-style scraper</a></p></li>
-<li><p><a class="reference internal" href="#example-2-detecting-image-files-on-disk" id="id9">Example 2: detecting image files on disk</a></p></li>
-<li><p><a class="reference internal" href="#example-3-matplotlib-with-svg-format" id="id10">Example 3: matplotlib with SVG format</a></p></li>
-<li><p><a class="reference internal" href="#integrate-custom-scrapers-with-sphinx-gallery" id="id11">Integrate custom scrapers with Sphinx-Gallery</a></p></li>
+<li><p><a class="reference internal" href="#cross-referencing" id="id6">Cross referencing</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#define-resetting-behavior-e-g-for-custom-libraries" id="id12">Define resetting behavior (e.g., for custom libraries)</a></p></li>
-<li><p><a class="reference internal" href="#using-only-sphinx-gallery-styles" id="id13">Using (only) Sphinx-Gallery styles</a></p></li>
+<li><p><a class="reference internal" href="#understanding-warning-and-error-outputs" id="id7">Understanding warning and error outputs</a></p></li>
+<li><p><a class="reference internal" href="#write-a-custom-image-scraper" id="id8">Write a custom image scraper</a></p>
+<ul>
+<li><p><a class="reference internal" href="#example-1-a-matplotlib-and-mayavi-style-scraper" id="id9">Example 1: a Matplotlib and Mayavi-style scraper</a></p></li>
+<li><p><a class="reference internal" href="#example-2-detecting-image-files-on-disk" id="id10">Example 2: detecting image files on disk</a></p></li>
+<li><p><a class="reference internal" href="#example-3-matplotlib-with-svg-format" id="id11">Example 3: matplotlib with SVG format</a></p></li>
+<li><p><a class="reference internal" href="#integrate-custom-scrapers-with-sphinx-gallery" id="id12">Integrate custom scrapers with Sphinx-Gallery</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#define-resetting-behavior-e-g-for-custom-libraries" id="id13">Define resetting behavior (e.g., for custom libraries)</a></p></li>
+<li><p><a class="reference internal" href="#altering-sphinx-gallery-css" id="id14">Altering Sphinx-Gallery CSS</a></p></li>
+<li><p><a class="reference internal" href="#using-only-sphinx-gallery-styles" id="id15">Using (only) Sphinx-Gallery styles</a></p></li>
 </ul>
 </div>
 <div class="section" id="extend-your-makefile-for-sphinx-gallery">
@@ -243,13 +253,15 @@ to your Sphinx <code class="docutils literal notranslate"><span class="pre">Make
         rm -rf auto_examples/
 </pre></div>
 </div>
+<p>You need to adapt the second <code class="docutils literal notranslate"><span class="pre">rm</span></code> command if you have changed the
+<code class="docutils literal notranslate"><span class="pre">gallery_dirs</span></code> config variable.</p>
 </div>
 <div class="section" id="build-the-gallery-without-running-any-examples">
 <h3><a class="toc-backref" href="#id4">Build the gallery without running any examples</a><a class="headerlink" href="#build-the-gallery-without-running-any-examples" title="Permalink to this headline">¶</a></h3>
 <p>If you wish to build your gallery without running examples first (e.g., if an
 example takes a long time to run), add the following to your <code class="docutils literal notranslate"><span class="pre">Makefile</span></code>.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>html-noplot:
-        <span class="k">$(</span>SPHINXBUILD<span class="k">)</span> -D <span class="nv">plot_gallery</span><span class="o">=</span><span class="m">0</span> -b html <span class="k">$(</span>ALLSPHINXOPTS<span class="k">)</span> <span class="k">$(</span>BUILDDIR<span class="k">)</span>/html
+        <span class="k">$(</span>SPHINXBUILD<span class="k">)</span> -D <span class="nv">plot_gallery</span><span class="o">=</span><span class="m">0</span> -b html <span class="k">$(</span>ALLSPHINXOPTS<span class="k">)</span> <span class="k">$(</span>SOURCEDIR<span class="k">)</span> <span class="k">$(</span>BUILDDIR<span class="k">)</span>/html
         @echo
         @echo <span class="s2">&quot;Build finished. The HTML pages are in </span><span class="k">$(</span>BUILDDIR<span class="k">)</span><span class="s2">/html.&quot;</span>
 </pre></div>
@@ -265,16 +277,13 @@ stored where you configured in <code class="docutils literal notranslate"><span 
 into the HTML version of your documentation have a particular
 namespace, to avoid collisions with your own files and images.</p>
 <p>Our namespace convention is to prefix everything with <code class="docutils literal notranslate"><span class="pre">sphx_glr</span></code> and
-change path separators with underscores. This is valid for
-cross-references labels, and images.</p>
-<p>So for example if we want to reference the example
-<a class="reference internal" href="auto_examples/plot_0_sin.html#sphx-glr-auto-examples-plot-0-sin-py"><span class="std std-ref">Introductory example - Plotting sin</span></a>, we just call
-its reference
-<code class="docutils literal notranslate"><span class="pre">:ref:`sphx_glr_auto_examples_plot_0_sin.py`</span></code>. The image
-it generated has the name <code class="docutils literal notranslate"><span class="pre">sphx_glr_plot_0_sin_001.png</span></code>
-and its thumbnail is <code class="docutils literal notranslate"><span class="pre">sphx_glr_plot_0_sin_thumb.png</span></code></p>
+change path separators with underscores. For example the first image
+generated by the example ‘plot_0_sin.py’ has the name
+<code class="docutils literal notranslate"><span class="pre">sphx_glr_plot_0_sin_001.png</span></code> and its thumbnail is
+<code class="docutils literal notranslate"><span class="pre">sphx_glr_plot_0_sin_thumb.png</span></code></p>
 <p>You can also include part of a gallery script elsewhere in your documentation
-using the <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html#directive-literalinclude" title="(in Sphinx v4.0.0+)"><code class="xref rst rst-dir docutils literal notranslate"><span class="pre">literalinclude</span></code></a> directive, in order to limit code duplication:</p>
+using the <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html#directive-literalinclude" title="(in Sphinx v5.0.0+)"><code class="xref rst rst-dir docutils literal notranslate"><span class="pre">literalinclude</span></code></a> directive, in order to limit code
+duplication:</p>
 <div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="p">..</span> <span class="ow">literalinclude</span><span class="p">::</span> ../examples/plot_0_sin.py
    <span class="nc">:language:</span> python
    <span class="nc">:start-after:</span> # License: BSD 3 clause
@@ -301,9 +310,19 @@ changed (all the more when line numbers are used instead of <code class="docutil
 and  <code class="docutils literal notranslate"><span class="pre">end-before</span></code>). Use with caution: linking directly to examples is
 a more robust alternative.</p>
 </div>
+<div class="section" id="cross-referencing">
+<h3><a class="toc-backref" href="#id6">Cross referencing</a><a class="headerlink" href="#cross-referencing" title="Permalink to this headline">¶</a></h3>
+<p>You can also cross reference an example using similar naming convention. For
+example if we want to reference the example
+<a class="reference internal" href="auto_examples/plot_0_sin.html#sphx-glr-auto-examples-plot-0-sin-py"><span class="std std-ref">Introductory example - Plotting sin</span></a>, we just call its reference
+<code class="docutils literal notranslate"><span class="pre">:ref:`sphx_glr_auto_examples_plot_0_sin.py`</span></code>.
+Note that we have included the path to the example file (relative to
+the <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file) after <code class="docutils literal notranslate"><span class="pre">sphx_glr_</span></code>. Path separators are replaced with
+underscores.</p>
+</div>
 </div>
 <div class="section" id="understanding-warning-and-error-outputs">
-<span id="warning-errors"></span><h2><a class="toc-backref" href="#id6">Understanding warning and error outputs</a><a class="headerlink" href="#understanding-warning-and-error-outputs" title="Permalink to this headline">¶</a></h2>
+<span id="warning-errors"></span><h2><a class="toc-backref" href="#id7">Understanding warning and error outputs</a><a class="headerlink" href="#understanding-warning-and-error-outputs" title="Permalink to this headline">¶</a></h2>
 <p>Any warnings or errors that occur when executing code blocks in the gallery
 Python files will be printed in pink during building of the documentation. The
 <code class="docutils literal notranslate"><span class="pre">.py</span></code> file path and the line number that the error occurred in will also be
@@ -334,7 +353,7 @@ re-running the documentation build should rebuild just the modified example,
 allowing for quick iteration.</p>
 </div>
 <div class="section" id="write-a-custom-image-scraper">
-<span id="custom-scraper"></span><h2><a class="toc-backref" href="#id7">Write a custom image scraper</a><a class="headerlink" href="#write-a-custom-image-scraper" title="Permalink to this headline">¶</a></h2>
+<span id="custom-scraper"></span><h2><a class="toc-backref" href="#id8">Write a custom image scraper</a><a class="headerlink" href="#write-a-custom-image-scraper" title="Permalink to this headline">¶</a></h2>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>The API for custom scrapers is currently experimental.</p>
@@ -399,7 +418,7 @@ SVG images are copied.</p>
 work while building a PDF version of your documentation.</p>
 </div>
 <div class="section" id="example-1-a-matplotlib-and-mayavi-style-scraper">
-<h3><a class="toc-backref" href="#id8">Example 1: a Matplotlib and Mayavi-style scraper</a><a class="headerlink" href="#example-1-a-matplotlib-and-mayavi-style-scraper" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id9">Example 1: a Matplotlib and Mayavi-style scraper</a><a class="headerlink" href="#example-1-a-matplotlib-and-mayavi-style-scraper" title="Permalink to this headline">¶</a></h3>
 <p>For example, we will show sample code for a scraper for a hypothetical package.
 It uses an approach similar to what <a class="reference internal" href="gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.matplotlib_scraper" title="sphinx_gallery.scrapers.matplotlib_scraper"><code class="xref py py-func docutils literal notranslate"><span class="pre">sphinx_gallery.scrapers.matplotlib_scraper()</span></code></a>
 and <a class="reference internal" href="gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.mayavi_scraper" title="sphinx_gallery.scrapers.mayavi_scraper"><code class="xref py py-func docutils literal notranslate"><span class="pre">sphinx_gallery.scrapers.mayavi_scraper()</span></code></a> do under the hood, which
@@ -441,7 +460,7 @@ scraper would look like:</p>
 </div>
 </div>
 <div class="section" id="example-2-detecting-image-files-on-disk">
-<h3><a class="toc-backref" href="#id9">Example 2: detecting image files on disk</a><a class="headerlink" href="#example-2-detecting-image-files-on-disk" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id10">Example 2: detecting image files on disk</a><a class="headerlink" href="#example-2-detecting-image-files-on-disk" title="Permalink to this headline">¶</a></h3>
 <p>Here’s another example that assumes that images have <em>already been written to
 disk</em>. In this case we won’t <em>generate</em> any image files, we’ll only generate
 the rST needed to embed them in the documentation. Note that the example scripts
@@ -490,9 +509,9 @@ package in a module called <code class="docutils literal notranslate"><span clas
 </div>
 </div>
 <div class="section" id="example-3-matplotlib-with-svg-format">
-<h3><a class="toc-backref" href="#id10">Example 3: matplotlib with SVG format</a><a class="headerlink" href="#example-3-matplotlib-with-svg-format" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id11">Example 3: matplotlib with SVG format</a><a class="headerlink" href="#example-3-matplotlib-with-svg-format" title="Permalink to this headline">¶</a></h3>
 <p>The <a class="reference internal" href="gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.matplotlib_scraper" title="sphinx_gallery.scrapers.matplotlib_scraper"><code class="xref py py-func docutils literal notranslate"><span class="pre">sphinx_gallery.scrapers.matplotlib_scraper()</span></code></a> supports <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>
-to pass to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure.savefig" title="(in Matplotlib v3.3.3)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">matplotlib.figure.Figure.savefig()</span></code></a>, one of which is the
+to pass to <a class="reference external" href="https://matplotlib.org/api/figure_api.html#matplotlib.figure.Figure.savefig" title="(in Matplotlib v3.4.1)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">matplotlib.figure.Figure.savefig()</span></code></a>, one of which is the
 <code class="docutils literal notranslate"><span class="pre">format</span></code> argument. Currently Sphinx-Gallery supports PNG (default) and SVG
 output formats. To use SVG, you can do:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sphinx_gallery.scrapers</span> <span class="kn">import</span> <span class="n">matplotlib_scraper</span>
@@ -516,7 +535,7 @@ output formats. To use SVG, you can do:</p>
 writing a customized scraper class or function.</p>
 </div>
 <div class="section" id="integrate-custom-scrapers-with-sphinx-gallery">
-<h3><a class="toc-backref" href="#id11">Integrate custom scrapers with Sphinx-Gallery</a><a class="headerlink" href="#integrate-custom-scrapers-with-sphinx-gallery" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id12">Integrate custom scrapers with Sphinx-Gallery</a><a class="headerlink" href="#integrate-custom-scrapers-with-sphinx-gallery" title="Permalink to this headline">¶</a></h3>
 <p>Sphinx-Gallery plans to internally maintain only two scrapers: matplotlib and
 mayavi. If you have extended or fixed bugs with these scrapers, we welcome PRs
 to improve them!</p>
@@ -546,7 +565,7 @@ PyVista image scraper to use before running any examples.</p>
 </div>
 </div>
 <div class="section" id="define-resetting-behavior-e-g-for-custom-libraries">
-<span id="custom-reset"></span><h2><a class="toc-backref" href="#id12">Define resetting behavior (e.g., for custom libraries)</a><a class="headerlink" href="#define-resetting-behavior-e-g-for-custom-libraries" title="Permalink to this headline">¶</a></h2>
+<span id="custom-reset"></span><h2><a class="toc-backref" href="#id13">Define resetting behavior (e.g., for custom libraries)</a><a class="headerlink" href="#define-resetting-behavior-e-g-for-custom-libraries" title="Permalink to this headline">¶</a></h2>
 <p>Sphinx-Gallery natively supports resetting <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> and <code class="docutils literal notranslate"><span class="pre">seaborn</span></code>.
 However, if you’d like to support resetting for other libraries (or would like
 to modify the resetting behavior for a natively-supported library), you can
@@ -578,8 +597,35 @@ examples themselves is discouraged due to the inconsistency
 that results between the rendered examples and local outputs.</p>
 </div>
 </div>
+<div class="section" id="altering-sphinx-gallery-css">
+<h2><a class="toc-backref" href="#id14">Altering Sphinx-Gallery CSS</a><a class="headerlink" href="#altering-sphinx-gallery-css" title="Permalink to this headline">¶</a></h2>
+<p>The Sphinx-Gallery <code class="docutils literal notranslate"><span class="pre">.css</span></code> files that control the appearance of your example
+gallery can be found <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/tree/master/sphinx_gallery/_static">here</a>.
+These default <code class="docutils literal notranslate"><span class="pre">.css</span></code> files are added to your build. Specifically, they are
+copied into <code class="docutils literal notranslate"><span class="pre">_build/html/_static/</span></code> of your <code class="docutils literal notranslate"><span class="pre">gallery_dir</span></code>. You can add your
+own custom <code class="docutils literal notranslate"><span class="pre">.css</span></code> files by using the <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/configuration.html" title="(in Sphinx v5.0.0+)"><span class="xref std std-doc">Sphinx configuration</span></a> <code class="docutils literal notranslate"><span class="pre">html_static_path</span></code>. For example,
+list any path(s) that contain your custom static files, using the
+<code class="docutils literal notranslate"><span class="pre">html_static_path</span></code> configuration, in your <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">html_static_path</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;_static&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>You can also directly overwrite the default static files. The static files in
+the path(s) listed will be copied over after the builtin Sphinx-Gallery files,
+so if you have a file named “gallery.css”, it will overwrite the builtin
+“gallery.css”.</p>
+<p>The appearance of <a class="reference internal" href="configuration.html#stylizing-code-links"><span class="std std-ref">code links</span></a> and
+<a class="reference internal" href="configuration.html#setting-thumbnail-size"><span class="std std-ref">thumbnail size</span></a> can be altered via addition
+of your own CSS. Can also do things like hide the download buttons in the
+example headers using:</p>
+<div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="nt">div</span><span class="p">.</span><span class="nc">sphx-glr-download-link-note</span> <span class="p">{</span>
+    <span class="k">height</span><span class="p">:</span> <span class="mi">0</span><span class="kt">px</span><span class="p">;</span>
+    <span class="k">visibility</span><span class="p">:</span> <span class="kc">hidden</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="using-only-sphinx-gallery-styles">
-<h2><a class="toc-backref" href="#id13">Using (only) Sphinx-Gallery styles</a><a class="headerlink" href="#using-only-sphinx-gallery-styles" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id15">Using (only) Sphinx-Gallery styles</a><a class="headerlink" href="#using-only-sphinx-gallery-styles" title="Permalink to this headline">¶</a></h2>
 <p>If you just want to make use of sphinx-Gallery CSS files, instead of using
 the <code class="docutils literal notranslate"><span class="pre">sphinx_gallery.gen_gallery</span></code> extension, you can use in <code class="docutils literal notranslate"><span class="pre">conf.py</span></code>:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">extensions</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;sphinx_gallery.load_style&#39;</span><span class="p">]</span>
@@ -594,37 +640,29 @@ the <code class="docutils literal notranslate"><span class="pre">sphinx_gallery.
            
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="faq.html" class="btn btn-neutral float-right" title="Frequently Asked Questions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="projects_list.html" class="btn btn-neutral float-left" title="Who uses Sphinx-Gallery" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="faq.html" class="btn btn-neutral float-right" title="Frequently Asked Questions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="projects_list.html" class="btn btn-neutral float-left" title="Who uses Sphinx-Gallery" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        
-        &copy; Copyright 2014-2020, Sphinx-gallery developers
+        &#169; Copyright 2014-2021, Sphinx-gallery developers.
 
     </p>
   </div>
     
     
     
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     
     provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 
