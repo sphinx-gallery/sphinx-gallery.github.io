@@ -148,6 +148,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#generate-binder-links-for-gallery-notebooks-experimental">Generate Binder links for gallery notebooks (experimental)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#building-without-executing-examples">Building without executing examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#compressing-images">Compressing images</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#multi-resolution-images">Multi-resolution images</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#image-scrapers">Image scrapers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#using-multiple-code-blocks-to-create-a-single-figure">Using multiple code blocks to create a single figure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#resetting-modules">Resetting modules</a></li>
@@ -262,6 +263,7 @@ file:</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">image_scrapers</span></code> (and the deprecated <code class="docutils literal notranslate"><span class="pre">find_mayavi_figures</span></code>)
 (<a class="reference internal" href="#image-scrapers"><span class="std std-ref">Image scrapers</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">compress_images</span></code> (<a class="reference internal" href="#compress-images"><span class="std std-ref">Compressing images</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">image_srcset</span></code> (<a class="reference internal" href="#image-srcset"><span class="std std-ref">Multi-resolution images</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">reset_modules</span></code> (<a class="reference internal" href="#reset-modules"><span class="std std-ref">Resetting modules</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">abort_on_example_error</span></code> (<a class="reference internal" href="#abort-on-first"><span class="std std-ref">Abort build on first fail</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">only_warn_on_example_error</span></code> (<a class="reference internal" href="#warning-on-error"><span class="std std-ref">Never fail the build on error</span></a>)</p></li>
@@ -1364,6 +1366,41 @@ optimize less but speed up the build time you could do:</p>
 </pre></div>
 </div>
 <p>See <code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">optipng</span> <span class="pre">--help</span></code> for a complete list of options.</p>
+</div>
+<div class="section" id="multi-resolution-images">
+<span id="image-srcset"></span><h2>Multi-resolution images<a class="headerlink" href="#multi-resolution-images" title="Permalink to this headline">¶</a></h2>
+<p>Web browsers allow a <code class="docutils literal notranslate"><span class="pre">srcset</span></code> parameter to the <code class="docutils literal notranslate"><span class="pre">&lt;img&gt;</span></code> tag that
+allows the browser to support <a class="reference external" href="https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images">responsive resolution images</a>
+for hi-dpi/retina displays. Sphinx Gallery supports this via the
+<code class="docutils literal notranslate"><span class="pre">image_srcset</span></code> parameter:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">...</span>
+    <span class="s1">&#39;image_srcset&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;2x&quot;</span><span class="p">],</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>that saves a 1x image at the normal figure dpi (usually 100 dpi) and a 2x
+version at twice the density (e.g. 200 dpi).  The default is no extra images
+(<code class="docutils literal notranslate"><span class="pre">'image_srcset':</span> <span class="pre">[]</span></code>), and you can specify other resolutions if desired as a
+list: <code class="docutils literal notranslate"><span class="pre">[&quot;2x&quot;,</span> <span class="pre">&quot;1.5x&quot;]</span></code>.</p>
+<p>The matplotlib scraper creates a custom image directive, <code class="docutils literal notranslate"><span class="pre">image-sg</span></code> in the
+rst file:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="o">..</span> <span class="n">image</span><span class="o">-</span><span class="n">sg</span><span class="p">::</span> <span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">images</span><span class="o">/</span><span class="n">sphx_glr_test_001</span><span class="o">.</span><span class="n">png</span>
+    <span class="p">:</span><span class="n">alt</span><span class="p">:</span> <span class="n">test</span>
+    <span class="p">:</span><span class="n">srcset</span><span class="p">:</span> <span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">images</span><span class="o">/</span><span class="n">sphx_glr_test_001</span><span class="o">.</span><span class="n">png</span><span class="p">,</span> <span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">images</span><span class="o">/</span><span class="n">sphx_glr_test_001_2_0x</span><span class="o">.</span><span class="n">png</span> <span class="mf">2.0</span><span class="n">x</span>
+    <span class="p">:</span><span class="n">class</span><span class="p">:</span> <span class="n">sphx</span><span class="o">-</span><span class="n">glr</span><span class="o">-</span><span class="n">single</span><span class="o">-</span><span class="n">img</span>
+</pre></div>
+</div>
+<p>This is converted to html by the custom directive as:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="o">..</span> <span class="o">&lt;</span><span class="n">img</span> <span class="n">src</span><span class="o">=</span><span class="s2">&quot;../_images/sphx_glr_test_001.png&quot;</span> <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;test&quot;</span><span class="p">,</span> <span class="n">class</span><span class="o">=</span><span class="s2">&quot;sphx-glr-single-img&quot;</span><span class="p">,</span>
+    <span class="n">srcset</span><span class="o">=</span><span class="s2">&quot;../_images/sphx_glr_test_001.png, ../_images/sphx_glr_test_001_2_0x.png 2.0x&gt;</span>
+</pre></div>
+</div>
+<p>This leads to a larger website, but clients that support the <code class="docutils literal notranslate"><span class="pre">srcset</span></code> tag will only
+download the appropriate-sized images.</p>
+<p>Note that the <code class="docutils literal notranslate"><span class="pre">..</span> <span class="pre">image-sg</span></code> directive currently ignores other <code class="docutils literal notranslate"><span class="pre">..</span> <span class="pre">image</span></code> directive
+tags like <code class="docutils literal notranslate"><span class="pre">width</span></code>, <code class="docutils literal notranslate"><span class="pre">height</span></code>, and <code class="docutils literal notranslate"><span class="pre">align</span></code>.  It also only works with the <em>html</em> and
+<em>latex</em>  builders.</p>
 </div>
 <div class="section" id="image-scrapers">
 <span id="id6"></span><h2>Image scrapers<a class="headerlink" href="#image-scrapers" title="Permalink to this headline">¶</a></h2>

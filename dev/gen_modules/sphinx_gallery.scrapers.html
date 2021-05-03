@@ -216,7 +216,9 @@
 <h2>Scrapers for embedding images<a class="headerlink" href="#scrapers-for-embedding-images" title="Permalink to this headline">¶</a></h2>
 <p>Collect images that have been produced by code blocks.</p>
 <p>The only scrapers we support are Matplotlib and Mayavi, others should
-live in modules that will support them (e.g., PyVista, Plotly).</p>
+live in modules that will support them (e.g., PyVista, Plotly).  Scraped
+images are injected as rst <code class="docutils literal notranslate"><span class="pre">image-sg</span></code> directives into the <code class="docutils literal notranslate"><span class="pre">.rst</span></code>
+file generated for each example script.</p>
 <div class="section" id="functions">
 <h3>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h3>
 <dl class="py function">
@@ -238,7 +240,7 @@ a directory of examples to be built.</p></li>
 
 <span class="target" id="sphx-glr-backref-sphinx-gallery-scrapers-clean-modules"></span><dl class="py function">
 <dt id="sphinx_gallery.scrapers.figure_rst">
-<code class="sig-prename descclassname"><span class="pre">sphinx_gallery.scrapers.</span></code><code class="sig-name descname"><span class="pre">figure_rst</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">figure_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sources_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig_titles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sphinx_gallery/scrapers.html#figure_rst"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sphinx_gallery.scrapers.figure_rst" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">sphinx_gallery.scrapers.</span></code><code class="sig-name descname"><span class="pre">figure_rst</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">figure_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sources_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig_titles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">srcsetpaths</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sphinx_gallery/scrapers.html#figure_rst"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sphinx_gallery.scrapers.figure_rst" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate RST for a list of image filenames.</p>
 <p>Depending on whether we have one or more figures, we use a
 single rst call to ‘image’ or a horizontal list.</p>
@@ -249,13 +251,23 @@ single rst call to ‘image’ or a horizontal list.</p>
 <li><p><strong>sources_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – absolute path of Sphinx documentation sources</p></li>
 <li><p><strong>fig_titles</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Titles of figures, empty string if no titles found. Currently
 only supported for matplotlib figures, default = ‘’.</p></li>
+<li><p><strong>srcsetpaths</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><em>None</em></a>) – List of dictionaries containing absolute paths.  If
+empty, then srcset field is populated with the figure path.
+(see <code class="docutils literal notranslate"><span class="pre">image_srcset</span></code> configuration option).  Otherwise,
+each dict is of the form
+{0: /images/image.png, 2.0: /images/image_2_0x.png}
+where the key is the multiplication factor and the contents
+the path to the image created above.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>images_rst</strong> – rst code to embed the images in the document</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></p>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>images_rst</strong> (<em>str</em>) – rst code to embed the images in the document</p></li>
+<li><p>The rst code will have a custom <code class="docutils literal notranslate"><span class="pre">image-sg</span></code> directive that allows</p></li>
+<li><p><em>multiple resolution images to be served e.g.</em></p></li>
+<li><p><strong>``</strong> (<em>srcset: /plot_types/imgs/img_001.png,</em>) – /plot_types/imgs/img_2_0x.png 2.0x``</p></li>
+</ul>
+</p>
 </dd>
 </dl>
 </dd></dl>
