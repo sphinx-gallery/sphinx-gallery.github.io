@@ -374,8 +374,8 @@ this section describes how to write a custom scraper.</p>
 <p>Image scrapers are functions (or callable class instances) that do two things:</p>
 <ol class="arabic simple">
 <li><p>Collect a list of images created in the latest execution of code.</p></li>
-<li><p>Write these images to disk in PNG, JPEG, or SVG format (with .png, .jpg, or
-.svg extensions, respectively)</p></li>
+<li><p>Write these images to disk in PNG, JPEG, SVG, or GIP format (with .png,
+.jpg, .svg, or .gif extensions, respectively)</p></li>
 <li><p>Return rST that embeds these figures in the built documentation.</p></li>
 </ol>
 <p>The function should take the following inputs (in this order):</p>
@@ -395,15 +395,16 @@ starts at.</p></li>
 </li>
 <li><p><code class="docutils literal notranslate"><span class="pre">block_vars</span></code> - dictionary of configuration and runtime variables. Of
 interest for image scrapers is the element <code class="docutils literal notranslate"><span class="pre">'image_path_iterator'</span></code> which
-is an iterable object which returns an absolute path to an image file name
+is an iterable that returns an absolute path to an image file name
 adhering to Sphinx-Gallery naming convention. The path directs to the
 <code class="docutils literal notranslate"><span class="pre">gallery_dirs/images</span></code> directory (<a class="reference internal" href="getting_started.html#configure-and-use-sphinx-gallery"><span class="std std-ref">Configure and use Sphinx-Gallery</span></a>)
 and the image file name is <code class="docutils literal notranslate"><span class="pre">'sphx_glr_'</span></code> followed by the name of the
 source <code class="docutils literal notranslate"><span class="pre">.py</span></code> file then a number, which starts at 1 and increases by 1 at
 each iteration. The default file format is <code class="docutils literal notranslate"><span class="pre">.'png'</span></code>. For example:
 <code class="docutils literal notranslate"><span class="pre">'home/user/Documents/module/auto_examples/images/sphx_glr_plot_mymodule_001.png'</span></code>.
-The scraper is responsible for replacing the <cite>.png</cite> extension with a supported
-image extension (see above) for it to then be picked up by Sphinx-Gallery.</p></li>
+If a different image extension is desired, the scraper is responsible for
+replacing the default <cite>.png</cite> extension. Only supported image extensions
+(see above) will enable the file to be picked up by Sphinx-Gallery.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">gallery_conf</span></code> - dictionary containing the configuration of Sphinx-Gallery,
 set under <code class="docutils literal notranslate"><span class="pre">sphinx_gallery_conf</span></code> in <code class="docutils literal notranslate"><span class="pre">doc/conf.py</span></code> (<a class="reference internal" href="configuration.html#configuration"><span class="std std-ref">Configuration</span></a>).</p></li>
 </ol>
