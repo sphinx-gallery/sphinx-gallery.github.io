@@ -401,7 +401,9 @@ adhering to Sphinx-Gallery naming convention. The path directs to the
 and the image file name is <code class="docutils literal notranslate"><span class="pre">'sphx_glr_'</span></code> followed by the name of the
 source <code class="docutils literal notranslate"><span class="pre">.py</span></code> file then a number, which starts at 1 and increases by 1 at
 each iteration. The default file format is <code class="docutils literal notranslate"><span class="pre">.'png'</span></code>. For example:
-<code class="docutils literal notranslate"><span class="pre">'home/user/Documents/module/auto_examples/images/sphx_glr_plot_mymodule_001.png'</span></code></p></li>
+<code class="docutils literal notranslate"><span class="pre">'home/user/Documents/module/auto_examples/images/sphx_glr_plot_mymodule_001.png'</span></code>.
+The scraper is responsible for replacing the <cite>.png</cite> extension with a supported
+image extension (see above) for it to then be picked up by Sphinx-Gallery.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">gallery_conf</span></code> - dictionary containing the configuration of Sphinx-Gallery,
 set under <code class="docutils literal notranslate"><span class="pre">sphinx_gallery_conf</span></code> in <code class="docutils literal notranslate"><span class="pre">doc/conf.py</span></code> (<a class="reference internal" href="configuration.html#configuration"><span class="std std-ref">Configuration</span></a>).</p></li>
 </ol>
@@ -428,7 +430,7 @@ and <a class="reference internal" href="gen_modules/sphinx_gallery.scrapers.html
 use the helper function <a class="reference internal" href="gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.figure_rst" title="sphinx_gallery.scrapers.figure_rst"><code class="xref py py-func docutils literal notranslate"><span class="pre">sphinx_gallery.scrapers.figure_rst()</span></code></a> to
 create the standardized rST. If your package will be used to write an image file
 to disk (e.g., PNG or JPEG), we recommend you use a similar approach.</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">my_module_scraper</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">block_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">my_module_scraper</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">block_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
     <span class="kn">import</span> <span class="nn">mymodule</span>
     <span class="c1"># We use a list to collect references to image names</span>
     <span class="n">image_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
@@ -561,8 +563,8 @@ PyVista users to just use strings as they already can for
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Sphinx-Gallery will look for this custom function and call it to get the
-PyVista image scraper to use before running any examples.</p>
+<p>Sphinx-Gallery will import the named module (here, <code class="docutils literal notranslate"><span class="pre">pyvista</span></code>) and use the
+<code class="docutils literal notranslate"><span class="pre">_get_sg_image_scraper</span></code> function defined there as a scraper.</p>
 </li>
 </ol>
 </div>
