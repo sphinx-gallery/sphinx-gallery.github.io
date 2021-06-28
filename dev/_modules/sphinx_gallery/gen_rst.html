@@ -865,6 +865,10 @@
         <span class="n">sys</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">sys_path</span>
         <span class="n">logging_tee</span><span class="o">.</span><span class="n">restore_std</span><span class="p">()</span>
 
+    <span class="c1"># Sanitize ANSI escape characters from RST output</span>
+    <span class="n">ansi_escape</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\x1B(?:[@-Z</span><span class="se">\\</span><span class="s1">-_]|\[[0-?]*[ -/]*[@-~])&#39;</span><span class="p">)</span>
+    <span class="n">code_output</span> <span class="o">=</span> <span class="n">ansi_escape</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">code_output</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="n">code_output</span></div>
 
 
@@ -1202,6 +1206,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">block_separator</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">bcontent</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
             <span class="n">example_rst</span> <span class="o">+=</span> <span class="n">bcontent</span> <span class="o">+</span> <span class="n">block_separator</span>
+
     <span class="k">return</span> <span class="n">example_rst</span></div>
 
 
