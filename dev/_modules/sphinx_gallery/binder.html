@@ -208,6 +208,7 @@
 
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">from</span> <span class="nn">urllib.parse</span> <span class="kn">import</span> <span class="n">quote</span>
 
 <span class="kn">from</span> <span class="nn">sphinx.errors</span> <span class="kn">import</span> <span class="n">ConfigError</span>
 
@@ -251,17 +252,16 @@
     <span class="n">path_link</span> <span class="o">=</span> <span class="n">path_link</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">)</span>
 
     <span class="c1"># Create the URL</span>
-    <span class="n">binder_url</span> <span class="o">=</span> <span class="n">binder_conf</span><span class="p">[</span><span class="s1">&#39;binderhub_url&#39;</span><span class="p">]</span>
     <span class="n">binder_url</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">binder_conf</span><span class="p">[</span><span class="s1">&#39;binderhub_url&#39;</span><span class="p">],</span>
                            <span class="s1">&#39;v2&#39;</span><span class="p">,</span> <span class="s1">&#39;gh&#39;</span><span class="p">,</span>
                            <span class="n">binder_conf</span><span class="p">[</span><span class="s1">&#39;org&#39;</span><span class="p">],</span>
                            <span class="n">binder_conf</span><span class="p">[</span><span class="s1">&#39;repo&#39;</span><span class="p">],</span>
-                           <span class="n">binder_conf</span><span class="p">[</span><span class="s1">&#39;branch&#39;</span><span class="p">]])</span>
+                           <span class="n">quote</span><span class="p">(</span><span class="n">binder_conf</span><span class="p">[</span><span class="s1">&#39;branch&#39;</span><span class="p">])])</span>
 
     <span class="k">if</span> <span class="n">binder_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;use_jupyter_lab&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-        <span class="n">binder_url</span> <span class="o">+=</span> <span class="s1">&#39;?urlpath=lab/tree/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path_link</span><span class="p">)</span>
+        <span class="n">binder_url</span> <span class="o">+=</span> <span class="s1">&#39;?urlpath=lab/tree/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">quote</span><span class="p">(</span><span class="n">path_link</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">binder_url</span> <span class="o">+=</span> <span class="s1">&#39;?filepath=</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path_link</span><span class="p">)</span>
+        <span class="n">binder_url</span> <span class="o">+=</span> <span class="s1">&#39;?filepath=</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">quote</span><span class="p">(</span><span class="n">path_link</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">binder_url</span></div>
 
 
