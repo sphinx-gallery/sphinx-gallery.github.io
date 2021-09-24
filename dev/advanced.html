@@ -92,7 +92,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#integrate-custom-scrapers-with-sphinx-gallery">Integrate custom scrapers with Sphinx-Gallery</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#define-resetting-behavior-e-g-for-custom-libraries">Define resetting behavior (e.g., for custom libraries)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#resetting-before-each-example">Resetting before each example</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#altering-sphinx-gallery-css">Altering Sphinx-Gallery CSS</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#using-only-sphinx-gallery-styles">Using (only) Sphinx-Gallery styles</a></li>
 </ul>
@@ -175,7 +175,7 @@ to use Sphinx-Gallery more deeply.</p>
 <li><p><a class="reference internal" href="#integrate-custom-scrapers-with-sphinx-gallery" id="id12">Integrate custom scrapers with Sphinx-Gallery</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="#define-resetting-behavior-e-g-for-custom-libraries" id="id13">Define resetting behavior (e.g., for custom libraries)</a></p></li>
+<li><p><a class="reference internal" href="#resetting-before-each-example" id="id13">Resetting before each example</a></p></li>
 <li><p><a class="reference internal" href="#altering-sphinx-gallery-css" id="id14">Altering Sphinx-Gallery CSS</a></p></li>
 <li><p><a class="reference internal" href="#using-only-sphinx-gallery-styles" id="id15">Using (only) Sphinx-Gallery styles</a></p></li>
 </ul>
@@ -508,13 +508,17 @@ PyVista users to just use strings as they already can for
 </ol>
 </section>
 </section>
-<section id="define-resetting-behavior-e-g-for-custom-libraries">
-<span id="custom-reset"></span><h2><a class="toc-backref" href="#id13">Define resetting behavior (e.g., for custom libraries)</a><a class="headerlink" href="#define-resetting-behavior-e-g-for-custom-libraries" title="Permalink to this headline">¶</a></h2>
-<p>Sphinx-Gallery natively supports resetting <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> and <code class="docutils literal notranslate"><span class="pre">seaborn</span></code>.
-However, if you’d like to support resetting for other libraries (or would like
-to modify the resetting behavior for a natively-supported library), you can
-add a custom function to the resetting tuple defined in <code class="docutils literal notranslate"><span class="pre">conf.py</span></code>.</p>
-<p>The function takes two variables: a dictionary called <code class="docutils literal notranslate"><span class="pre">gallery_conf</span></code> (which is
+<section id="resetting-before-each-example">
+<span id="custom-reset"></span><h2><a class="toc-backref" href="#id13">Resetting before each example</a><a class="headerlink" href="#resetting-before-each-example" title="Permalink to this headline">¶</a></h2>
+<p>Sphinx-Gallery supports ‘resetting’ via a prolog that is run before each
+example script is executed. This is used natively in Sphinx-Gallery to ‘reset’
+the behavior of the visualization packages <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> and <code class="docutils literal notranslate"><span class="pre">seaborn</span></code>
+(<a class="reference internal" href="configuration.html#reset-modules"><span class="std std-ref">Resetting modules</span></a>). However, this functionality could be used to reset other
+libraries, modify the resetting behavior for a natively-reset library or run
+an arbitrary custom function at the start of each script.</p>
+<p>This is done by adding a custom function to the resetting tuple defined in
+<code class="docutils literal notranslate"><span class="pre">conf.py</span></code>. The function should take two variables: a dictionary called
+<code class="docutils literal notranslate"><span class="pre">gallery_conf</span></code> (which is
 your Sphinx-Gallery configuration) and a string called <code class="docutils literal notranslate"><span class="pre">fname</span></code> (which is the
 file name of the currently-executed Python script). These generally don’t need
 to be used in order to perform whatever resetting behavior you want, but must
@@ -526,13 +530,15 @@ be included in the function definition for compatibility reasons.</p>
 </pre></div>
 </div>
 <p>Any custom functions can be defined (or imported) in <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> and given to
-the <code class="docutils literal notranslate"><span class="pre">reset_modules</span></code> configuration key. For the function defined above:</p>
+the <code class="docutils literal notranslate"><span class="pre">reset_modules</span></code> configuration key. To add the function defined above:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
     <span class="s1">&#39;reset_modules&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">reset_mpl</span><span class="p">,</span> <span class="s1">&#39;seaborn&#39;</span><span class="p">),</span>
 <span class="p">}</span>
 </pre></div>
 </div>
+<p>In the config above <code class="docutils literal notranslate"><span class="pre">'seaborn'</span></code> refers to the native seaborn resetting
+function (see <a class="reference internal" href="configuration.html#reset-modules"><span class="std std-ref">Resetting modules</span></a>).</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Using resetters such as <code class="docutils literal notranslate"><span class="pre">reset_mpl</span></code> that deviate from the
