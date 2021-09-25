@@ -154,8 +154,8 @@ this section describes how to write a custom scraper.
 Image scrapers are functions (or callable class instances) that do two things:
 
 1. Collect a list of images created in the latest execution of code.
-2. Write these images to disk in PNG, JPEG, or SVG format (with .png, .jpg, or
-   .svg extensions, respectively)
+2. Write these images to disk in PNG, JPEG, SVG, or GIF format (with .png,
+   .jpg, .svg, or .gif extensions, respectively)
 3. Return rST that embeds these figures in the built documentation.
 
 The function should take the following inputs (in this order):
@@ -174,13 +174,16 @@ The function should take the following inputs (in this order):
 
 2. ``block_vars`` - dictionary of configuration and runtime variables. Of
    interest for image scrapers is the element ``'image_path_iterator'`` which
-   is an iterable object which returns an absolute path to an image file name
+   is an iterable that returns an absolute path to an image file name
    adhering to Sphinx-Gallery naming convention. The path directs to the
    ``gallery_dirs/images`` directory (:ref:`configure_and_use_sphinx_gallery`)
    and the image file name is ``'sphx_glr_'`` followed by the name of the
    source ``.py`` file then a number, which starts at 1 and increases by 1 at
    each iteration. The default file format is ``.'png'``. For example:
-   ``'home/user/Documents/module/auto_examples/images/sphx_glr_plot_mymodule_001.png'``
+   ``'home/user/Documents/module/auto_examples/images/sphx_glr_plot_mymodule_001.png'``.
+   If a different image extension is desired, the scraper is responsible for
+   replacing the default `.png` extension. Only supported image extensions
+   (see above) will enable the file to be picked up by Sphinx-Gallery.
 
 3. ``gallery_conf`` - dictionary containing the configuration of Sphinx-Gallery,
    set under ``sphinx_gallery_conf`` in ``doc/conf.py`` (:ref:`configuration`).
@@ -210,7 +213,7 @@ use the helper function :func:`sphinx_gallery.scrapers.figure_rst` to
 create the standardized rST. If your package will be used to write an image file
 to disk (e.g., PNG or JPEG), we recommend you use a similar approach. ::
 
-   def my_module_scraper(block, block_vars, gallery_conf)
+   def my_module_scraper(block, block_vars, gallery_conf):
        import mymodule
        # We use a list to collect references to image names
        image_names = list()
@@ -345,20 +348,24 @@ it with Sphinx-Gallery. You can:
            'image_scrapers': ('pyvista',)
        }
 
-   Sphinx-Gallery will look for this custom function and call it to get the
-   PyVista image scraper to use before running any examples.
+   Sphinx-Gallery will import the named module (here, ``pyvista``) and use the
+   ``_get_sg_image_scraper`` function defined there as a scraper.
 
 .. _custom_reset:
 
-Define resetting behavior (e.g., for custom libraries)
-======================================================
+Resetting before each example
+=============================
 
-Sphinx-Gallery natively supports resetting ``matplotlib`` and ``seaborn``.
-However, if you'd like to support resetting for other libraries (or would like
-to modify the resetting behavior for a natively-supported library), you can
-add a custom function to the resetting tuple defined in ``conf.py``.
+Sphinx-Gallery supports 'resetting' via a prolog that is run before each
+example script is executed. This is used natively in Sphinx-Gallery to 'reset'
+the behavior of the visualization packages ``matplotlib`` and ``seaborn``
+(:ref:`reset_modules`). However, this functionality could be used to reset other
+libraries, modify the resetting behavior for a natively-reset library or run
+an arbitrary custom function at the start of each script.
 
-The function takes two variables: a dictionary called ``gallery_conf`` (which is
+This is done by adding a custom function to the resetting tuple defined in
+``conf.py``. The function should take two variables: a dictionary called
+``gallery_conf`` (which is
 your Sphinx-Gallery configuration) and a string called ``fname`` (which is the
 file name of the currently-executed Python script). These generally don't need
 to be used in order to perform whatever resetting behavior you want, but must
@@ -371,12 +378,15 @@ For example, to reset matplotlib to always use the ``ggplot`` style, you could d
        style.use('ggplot')
 
 Any custom functions can be defined (or imported) in ``conf.py`` and given to
-the ``reset_modules`` configuration key. For the function defined above::
+the ``reset_modules`` configuration key. To add the function defined above::
 
    sphinx_gallery_conf = {
        ...
        'reset_modules': (reset_mpl, 'seaborn'),
    }
+
+In the config above ``'seaborn'`` refers to the native seaborn resetting
+function (see :ref:`reset_modules`).
 
 .. note:: Using resetters such as ``reset_mpl`` that deviate from the
           standard behavior that users will experience when manually running
@@ -390,23 +400,27 @@ The Sphinx-Gallery ``.css`` files that control the appearance of your example
 gallery can be found `here
 <https://github.com/sphinx-gallery/sphinx-gallery/tree/master/sphinx_gallery/_static>`_.
 These default ``.css`` files are added to your build. Specifically, they are
-copied into ``_build/html/_static/`` of your ``gallery_dir``. You can add your
-own custom ``.css`` files by using the :doc:`Sphinx configuration
-<sphinx:usage/configuration>` ``html_static_path``. For example,
-list any path(s) that contain your custom static files, using the
+copied into ``_build/html/_static/`` of your ``gallery_dir``.
+
+You can add your own custom ``.css`` files by using the
+:doc:`Sphinx configuration <sphinx:usage/configuration>` ``html_static_path``.
+For example, list any path(s) that contain your custom static files, using the
 ``html_static_path`` configuration, in your ``conf.py`` file::
 
     html_static_path = ['_static']
 
-You can also directly overwrite the default static files. The static files in
-the path(s) listed will be copied over after the builtin Sphinx-Gallery files,
-so if you have a file named "gallery.css", it will overwrite the builtin
-"gallery.css".
+The default Sphinx-Gallery ``.css`` files are copied to your build **after**
+files in your ``html_static_path`` config. This means that files in your
+``html_static_path`` that are named the same as Sphinx-Gallery ``.css`` files
+will be over-written. You can easily avoid this as all Sphinx-Gallery ``.css``
+files are prepended with 'sg\_' (e.g., 'sg_gallery.css'). More details on
+this can be found in `PR #845
+<https://github.com/sphinx-gallery/sphinx-gallery/pull/845>`_.
 
-The appearance of :ref:`code links <stylizing_code_links>` and
-:ref:`thumbnail size <setting_thumbnail_size>` can be altered via addition
-of your own CSS. Can also do things like hide the download buttons in the
-example headers using:
+Custom css can be used to alter the appearance of
+:ref:`code links <stylizing_code_links>` and
+:ref:`thumbnail size <setting_thumbnail_size>`. You can also do things like hide
+the download buttons in the example headers, e.g., using:
 
 .. code-block:: css
 
