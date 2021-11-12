@@ -105,6 +105,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#using-multiple-code-blocks-to-create-a-single-figure">Using multiple code blocks to create a single figure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#generating-dummy-images">Generating dummy images</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#resetting-modules">Resetting modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#order-of-resetting-modules">Order of resetting modules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#dealing-with-failing-gallery-example-scripts">Dealing with failing Gallery example scripts</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#abort-build-on-first-fail">Abort build on first fail</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#don-t-fail-the-build-if-specific-examples-error">Don’t fail the build if specific examples error</a></li>
@@ -207,6 +208,7 @@ file:</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">compress_images</span></code> (<a class="reference internal" href="#compress-images"><span class="std std-ref">Compressing images</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">image_srcset</span></code> (<a class="reference internal" href="#image-srcset"><span class="std std-ref">Multi-resolution images</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">reset_modules</span></code> (<a class="reference internal" href="#reset-modules"><span class="std std-ref">Resetting modules</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">reset_modules_order</span></code> (<a class="reference internal" href="#reset-modules-order"><span class="std std-ref">Order of resetting modules</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">abort_on_example_error</span></code> (<a class="reference internal" href="#abort-on-first"><span class="std std-ref">Abort build on first fail</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">only_warn_on_example_error</span></code> (<a class="reference internal" href="#warning-on-error"><span class="std std-ref">Never fail the build on error</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">expected_failing_examples</span></code> (<a class="reference internal" href="#dont-fail-exit"><span class="std std-ref">Don’t fail the build if specific examples error</span></a>)</p></li>
@@ -1468,6 +1470,24 @@ following configuration:</p>
 <code class="docutils literal notranslate"><span class="pre">seaborn</span></code>. However, you can also add your own custom function to
 this tuple in order to define resetting behavior for other visualization libraries.</p>
 <p>To do so, follow the instructions in <a class="reference internal" href="advanced.html#custom-reset"><span class="std std-ref">Resetting before each example</span></a>.</p>
+</section>
+<section id="order-of-resetting-modules">
+<span id="reset-modules-order"></span><h2>Order of resetting modules<a class="headerlink" href="#order-of-resetting-modules" title="Permalink to this headline">¶</a></h2>
+<p>By default, Sphinx-Gallery will reset modules before each example is run.
+The choices for <code class="docutils literal notranslate"><span class="pre">reset_modules_order</span></code> are <code class="docutils literal notranslate"><span class="pre">before</span></code> (default), <code class="docutils literal notranslate"><span class="pre">after</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">both</span></code>. If the last example run in Sphinx-Gallery modifies a module, it is
+recommended to use <code class="docutils literal notranslate"><span class="pre">after</span></code> or <code class="docutils literal notranslate"><span class="pre">both</span></code> to avoid leaking out a modified module to
+other parts of the Sphinx build process.  For example, set <code class="docutils literal notranslate"><span class="pre">reset_modules_order</span></code>
+to <code class="docutils literal notranslate"><span class="pre">both</span></code> in the configuration:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">...</span>
+    <span class="s1">&#39;reset_modules_order&#39;</span><span class="p">:</span> <span class="s1">&#39;both&#39;</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Custom functions can be constructed to have custom functionality depending on
+whether they are called before or after the examples.  See <a class="reference internal" href="advanced.html#custom-reset"><span class="std std-ref">Resetting before each example</span></a>
+for more information.</p>
 </section>
 <section id="dealing-with-failing-gallery-example-scripts">
 <h2>Dealing with failing Gallery example scripts<a class="headerlink" href="#dealing-with-failing-gallery-example-scripts" title="Permalink to this headline">¶</a></h2>

@@ -209,6 +209,7 @@
     <span class="s1">&#39;image_scrapers&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;matplotlib&#39;</span><span class="p">,),</span>
     <span class="s1">&#39;compress_images&#39;</span><span class="p">:</span> <span class="p">(),</span>
     <span class="s1">&#39;reset_modules&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;matplotlib&#39;</span><span class="p">,</span> <span class="s1">&#39;seaborn&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;reset_modules_order&#39;</span><span class="p">:</span> <span class="s1">&#39;before&#39;</span><span class="p">,</span>
     <span class="s1">&#39;first_notebook_cell&#39;</span><span class="p">:</span> <span class="s1">&#39;%matplotlib inline&#39;</span><span class="p">,</span>
     <span class="s1">&#39;last_notebook_cell&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
     <span class="s1">&#39;notebook_images&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
@@ -414,6 +415,14 @@
             <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s1">&#39;Module resetter </span><span class="si">%r</span><span class="s1"> was not callable&#39;</span>
                               <span class="o">%</span> <span class="p">(</span><span class="n">resetter</span><span class="p">,))</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;reset_modules&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">resetters</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;reset_modules_order&#39;</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s1">&#39;reset_modules_order must be a str, &#39;</span>
+                          <span class="s1">&#39;got </span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;reset_modules_order&#39;</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;reset_modules_order&#39;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;before&#39;</span><span class="p">,</span> <span class="s1">&#39;after&#39;</span><span class="p">,</span> <span class="s1">&#39;both&#39;</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s2">&quot;reset_modules_order must be in&quot;</span>
+                          <span class="s2">&quot;[&#39;before&#39;, &#39;after&#39;, &#39;both&#39;], &quot;</span>
+                          <span class="s1">&#39;got </span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;reset_modules_order&#39;</span><span class="p">])</span>
 
     <span class="n">lang</span> <span class="o">=</span> <span class="n">lang</span> <span class="k">if</span> <span class="n">lang</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;python&#39;</span><span class="p">,</span> <span class="s1">&#39;python3&#39;</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="s1">&#39;python&#39;</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;lang&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lang</span>
