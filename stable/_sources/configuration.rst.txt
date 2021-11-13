@@ -36,6 +36,7 @@ file:
 - ``compress_images`` (:ref:`compress_images`)
 - ``image_srcset`` (:ref:`image_srcset`)
 - ``reset_modules`` (:ref:`reset_modules`)
+- ``reset_modules_order`` (:ref:`reset_modules_order`)
 - ``abort_on_example_error`` (:ref:`abort_on_first`)
 - ``only_warn_on_example_error`` (:ref:`warning_on_error`)
 - ``expected_failing_examples`` (:ref:`dont_fail_exit`)
@@ -150,16 +151,18 @@ instead of ``'/'`` if they want to be agnostic to the operating system.
 
 The ``filename_pattern`` option is also useful if you want to build only a
 subset of the examples. For example, you may
-want to build only one example so that you can link it in the documentation. In that case,
-you would do::
+want to build only one example so that you can link it in the documentation.
+In that case, you would do::
 
     sphinx_gallery_conf = {
         ...
         'filename_pattern': r'plot_awesome_example\.py',
     }
 
-Here, one should escape the dot ``r'\.'`` as otherwise python `regular expressions`_ matches any character. Nevertheless, as
-one is targeting a specific file, it would match the dot in the filename even without this escape character.
+Here, one should escape the dot ``r'\.'`` as otherwise python
+`regular expressions`_ matches any character. Nevertheless, as
+one is targeting a specific file, it would match the dot in the filename even
+without this escape character.
 
 .. note::
     Sphinx-Gallery only re-runs examples that have changed (according to their
@@ -172,20 +175,21 @@ Similarly, to build only examples in a specific directory, you can do::
         'filename_pattern': '/directory/plot_',
     }
 
-Alternatively, you can skip executing some examples. For example, to skip building examples
-starting with ``plot_long_examples_``, you would do::
+Alternatively, you can skip executing some examples. For example, to skip
+building examples starting with ``plot_long_examples_``, you would do::
 
     sphinx_gallery_conf = {
         ...
         'filename_pattern': '/plot_(?!long_examples)',
     }
 
-As the patterns are parsed as `regular expressions`_, users are advised to consult the
-`regular expressions`_ module for more details.
+As the patterns are parsed as `regular expressions`_, users are advised to
+consult the `regular expressions`_ module for more details.
 
 .. note::
     Remember that Sphinx allows overriding ``conf.py`` values from the command
-    line, so you can for example build a single example directly via something like:
+    line, so you can for example build a single example directly via something
+    like:
 
     .. code-block:: console
 
@@ -387,6 +391,9 @@ as the ``intersphinx`` inventory will automatically be used.
 If you do not use ``intersphinx``, then you should add entries that
 point to the directory containing ``searchindex.js``, such as
 ``'matplotlib': 'https://matplotlib.org'``.
+
+If you wish to do the same for ordinary RST documentation,
+see :ref:`plain_rst`.
 
 .. _references_to_examples:
 
@@ -946,7 +953,8 @@ Generate Binder links for gallery notebooks (experimental)
 
 Sphinx-Gallery automatically generates Jupyter notebooks for any
 examples built with the gallery. `Binder <https://mybinder.org>`_ makes it
-possible to create interactive GitHub repositories that connect to cloud resources.
+possible to create interactive GitHub repositories that connect to cloud
+resources.
 
 If you host your documentation on a GitHub repository, it is possible to
 auto-generate a Binder link for each notebook. Clicking this link will
@@ -979,12 +987,17 @@ dictionary following the pattern below::
          }
     }
 
-If a Sphinx-Gallery configuration for Binder is discovered, the following extra things will happen:
+If a Sphinx-Gallery configuration for Binder is discovered, the following extra
+things will happen:
 
-1. The dependency files specified in ``dependencies`` will be copied to a ``binder/`` folder in your built documentation.
-2. The built Jupyter Notebooks from the documentation will be copied to a folder called ``<notebooks_dir/>`` at the root of
-   your built documentation (they will follow the same folder hierarchy within the notebooks directory folder.
-3. The rST output of each Sphinx-Gallery example will now have a ``launch binder`` button in it.
+1. The dependency files specified in ``dependencies`` will be copied to a
+   ``binder/`` folder in your built documentation.
+2. The built Jupyter Notebooks from the documentation will be copied to a
+   folder called ``<notebooks_dir/>`` at the root of
+   your built documentation (they will follow the same folder hierarchy within
+   the notebooks directory folder.
+3. The rST output of each Sphinx-Gallery example will now have a
+   ``launch binder`` button in it.
 4. That button will point to a binder link with the following structure
 
    .. code-block:: html
@@ -999,23 +1012,29 @@ repo (type: string)
   The GitHub repository where your documentation is stored.
 ref (type: string)
   A reference to the version of your repository where your documentation exists.
-  For example, if your built documentation is stored on a ``gh-pages`` branch, then this field
-  should be set to ``gh-pages``.
+  For example, if your built documentation is stored on a ``gh-pages`` branch,
+  then this field should be set to ``gh-pages``.
 binderhub_url (type: string)
-  The full URL to a BinderHub deployment where you want your examples to run. One
-  public BinderHub deployment is at ``https://mybinder.org``, though if you (and your users) have access to
-  another, this can be configured with this field.
+  The full URL to a BinderHub deployment where you want your examples to run.
+  One public BinderHub deployment is at ``https://mybinder.org``, though if you
+  (and your users) have access to another, this can be configured with this
+  field.
 dependencies (type: list)
-  A list of paths (relative to ``conf.py``) to dependency files that Binder uses to infer the environment needed
-  to run your examples. For example, a ``requirements.txt`` file. These will be copied into a folder
-  called ``binder/`` in your built documentation folder. For a list of all the possible dependency files
-  you can use, see `the Binder configuration documentation <https://mybinder.readthedocs.io/en/latest/config_files.html#config-files>`_.
+  A list of paths (relative to ``conf.py``) to dependency files that Binder uses
+  to infer the environment needed to run your examples. For example, a
+  ``requirements.txt`` file. These will be copied into a folder   called
+  ``binder/`` in your built documentation folder. For a list of all the possible
+  dependency files you can use, see `the Binder configuration documentation
+  <https://mybinder.readthedocs.io/en/latest/config_files.html#config-files>`_.
 filepath_prefix (type: string | None, default: ``None``)
-  A prefix to append to the filepath in the Binder links. You should use this if you will store your built
-  documentation in a sub-folder of a repository, instead of in the root.
+  A prefix to append to the filepath in the Binder links. You should use this if
+  you will store your built documentation in a sub-folder of a repository,
+  instead of in the root.
 notebooks_dir (type: string, default: ``notebooks``)
-  The name of a folder where the built Jupyter notebooks will be copied. This ensures that all the notebooks are
-  in one place (though they retain their folder hierarchy) in case you'd like users to browse multiple notebook examples in one session.
+  The name of a folder where the built Jupyter notebooks will be copied. This
+  ensures that all the notebooks are in one place (though they retain their
+  folder hierarchy) in case you'd like users to browse multiple notebook
+  examples in one session.
 use_jupyter_lab (type: bool, default: ``False``)
   Whether the default interface activated by the Binder link will be for
   Jupyter Lab or the classic Jupyter Notebook interface.
@@ -1065,7 +1084,7 @@ a default::
 
     sphinx_gallery_conf = {
         ...
-        'plot_gallery': 'False',
+        'plot_gallery': False,
     }
 
 The highest precedence is always given to the `-D` flag of the
@@ -1138,9 +1157,9 @@ This is converted to html by the custom directive as::
 This leads to a larger website, but clients that support the ``srcset`` tag will only
 download the appropriate-sized images.
 
-Note that the ``.. image-sg`` directive currently ignores other ``.. image`` directive
-tags like ``width``, ``height``, and ``align``.  It also only works with the *html* and
-*latex*  builders.
+Note that the ``.. image-sg`` directive currently ignores other ``.. image``
+directive tags like ``width``, ``height``, and ``align``.  It also only works
+with the *html* and *latex*  builders.
 
 .. _image_scrapers:
 
@@ -1287,7 +1306,7 @@ so they will not be overwritten.
 .. note::
     This configuration **only** works when the example is set to not execute
     (i.e., the ``plot_gallery`` is False, the example is in `ignore_pattern`
-    or the example is not in `filename_pattern - see
+    or the example is not in ``filename_pattern`` - see
     :ref:`filename/ignore patterns <build_pattern>`). This means that you will
     not need to remove any ``sphinx_gallery_dummy_images`` lines in your
     examples when you switch to building your gallery with execution.
@@ -1317,6 +1336,26 @@ this tuple in order to define resetting behavior for other visualization librari
 
 To do so, follow the instructions in :ref:`custom_reset`.
 
+.. _reset_modules_order:
+
+Order of resetting modules
+==========================
+
+By default, Sphinx-Gallery will reset modules before each example is run.
+The choices for ``reset_modules_order`` are ``before`` (default), ``after``, and
+``both``. If the last example run in Sphinx-Gallery modifies a module, it is
+recommended to use ``after`` or ``both`` to avoid leaking out a modified module to
+other parts of the Sphinx build process.  For example, set ``reset_modules_order``
+to ``both`` in the configuration::
+
+    sphinx_gallery_conf = {
+        ...
+        'reset_modules_order': 'both',
+    }
+
+Custom functions can be constructed to have custom functionality depending on
+whether they are called before or after the examples.  See :ref:`custom_reset`
+for more information.
 
 Dealing with failing Gallery example scripts
 ============================================
@@ -1357,8 +1396,8 @@ by including in your ``Makefile``:
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
 
-Remember that for ``Makefile`` white space is significant and the indentation are tabs
-and not spaces.
+Remember that for ``Makefile`` white space is significant and the indentation
+are tabs and not spaces.
 
 Alternatively, you can add the ``abort_on_example_error`` option to
 the ``sphinx_gallery_conf`` dictionary inside your ``conf.py``
@@ -1401,7 +1440,9 @@ the example script.
 Never fail the build on error
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Sphinx-Gallery can be configured to only log warnings when examples fail. This means that sphinx will only exit with a non-zero exit code if the ``-W`` flag is passed to ``sphinx-build``. This can be enabled by setting::
+Sphinx-Gallery can be configured to only log warnings when examples fail.
+This means that sphinx will only exit with a non-zero exit code if the ``-W``
+flag is passed to ``sphinx-build``. This can be enabled by setting::
 
     sphinx_gallery_conf = {
         ...
