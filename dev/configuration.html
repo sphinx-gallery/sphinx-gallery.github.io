@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Configuration &mdash; Sphinx-Gallery 0.11.0.dev0-git documentation</title>
+  <title>Configuration &mdash; Sphinx-Gallery 0.10.1-git documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/theme_override.css" type="text/css" />
@@ -35,7 +35,7 @@
             <a href="index.html" class="icon icon-home"> Sphinx-Gallery
           </a>
               <div class="version">
-                0.11.0.dev0
+                0.10.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -49,7 +49,7 @@
   <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
       <span class="rst-current-version" data-toggle="rst-current-version">
         <span class="fa fa-book"> Versions</span>
-        v: dev
+        v: stable
         <span class="fa fa-caret-down"></span>
       </span>
       <div class="rst-other-versions">
@@ -314,16 +314,18 @@ the leading <code class="docutils literal notranslate"><span class="pre">'/'</sp
 instead of <code class="docutils literal notranslate"><span class="pre">'/'</span></code> if they want to be agnostic to the operating system.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">filename_pattern</span></code> option is also useful if you want to build only a
 subset of the examples. For example, you may
-want to build only one example so that you can link it in the documentation. In that case,
-you would do:</p>
+want to build only one example so that you can link it in the documentation.
+In that case, you would do:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
     <span class="s1">&#39;filename_pattern&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;plot_awesome_example\.py&#39;</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Here, one should escape the dot <code class="docutils literal notranslate"><span class="pre">r'\.'</span></code> as otherwise python <a class="reference external" href="https://docs.python.org/library/re.html">regular expressions</a> matches any character. Nevertheless, as
-one is targeting a specific file, it would match the dot in the filename even without this escape character.</p>
+<p>Here, one should escape the dot <code class="docutils literal notranslate"><span class="pre">r'\.'</span></code> as otherwise python
+<a class="reference external" href="https://docs.python.org/library/re.html">regular expressions</a> matches any character. Nevertheless, as
+one is targeting a specific file, it would match the dot in the filename even
+without this escape character.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Sphinx-Gallery only re-runs examples that have changed (according to their
@@ -336,20 +338,21 @@ md5 hash). See <a class="reference internal" href="#run-stale-examples"><span cl
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Alternatively, you can skip executing some examples. For example, to skip building examples
-starting with <code class="docutils literal notranslate"><span class="pre">plot_long_examples_</span></code>, you would do:</p>
+<p>Alternatively, you can skip executing some examples. For example, to skip
+building examples starting with <code class="docutils literal notranslate"><span class="pre">plot_long_examples_</span></code>, you would do:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
     <span class="s1">&#39;filename_pattern&#39;</span><span class="p">:</span> <span class="s1">&#39;/plot_(?!long_examples)&#39;</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>As the patterns are parsed as <a class="reference external" href="https://docs.python.org/library/re.html">regular expressions</a>, users are advised to consult the
-<a class="reference external" href="https://docs.python.org/library/re.html">regular expressions</a> module for more details.</p>
+<p>As the patterns are parsed as <a class="reference external" href="https://docs.python.org/library/re.html">regular expressions</a>, users are advised to
+consult the <a class="reference external" href="https://docs.python.org/library/re.html">regular expressions</a> module for more details.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Remember that Sphinx allows overriding <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> values from the command
-line, so you can for example build a single example directly via something like:</p>
+line, so you can for example build a single example directly via something
+like:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>sphinx-build -D sphinx_gallery_conf.filename_pattern<span class="o">=</span>plot_specific_example<span class="se">\.</span>py ...
 </pre></div>
 </div>
@@ -1125,7 +1128,8 @@ this functionality.</p>
 <span id="binder-links"></span><h2>Generate Binder links for gallery notebooks (experimental)<a class="headerlink" href="#generate-binder-links-for-gallery-notebooks-experimental" title="Permalink to this headline">¶</a></h2>
 <p>Sphinx-Gallery automatically generates Jupyter notebooks for any
 examples built with the gallery. <a class="reference external" href="https://mybinder.org">Binder</a> makes it
-possible to create interactive GitHub repositories that connect to cloud resources.</p>
+possible to create interactive GitHub repositories that connect to cloud
+resources.</p>
 <p>If you host your documentation on a GitHub repository, it is possible to
 auto-generate a Binder link for each notebook. Clicking this link will
 take users to a live version of the Jupyter notebook where they may
@@ -1155,12 +1159,17 @@ dictionary following the pattern below:</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>If a Sphinx-Gallery configuration for Binder is discovered, the following extra things will happen:</p>
+<p>If a Sphinx-Gallery configuration for Binder is discovered, the following extra
+things will happen:</p>
 <ol class="arabic">
-<li><p>The dependency files specified in <code class="docutils literal notranslate"><span class="pre">dependencies</span></code> will be copied to a <code class="docutils literal notranslate"><span class="pre">binder/</span></code> folder in your built documentation.</p></li>
-<li><p>The built Jupyter Notebooks from the documentation will be copied to a folder called <code class="docutils literal notranslate"><span class="pre">&lt;notebooks_dir/&gt;</span></code> at the root of
-your built documentation (they will follow the same folder hierarchy within the notebooks directory folder.</p></li>
-<li><p>The rST output of each Sphinx-Gallery example will now have a <code class="docutils literal notranslate"><span class="pre">launch</span> <span class="pre">binder</span></code> button in it.</p></li>
+<li><p>The dependency files specified in <code class="docutils literal notranslate"><span class="pre">dependencies</span></code> will be copied to a
+<code class="docutils literal notranslate"><span class="pre">binder/</span></code> folder in your built documentation.</p></li>
+<li><p>The built Jupyter Notebooks from the documentation will be copied to a
+folder called <code class="docutils literal notranslate"><span class="pre">&lt;notebooks_dir/&gt;</span></code> at the root of
+your built documentation (they will follow the same folder hierarchy within
+the notebooks directory folder.</p></li>
+<li><p>The rST output of each Sphinx-Gallery example will now have a
+<code class="docutils literal notranslate"><span class="pre">launch</span> <span class="pre">binder</span></code> button in it.</p></li>
 <li><p>That button will point to a binder link with the following structure</p>
 <div class="highlight-html notranslate"><div class="highlight"><pre><span></span><span class="p">&lt;</span><span class="nt">binderhub_url</span><span class="p">&gt;</span>/v2/gh/<span class="p">&lt;</span><span class="nt">org</span><span class="p">&gt;</span>/<span class="p">&lt;</span><span class="nt">repo</span><span class="p">&gt;</span>/<span class="p">&lt;</span><span class="nt">ref</span><span class="p">&gt;</span>?filepath=<span class="p">&lt;</span><span class="nt">filepath_prefix</span><span class="p">&gt;</span>/<span class="p">&lt;</span><span class="nt">notebooks_dir</span><span class="p">&gt;</span>/path/to/notebook.ipynb
 </pre></div>
@@ -1174,23 +1183,28 @@ your built documentation (they will follow the same folder hierarchy within the 
 <dt>repo (type: string)</dt><dd><p>The GitHub repository where your documentation is stored.</p>
 </dd>
 <dt>ref (type: string)</dt><dd><p>A reference to the version of your repository where your documentation exists.
-For example, if your built documentation is stored on a <code class="docutils literal notranslate"><span class="pre">gh-pages</span></code> branch, then this field
-should be set to <code class="docutils literal notranslate"><span class="pre">gh-pages</span></code>.</p>
+For example, if your built documentation is stored on a <code class="docutils literal notranslate"><span class="pre">gh-pages</span></code> branch,
+then this field should be set to <code class="docutils literal notranslate"><span class="pre">gh-pages</span></code>.</p>
 </dd>
-<dt>binderhub_url (type: string)</dt><dd><p>The full URL to a BinderHub deployment where you want your examples to run. One
-public BinderHub deployment is at <code class="docutils literal notranslate"><span class="pre">https://mybinder.org</span></code>, though if you (and your users) have access to
-another, this can be configured with this field.</p>
+<dt>binderhub_url (type: string)</dt><dd><p>The full URL to a BinderHub deployment where you want your examples to run.
+One public BinderHub deployment is at <code class="docutils literal notranslate"><span class="pre">https://mybinder.org</span></code>, though if you
+(and your users) have access to another, this can be configured with this
+field.</p>
 </dd>
-<dt>dependencies (type: list)</dt><dd><p>A list of paths (relative to <code class="docutils literal notranslate"><span class="pre">conf.py</span></code>) to dependency files that Binder uses to infer the environment needed
-to run your examples. For example, a <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> file. These will be copied into a folder
-called <code class="docutils literal notranslate"><span class="pre">binder/</span></code> in your built documentation folder. For a list of all the possible dependency files
-you can use, see <a class="reference external" href="https://mybinder.readthedocs.io/en/latest/config_files.html#config-files">the Binder configuration documentation</a>.</p>
+<dt>dependencies (type: list)</dt><dd><p>A list of paths (relative to <code class="docutils literal notranslate"><span class="pre">conf.py</span></code>) to dependency files that Binder uses
+to infer the environment needed to run your examples. For example, a
+<code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> file. These will be copied into a folder   called
+<code class="docutils literal notranslate"><span class="pre">binder/</span></code> in your built documentation folder. For a list of all the possible
+dependency files you can use, see <a class="reference external" href="https://mybinder.readthedocs.io/en/latest/config_files.html#config-files">the Binder configuration documentation</a>.</p>
 </dd>
-<dt>filepath_prefix (type: string | None, default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)</dt><dd><p>A prefix to append to the filepath in the Binder links. You should use this if you will store your built
-documentation in a sub-folder of a repository, instead of in the root.</p>
+<dt>filepath_prefix (type: string | None, default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)</dt><dd><p>A prefix to append to the filepath in the Binder links. You should use this if
+you will store your built documentation in a sub-folder of a repository,
+instead of in the root.</p>
 </dd>
-<dt>notebooks_dir (type: string, default: <code class="docutils literal notranslate"><span class="pre">notebooks</span></code>)</dt><dd><p>The name of a folder where the built Jupyter notebooks will be copied. This ensures that all the notebooks are
-in one place (though they retain their folder hierarchy) in case you’d like users to browse multiple notebook examples in one session.</p>
+<dt>notebooks_dir (type: string, default: <code class="docutils literal notranslate"><span class="pre">notebooks</span></code>)</dt><dd><p>The name of a folder where the built Jupyter notebooks will be copied. This
+ensures that all the notebooks are in one place (though they retain their
+folder hierarchy) in case you’d like users to browse multiple notebook
+examples in one session.</p>
 </dd>
 <dt>use_jupyter_lab (type: bool, default: <code class="docutils literal notranslate"><span class="pre">False</span></code>)</dt><dd><p>Whether the default interface activated by the Binder link will be for
 Jupyter Lab or the classic Jupyter Notebook interface.</p>
@@ -1297,9 +1311,9 @@ rst file:</p>
 </div>
 <p>This leads to a larger website, but clients that support the <code class="docutils literal notranslate"><span class="pre">srcset</span></code> tag will only
 download the appropriate-sized images.</p>
-<p>Note that the <code class="docutils literal notranslate"><span class="pre">..</span> <span class="pre">image-sg</span></code> directive currently ignores other <code class="docutils literal notranslate"><span class="pre">..</span> <span class="pre">image</span></code> directive
-tags like <code class="docutils literal notranslate"><span class="pre">width</span></code>, <code class="docutils literal notranslate"><span class="pre">height</span></code>, and <code class="docutils literal notranslate"><span class="pre">align</span></code>.  It also only works with the <em>html</em> and
-<em>latex</em>  builders.</p>
+<p>Note that the <code class="docutils literal notranslate"><span class="pre">..</span> <span class="pre">image-sg</span></code> directive currently ignores other <code class="docutils literal notranslate"><span class="pre">..</span> <span class="pre">image</span></code>
+directive tags like <code class="docutils literal notranslate"><span class="pre">width</span></code>, <code class="docutils literal notranslate"><span class="pre">height</span></code>, and <code class="docutils literal notranslate"><span class="pre">align</span></code>.  It also only works
+with the <em>html</em> and <em>latex</em>  builders.</p>
 </section>
 <section id="image-scrapers">
 <span id="id6"></span><h2>Image scrapers<a class="headerlink" href="#image-scrapers" title="Permalink to this headline">¶</a></h2>
@@ -1519,8 +1533,8 @@ by including in your <code class="docutils literal notranslate"><span class="pre
     @echo <span class="s2">&quot;Build finished. The HTML pages are in </span><span class="k">$(</span>BUILDDIR<span class="k">)</span><span class="s2">/html.&quot;</span>
 </pre></div>
 </div>
-<p>Remember that for <code class="docutils literal notranslate"><span class="pre">Makefile</span></code> white space is significant and the indentation are tabs
-and not spaces.</p>
+<p>Remember that for <code class="docutils literal notranslate"><span class="pre">Makefile</span></code> white space is significant and the indentation
+are tabs and not spaces.</p>
 <p>Alternatively, you can add the <code class="docutils literal notranslate"><span class="pre">abort_on_example_error</span></code> option to
 the <code class="docutils literal notranslate"><span class="pre">sphinx_gallery_conf</span></code> dictionary inside your <code class="docutils literal notranslate"><span class="pre">conf.py</span></code>
 configuration file to have it as a default:</p>
@@ -1557,7 +1571,9 @@ the example runs without error.</p>
 </section>
 <section id="never-fail-the-build-on-error">
 <span id="warning-on-error"></span><h3>Never fail the build on error<a class="headerlink" href="#never-fail-the-build-on-error" title="Permalink to this headline">¶</a></h3>
-<p>Sphinx-Gallery can be configured to only log warnings when examples fail. This means that sphinx will only exit with a non-zero exit code if the <code class="docutils literal notranslate"><span class="pre">-W</span></code> flag is passed to <code class="docutils literal notranslate"><span class="pre">sphinx-build</span></code>. This can be enabled by setting:</p>
+<p>Sphinx-Gallery can be configured to only log warnings when examples fail.
+This means that sphinx will only exit with a non-zero exit code if the <code class="docutils literal notranslate"><span class="pre">-W</span></code>
+flag is passed to <code class="docutils literal notranslate"><span class="pre">sphinx-build</span></code>. This can be enabled by setting:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
     <span class="s1">&#39;only_warn_on_example_error&#39;</span><span class="p">:</span> <span class="kc">True</span>
