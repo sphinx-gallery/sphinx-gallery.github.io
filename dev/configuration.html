@@ -536,20 +536,22 @@ see <a class="reference internal" href="syntax.html#plain-rst"><span class="std 
 </section>
 <section id="add-mini-galleries-for-api-documentation">
 <span id="references-to-examples"></span><h2>Add mini-galleries for API documentation<a class="headerlink" href="#add-mini-galleries-for-api-documentation" title="Permalink to this headline">¶</a></h2>
-<p>When documenting a given function/class, Sphinx-Gallery enables you to link to
-any examples that either:</p>
+<p>When documenting a given function/method/attribute/object/class, Sphinx-Gallery
+enables you to link to any examples that either:</p>
 <ol class="arabic simple">
-<li><p>Use the function/instantiate the class in the code.</p></li>
-<li><p>Refer to that function/class using sphinx markup <code class="docutils literal notranslate"><span class="pre">:func:</span></code>/<code class="docutils literal notranslate"><span class="pre">:class:</span></code>
-in a documentation block.</p></li>
+<li><p>Use the function/method/attribute/object or instantiate the class in the
+code.</p></li>
+<li><p>Refer to that function/method/attribute/object/class using sphinx markup
+<code class="docutils literal notranslate"><span class="pre">:func:</span></code>/<code class="docutils literal notranslate"><span class="pre">:meth:</span></code>/<code class="docutils literal notranslate"><span class="pre">:attr:</span></code>/<code class="docutils literal notranslate"><span class="pre">:obj:</span></code>/<code class="docutils literal notranslate"><span class="pre">:class:</span></code> in a documentation
+block.</p></li>
 </ol>
 <p>The former is useful for auto-documenting functions that are used and classes
 that are explicitly instantiated. The latter is useful for classes that are
 typically implicitly returned rather than explicitly instantiated (e.g.,
-<a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a> which is most often instantiated only indirectly
+<a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.5.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a> which is most often instantiated only indirectly
 within function calls).</p>
 <p>For example, we can embed a small gallery of all examples that use or
-refer to <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.exp.html#numpy.exp" title="(in NumPy v1.21)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.exp</span></code></a>, which looks like this:</p>
+refer to <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.exp.html#numpy.exp" title="(in NumPy v1.22)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.exp</span></code></a>, which looks like this:</p>
 <section id="examples-using-numpy-exp">
 <h3>Examples using <code class="docutils literal notranslate"><span class="pre">numpy.exp</span></code><a class="headerlink" href="#examples-using-numpy-exp" title="Permalink to this headline">¶</a></h3>
 <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how to import a local module and how images are stacked when two plot..."><figure class="align-default" id="id9">
@@ -776,10 +778,10 @@ For example, this code:</p>
 properly):</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">lst</span></code></a></p></li>
-<li><p><a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="(in Matplotlib v3.5.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">plt.subplots</span></code></a></p></li>
-<li><p><a class="reference external" href="https://matplotlib.org/api/figure_api.html#matplotlib.figure.Figure" title="(in Matplotlib v3.5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">fig</span></code></a></p></li>
-<li><p><a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ax</span></code></a></p></li>
-<li><p><a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="(in Matplotlib v3.5.0)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ax.plot</span></code></a></p></li>
+<li><p><a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="(in Matplotlib v3.5.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">plt.subplots</span></code></a></p></li>
+<li><p><a class="reference external" href="https://matplotlib.org/api/figure_api.html#matplotlib.figure.Figure" title="(in Matplotlib v3.5.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">fig</span></code></a></p></li>
+<li><p><a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.5.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ax</span></code></a></p></li>
+<li><p><a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="(in Matplotlib v3.5.1)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ax.plot</span></code></a></p></li>
 </ul>
 <p>However, this feature might not work properly in all instances.
 Moreover, if variable names get reused in the same script to refer to
@@ -816,9 +818,9 @@ the object type. This is a sanitized intersphinx type, e.g., a
 instance of a class (rather than, e.g., a class itself, method, or
 function). By default, Sphinx-Gallery adds the following CSS in
 <code class="docutils literal notranslate"><span class="pre">gallery.css</span></code>:</p>
-<div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="nt">a</span><span class="p">.</span><span class="nc">sphx-glr-backref-instance</span> <span class="p">{</span>
-    <span class="k">text-decoration</span><span class="p">:</span> <span class="kc">none</span><span class="p">;</span>
-<span class="p">}</span>
+<div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="nt">a</span><span class="p">.</span><span class="nc">sphx-glr-backref-instance</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">text-decoration</span><span class="p">:</span><span class="w"> </span><span class="kc">none</span><span class="p">;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 <p>This is done to reduce the visual impact of instance linking
@@ -840,12 +842,12 @@ different links are decorated. For example, using CSS selectors you could
 choose to avoid highlighting any <code class="docutils literal notranslate"><span class="pre">sphx-glr-backref-*</span></code> links except for ones
 that you whitelist (e.g., those from your own module). For example, the
 following css prevents any module except for matplotlib from being decorated:</p>
-<div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="nt">a</span><span class="o">[</span><span class="nt">class</span><span class="o">^=</span><span class="s2">&quot;sphx-glr-backref-module-&quot;</span><span class="o">]</span> <span class="p">{</span>
-    <span class="k">text-decoration</span><span class="p">:</span> <span class="kc">none</span><span class="p">;</span>
-<span class="p">}</span>
-<span class="nt">a</span><span class="o">[</span><span class="nt">class</span><span class="o">^=</span><span class="s2">&quot;sphx-glr-backref-module-matplotlib&quot;</span><span class="o">]</span> <span class="p">{</span>
-    <span class="k">text-decoration</span><span class="p">:</span> <span class="kc">underline</span><span class="p">;</span>
-<span class="p">}</span>
+<div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="nt">a</span><span class="o">[</span><span class="nt">class</span><span class="o">^=</span><span class="s2">&quot;sphx-glr-backref-module-&quot;</span><span class="o">]</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">text-decoration</span><span class="p">:</span><span class="w"> </span><span class="kc">none</span><span class="p">;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+<span class="nt">a</span><span class="o">[</span><span class="nt">class</span><span class="o">^=</span><span class="s2">&quot;sphx-glr-backref-module-matplotlib&quot;</span><span class="o">]</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">text-decoration</span><span class="p">:</span><span class="w"> </span><span class="kc">underline</span><span class="p">;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 <p>There are likely elements other than <code class="docutils literal notranslate"><span class="pre">text-decoration</span></code> that might be worth
@@ -1047,10 +1049,10 @@ a line like this to get a summary of your example run times in the CircleCI GUI
 (which will parse the file path
 <code class="docutils literal notranslate"><span class="pre">doc/_build/test-results/sphinx-gallery/junit.xml</span></code> and infer the tests
 came from <code class="docutils literal notranslate"><span class="pre">sphinx-gallery</span></code> based on the nested subdirectory name):</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span> <span class="nt">store_test_results</span><span class="p">:</span>
-    <span class="nt">path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">doc/_build/test-results</span>
-<span class="p p-Indicator">-</span> <span class="nt">store_artifacts</span><span class="p">:</span>
-    <span class="nt">path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">doc/_build/test-results</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">store_test_results</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">doc/_build/test-results</span><span class="w"></span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">store_artifacts</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">doc/_build/test-results</span><span class="w"></span>
 </pre></div>
 </div>
 <p>For more information on CircleCI integration, peruse the related
@@ -1333,7 +1335,7 @@ to scrape both matplotlib and Mayavi images you can do:</p>
 <p>The default value is <code class="docutils literal notranslate"><span class="pre">'image_scrapers':</span> <span class="pre">('matplotlib',)</span></code> which only scrapes
 Matplotlib images. Note that this includes any images produced by packages that
 are based on Matplotlib, for example Seaborn or Yellowbrick. If you want
-to embed <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.animation.Animation.html#matplotlib.animation.Animation" title="(in Matplotlib v3.5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.animation.Animation</span></code></a>s as animations rather
+to embed <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.animation.Animation.html#matplotlib.animation.Animation" title="(in Matplotlib v3.5.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.animation.Animation</span></code></a>s as animations rather
 than a single static image of the animation figure, you should add:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
@@ -1346,14 +1348,14 @@ and related options in your
 <a class="reference external" href="https://matplotlib.org/stable/tutorials/introductory/customizing.html">matplotlib rcParams</a>.
 It’s also recommended to ensure that “imagemagick” is available as a
 <code class="docutils literal notranslate"><span class="pre">writer</span></code>, which you can check with
-<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.animation.ImageMagickWriter.html#matplotlib.animation.ImageMagickWriter" title="(in Matplotlib v3.5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.animation.ImageMagickWriter.isAvailable()</span></code></a>.
+<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.animation.ImageMagickWriter.html#matplotlib.animation.ImageMagickWriter" title="(in Matplotlib v3.5.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.animation.ImageMagickWriter.isAvailable()</span></code></a>.
 The FFmpeg writer in some light testing did not work as well for
 creating GIF thumbnails for the gallery pages.</p>
 <p>The following scrapers are supported:</p>
 <ul class="simple">
 <li><dl class="simple">
 <dt>matplotlib</dt><dd><p>Sphinx-Gallery maintains a scraper for
-<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.html#module-matplotlib.pyplot" title="(in Matplotlib v3.5.0)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib</span></code></a> figures via the string
+<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.html#module-matplotlib.pyplot" title="(in Matplotlib v3.5.1)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib</span></code></a> figures via the string
 <code class="docutils literal notranslate"><span class="pre">'matplotlib'</span></code>.</p>
 </dd>
 </dl>
@@ -1473,7 +1475,7 @@ examples when you switch to building your gallery with execution.</p>
 to ensure that any changes made to plotting behavior in one example do not
 propagate to the other examples.</p>
 <p>By default, before each example file executes, Sphinx-Gallery will
-reset <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> (by using <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.rcdefaults.html#matplotlib.pyplot.rcdefaults" title="(in Matplotlib v3.5.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.rcdefaults()</span></code></a> and
+reset <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> (by using <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.rcdefaults.html#matplotlib.pyplot.rcdefaults" title="(in Matplotlib v3.5.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.rcdefaults()</span></code></a> and
 reloading submodules that populate the units registry) and <code class="docutils literal notranslate"><span class="pre">seaborn</span></code>
 (by trying to unload the module from <code class="docutils literal notranslate"><span class="pre">sys.modules</span></code>). This is equivalent to the
 following configuration:</p>
@@ -1606,20 +1608,20 @@ including your own CSS file via the Sphinx configuration
 in <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/tree/master/sphinx_gallery/_static">Sphinx-Gallery CSS files</a>).
 The following CSS would display the images at 250x250px instead of the default
 160x112px:</p>
-<div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="p">.</span><span class="nc">sphx-glr-thumbcontainer</span> <span class="p">{</span>
-    <span class="k">min-height</span><span class="p">:</span> <span class="mi">320</span><span class="kt">px</span> <span class="cp">!important</span><span class="p">;</span>
-    <span class="k">margin</span><span class="p">:</span> <span class="mi">20</span><span class="kt">px</span> <span class="cp">!important</span><span class="p">;</span>
-<span class="p">}</span>
-<span class="p">.</span><span class="nc">sphx-glr-thumbcontainer</span> <span class="p">.</span><span class="nc">figure</span> <span class="p">{</span>
-    <span class="k">width</span><span class="p">:</span> <span class="mi">250</span><span class="kt">px</span> <span class="cp">!important</span><span class="p">;</span>
-<span class="p">}</span>
-<span class="p">.</span><span class="nc">sphx-glr-thumbcontainer</span> <span class="nt">img</span> <span class="p">{</span>
-    <span class="k">max-height</span><span class="p">:</span> <span class="mi">250</span><span class="kt">px</span> <span class="cp">!important</span><span class="p">;</span>
-    <span class="k">width</span><span class="p">:</span> <span class="mi">250</span><span class="kt">px</span> <span class="cp">!important</span><span class="p">;</span>
-<span class="p">}</span>
-<span class="p">.</span><span class="nc">sphx-glr-thumbcontainer</span> <span class="nt">a</span><span class="p">.</span><span class="nc">internal</span> <span class="p">{</span>
-    <span class="k">padding</span><span class="p">:</span> <span class="mi">270</span><span class="kt">px</span> <span class="mi">10</span><span class="kt">px</span> <span class="mi">0</span> <span class="cp">!important</span><span class="p">;</span>
-<span class="p">}</span>
+<div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="p">.</span><span class="nc">sphx-glr-thumbcontainer</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">min-height</span><span class="p">:</span><span class="w"> </span><span class="mi">320</span><span class="kt">px</span><span class="w"> </span><span class="cp">!important</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="k">margin</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="kt">px</span><span class="w"> </span><span class="cp">!important</span><span class="p">;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+<span class="p">.</span><span class="nc">sphx-glr-thumbcontainer</span><span class="w"> </span><span class="p">.</span><span class="nc">figure</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">width</span><span class="p">:</span><span class="w"> </span><span class="mi">250</span><span class="kt">px</span><span class="w"> </span><span class="cp">!important</span><span class="p">;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+<span class="p">.</span><span class="nc">sphx-glr-thumbcontainer</span><span class="w"> </span><span class="nt">img</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">max-height</span><span class="p">:</span><span class="w"> </span><span class="mi">250</span><span class="kt">px</span><span class="w"> </span><span class="cp">!important</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="k">width</span><span class="p">:</span><span class="w"> </span><span class="mi">250</span><span class="kt">px</span><span class="w"> </span><span class="cp">!important</span><span class="p">;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+<span class="p">.</span><span class="nc">sphx-glr-thumbcontainer</span><span class="w"> </span><span class="nt">a</span><span class="p">.</span><span class="nc">internal</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">padding</span><span class="p">:</span><span class="w"> </span><span class="mi">270</span><span class="kt">px</span><span class="w"> </span><span class="mi">10</span><span class="kt">px</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="cp">!important</span><span class="p">;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 <div class="admonition note">
@@ -1803,7 +1805,7 @@ etc. Similarly subclasses of ‘matplotlib.axes’ (e.g. ‘matplotlib.axes.Axes
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2014-2021, Sphinx-gallery developers.</p>
+    <p>&#169; Copyright 2014-2022, Sphinx-gallery developers.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
