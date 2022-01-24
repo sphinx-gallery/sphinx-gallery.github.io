@@ -472,6 +472,21 @@
     <span class="k">return</span> <span class="kc">None</span>
 
 
+<span class="n">THUMBNAIL_PARENT_DIV</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">.. raw:: html</span>
+
+<span class="s2">    &lt;div class=&quot;sphx-glr-thumbnails&quot;&gt;</span>
+
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">THUMBNAIL_PARENT_DIV_CLOSE</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">.. raw:: html</span>
+
+<span class="s2">    &lt;/div&gt;</span>
+
+<span class="s2">&quot;&quot;&quot;</span>
+
+
 <div class="viewcode-block" id="generate_dir_rst"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.generate_dir_rst">[docs]</a><span class="k">def</span> <span class="nf">generate_dir_rst</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">seen_backrefs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Generate the gallery reStructuredText for an example directory.&quot;&quot;&quot;</span>
     <span class="n">head_ref</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">])</span>
@@ -497,6 +512,11 @@
     <span class="c1"># sort them</span>
     <span class="n">sorted_listdir</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
         <span class="n">listdir</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;within_subsection_order&#39;</span><span class="p">](</span><span class="n">src_dir</span><span class="p">))</span>
+
+    <span class="c1"># Add div containing all thumbnails;</span>
+    <span class="c1"># this is helpful for controlling grid or flexbox behaviours</span>
+    <span class="n">fhindex</span> <span class="o">+=</span> <span class="n">THUMBNAIL_PARENT_DIV</span>
+
     <span class="n">entries_text</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">costs</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">build_target_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">])</span>
@@ -521,9 +541,8 @@
     <span class="k">for</span> <span class="n">entry_text</span> <span class="ow">in</span> <span class="n">entries_text</span><span class="p">:</span>
         <span class="n">fhindex</span> <span class="o">+=</span> <span class="n">entry_text</span>
 
-    <span class="c1"># clear at the end of the section</span>
-    <span class="n">fhindex</span> <span class="o">+=</span> <span class="s2">&quot;&quot;&quot;.. raw:: html</span><span class="se">\n</span><span class="s2"></span>
-<span class="s2">    &lt;div class=&quot;sphx-glr-clear&quot;&gt;&lt;/div&gt;</span><span class="se">\n\n</span><span class="s2">&quot;&quot;&quot;</span>
+    <span class="c1"># Close thumbnail parent div</span>
+    <span class="n">fhindex</span> <span class="o">+=</span> <span class="n">THUMBNAIL_PARENT_DIV_CLOSE</span>
 
     <span class="k">return</span> <span class="n">fhindex</span><span class="p">,</span> <span class="n">costs</span></div>
 
