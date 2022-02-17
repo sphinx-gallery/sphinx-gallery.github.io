@@ -139,10 +139,8 @@
 
 <span class="kn">import</span> <span class="nn">codecs</span>
 <span class="kn">import</span> <span class="nn">ast</span>
-<span class="kn">from</span> <span class="nn">distutils.version</span> <span class="kn">import</span> <span class="n">LooseVersion</span>
 <span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">BytesIO</span>
 <span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">tokenize</span>
 <span class="kn">from</span> <span class="nn">textwrap</span> <span class="kn">import</span> <span class="n">dedent</span>
 
@@ -231,26 +229,21 @@
             <span class="s1">&#39;unless the file is ignored by &quot;ignore_pattern&quot;&#39;</span>
             <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
 
-    <span class="k">if</span> <span class="n">LooseVersion</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">version</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">LooseVersion</span><span class="p">(</span><span class="s1">&#39;3.7&#39;</span><span class="p">):</span>
-        <span class="n">docstring</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">get_docstring</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
-        <span class="k">assert</span> <span class="n">docstring</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>  <span class="c1"># should be guaranteed above</span>
-        <span class="c1"># This is just for backward compat</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">s</span><span class="p">)</span> <span class="ow">and</span> <span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">:</span>
-            <span class="c1"># just for strict backward compat here</span>
-            <span class="n">docstring</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">docstring</span>
-        <span class="n">ts</span> <span class="o">=</span> <span class="n">tokenize</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">content</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">readline</span><span class="p">)</span>
-        <span class="c1"># find the first string according to the tokenizer and get its end row</span>
-        <span class="k">for</span> <span class="n">tk</span> <span class="ow">in</span> <span class="n">ts</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">tk</span><span class="o">.</span><span class="n">exact_type</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-                <span class="n">lineno</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">end</span>
-                <span class="k">break</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">lineno</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="c1"># Python 3.7+ way</span>
+    <span class="n">docstring</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">get_docstring</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">docstring</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>  <span class="c1"># should be guaranteed above</span>
+    <span class="c1"># This is just for backward compat</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">s</span><span class="p">)</span> <span class="ow">and</span> <span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">:</span>
+        <span class="c1"># just for strict backward compat here</span>
+        <span class="n">docstring</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">docstring</span>
+    <span class="n">ts</span> <span class="o">=</span> <span class="n">tokenize</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">content</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">readline</span><span class="p">)</span>
+    <span class="c1"># find the first string according to the tokenizer and get its end row</span>
+    <span class="k">for</span> <span class="n">tk</span> <span class="ow">in</span> <span class="n">ts</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">tk</span><span class="o">.</span><span class="n">exact_type</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">lineno</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">end</span>
+            <span class="k">break</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="c1"># this block can be removed when python 3.6 support is dropped</span>
-        <span class="n">docstring_node</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">docstring</span> <span class="o">=</span> <span class="n">docstring_node</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">s</span>
-        <span class="n">lineno</span> <span class="o">=</span> <span class="n">docstring_node</span><span class="o">.</span><span class="n">lineno</span>  <span class="c1"># The last line of the string.</span>
+        <span class="n">lineno</span> <span class="o">=</span> <span class="mi">0</span>
 
     <span class="c1"># This get the content of the file after the docstring last line</span>
     <span class="c1"># Note: &#39;maxsplit&#39; argument is not a keyword argument in python2</span>

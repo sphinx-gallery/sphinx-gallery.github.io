@@ -224,9 +224,14 @@
                                 <span class="n">obj</span> <span class="o">=</span> <span class="n">last_obj</span>
                                 <span class="n">class_attr</span><span class="p">,</span> <span class="n">method</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="p">[</span><span class="n">level</span><span class="p">]</span>
                                 <span class="k">break</span>
+                            <span class="c1"># For most objects this will emit a AttributeError,</span>
+                            <span class="c1"># but for some (e.g., PyQt5) you can get other</span>
+                            <span class="c1"># errors like &quot;RuntimeError: wrapped C/C++ object</span>
+                            <span class="c1"># ... has been deleted&quot; so let&#39;s be safer with</span>
+                            <span class="c1"># plain Exception</span>
                             <span class="k">try</span><span class="p">:</span>
                                 <span class="n">obj</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">level</span><span class="p">)</span>
-                            <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+                            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
                                 <span class="k">break</span>
                             <span class="k">if</span> <span class="n">inspect</span><span class="o">.</span><span class="n">ismethod</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
                                 <span class="n">obj</span> <span class="o">=</span> <span class="n">last_obj</span>
