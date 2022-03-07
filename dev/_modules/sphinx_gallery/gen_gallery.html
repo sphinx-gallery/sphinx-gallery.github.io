@@ -187,6 +187,7 @@
     <span class="s1">&#39;gallery_dirs&#39;</span><span class="p">:</span> <span class="s1">&#39;auto_examples&#39;</span><span class="p">,</span>
     <span class="s1">&#39;backreferences_dir&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
     <span class="s1">&#39;doc_module&#39;</span><span class="p">:</span> <span class="p">(),</span>
+    <span class="s1">&#39;exclude_implicit_doc&#39;</span><span class="p">:</span> <span class="p">{},</span>
     <span class="s1">&#39;reference_url&#39;</span><span class="p">:</span> <span class="p">{},</span>
     <span class="s1">&#39;capture_repr&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;_repr_html_&#39;</span><span class="p">,</span> <span class="s1">&#39;__repr__&#39;</span><span class="p">),</span>
     <span class="s1">&#39;ignore_repr_types&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
@@ -256,6 +257,17 @@
     <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="n">gallery_conf</span>
     <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">html_static_path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">glr_path_static</span><span class="p">())</span>
     <span class="k">return</span> <span class="n">gallery_conf</span></div>
+
+
+<span class="k">def</span> <span class="nf">_update_gallery_conf</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Update gallery config.</span>
+
+<span class="sd">    This is separate function for better testability.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># prepare regex for exclusions from implicit documentation</span>
+    <span class="n">exclude_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;exclude_implicit_doc&#39;</span><span class="p">]))</span>\
+        <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;exclude_implicit_doc&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="kc">False</span>
+    <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;exclude_implicit_doc_regex&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">exclude_regex</span>
 
 
 <span class="k">def</span> <span class="nf">_complete_gallery_conf</span><span class="p">(</span><span class="n">sphinx_gallery_conf</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">,</span> <span class="n">plot_gallery</span><span class="p">,</span>
@@ -491,6 +503,8 @@
                               <span class="o">%</span> <span class="p">(</span><span class="n">css</span><span class="p">,</span> <span class="n">_KNOWN_CSS</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;app&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># can be None in testing</span>
             <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;app&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">add_css_file</span><span class="p">(</span><span class="n">css</span> <span class="o">+</span> <span class="s1">&#39;.css&#39;</span><span class="p">)</span>
+
+    <span class="n">_update_gallery_conf</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">gallery_conf</span>
 

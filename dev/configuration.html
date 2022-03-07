@@ -197,7 +197,8 @@ file:</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">subsection_order</span></code> (<a class="reference internal" href="#sub-gallery-order"><span class="std std-ref">Sorting gallery subsections</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">within_subsection_order</span></code> (<a class="reference internal" href="#within-gallery-order"><span class="std std-ref">Sorting gallery examples</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">reference_url</span></code> (<a class="reference internal" href="#link-to-documentation"><span class="std std-ref">Add intersphinx links to your examples</span></a>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">backreferences_dir</span></code>, <code class="docutils literal notranslate"><span class="pre">doc_module</span></code>, and <code class="docutils literal notranslate"><span class="pre">inspect_global_variables</span></code> (<a class="reference internal" href="#references-to-examples"><span class="std std-ref">Add mini-galleries for API documentation</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">backreferences_dir</span></code>, <code class="docutils literal notranslate"><span class="pre">doc_module</span></code>, <code class="docutils literal notranslate"><span class="pre">exclude_implicit_doc</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">inspect_global_variables</span></code> (<a class="reference internal" href="#references-to-examples"><span class="std std-ref">Add mini-galleries for API documentation</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">default_thumb_file</span></code> (<a class="reference internal" href="#custom-default-thumb"><span class="std std-ref">Using a custom default thumbnail</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">thumbnail_size</span></code> (<a class="reference internal" href="#setting-thumbnail-size"><span class="std std-ref">Setting gallery thumbnail size</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">line_numbers</span></code> (<a class="reference internal" href="#adding-line-numbers"><span class="std std-ref">Adding line numbers to examples</span></a>)</p></li>
@@ -546,10 +547,11 @@ code.</p></li>
 block.</p></li>
 </ol>
 <p>The former is useful for auto-documenting functions that are used and classes
-that are explicitly instantiated. The latter is useful for classes that are
-typically implicitly returned rather than explicitly instantiated (e.g.,
+that are explicitly instantiated. The generated links are called implicit
+backreferences. The latter is useful for classes that are typically implicitly
+returned rather than explicitly instantiated (e.g.,
 <a class="reference external" href="https://matplotlib.org/stable/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.5.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a> which is most often instantiated only indirectly
-within function calls).</p>
+within function calls). Such links are called explicit backreferences.</p>
 <p>For example, we can embed a small gallery of all examples that use or
 refer to <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.exp.html#numpy.exp" title="(in NumPy v1.22)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.exp</span></code></a>, which looks like this:</p>
 <section id="examples-using-numpy-exp">
@@ -572,7 +574,12 @@ your Sphinx-Gallery configuration <code class="docutils literal notranslate"><sp
 
     <span class="c1"># Modules for which function/class level galleries are created. In</span>
     <span class="c1"># this case sphinx_gallery and numpy in a tuple of strings.</span>
-    <span class="s1">&#39;doc_module&#39;</span>          <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;sphinx_gallery&#39;</span><span class="p">,</span> <span class="s1">&#39;numpy&#39;</span><span class="p">)}</span>
+    <span class="s1">&#39;doc_module&#39;</span>          <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;sphinx_gallery&#39;</span><span class="p">,</span> <span class="s1">&#39;numpy&#39;</span><span class="p">),</span>
+
+    <span class="c1"># objects to exclude from implicit backreferences. The default option</span>
+    <span class="c1"># is an empty set, i.e. exclude nothing.</span>
+    <span class="s1">&#39;exclude_implicit_doc&#39;</span><span class="p">:</span> <span class="p">{},</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 <p>The path you specify in <code class="docutils literal notranslate"><span class="pre">backreferences_dir</span></code> (here we choose
@@ -582,7 +589,7 @@ gallery specific to every function/class that is used across all the examples
 and belonging to the modules listed in <code class="docutils literal notranslate"><span class="pre">doc_module</span></code>.
 <code class="docutils literal notranslate"><span class="pre">backreferences_dir</span></code> should be a string or <code class="docutils literal notranslate"><span class="pre">pathlib.Path</span></code> object that is
 <strong>relative</strong> to the <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file, or <code class="docutils literal notranslate"><span class="pre">None</span></code>. It is <code class="docutils literal notranslate"><span class="pre">None</span></code> by default.</p>
-<p>Within your sphinx documentation <code class="docutils literal notranslate"><span class="pre">.rst</span></code> files, you can use easily
+<p>Within your sphinx documentation <code class="docutils literal notranslate"><span class="pre">.rst</span></code> files, you can easily
 add this reduced version of the Gallery. For example, the rst below adds
 the reduced version of the Gallery for <code class="docutils literal notranslate"><span class="pre">numpy.exp</span></code>, which includes all
 examples that use the specific function <code class="docutils literal notranslate"><span class="pre">numpy.exp</span></code>:</p>
@@ -590,6 +597,18 @@ examples that use the specific function <code class="docutils literal notranslat
     <span class="nc">:add-heading:</span>
 </pre></div>
 </div>
+<p>Sometimes, there are functions that are being used in practically every example
+for the given module, for instance the <code class="docutils literal notranslate"><span class="pre">pyplot.show</span></code> or <code class="docutils literal notranslate"><span class="pre">pyplot.subplots</span></code>
+functions in Matplotlib, so that a large number of often spurious examples will
+be linked to these functions. To prevent this, you can exclude implicit
+backreferences for certain objects by including them as regular expressions
+in <code class="docutils literal notranslate"><span class="pre">exclude_implicit_doc</span></code>. The following setting will exclude any implicit
+backreferences so that examples galleries are only created for objects
+explicitly mentioned by Sphinx markup in a documentation block: <code class="docutils literal notranslate"><span class="pre">{'.*'}</span></code>.
+To exclude the functions mentioned above you would use
+<code class="docutils literal notranslate"><span class="pre">{r'pyplot\.show',</span> <span class="pre">r'pyplot\.subplots'}</span></code> (note the escape to match a dot
+instead of any character, if the name is unambiguous you can also write
+<code class="docutils literal notranslate"><span class="pre">pyplot.show</span></code> or just <code class="docutils literal notranslate"><span class="pre">show</span></code>).</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">add-heading</span></code> option adds a heading for the mini-gallery, which will be a
 default generated message if no string is provided as an argument.  The example
 mini-gallery shown above uses the default heading.  The level of the heading
