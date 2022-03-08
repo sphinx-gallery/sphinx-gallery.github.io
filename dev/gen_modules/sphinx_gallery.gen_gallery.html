@@ -188,7 +188,17 @@ when building the documentation.</p>
 <span class="sig-prename descclassname"><span class="pre">sphinx_gallery.gen_gallery.</span></span><span class="sig-name descname"><span class="pre">generate_gallery_rst</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">app</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sphinx_gallery/gen_gallery.html#generate_gallery_rst"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sphinx_gallery.gen_gallery.generate_gallery_rst" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate the Main examples gallery reStructuredText</p>
 <p>Start the Sphinx-Gallery configuration and recursively scan the examples
-directories in order to populate the examples gallery</p>
+directories in order to populate the examples gallery.</p>
+<p>We create a 2-level nested structure by iterating through every
+sibling folder of the current index file.
+In each of these folders, we look for a section index file,
+for which we generate a toctree pointing to sibling scripts.
+Then, we append the content of this section index file
+to the current index file,
+after we remove toctree (to keep a clean nested structure)
+and sphinx tags (to prevent tag duplication)
+Eventually, we create a toctree in the current index file
+which points to section index files.</p>
 </dd></dl>
 
 <span class="target" id="sphx-glr-backref-sphinx-gallery-gen-gallery-generate-gallery-rst"></span><dl class="py function">

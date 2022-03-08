@@ -490,14 +490,16 @@
 <div class="viewcode-block" id="generate_dir_rst"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.generate_dir_rst">[docs]</a><span class="k">def</span> <span class="nf">generate_dir_rst</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">seen_backrefs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Generate the gallery reStructuredText for an example directory.&quot;&quot;&quot;</span>
     <span class="n">head_ref</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">])</span>
-    <span class="n">fhindex</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span><span class="se">\n\n</span><span class="s2">.. _sphx_glr_</span><span class="si">{0}</span><span class="s2">:</span><span class="se">\n\n</span><span class="s2">&quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-        <span class="n">head_ref</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">))</span>
 
-    <span class="n">fname</span> <span class="o">=</span> <span class="n">_get_readme</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
-    <span class="k">with</span> <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
-        <span class="n">fhindex</span> <span class="o">+=</span> <span class="n">fid</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="n">subsection_index_content</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">subsection_readme_fname</span> <span class="o">=</span> <span class="n">_get_readme</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">subsection_readme_fname</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
+        <span class="n">subsection_readme_content</span> <span class="o">=</span> <span class="n">fid</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">subsection_index_content</span> <span class="o">+=</span> <span class="n">subsection_readme_content</span>
+
     <span class="c1"># Add empty lines to avoid bug in issue #165</span>
-    <span class="n">fhindex</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+    <span class="n">subsection_index_content</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">target_dir</span><span class="p">):</span>
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">target_dir</span><span class="p">)</span>
@@ -515,10 +517,11 @@
 
     <span class="c1"># Add div containing all thumbnails;</span>
     <span class="c1"># this is helpful for controlling grid or flexbox behaviours</span>
-    <span class="n">fhindex</span> <span class="o">+=</span> <span class="n">THUMBNAIL_PARENT_DIV</span>
+    <span class="n">subsection_index_content</span> <span class="o">+=</span> <span class="n">THUMBNAIL_PARENT_DIV</span>
 
     <span class="n">entries_text</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">costs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">subsection_toctree_filenames</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">build_target_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">])</span>
     <span class="n">iterator</span> <span class="o">=</span> <span class="n">sphinx_compatibility</span><span class="o">.</span><span class="n">status_iterator</span><span class="p">(</span>
         <span class="n">sorted_listdir</span><span class="p">,</span>
@@ -529,22 +532,49 @@
             <span class="n">fname</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">seen_backrefs</span><span class="p">)</span>
         <span class="n">src_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">))</span>
         <span class="n">costs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">cost</span><span class="p">,</span> <span class="n">src_file</span><span class="p">))</span>
-        <span class="n">this_entry</span> <span class="o">=</span> <span class="n">_thumbnail_div</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">],</span>
-                                    <span class="n">fname</span><span class="p">,</span> <span class="n">intro</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;&quot;&quot;</span>
+        <span class="n">gallery_item_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">build_target_dir</span><span class="p">,</span>
+            <span class="n">fname</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">)</span>
+        <span class="n">this_entry</span> <span class="o">=</span> <span class="n">_thumbnail_div</span><span class="p">(</span>
+            <span class="n">target_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">],</span> <span class="n">fname</span><span class="p">,</span> <span class="n">intro</span><span class="p">,</span> <span class="n">title</span>
+        <span class="p">)</span>
+        <span class="n">entries_text</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">this_entry</span><span class="p">)</span>
+        <span class="n">subsection_toctree_filenames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gallery_item_filename</span><span class="p">)</span>
 
+    <span class="k">for</span> <span class="n">entry_text</span> <span class="ow">in</span> <span class="n">entries_text</span><span class="p">:</span>
+        <span class="n">subsection_index_content</span> <span class="o">+=</span> <span class="n">entry_text</span>
+
+    <span class="c1"># Close thumbnail parent div</span>
+    <span class="n">subsection_index_content</span> <span class="o">+=</span> <span class="n">THUMBNAIL_PARENT_DIV_CLOSE</span>
+
+    <span class="c1"># Create toctree for index file</span>
+    <span class="c1"># with all gallery items which belong to current subsection.</span>
+    <span class="c1"># The toctree string should be empty if there are no subsections</span>
+    <span class="c1"># or related files, as it will be returned at the end of this function.</span>
+    <span class="n">subsection_index_toctree</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">subsection_toctree_filenames</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">subsection_index_toctree</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">.. toctree::</span>
 <span class="s2">   :hidden:</span>
 
-<span class="s2">   /</span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">build_target_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">])</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">)</span>
-        <span class="n">entries_text</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">this_entry</span><span class="p">)</span>
+<span class="s2">   /</span><span class="si">%s</span><span class="se">\n</span><span class="s2"></span>
+<span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">   /&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">subsection_toctree_filenames</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">entry_text</span> <span class="ow">in</span> <span class="n">entries_text</span><span class="p">:</span>
-        <span class="n">fhindex</span> <span class="o">+=</span> <span class="n">entry_text</span>
+    <span class="c1"># Write subsection index file</span>
+    <span class="n">subsection_index_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="s1">&#39;index.rst.new&#39;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">subsection_index_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">findex</span><span class="p">:</span>
+        <span class="n">findex</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\n\n</span><span class="s2">.. _sphx_glr_</span><span class="si">{0}</span><span class="s2">:</span><span class="se">\n\n</span><span class="s2">&quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">head_ref</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
+        <span class="p">))</span>
+        <span class="n">findex</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">subsection_index_content</span><span class="p">)</span>
 
-    <span class="c1"># Close thumbnail parent div</span>
-    <span class="n">fhindex</span> <span class="o">+=</span> <span class="n">THUMBNAIL_PARENT_DIV_CLOSE</span>
+        <span class="c1"># add toctree to file only if toctree is not empty</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">subsection_toctree_filenames</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">findex</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">subsection_index_toctree</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">fhindex</span><span class="p">,</span> <span class="n">costs</span></div>
+    <span class="k">return</span> <span class="n">subsection_index_content</span><span class="p">,</span> <span class="n">costs</span><span class="p">,</span> <span class="n">subsection_index_toctree</span><span class="p">,</span> \
+        <span class="n">subsection_index_path</span></div>
 
 
 <div class="viewcode-block" id="handle_exception"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.handle_exception">[docs]</a><span class="k">def</span> <span class="nf">handle_exception</span><span class="p">(</span><span class="n">exc_info</span><span class="p">,</span> <span class="n">src_file</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
