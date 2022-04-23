@@ -103,6 +103,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#multi-resolution-images">Multi-resolution images</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#image-scrapers">Image scrapers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#using-multiple-code-blocks-to-create-a-single-figure">Using multiple code blocks to create a single figure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hiding-lines-of-code">Hiding lines of code</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#generating-dummy-images">Generating dummy images</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#resetting-modules">Resetting modules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#order-of-resetting-modules">Order of resetting modules</a></li>
@@ -185,6 +186,10 @@
 dictionary specified in your <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file. A list of the possible
 keys are listed <a class="reference internal" href="#list-of-options"><span class="std std-ref">below</span></a> and explained in
 greater detail in subsequent sections.</p>
+<p>When using these flags, it is good practice to make sure the source Python files
+are equivalent to the generated HTML and iPython notebooks (i.e. make sure
+<code class="docutils literal notranslate"><span class="pre">.py</span> <span class="pre">==</span> <span class="pre">.html</span> <span class="pre">==</span> <span class="pre">.ipynb</span></code>). This principle should be violated only when
+necessary, and on a case-by-case basis.</p>
 <section id="list-of-config-options">
 <span id="list-of-options"></span><h2>List of config options<a class="headerlink" href="#list-of-config-options" title="Permalink to this headline">¶</a></h2>
 <p>Most Sphinx-Gallery configuration options are set in the Sphinx <code class="docutils literal notranslate"><span class="pre">conf.py</span></code>
@@ -239,6 +244,8 @@ and <code class="docutils literal notranslate"><span class="pre">inspect_global_
 </ul>
 <p>See also <a class="reference internal" href="#removing-config-comments"><span class="std std-ref">Removing config comments</span></a> to hide config comments in files from
 the rendered examples.</p>
+<p>Some options can be set on a per-line basis in a file:
+- <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">sphinx_gallery_start_ignore</span></code> and <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">sphinx_gallery_end_ignore</span></code> (<a class="reference internal" href="#hiding-code-blocks"><span class="std std-ref">Hiding lines of code</span></a>)</p>
 <p>Some options can be set during the build execution step, e.g. using a Makefile:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">html-noplot</span></code> (<a class="reference internal" href="#without-execution"><span class="std std-ref">Building without executing examples</span></a>)</p></li>
@@ -1437,6 +1444,42 @@ further deferred, if desired).  The following produces only one plot:</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
+</div>
+</section>
+<section id="hiding-lines-of-code">
+<span id="hiding-code-blocks"></span><h2>Hiding lines of code<a class="headerlink" href="#hiding-lines-of-code" title="Permalink to this headline">¶</a></h2>
+<p>Normally, Sphinx-Gallery will render every line of Python code when building
+HTML and iPython notebooks. This is usually desirable, as we want to ensure the
+Python source files, HTML, and iPython notebooks all do the same thing.</p>
+<p>However, it is sometimes useful to have Python code that runs, but is not
+included in any user-facing documentation. For example, suppose we wanted to
+add some <code class="docutils literal notranslate"><span class="pre">assert</span></code> statements to verify the docs were built successfully, but
+did not want these shown to users. We could use the <code class="docutils literal notranslate"><span class="pre">sphinx_gallery_start_ignore</span></code>
+and <code class="docutils literal notranslate"><span class="pre">sphinx_gallery_end_ignore</span></code> flags to achieve this:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="c1"># sphinx_gallery_start_ignore</span>
+<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">layers</span><span class="p">)</span> <span class="o">==</span> <span class="mi">5</span>
+<span class="k">assert</span> <span class="n">model</span><span class="o">.</span><span class="n">count_params</span><span class="p">()</span> <span class="o">==</span> <span class="mi">219058</span>
+<span class="c1"># sphinx_gallery_end_ignore</span>
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>When the HTML or iPython notebooks are built, this code block will be shown as:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">sphinx_gallery_start_ignore</span></code> and <code class="docutils literal notranslate"><span class="pre">sphinx_gallery_end_ignore</span></code> flags may
+be used in any code block, and multiple pairs of flags may be used in the same
+block. Every start flag must always have a corresponding end flag, or an error
+will be raised during doc generation. These flags and the code between them are
+always removed, regardless of what <code class="docutils literal notranslate"><span class="pre">remove_config_comments</span></code> is set to.</p>
+<p>Note that any output from the ignored code will still be captured.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This flag should be used sparingly, as it makes the <code class="docutils literal notranslate"><span class="pre">.py</span></code> source files less
+equivalent to the generated <code class="docutils literal notranslate"><span class="pre">.html</span></code> and <code class="docutils literal notranslate"><span class="pre">.ipynb</span></code> files. It is bad practice
+to use this when other methods that preserve this relationship are possible.</p>
 </div>
 </section>
 <section id="generating-dummy-images">

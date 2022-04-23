@@ -166,8 +166,15 @@
 <span class="c1">#     # sphinx_gallery_thumbnail_number = 2</span>
 <span class="c1">#</span>
 <span class="c1">#     b = 2</span>
+<span class="n">FLAG_START</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;^[\ \t]*#\s*&quot;</span>
 <span class="n">INFILE_CONFIG_PATTERN</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
-    <span class="sa">r</span><span class="s2">&quot;^[\ \t]*#\s*sphinx_gallery_([A-Za-z0-9_]+)(\s*=\s*(.+))?[\ \t]*\n?&quot;</span><span class="p">,</span>
+    <span class="n">FLAG_START</span> <span class="o">+</span> <span class="sa">r</span><span class="s2">&quot;sphinx_gallery_([A-Za-z0-9_]+)(\s*=\s*(.+))?[\ \t]*\n?&quot;</span><span class="p">,</span>
+    <span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span><span class="p">)</span>
+
+<span class="n">START_IGNORE_FLAG</span> <span class="o">=</span> <span class="n">FLAG_START</span> <span class="o">+</span> <span class="s2">&quot;sphinx_gallery_start_ignore&quot;</span>
+<span class="n">END_IGNORE_FLAG</span> <span class="o">=</span> <span class="n">FLAG_START</span> <span class="o">+</span> <span class="s2">&quot;sphinx_gallery_end_ignore&quot;</span>
+<span class="n">IGNORE_BLOCK_PATTERN</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+    <span class="sa">rf</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">START_IGNORE_FLAG</span><span class="si">}</span><span class="s2">(?:[\s\S]*?)</span><span class="si">{</span><span class="n">END_IGNORE_FLAG</span><span class="si">}</span><span class="s2">\n?&quot;</span><span class="p">,</span>
     <span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span><span class="p">)</span>
 
 
@@ -330,6 +337,30 @@
     <span class="k">if</span> <span class="n">return_node</span><span class="p">:</span>
         <span class="n">out</span> <span class="o">+=</span> <span class="p">(</span><span class="n">node</span><span class="p">,)</span>
     <span class="k">return</span> <span class="n">out</span></div>
+
+
+<div class="viewcode-block" id="remove_ignore_blocks"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.py_source_parser.html#sphinx_gallery.py_source_parser.remove_ignore_blocks">[docs]</a><span class="k">def</span> <span class="nf">remove_ignore_blocks</span><span class="p">(</span><span class="n">code_block</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return the content of *code_block* with ignored areas removed.</span>
+
+<span class="sd">    An ignore block starts with # sphinx_gallery_begin_ignore, and ends with</span>
+<span class="sd">    # sphinx_gallery_end_ignore. These lines and anything in between them will</span>
+<span class="sd">    be removed, but surrounding empty lines are preserved.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    code_block : str</span>
+<span class="sd">        A code segment.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">num_start_flags</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">START_IGNORE_FLAG</span><span class="p">,</span> <span class="n">code_block</span><span class="p">))</span>
+    <span class="n">num_end_flags</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">END_IGNORE_FLAG</span><span class="p">,</span> <span class="n">code_block</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">num_start_flags</span> <span class="o">!=</span> <span class="n">num_end_flags</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
+            <span class="s1">&#39;All &quot;sphinx_gallery_start_ignore&quot; flags must have a matching &#39;</span>
+            <span class="s1">&#39;&quot;sphinx_gallery_end_ignore&quot; flag!&#39;</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">subn</span><span class="p">(</span><span class="n">IGNORE_BLOCK_PATTERN</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">code_block</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="remove_config_comments"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.py_source_parser.html#sphinx_gallery.py_source_parser.remove_config_comments">[docs]</a><span class="k">def</span> <span class="nf">remove_config_comments</span><span class="p">(</span><span class="n">code_block</span><span class="p">):</span>
