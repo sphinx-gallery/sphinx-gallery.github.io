@@ -144,12 +144,13 @@
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">count</span>
 <span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">base64</span>
+<span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">mimetypes</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">textwrap</span>
 
 <span class="kn">from</span> <span class="nn">sphinx.errors</span> <span class="kn">import</span> <span class="n">ExtensionError</span>
 
@@ -196,6 +197,36 @@
     <span class="k">return</span> <span class="p">(</span><span class="s1">&#39;&lt;div class=&quot;alert alert-</span><span class="si">{0}</span><span class="s1">&quot;&gt;&lt;h4&gt;</span><span class="si">{1}</span><span class="s1">&lt;/h4&gt;&lt;p&gt;</span><span class="si">{2}</span><span class="s1">&lt;/p&gt;&lt;/div&gt;&#39;</span>
             <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">directive_to_alert</span><span class="p">[</span><span class="n">directive</span><span class="p">],</span> <span class="n">directive</span><span class="o">.</span><span class="n">capitalize</span><span class="p">(),</span>
                     <span class="k">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()))</span></div>
+
+
+<div class="viewcode-block" id="convert_code_to_md"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.notebook.html#sphinx_gallery.notebook.convert_code_to_md">[docs]</a><span class="k">def</span> <span class="nf">convert_code_to_md</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Rewrites code blocks using the code-block notation to use Markdown&#39;s</span>
+<span class="sd">    preferred backtick notation, which preserves syntax highlighting.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    text: str</span>
+<span class="sd">        A mostly converted string of markdown text. May contain zero, one,</span>
+<span class="sd">        or multiple code blocks in code-block format.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">code_regex</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;[ \t]*\.\. code-block::[ \t]*(\S*)\n[ \t]*\n([ \t]+)&#39;</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">code_block</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">code_regex</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">code_block</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="n">indent</span> <span class="o">=</span> <span class="n">code_block</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">start_index</span> <span class="o">=</span> <span class="n">code_block</span><span class="o">.</span><span class="n">span</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">indent</span><span class="p">)</span>
+
+        <span class="c1"># Find first non-empty, non-indented line</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">fr</span><span class="s1">&#39;^(?!</span><span class="si">{</span><span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">indent</span><span class="p">)</span><span class="si">}</span><span class="s1">)[ \t]*\S+&#39;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span><span class="p">)</span>
+        <span class="n">code_end_match</span> <span class="o">=</span> <span class="n">end</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">start_index</span><span class="p">)</span>
+        <span class="n">end_index</span> <span class="o">=</span> <span class="n">code_end_match</span><span class="o">.</span><span class="n">start</span><span class="p">()</span> <span class="k">if</span> <span class="n">code_end_match</span> <span class="k">else</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+        <span class="n">contents</span> <span class="o">=</span> <span class="n">textwrap</span><span class="o">.</span><span class="n">dedent</span><span class="p">(</span><span class="n">text</span><span class="p">[</span><span class="n">start_index</span><span class="p">:</span><span class="n">end_index</span><span class="p">])</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span>
+        <span class="n">new_code</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s1">&#39;```</span><span class="si">{</span><span class="n">code_block</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">contents</span><span class="si">}</span><span class="se">\n</span><span class="s1">```</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="p">[:</span><span class="n">code_block</span><span class="o">.</span><span class="n">span</span><span class="p">()[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">+</span> <span class="n">new_code</span> <span class="o">+</span> <span class="n">text</span><span class="p">[</span><span class="n">end_index</span><span class="p">:]</span>
+    <span class="k">return</span> <span class="n">text</span></div>
 
 
 <div class="viewcode-block" id="rst2md"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.notebook.html#sphinx_gallery.notebook.rst2md">[docs]</a><span class="k">def</span> <span class="nf">rst2md</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">heading_levels</span><span class="p">):</span>
@@ -277,6 +308,8 @@
                 <span class="k">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">),</span>
             <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">image_opts</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39; \1=&quot;\2&quot;&#39;</span><span class="p">,</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="ow">or</span> <span class="s1">&#39;&#39;</span><span class="p">)),</span>
         <span class="n">text</span><span class="p">)</span>
+
+    <span class="n">text</span> <span class="o">=</span> <span class="n">convert_code_to_md</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">text</span></div>
 
@@ -373,6 +406,36 @@
     <span class="n">work_notebook</span><span class="p">[</span><span class="s2">&quot;cells&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">markdown_cell</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="promote_jupyter_cell_magic"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.notebook.html#sphinx_gallery.notebook.promote_jupyter_cell_magic">[docs]</a><span class="k">def</span> <span class="nf">promote_jupyter_cell_magic</span><span class="p">(</span><span class="n">work_notebook</span><span class="p">,</span> <span class="n">markdown</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Parses a block of markdown text looking for code blocks starting with a</span>
+<span class="sd">    Jupyter cell magic (e.g. %%bash). Whenever one is found, the text before it</span>
+<span class="sd">    and the code (as a runnable code block) are added to work_notebook. Any</span>
+<span class="sd">    remaining text is returned.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    markdown : str</span>
+<span class="sd">        Markdown cell content.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Regex detects all code blocks that use %% Jupyter cell magic</span>
+    <span class="n">cell_magic_regex</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;\n?```\s*[a-z]*\n(</span><span class="si">%%</span><span class="s1">(?:[\s\S]*?))\n?```\n?&#39;</span>
+
+    <span class="n">text_cell_start</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">magic_cell</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="n">cell_magic_regex</span><span class="p">,</span> <span class="n">markdown</span><span class="p">):</span>
+        <span class="c1"># Extract the preceeding text block, and add it if non-empty</span>
+        <span class="n">text_block</span> <span class="o">=</span> <span class="n">markdown</span><span class="p">[</span><span class="n">text_cell_start</span><span class="p">:</span><span class="n">magic_cell</span><span class="o">.</span><span class="n">span</span><span class="p">()[</span><span class="mi">0</span><span class="p">]]</span>
+        <span class="k">if</span> <span class="n">text_block</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">text_block</span><span class="o">.</span><span class="n">isspace</span><span class="p">():</span>
+            <span class="n">add_markdown_cell</span><span class="p">(</span><span class="n">work_notebook</span><span class="p">,</span> <span class="n">text_block</span><span class="p">)</span>
+        <span class="n">text_cell_start</span> <span class="o">=</span> <span class="n">magic_cell</span><span class="o">.</span><span class="n">span</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="n">code_block</span> <span class="o">=</span> <span class="n">magic_cell</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">add_code_cell</span><span class="p">(</span><span class="n">work_notebook</span><span class="p">,</span> <span class="n">code_block</span><span class="p">)</span>
+
+    <span class="c1"># Return remaining text (which equals markdown if no magic cells exist)</span>
+    <span class="k">return</span> <span class="n">markdown</span><span class="p">[</span><span class="n">text_cell_start</span><span class="p">:]</span></div>
+
+
 <div class="viewcode-block" id="fill_notebook"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.notebook.html#sphinx_gallery.notebook.fill_notebook">[docs]</a><span class="k">def</span> <span class="nf">fill_notebook</span><span class="p">(</span><span class="n">work_notebook</span><span class="p">,</span> <span class="n">script_blocks</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Writes the Jupyter notebook cells</span>
 
@@ -398,7 +461,13 @@
                 <span class="n">markdown</span> <span class="o">=</span> <span class="n">pypandoc</span><span class="o">.</span><span class="n">convert_text</span><span class="p">(</span>
                     <span class="n">bcontent</span><span class="p">,</span> <span class="n">to</span><span class="o">=</span><span class="s1">&#39;md&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;rst&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;pypandoc&quot;</span><span class="p">]</span>
                 <span class="p">)</span>
-            <span class="n">add_markdown_cell</span><span class="p">(</span><span class="n">work_notebook</span><span class="p">,</span> <span class="n">markdown</span><span class="p">)</span></div>
+
+            <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;promote_jupyter_magic&quot;</span><span class="p">]:</span>
+                <span class="n">remaining</span> <span class="o">=</span> <span class="n">promote_jupyter_cell_magic</span><span class="p">(</span><span class="n">work_notebook</span><span class="p">,</span> <span class="n">markdown</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">remaining</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">remaining</span><span class="o">.</span><span class="n">isspace</span><span class="p">():</span>
+                    <span class="n">add_markdown_cell</span><span class="p">(</span><span class="n">work_notebook</span><span class="p">,</span> <span class="n">remaining</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">add_markdown_cell</span><span class="p">(</span><span class="n">work_notebook</span><span class="p">,</span> <span class="n">markdown</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="save_notebook"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.notebook.html#sphinx_gallery.notebook.save_notebook">[docs]</a><span class="k">def</span> <span class="nf">save_notebook</span><span class="p">(</span><span class="n">work_notebook</span><span class="p">,</span> <span class="n">write_file</span><span class="p">):</span>
