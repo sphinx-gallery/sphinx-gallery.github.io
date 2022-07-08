@@ -680,13 +680,9 @@
 
 <span class="k">def</span> <span class="nf">_reset_seaborn</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Reset seaborn.&quot;&quot;&quot;</span>
-    <span class="c1"># Horrible code to &#39;unload&#39; seaborn, so that it resets</span>
-    <span class="c1"># its default when is load</span>
-    <span class="c1"># Python does not support unloading of modules</span>
-    <span class="c1"># https://bugs.python.org/issue9072</span>
-    <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
-        <span class="k">if</span> <span class="s1">&#39;seaborn&#39;</span> <span class="ow">in</span> <span class="n">module</span><span class="p">:</span>
-            <span class="k">del</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">module</span><span class="p">]</span>
+    <span class="n">seaborn_module</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;seaborn&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">seaborn_module</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">seaborn_module</span><span class="o">.</span><span class="n">reset_defaults</span><span class="p">()</span>
 
 
 <span class="n">_reset_dict</span> <span class="o">=</span> <span class="p">{</span>
