@@ -123,6 +123,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#prevent-capture-of-certain-classes">Prevent capture of certain classes</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#nesting-gallery-sections">Nesting gallery sections</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="projects_list.html">Who uses Sphinx-Gallery</a></li>
@@ -232,6 +233,7 @@ and <code class="docutils literal notranslate"><span class="pre">inspect_global_
 <li><p><code class="docutils literal notranslate"><span class="pre">junit</span></code> (<a class="reference internal" href="#junit-xml"><span class="std std-ref">Using JUnit XML files</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">log_level</span></code> (<a class="reference internal" href="#log-level"><span class="std std-ref">Setting log level</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">capture_repr</span></code> and <code class="docutils literal notranslate"><span class="pre">ignore_repr_types</span></code> (<a class="reference internal" href="#capture-repr"><span class="std std-ref">Controlling what output is captured</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nested_sections</span></code> (<a class="reference internal" href="#nested-sections"><span class="std std-ref">Nesting gallery sections</span></a>)</p></li>
 </ul>
 <p>Some options can also be set or overridden on a file-by-file basis:</p>
 <ul class="simple">
@@ -585,7 +587,7 @@ returned rather than explicitly instantiated (e.g.,
 <a class="reference external" href="https://matplotlib.org/stable/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.5.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a> which is most often instantiated only indirectly
 within function calls). Such links are called explicit backreferences.</p>
 <p>For example, we can embed a small gallery of all examples that use or
-refer to <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.exp.html#numpy.exp" title="(in NumPy v1.22)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.exp</span></code></a>, which looks like this:</p>
+refer to <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.exp.html#numpy.exp" title="(in NumPy v1.23)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.exp</span></code></a>, which looks like this:</p>
 <section id="examples-using-numpy-exp">
 <h3>Examples using <code class="docutils literal notranslate"><span class="pre">numpy.exp</span></code><a class="headerlink" href="#examples-using-numpy-exp" title="Permalink to this heading">¶</a></h3>
 <div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how to import a local module and how images are stacked when two plot..."><img alt="Plotting the exponential function" src="_images/sphx_glr_plot_1_exp_thumb.png" />
@@ -1918,6 +1920,33 @@ etc. Similarly subclasses of ‘matplotlib.axes’ (e.g. ‘matplotlib.axes.Axes
 </pre></div>
 </div>
 </section>
+</section>
+<section id="nesting-gallery-sections">
+<span id="nested-sections"></span><h2>Nesting gallery sections<a class="headerlink" href="#nesting-gallery-sections" title="Permalink to this heading">¶</a></h2>
+<p>By default, <code class="docutils literal notranslate"><span class="pre">nested_sections=True</span></code>.
+In this case, for each folder present in the gallery’s root folder,
+Sphinx-Gallery expects to find a readme and uses it to build
+a specific index file for this subsection.
+This index file will contain the section’s description and a toctree
+linking to each gallery item which belongs to this subsection.</p>
+<p>Eventually, the gallery’s main index files will contain the gallery’s
+description and a toctree linking to each subsections’s index file.</p>
+<p>With this behaviour, generated file structure and toctrees mimic that of
+the original gallery folder. This is useful to generate sidebars with
+nested sections representing the gallery’s file structure.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When <code class="docutils literal notranslate"><span class="pre">nested_sections=True</span></code>, gallery items located in the gallery’s root folder
+should be move to a new subfolder, otherwise the sidebar
+might not behave as expected (due to the fuzzy toctree structure).</p>
+</div>
+<p>If <code class="docutils literal notranslate"><span class="pre">nested_sections=False</span></code>, Sphinx-Gallery will behave as it used to
+previous to version 0.10.2.
+Specifically, it will generate a single index file for the whole gallery.
+This index file will contain descriptions for the whole gallery as well as for
+each subsection, and a specific toctree for each subsection.
+In particular, sidebars generated using these toctrees might not reflect the
+actual section / folder structure.</p>
 </section>
 </section>
 
