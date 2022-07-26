@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Maintaining Sphinx Gallery &mdash; Sphinx-Gallery 0.11.0.dev0-git documentation</title>
+  <title>Maintaining Sphinx Gallery &mdash; Sphinx-Gallery 0.11.0-git documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/theme_override.css" type="text/css" />
@@ -34,7 +34,7 @@
             <a href="index.html" class="icon icon-home"> Sphinx-Gallery
           </a>
               <div class="version">
-                0.11.0.dev0
+                0.11.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -48,7 +48,7 @@
   <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
       <span class="rst-current-version" data-toggle="rst-current-version">
         <span class="fa fa-book"> Versions</span>
-        v: dev
+        v: stable
         <span class="fa fa-caret-down"></span>
       </span>
       <div class="rst-other-versions">
@@ -224,19 +224,21 @@ Get somebody else to make sure all looks well, and merge this pull request.</p>
 <ol class="arabic">
 <li><p>Create the new release on PyPI</p>
 <ul>
-<li><p>Build a source distribution:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python setup.py sdist</span>
+<li><p>Build a source distribution and an <code class="docutils literal notranslate"><span class="pre">any</span></code> wheel:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">git clean -xdf</span>
+<span class="go">python setup.py sdist bdist_wheel</span>
 </pre></div>
 </div>
 </li>
 <li><p>Check the release:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">twine check dist/sphinx-gallery-&lt;version&gt;.tar.gz</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">twine check dist/sphinx-gallery-&lt;version&gt;.*</span>
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">&lt;version&gt;</span></code> should be the release version, e.g., <code class="docutils literal notranslate"><span class="pre">0.7.0</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">&lt;version&gt;</span></code> should be the release version, e.g., <code class="docutils literal notranslate"><span class="pre">0.7.0</span></code>, and it
+should check both the source distribution and the wheel.</p>
 </li>
 <li><p>Upload to PyPI:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">twine upload dist/sphinx-gallery-&lt;version&gt;.tar.gz</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">twine upload dist/*</span>
 </pre></div>
 </div>
 <p>Again, <code class="docutils literal notranslate"><span class="pre">&lt;version&gt;</span></code> should be the release version, e.g., <code class="docutils literal notranslate"><span class="pre">0.7.0</span></code>.</p>
