@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plotting Glyphs (Vectors or PolyData) &mdash; Sphinx-Gallery 0.11.0-git documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/theme_override.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Lighting Properties" href="plot_lighting.html" />
+    <link rel="prev" title="Collision" href="plot_collisions.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> Sphinx-Gallery
+          </a>
+              <div class="version">
+                0.11.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+      <span class="rst-current-version" data-toggle="rst-current-version">
+        <span class="fa fa-book"> Versions</span>
+        v: stable
+        <span class="fa fa-caret-down"></span>
+      </span>
+      <div class="rst-other-versions">
+        <dl>
+          <dt>Versions</dt>
+          
+            <dd><a href="https://sphinx-gallery.github.io/dev">dev</a></dd>
+          
+            <dd><a href="https://sphinx-gallery.github.io/stable">stable</a></dd>
+          
+        </dl>
+      </div>
+    </div>
+
+    
+              <p class="caption" role="heading"><span class="caption-text">Using Sphinx Gallery</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started with Sphinx-Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../syntax.html">How to structure your Python scripts for Sphinx-Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../projects_list.html">Who uses Sphinx-Gallery</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced usage and information</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../advanced.html">Advanced usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">Frequently Asked Questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utils.html">Sphinx-Gallery Utilities</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Example galleries</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../auto_examples/index.html">Gallery of Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Notebook style example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_mayavi_examples/index.html">Gallery of Examples using Mayavi</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Gallery of Examples using PyVista</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#pyvista-examples">PyVista Examples</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="plot_collisions.html">Collision</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Plotting Glyphs (Vectors or PolyData)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#subset-of-glyphs">Subset of Glyphs</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="plot_lighting.html">Lighting Properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plot_ray_trace.html">Ray Tracing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API and developer reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../reference.html">Sphinx-Gallery API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Change Log</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery">Fork Sphinx-Gallery on Github</a></li>
+</ul>
+
+
+  
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Sphinx-Gallery</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="index.html">Gallery of Examples using PyVista</a> &raquo;</li>
+      
+    <li>Plotting Glyphs (Vectors or PolyData)</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-pyvista-examples-plot-glyphs-py"><span class="std std-ref">here</span></a>
+to download the full example code or to run this example in your browser via Binder</p>
+</div>
+<section class="sphx-glr-example-title" id="plotting-glyphs-vectors-or-polydata">
+<span id="glyph-example"></span><span id="sphx-glr-auto-pyvista-examples-plot-glyphs-py"></span><h1>Plotting Glyphs (Vectors or PolyData)<a class="headerlink" href="#plotting-glyphs-vectors-or-polydata" title="Permalink to this heading">¶</a></h1>
+<p>Use vectors in a dataset to plot and orient glyphs/geometric objects.</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="c1"># sphinx_gallery_thumbnail_number = 4</span>
+<span class="kn">import</span> <span class="nn">pyvista</span> <span class="k">as</span> <span class="nn">pv</span>
+<span class="kn">from</span> <span class="nn">pyvista</span> <span class="kn">import</span> <span class="n">examples</span>
+</pre></div>
+</div>
+<p>Glyphying can be done via the <a class="reference external" href="https://docs.pyvista.org/api/core/_autosummary/pyvista.DataSetFilters.glyph.html#pyvista.DataSetFilters.glyph" title="(in PyVista v0.35.2)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pyvista.DataSetFilters.glyph()</span></code></a> filter</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><a href="https://docs.pyvista.org/api/core/_autosummary/pyvista.PolyData.html#pyvista.PolyData" title="pyvista.PolyData" class="sphx-glr-backref-module-pyvista sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">mesh</span></a> <span class="o">=</span> <span class="n">examples</span><span class="o">.</span><span class="n">download_carotid</span><span class="p">()</span><span class="o">.</span><span class="n">threshold</span><span class="p">(</span><span class="mi">145</span><span class="p">,</span> <span class="n">scalars</span><span class="o">=</span><span class="s2">&quot;scalars&quot;</span><span class="p">)</span>
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">mask</span></a> <span class="o">=</span> <a href="https://docs.pyvista.org/api/core/_autosummary/pyvista.PolyData.html#pyvista.PolyData" title="pyvista.PolyData" class="sphx-glr-backref-module-pyvista sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">mesh</span></a><span class="p">[</span><span class="s1">&#39;scalars&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">210</span>
+<a href="https://docs.pyvista.org/api/core/_autosummary/pyvista.PolyData.html#pyvista.PolyData" title="pyvista.PolyData" class="sphx-glr-backref-module-pyvista sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">mesh</span></a><span class="p">[</span><span class="s1">&#39;scalars&#39;</span><span class="p">][</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">mask</span></a><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># null out smaller vectors</span>
+
+<span class="c1"># Make a geometric object to use as the glyph</span>
+<a href="https://docs.pyvista.org/api/core/_autosummary/pyvista.PolyData.html#pyvista.PolyData" title="pyvista.PolyData" class="sphx-glr-backref-module-pyvista sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">geom</span></a> <span class="o">=</span> <a href="https://docs.pyvista.org/api/utilities/_autosummary/pyvista.Arrow.html#pyvista.Arrow" title="pyvista.Arrow" class="sphx-glr-backref-module-pyvista sphx-glr-backref-type-py-function"><span class="n">pv</span><span class="o">.</span><span class="n">Arrow</span></a><span class="p">()</span>  <span class="c1"># This could be any dataset</span>
+
+<span class="c1"># Perform the glyph</span>
+<a href="https://docs.pyvista.org/api/core/_autosummary/pyvista.PolyData.html#pyvista.PolyData" title="pyvista.PolyData" class="sphx-glr-backref-module-pyvista sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">glyphs</span></a> <span class="o">=</span> <a href="https://docs.pyvista.org/api/core/_autosummary/pyvista.PolyData.glyph.html#pyvista.PolyData.glyph" title="pyvista.PolyData.glyph" class="sphx-glr-backref-module-pyvista sphx-glr-backref-type-py-method"><span class="n">mesh</span><span class="o">.</span><span class="n">glyph</span></a><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s2">&quot;vectors&quot;</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="s2">&quot;scalars&quot;</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mf">0.003</span><span class="p">,</span> <a href="https://docs.pyvista.org/api/core/_autosummary/pyvista.PolyData.html#pyvista.PolyData" title="pyvista.PolyData" class="sphx-glr-backref-module-pyvista sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">geom</span></a><span class="o">=</span><a href="https://docs.pyvista.org/api/core/_autosummary/pyvista.PolyData.html#pyvista.PolyData" title="pyvista.PolyData" class="sphx-glr-backref-module-pyvista sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">geom</span></a><span class="p">)</span>
+
+<span class="c1"># plot using the plotting class</span>
+<a href="https://docs.pyvista.org/api/plotting/_autosummary/pyvista.Plotter.html#pyvista.Plotter" title="pyvista.Plotter" class="sphx-glr-backref-module-pyvista sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pl</span></a> <span class="o">=</span> <a href="https://docs.pyvista.org/api/plotting/_autosummary/pyvista.Plotter.html#pyvista.Plotter" title="pyvista.Plotter" class="sphx-glr-backref-module-pyvista sphx-glr-backref-type-py-class"><span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span></a><span class="p">()</span>
+<a href="https://docs.pyvista.org/api/plotting/_autosummary/pyvista.Plotter.add_mesh.html#pyvista.Plotter.add_mesh" title="pyvista.Plotter.add_mesh" class="sphx-glr-backref-module-pyvista sphx-glr-backref-type-py-method"><span class="n">pl</span><span class="o">.</span><span class="n">add_mesh</span></a><span class="p">(</span><a href="https://docs.pyvista.org/api/core/_autosummary/pyvista.PolyData.html#pyvista.PolyData" title="pyvista.PolyData" class="sphx-glr-backref-module-pyvista sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">glyphs</span></a><span class="p">,</span> <span class="n">show_scalar_bar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">lighting</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;coolwarm&#39;</span><span class="p">)</span>
+<a href="https://docs.pyvista.org/api/plotting/_autosummary/pyvista.Plotter.camera_position.html#pyvista.Plotter.camera_position" title="pyvista.Plotter.camera_position" class="sphx-glr-backref-module-pyvista sphx-glr-backref-type-py-property"><span class="n">pl</span><span class="o">.</span><span class="n">camera_position</span></a> <span class="o">=</span> <span class="p">[(</span><span class="mf">146.53</span><span class="p">,</span> <span class="mf">91.28</span><span class="p">,</span> <span class="mf">21.70</span><span class="p">),</span>
+                      <span class="p">(</span><span class="mf">125.00</span><span class="p">,</span> <span class="mf">94.45</span><span class="p">,</span> <span class="mf">19.81</span><span class="p">),</span>
+                      <span class="p">(</span><span class="o">-</span><span class="mf">0.086</span><span class="p">,</span> <span class="mf">0.007</span><span class="p">,</span> <span class="mf">0.996</span><span class="p">)]</span>  <span class="c1"># view only part of the vector field</span>
+<span class="n">cpos</span> <span class="o">=</span> <a href="https://docs.pyvista.org/api/plotting/_autosummary/pyvista.Plotter.show.html#pyvista.Plotter.show" title="pyvista.Plotter.show" class="sphx-glr-backref-module-pyvista sphx-glr-backref-type-py-method"><span class="n">pl</span><span class="o">.</span><span class="n">show</span></a><span class="p">(</span><span class="n">return_cpos</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_plot_glyphs_001.png" srcset="../_images/sphx_glr_plot_glyphs_001.png" alt="plot glyphs" class = "sphx-glr-single-img"/><p>Another approach is to load the vectors directly to the mesh object and then
+access the <a class="reference external" href="https://docs.pyvista.org/api/core/_autosummary/pyvista.DataSet.arrows.html#pyvista.DataSet.arrows" title="(in PyVista v0.35.2)"><code class="xref py py-attr docutils literal notranslate"><span class="pre">pyvista.DataSet.arrows</span></code></a> property.</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><a href="https://docs.pyvista.org/api/core/_autosummary/pyvista.PolyData.html#pyvista.PolyData" title="pyvista.PolyData" class="sphx-glr-backref-module-pyvista sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sphere</span></a> <span class="o">=</span> <a href="https://docs.pyvista.org/api/utilities/_autosummary/pyvista.Sphere.html#pyvista.Sphere" title="pyvista.Sphere" class="sphx-glr-backref-module-pyvista sphx-glr-backref-type-py-function"><span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span></a><span class="p">(</span><span class="n">radius</span><span class="o">=</span><span class="mf">3.14</span><span class="p">)</span>
+
+<span class="c1"># make cool swirly pattern</span>
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">vectors</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.vstack.html#numpy.vstack" title="numpy.vstack" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">vstack</span></a><span class="p">(</span>
+    <span class="p">(</span>
+        <a href="https://numpy.org/doc/stable/reference/generated/numpy.ufunc.html#numpy.ufunc" title="numpy.ufunc" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">sin</span></a><span class="p">(</span><a href="https://docs.pyvista.org/api/core/_autosummary/pyvista.PolyData.points.html#pyvista.PolyData.points" title="pyvista.PolyData.points" class="sphx-glr-backref-module-pyvista sphx-glr-backref-type-py-property"><span class="n">sphere</span><span class="o">.</span><span class="n">points</span></a><span class="p">[:,</span> <span class="mi">0</span><span class="p">]),</span>
+        <a href="https://numpy.org/doc/stable/reference/generated/numpy.ufunc.html#numpy.ufunc" title="numpy.ufunc" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">cos</span></a><span class="p">(</span><a href="https://docs.pyvista.org/api/core/_autosummary/pyvista.PolyData.points.html#pyvista.PolyData.points" title="pyvista.PolyData.points" class="sphx-glr-backref-module-pyvista sphx-glr-backref-type-py-property"><span class="n">sphere</span><span class="o">.</span><span class="n">points</span></a><span class="p">[:,</span> <span class="mi">1</span><span class="p">]),</span>
+        <a href="https://numpy.org/doc/stable/reference/generated/numpy.ufunc.html#numpy.ufunc" title="numpy.ufunc" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">cos</span></a><span class="p">(</span><a href="https://docs.pyvista.org/api/core/_autosummary/pyvista.PolyData.points.html#pyvista.PolyData.points" title="pyvista.PolyData.points" class="sphx-glr-backref-module-pyvista sphx-glr-backref-type-py-property"><span class="n">sphere</span><span class="o">.</span><span class="n">points</span></a><span class="p">[:,</span> <span class="mi">2</span><span class="p">]),</span>
+    <span class="p">)</span>
+<span class="p">)</span><span class="o">.</span><span class="n">T</span>
+
+<span class="c1"># add and scale</span>
+<a href="https://docs.pyvista.org/api/core/_autosummary/pyvista.PolyData.html#pyvista.PolyData" title="pyvista.PolyData" class="sphx-glr-backref-module-pyvista sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sphere</span></a><span class="p">[</span><span class="s2">&quot;vectors&quot;</span><span class="p">]</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">vectors</span></a> <span class="o">*</span> <span class="mf">0.3</span>
+<a href="https://docs.pyvista.org/api/core/_autosummary/pyvista.PolyData.set_active_vectors.html#pyvista.PolyData.set_active_vectors" title="pyvista.PolyData.set_active_vectors" class="sphx-glr-backref-module-pyvista sphx-glr-backref-type-py-method"><span class="n">sphere</span><span class="o">.</span><span class="n">set_active_vectors</span></a><span class="p">(</span><span class="s2">&quot;vectors&quot;</span><span class="p">)</span>
+
+<span class="c1"># plot just the arrows</span>
+<a href="https://docs.pyvista.org/api/core/_autosummary/pyvista.PolyData.arrows.html#pyvista.PolyData.arrows" title="pyvista.PolyData.arrows" class="sphx-glr-backref-module-pyvista sphx-glr-backref-type-py-property"><span class="n">sphere</span><span class="o">.</span><span class="n">arrows</span><span class="o">.</span><span class="n">plot</span></a><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_plot_glyphs_002.png" srcset="../_images/sphx_glr_plot_glyphs_002.png" alt="plot glyphs" class = "sphx-glr-single-img"/><p>Plot the arrows and the sphere.</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><a href="https://docs.pyvista.org/api/plotting/_autosummary/pyvista.Plotter.html#pyvista.Plotter" title="pyvista.Plotter" class="sphx-glr-backref-module-pyvista sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">p</span></a> <span class="o">=</span> <a href="https://docs.pyvista.org/api/plotting/_autosummary/pyvista.Plotter.html#pyvista.Plotter" title="pyvista.Plotter" class="sphx-glr-backref-module-pyvista sphx-glr-backref-type-py-class"><span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span></a><span class="p">()</span>
+<a href="https://docs.pyvista.org/api/plotting/_autosummary/pyvista.Plotter.add_mesh.html#pyvista.Plotter.add_mesh" title="pyvista.Plotter.add_mesh" class="sphx-glr-backref-module-pyvista sphx-glr-backref-type-py-method"><span class="n">p</span><span class="o">.</span><span class="n">add_mesh</span></a><span class="p">(</span><a href="https://docs.pyvista.org/api/core/_autosummary/pyvista.PolyData.arrows.html#pyvista.PolyData.arrows" title="pyvista.PolyData.arrows" class="sphx-glr-backref-module-pyvista sphx-glr-backref-type-py-property"><span class="n">sphere</span><span class="o">.</span><span class="n">arrows</span></a><span class="p">,</span> <span class="n">lighting</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+           <span class="n">scalar_bar_args</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s2">&quot;Vector Magnitude&quot;</span><span class="p">})</span>
+<a href="https://docs.pyvista.org/api/plotting/_autosummary/pyvista.Plotter.add_mesh.html#pyvista.Plotter.add_mesh" title="pyvista.Plotter.add_mesh" class="sphx-glr-backref-module-pyvista sphx-glr-backref-type-py-method"><span class="n">p</span><span class="o">.</span><span class="n">add_mesh</span></a><span class="p">(</span><a href="https://docs.pyvista.org/api/core/_autosummary/pyvista.PolyData.html#pyvista.PolyData" title="pyvista.PolyData" class="sphx-glr-backref-module-pyvista sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sphere</span></a><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;grey&quot;</span><span class="p">,</span> <span class="n">ambient</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">show_edges</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<a href="https://docs.pyvista.org/api/plotting/_autosummary/pyvista.Plotter.show.html#pyvista.Plotter.show" title="pyvista.Plotter.show" class="sphx-glr-backref-module-pyvista sphx-glr-backref-type-py-method"><span class="n">p</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_plot_glyphs_003.png" srcset="../_images/sphx_glr_plot_glyphs_003.png" alt="plot glyphs" class = "sphx-glr-single-img"/><section id="subset-of-glyphs">
+<h2>Subset of Glyphs<a class="headerlink" href="#subset-of-glyphs" title="Permalink to this heading">¶</a></h2>
+<p>Sometimes you might not want glyphs for every node in the input dataset. In
+this case, you can choose to build glyphs for a subset of the input dataset
+by using a merging tolerance. Here we specify a merging tolerance of five
+percent which equates to five percent of the bounding box’s length.</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example dataset with normals</span>
+<a href="https://docs.pyvista.org/api/core/_autosummary/pyvista.PolyData.html#pyvista.PolyData" title="pyvista.PolyData" class="sphx-glr-backref-module-pyvista sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">mesh</span></a> <span class="o">=</span> <span class="n">examples</span><span class="o">.</span><span class="n">load_random_hills</span><span class="p">()</span>
+
+<span class="c1"># create a subset of arrows using the glyph filter</span>
+<a href="https://docs.pyvista.org/api/core/_autosummary/pyvista.PolyData.html#pyvista.PolyData" title="pyvista.PolyData" class="sphx-glr-backref-module-pyvista sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">arrows</span></a> <span class="o">=</span> <a href="https://docs.pyvista.org/api/core/_autosummary/pyvista.PolyData.glyph.html#pyvista.PolyData.glyph" title="pyvista.PolyData.glyph" class="sphx-glr-backref-module-pyvista sphx-glr-backref-type-py-method"><span class="n">mesh</span><span class="o">.</span><span class="n">glyph</span></a><span class="p">(</span><span class="n">scale</span><span class="o">=</span><span class="s2">&quot;Normals&quot;</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="s2">&quot;Normals&quot;</span><span class="p">,</span> <span class="n">tolerance</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+
+<a href="https://docs.pyvista.org/api/plotting/_autosummary/pyvista.Plotter.html#pyvista.Plotter" title="pyvista.Plotter" class="sphx-glr-backref-module-pyvista sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">p</span></a> <span class="o">=</span> <a href="https://docs.pyvista.org/api/plotting/_autosummary/pyvista.Plotter.html#pyvista.Plotter" title="pyvista.Plotter" class="sphx-glr-backref-module-pyvista sphx-glr-backref-type-py-class"><span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span></a><span class="p">()</span>
+<a href="https://docs.pyvista.org/api/plotting/_autosummary/pyvista.Plotter.add_mesh.html#pyvista.Plotter.add_mesh" title="pyvista.Plotter.add_mesh" class="sphx-glr-backref-module-pyvista sphx-glr-backref-type-py-method"><span class="n">p</span><span class="o">.</span><span class="n">add_mesh</span></a><span class="p">(</span><a href="https://docs.pyvista.org/api/core/_autosummary/pyvista.PolyData.html#pyvista.PolyData" title="pyvista.PolyData" class="sphx-glr-backref-module-pyvista sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">arrows</span></a><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
+<a href="https://docs.pyvista.org/api/plotting/_autosummary/pyvista.Plotter.add_mesh.html#pyvista.Plotter.add_mesh" title="pyvista.Plotter.add_mesh" class="sphx-glr-backref-module-pyvista sphx-glr-backref-type-py-method"><span class="n">p</span><span class="o">.</span><span class="n">add_mesh</span></a><span class="p">(</span><a href="https://docs.pyvista.org/api/core/_autosummary/pyvista.PolyData.html#pyvista.PolyData" title="pyvista.PolyData" class="sphx-glr-backref-module-pyvista sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">mesh</span></a><span class="p">,</span> <span class="n">scalars</span><span class="o">=</span><span class="s2">&quot;Elevation&quot;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;terrain&quot;</span><span class="p">,</span> <span class="n">smooth_shading</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a href="https://docs.pyvista.org/api/plotting/_autosummary/pyvista.Plotter.show.html#pyvista.Plotter.show" title="pyvista.Plotter.show" class="sphx-glr-backref-module-pyvista sphx-glr-backref-type-py-method"><span class="n">p</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../_images/sphx_glr_plot_glyphs_004.png" srcset="../_images/sphx_glr_plot_glyphs_004.png" alt="plot glyphs" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  3.325 seconds)</p>
+<p><strong>Estimated memory usage:</strong>  318 MB</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-pyvista-examples-plot-glyphs-py">
+<div class="binder-badge docutils container">
+<a class="reference external image-reference" href="https://mybinder.org/v2/gh/sphinx-gallery/sphinx-gallery.github.io/master?urlpath=lab/tree/notebooks/auto_pyvista_examples/plot_glyphs.ipynb"><img alt="Launch binder" src="../_images/binder_badge_logo3.svg" width="150px" /></a>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/e0f3efe2d70b44504e85530d2daa0ba4/plot_glyphs.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_glyphs.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/5af9ea66d9a7a356582b39b0947ce374/plot_glyphs.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_glyphs.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="plot_collisions.html" class="btn btn-neutral float-left" title="Collision" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="plot_lighting.html" class="btn btn-neutral float-right" title="Lighting Properties" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2014-2022, Sphinx-gallery developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

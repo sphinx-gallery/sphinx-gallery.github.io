@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>sphinx_gallery.gen_gallery &mdash; Sphinx-Gallery 0.10.1-git documentation</title>
+  <title>sphinx_gallery.gen_gallery &mdash; Sphinx-Gallery 0.11.0-git documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/theme_override.css" type="text/css" />
@@ -18,6 +18,7 @@
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -32,7 +33,7 @@
             <a href="../../index.html" class="icon icon-home"> Sphinx-Gallery
           </a>
               <div class="version">
-                0.10.1
+                0.11.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -80,6 +81,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html">Gallery of Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Notebook style example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../auto_mayavi_examples/index.html">Gallery of Examples using Mayavi</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_pyvista_examples/index.html">Gallery of Examples using PyVista</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API and developer reference</span></p>
 <ul>
@@ -186,6 +188,7 @@
     <span class="s1">&#39;gallery_dirs&#39;</span><span class="p">:</span> <span class="s1">&#39;auto_examples&#39;</span><span class="p">,</span>
     <span class="s1">&#39;backreferences_dir&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
     <span class="s1">&#39;doc_module&#39;</span><span class="p">:</span> <span class="p">(),</span>
+    <span class="s1">&#39;exclude_implicit_doc&#39;</span><span class="p">:</span> <span class="p">{},</span>
     <span class="s1">&#39;reference_url&#39;</span><span class="p">:</span> <span class="p">{},</span>
     <span class="s1">&#39;capture_repr&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;_repr_html_&#39;</span><span class="p">,</span> <span class="s1">&#39;__repr__&#39;</span><span class="p">),</span>
     <span class="s1">&#39;ignore_repr_types&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
@@ -206,6 +209,7 @@
     <span class="s1">&#39;thumbnail_size&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="mi">280</span><span class="p">),</span>  <span class="c1"># Default CSS does 0.4 scaling (160, 112)</span>
     <span class="s1">&#39;min_reported_time&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
     <span class="s1">&#39;binder&#39;</span><span class="p">:</span> <span class="p">{},</span>
+    <span class="s1">&#39;promote_jupyter_magic&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
     <span class="s1">&#39;image_scrapers&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;matplotlib&#39;</span><span class="p">,),</span>
     <span class="s1">&#39;compress_images&#39;</span><span class="p">:</span> <span class="p">(),</span>
     <span class="s1">&#39;reset_modules&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;matplotlib&#39;</span><span class="p">,</span> <span class="s1">&#39;seaborn&#39;</span><span class="p">),</span>
@@ -225,6 +229,8 @@
     <span class="s1">&#39;image_srcset&#39;</span><span class="p">:</span> <span class="p">[],</span>
     <span class="s1">&#39;default_thumb_file&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
     <span class="s1">&#39;line_numbers&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s1">&#39;nested_sections&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s1">&#39;prefer_full_module&#39;</span><span class="p">:</span> <span class="p">[],</span>
 <span class="p">}</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">sphinx_compatibility</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;sphinx-gallery&#39;</span><span class="p">)</span>
@@ -257,6 +263,17 @@
     <span class="k">return</span> <span class="n">gallery_conf</span></div>
 
 
+<span class="k">def</span> <span class="nf">_update_gallery_conf</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Update gallery config.</span>
+
+<span class="sd">    This is separate function for better testability.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># prepare regex for exclusions from implicit documentation</span>
+    <span class="n">exclude_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;exclude_implicit_doc&#39;</span><span class="p">]))</span>\
+        <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;exclude_implicit_doc&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="kc">False</span>
+    <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;exclude_implicit_doc_regex&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">exclude_regex</span>
+
+
 <span class="k">def</span> <span class="nf">_complete_gallery_conf</span><span class="p">(</span><span class="n">sphinx_gallery_conf</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">,</span> <span class="n">plot_gallery</span><span class="p">,</span>
                            <span class="n">abort_on_example_error</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s1">&#39;python&#39;</span><span class="p">,</span>
                            <span class="n">builder_name</span><span class="o">=</span><span class="s1">&#39;html&#39;</span><span class="p">,</span> <span class="n">app</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">check_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
@@ -286,7 +303,7 @@
     <span class="n">gallery_conf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">abort_on_example_error</span><span class="o">=</span><span class="n">abort_on_example_error</span><span class="p">)</span>
     <span class="c1"># XXX anything that can only be a bool (rather than str) should probably be</span>
     <span class="c1"># evaluated this way as it allows setting via -D on the command line</span>
-    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;run_stale_examples&#39;</span><span class="p">,):</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;promote_jupyter_magic&#39;</span><span class="p">,</span> <span class="s1">&#39;run_stale_examples&#39;</span><span class="p">,):</span>
         <span class="n">gallery_conf</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">_bool_eval</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">src_dir</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;app&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">app</span>
@@ -491,6 +508,8 @@
         <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;app&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># can be None in testing</span>
             <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;app&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">add_css_file</span><span class="p">(</span><span class="n">css</span> <span class="o">+</span> <span class="s1">&#39;.css&#39;</span><span class="p">)</span>
 
+    <span class="n">_update_gallery_conf</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="n">gallery_conf</span>
 
 
@@ -548,8 +567,27 @@
     <span class="sd">&quot;&quot;&quot;Generate the Main examples gallery reStructuredText</span>
 
 <span class="sd">    Start the Sphinx-Gallery configuration and recursively scan the examples</span>
-<span class="sd">    directories in order to populate the examples gallery</span>
+<span class="sd">    directories in order to populate the examples gallery.</span>
+
+<span class="sd">    We create a 2-level nested structure by iterating through every</span>
+<span class="sd">    sibling folder of the current index file.</span>
+<span class="sd">    In each of these folders, we look for a section index file,</span>
+<span class="sd">    for which we generate a toctree pointing to sibling scripts.</span>
+<span class="sd">    Then, we append the content of this section index file</span>
+<span class="sd">    to the current index file,</span>
+<span class="sd">    after we remove toctree (to keep a clean nested structure)</span>
+<span class="sd">    and sphinx tags (to prevent tag duplication)</span>
+<span class="sd">    Eventually, we create a toctree in the current index file</span>
+<span class="sd">    which points to section index files.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">blocked_builder</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;dirhtml&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">blocked_builder</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s1">&#39;Builder is set to </span><span class="si">{</span><span class="nb">repr</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="si">}</span><span class="s1">. sphinx_gallery does &#39;</span>
+            <span class="sa">f</span><span class="s1">&#39;not work for any of the following: </span><span class="si">{</span><span class="p">[</span><span class="n">blocked_builder</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="p">)</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;generating gallery...&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">)</span>
     <span class="n">gallery_conf</span> <span class="o">=</span> <span class="n">parse_config</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
 
@@ -567,41 +605,124 @@
 
     <span class="k">for</span> <span class="n">examples_dir</span><span class="p">,</span> <span class="n">gallery_dir</span> <span class="ow">in</span> <span class="n">workdirs</span><span class="p">:</span>
 
-        <span class="n">examples_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span> <span class="n">examples_dir</span><span class="p">)</span>
-        <span class="n">gallery_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span> <span class="n">gallery_dir</span><span class="p">)</span>
+        <span class="n">examples_dir_abs_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span> <span class="n">examples_dir</span><span class="p">)</span>
+        <span class="n">gallery_dir_abs_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span> <span class="n">gallery_dir</span><span class="p">)</span>
 
-        <span class="c1"># Here we don&#39;t use an os.walk, but we recurse only twice: flat is</span>
-        <span class="c1"># better than nested.</span>
-        <span class="n">this_fhindex</span><span class="p">,</span> <span class="n">this_costs</span> <span class="o">=</span> <span class="n">generate_dir_rst</span><span class="p">(</span>
-            <span class="n">examples_dir</span><span class="p">,</span> <span class="n">gallery_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">seen_backrefs</span><span class="p">)</span>
+        <span class="c1"># Create section rst files and fetch content which will</span>
+        <span class="c1"># be added to current index file. This only includes content</span>
+        <span class="c1"># from files located in the root folder of the current gallery</span>
+        <span class="c1"># (ie not in subfolders)</span>
+        <span class="p">(</span>
+            <span class="n">_</span><span class="p">,</span>
+            <span class="n">this_content</span><span class="p">,</span>
+            <span class="n">this_costs</span><span class="p">,</span>
+            <span class="n">this_toctree_items</span><span class="p">,</span>
+        <span class="p">)</span> <span class="o">=</span> <span class="n">generate_dir_rst</span><span class="p">(</span>
+            <span class="n">examples_dir_abs_path</span><span class="p">,</span>
+            <span class="n">gallery_dir_abs_path</span><span class="p">,</span>
+            <span class="n">gallery_conf</span><span class="p">,</span>
+            <span class="n">seen_backrefs</span><span class="p">,</span>
+            <span class="n">include_toctree</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
 
         <span class="n">costs</span> <span class="o">+=</span> <span class="n">this_costs</span>
-        <span class="n">write_computation_times</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">gallery_dir</span><span class="p">,</span> <span class="n">this_costs</span><span class="p">)</span>
+        <span class="n">write_computation_times</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">gallery_dir_abs_path</span><span class="p">,</span> <span class="n">this_costs</span><span class="p">)</span>
 
-        <span class="c1"># we create an index.rst with all examples</span>
-        <span class="n">index_rst_new</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gallery_dir</span><span class="p">,</span> <span class="s1">&#39;index.rst.new&#39;</span><span class="p">)</span>
+        <span class="c1"># We create an index.rst with all examples</span>
+        <span class="c1"># (this will overwrite the rst file generated by the previous call</span>
+        <span class="c1"># to generate_dir_rst)</span>
+        <span class="n">index_rst_new</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gallery_dir_abs_path</span><span class="p">,</span> <span class="s1">&#39;index.rst.new&#39;</span><span class="p">)</span>
         <span class="k">with</span> <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">index_rst_new</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fhindex</span><span class="p">:</span>
             <span class="c1"># :orphan: to suppress &quot;not included in TOCTREE&quot; sphinx warnings</span>
-            <span class="n">fhindex</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;:orphan:</span><span class="se">\n\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">this_fhindex</span><span class="p">)</span>
+            <span class="n">fhindex</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;:orphan:</span><span class="se">\n\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">this_content</span><span class="p">)</span>
+
+            <span class="c1"># Write toctree with gallery items from gallery root folder</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">this_toctree_items</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">this_toctree</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">.. toctree::</span>
+<span class="s2">   :hidden:</span>
+
+<span class="s2">   </span><span class="si">%s</span><span class="se">\n</span><span class="s2"></span>
+<span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">   &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">this_toctree_items</span><span class="p">)</span>
+                <span class="n">fhindex</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">this_toctree</span><span class="p">)</span>
+
+            <span class="c1"># list all paths to subsection index files in this array</span>
+            <span class="n">subsection_index_files</span> <span class="o">=</span> <span class="p">[]</span>
 
             <span class="k">for</span> <span class="n">subsection</span> <span class="ow">in</span> <span class="n">get_subsections</span><span class="p">(</span>
-                    <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span> <span class="n">examples_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
-                <span class="n">src_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">examples_dir</span><span class="p">,</span> <span class="n">subsection</span><span class="p">)</span>
-                <span class="n">target_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gallery_dir</span><span class="p">,</span> <span class="n">subsection</span><span class="p">)</span>
-                <span class="n">this_fhindex</span><span class="p">,</span> <span class="n">this_costs</span> <span class="o">=</span> \
-                    <span class="n">generate_dir_rst</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span>
-                                     <span class="n">seen_backrefs</span><span class="p">)</span>
-                <span class="n">fhindex</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">this_fhindex</span><span class="p">)</span>
-                <span class="n">costs</span> <span class="o">+=</span> <span class="n">this_costs</span>
-                <span class="n">write_computation_times</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">this_costs</span><span class="p">)</span>
+                    <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span> <span class="n">examples_dir_abs_path</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
+                <span class="n">src_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">examples_dir_abs_path</span><span class="p">,</span> <span class="n">subsection</span><span class="p">)</span>
+                <span class="n">target_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gallery_dir_abs_path</span><span class="p">,</span> <span class="n">subsection</span><span class="p">)</span>
+                <span class="n">subsection_index_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
+                        <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">gallery_dir</span><span class="p">,</span> <span class="n">subsection</span><span class="p">,</span> <span class="s1">&#39;index.rst&#39;</span>
+                    <span class="p">])</span>
+                <span class="p">)</span>
+
+                <span class="p">(</span>
+                    <span class="n">subsection_index_path</span><span class="p">,</span>
+                    <span class="n">subsection_index_content</span><span class="p">,</span>
+                    <span class="n">subsection_costs</span><span class="p">,</span>
+                    <span class="n">subsection_toctree_filenames</span><span class="p">,</span>
+                <span class="p">)</span> <span class="o">=</span> <span class="n">generate_dir_rst</span><span class="p">(</span>
+                    <span class="n">src_dir</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">seen_backrefs</span>
+                <span class="p">)</span>
+
+                <span class="c1"># Filter out tags from subsection content</span>
+                <span class="c1"># to prevent tag duplication across the documentation</span>
+                <span class="n">tag_regex</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;^\.\.(\s+)\_(.+)\:(\s*)$&quot;</span>
+                <span class="n">subsection_index_content</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
+                    <span class="n">line</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">subsection_index_content</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">tag_regex</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span>
+                <span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">])</span>
+
+                <span class="n">fhindex</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">subsection_index_content</span><span class="p">)</span>
+
+                <span class="c1"># Write subsection toctree in main file</span>
+                <span class="c1"># only if nested_sections is False or None</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;nested_sections&quot;</span><span class="p">]:</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">subsection_toctree_filenames</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">subsection_index_toctree</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">.. toctree::</span>
+<span class="s2">   :hidden:</span>
+
+<span class="s2">   </span><span class="si">%s</span><span class="se">\n</span><span class="s2"></span>
+<span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">   &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">subsection_toctree_filenames</span><span class="p">)</span>
+                    <span class="n">fhindex</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">subsection_index_toctree</span><span class="p">)</span>
+                <span class="c1"># Otherwise, a new index.rst.new file should</span>
+                <span class="c1"># have been created and it needs to be parsed</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">_replace_md5</span><span class="p">(</span><span class="n">subsection_index_path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;t&#39;</span><span class="p">)</span>
+
+                <span class="n">costs</span> <span class="o">+=</span> <span class="n">subsection_costs</span>
+                <span class="n">write_computation_times</span><span class="p">(</span>
+                    <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">subsection_costs</span>
+                <span class="p">)</span>
+
+            <span class="c1"># generate toctree with subsections</span>
+            <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;nested_sections&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">subsections_toctree</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">.. toctree::</span>
+<span class="s2">   :hidden:</span>
+<span class="s2">   :includehidden:</span>
+
+<span class="s2">   </span><span class="si">%s</span><span class="se">\n</span><span class="s2"></span>
+<span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">   &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">subsection_index_files</span><span class="p">)</span>
+<span class="c1"># &quot;&quot;&quot; % &quot;\n   &quot;.join(this_toctree_items + subsection_index_files)</span>
+
+                <span class="c1"># add toctree to file only if there are subsections</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">subsection_index_files</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">fhindex</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">subsections_toctree</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;download_all_examples&#39;</span><span class="p">]:</span>
                 <span class="n">download_fhindex</span> <span class="o">=</span> <span class="n">generate_zipfiles</span><span class="p">(</span>
-                    <span class="n">gallery_dir</span><span class="p">,</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">)</span>
+                    <span class="n">gallery_dir_abs_path</span><span class="p">,</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span>
+                <span class="p">)</span>
                 <span class="n">fhindex</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">download_fhindex</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s1">&#39;show_signature&#39;</span><span class="p">]):</span>
                 <span class="n">fhindex</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">SPHX_GLR_SIG</span><span class="p">)</span>
+
         <span class="n">_replace_md5</span><span class="p">(</span><span class="n">index_rst_new</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;t&#39;</span><span class="p">)</span>
     <span class="n">_finalize_backreferences</span><span class="p">(</span><span class="n">seen_backrefs</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
 
@@ -949,7 +1070,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2014-2021, Sphinx-gallery developers.</p>
+    <p>&#169; Copyright 2014-2022, Sphinx-gallery developers.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

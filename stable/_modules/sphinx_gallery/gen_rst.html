@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>sphinx_gallery.gen_rst &mdash; Sphinx-Gallery 0.10.1-git documentation</title>
+  <title>sphinx_gallery.gen_rst &mdash; Sphinx-Gallery 0.11.0-git documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/theme_override.css" type="text/css" />
@@ -18,6 +18,7 @@
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -32,7 +33,7 @@
             <a href="../../index.html" class="icon icon-home"> Sphinx-Gallery
           </a>
               <div class="version">
-                0.10.1
+                0.11.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -80,6 +81,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html">Gallery of Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Notebook style example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../auto_mayavi_examples/index.html">Gallery of Examples using Mayavi</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_pyvista_examples/index.html">Gallery of Examples using PyVista</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API and developer reference</span></p>
 <ul>
@@ -173,7 +175,8 @@
                              <span class="n">identify_names</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">.downloads</span> <span class="kn">import</span> <span class="n">CODE_DOWNLOAD</span>
 <span class="kn">from</span> <span class="nn">.py_source_parser</span> <span class="kn">import</span> <span class="p">(</span><span class="n">split_code_and_text_blocks</span><span class="p">,</span>
-                               <span class="n">remove_config_comments</span><span class="p">)</span>
+                               <span class="n">remove_config_comments</span><span class="p">,</span>
+                               <span class="n">remove_ignore_blocks</span><span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">.notebook</span> <span class="kn">import</span> <span class="n">jupyter_notebook</span><span class="p">,</span> <span class="n">save_notebook</span>
 <span class="kn">from</span> <span class="nn">.binder</span> <span class="kn">import</span> <span class="n">check_binder_conf</span><span class="p">,</span> <span class="n">gen_binder_rst</span>
@@ -233,6 +236,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">verbose</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger_buffer</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger_buffer</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 
+    <span class="c1"># Needed to work with Abseil</span>
+    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
     <span class="c1"># When called from a local terminal seaborn needs it in Python3</span>
     <span class="k">def</span> <span class="nf">isatty</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">isatty</span><span class="p">()</span>
@@ -267,8 +274,6 @@
 <span class="s2">&quot;&quot;&quot;</span>
 
 <span class="n">CODE_OUTPUT</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;.. rst-class:: sphx-glr-script-out</span>
-
-<span class="s2"> Out:</span>
 
 <span class="s2"> .. code-block:: none</span>
 
@@ -473,17 +478,72 @@
     <span class="k">return</span> <span class="kc">None</span>
 
 
-<div class="viewcode-block" id="generate_dir_rst"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.generate_dir_rst">[docs]</a><span class="k">def</span> <span class="nf">generate_dir_rst</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">seen_backrefs</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Generate the gallery reStructuredText for an example directory.&quot;&quot;&quot;</span>
-    <span class="n">head_ref</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">])</span>
-    <span class="n">fhindex</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span><span class="se">\n\n</span><span class="s2">.. _sphx_glr_</span><span class="si">{0}</span><span class="s2">:</span><span class="se">\n\n</span><span class="s2">&quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-        <span class="n">head_ref</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">))</span>
+<span class="n">THUMBNAIL_PARENT_DIV</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">.. raw:: html</span>
 
-    <span class="n">fname</span> <span class="o">=</span> <span class="n">_get_readme</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
-    <span class="k">with</span> <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
-        <span class="n">fhindex</span> <span class="o">+=</span> <span class="n">fid</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="s2">    &lt;div class=&quot;sphx-glr-thumbnails&quot;&gt;</span>
+
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">THUMBNAIL_PARENT_DIV_CLOSE</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">.. raw:: html</span>
+
+<span class="s2">    &lt;/div&gt;</span>
+
+<span class="s2">&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="generate_dir_rst"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.generate_dir_rst">[docs]</a><span class="k">def</span> <span class="nf">generate_dir_rst</span><span class="p">(</span>
+    <span class="n">src_dir</span><span class="p">,</span>
+    <span class="n">target_dir</span><span class="p">,</span>
+    <span class="n">gallery_conf</span><span class="p">,</span>
+    <span class="n">seen_backrefs</span><span class="p">,</span>
+    <span class="n">include_toctree</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Generate the gallery reStructuredText for an example directory.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    src_dir: str,</span>
+<span class="sd">        Path to example directory containing python files</span>
+<span class="sd">        and possibly sub categories</span>
+<span class="sd">    target_dir: str,</span>
+<span class="sd">        Path where parsed examples (rst, python files, etc)</span>
+<span class="sd">        will be outputed</span>
+<span class="sd">    gallery_conf : Dict[str, Any]</span>
+<span class="sd">        Gallery configurations.</span>
+<span class="sd">    seen_backrefs: set,</span>
+<span class="sd">        Back references encountered when parsing this gallery</span>
+<span class="sd">        will be stored in this set.</span>
+<span class="sd">    include_toctree: bool,</span>
+<span class="sd">        Whether or not toctree should be included</span>
+<span class="sd">        in generated rst file.</span>
+<span class="sd">        Default = True.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    index_path: str,</span>
+<span class="sd">        Path to index rst file presenting the current example gallery</span>
+<span class="sd">    index_content: str,</span>
+<span class="sd">        Content which will be written to the index rst file</span>
+<span class="sd">        presenting the current example gallery</span>
+<span class="sd">    costs: list,</span>
+<span class="sd">        List of costs for building each element of the gallery</span>
+<span class="sd">    toctree_items: list,</span>
+<span class="sd">        List of files included in toctree</span>
+<span class="sd">        (independent of include_toctree&#39;s value)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">head_ref</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">])</span>
+
+    <span class="n">subsection_index_content</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">subsection_readme_fname</span> <span class="o">=</span> <span class="n">_get_readme</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">subsection_readme_fname</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
+        <span class="n">subsection_readme_content</span> <span class="o">=</span> <span class="n">fid</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">subsection_index_content</span> <span class="o">+=</span> <span class="n">subsection_readme_content</span>
+
     <span class="c1"># Add empty lines to avoid bug in issue #165</span>
-    <span class="n">fhindex</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+    <span class="n">subsection_index_content</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">target_dir</span><span class="p">):</span>
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">target_dir</span><span class="p">)</span>
@@ -498,8 +558,14 @@
     <span class="c1"># sort them</span>
     <span class="n">sorted_listdir</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
         <span class="n">listdir</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;within_subsection_order&#39;</span><span class="p">](</span><span class="n">src_dir</span><span class="p">))</span>
+
+    <span class="c1"># Add div containing all thumbnails;</span>
+    <span class="c1"># this is helpful for controlling grid or flexbox behaviours</span>
+    <span class="n">subsection_index_content</span> <span class="o">+=</span> <span class="n">THUMBNAIL_PARENT_DIV</span>
+
     <span class="n">entries_text</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">costs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">subsection_toctree_filenames</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">build_target_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">])</span>
     <span class="n">iterator</span> <span class="o">=</span> <span class="n">sphinx_compatibility</span><span class="o">.</span><span class="n">status_iterator</span><span class="p">(</span>
         <span class="n">sorted_listdir</span><span class="p">,</span>
@@ -510,23 +576,57 @@
             <span class="n">fname</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">seen_backrefs</span><span class="p">)</span>
         <span class="n">src_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">))</span>
         <span class="n">costs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">cost</span><span class="p">,</span> <span class="n">src_file</span><span class="p">))</span>
-        <span class="n">this_entry</span> <span class="o">=</span> <span class="n">_thumbnail_div</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">],</span>
-                                    <span class="n">fname</span><span class="p">,</span> <span class="n">intro</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;&quot;&quot;</span>
+        <span class="n">gallery_item_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">build_target_dir</span><span class="p">,</span>
+            <span class="n">fname</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">)</span>
+        <span class="n">this_entry</span> <span class="o">=</span> <span class="n">_thumbnail_div</span><span class="p">(</span>
+            <span class="n">target_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">],</span> <span class="n">fname</span><span class="p">,</span> <span class="n">intro</span><span class="p">,</span> <span class="n">title</span>
+        <span class="p">)</span>
+        <span class="n">entries_text</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">this_entry</span><span class="p">)</span>
+        <span class="n">subsection_toctree_filenames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">gallery_item_filename</span><span class="p">)</span>
 
+    <span class="k">for</span> <span class="n">entry_text</span> <span class="ow">in</span> <span class="n">entries_text</span><span class="p">:</span>
+        <span class="n">subsection_index_content</span> <span class="o">+=</span> <span class="n">entry_text</span>
+
+    <span class="c1"># Close thumbnail parent div</span>
+    <span class="n">subsection_index_content</span> <span class="o">+=</span> <span class="n">THUMBNAIL_PARENT_DIV_CLOSE</span>
+
+    <span class="c1"># Write subsection index file</span>
+    <span class="c1"># only if nested_sections is True</span>
+    <span class="n">subsection_index_path</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;nested_sections&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">subsection_index_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="s1">&#39;index.rst.new&#39;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">subsection_index_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="p">(</span>
+            <span class="n">findex</span>
+        <span class="p">):</span>
+            <span class="n">findex</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\n\n</span><span class="s2">.. _sphx_glr_</span><span class="si">{0}</span><span class="s2">:</span><span class="se">\n\n</span><span class="s2">&quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">head_ref</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
+            <span class="p">))</span>
+            <span class="n">findex</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">subsection_index_content</span><span class="p">)</span>
+
+            <span class="c1"># Create toctree for index file</span>
+            <span class="c1"># with all gallery items which belong to current subsection</span>
+            <span class="c1"># and add it to generated index rst file if need be.</span>
+            <span class="c1"># Toctree cannot be empty</span>
+            <span class="c1"># and won&#39;t be added if include_toctree is false</span>
+            <span class="c1"># (this is useful when generating the example gallery&#39;s main</span>
+            <span class="c1"># index rst file, which should contain only one toctree)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">subsection_toctree_filenames</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">include_toctree</span><span class="p">:</span>
+                <span class="n">subsection_index_toctree</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">.. toctree::</span>
 <span class="s2">   :hidden:</span>
 
-<span class="s2">   /</span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">build_target_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">])</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">)</span>
-        <span class="n">entries_text</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">this_entry</span><span class="p">)</span>
+<span class="s2">   </span><span class="si">%s</span><span class="se">\n</span><span class="s2"></span>
+<span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">   &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">subsection_toctree_filenames</span><span class="p">)</span>
+                <span class="n">findex</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">subsection_index_toctree</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">entry_text</span> <span class="ow">in</span> <span class="n">entries_text</span><span class="p">:</span>
-        <span class="n">fhindex</span> <span class="o">+=</span> <span class="n">entry_text</span>
-
-    <span class="c1"># clear at the end of the section</span>
-    <span class="n">fhindex</span> <span class="o">+=</span> <span class="s2">&quot;&quot;&quot;.. raw:: html</span><span class="se">\n</span><span class="s2"></span>
-<span class="s2">    &lt;div class=&quot;sphx-glr-clear&quot;&gt;&lt;/div&gt;</span><span class="se">\n\n</span><span class="s2">&quot;&quot;&quot;</span>
-
-    <span class="k">return</span> <span class="n">fhindex</span><span class="p">,</span> <span class="n">costs</span></div>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="n">subsection_index_path</span><span class="p">,</span>
+        <span class="n">subsection_index_content</span><span class="p">,</span>
+        <span class="n">costs</span><span class="p">,</span>
+        <span class="n">subsection_toctree_filenames</span><span class="p">,</span>
+    <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="handle_exception"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.handle_exception">[docs]</a><span class="k">def</span> <span class="nf">handle_exception</span><span class="p">(</span><span class="n">exc_info</span><span class="p">,</span> <span class="n">src_file</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
@@ -724,10 +824,10 @@
     <span class="k">return</span> <span class="n">is_last_expr</span><span class="p">,</span> <span class="n">mem_max</span>
 
 
-<span class="k">def</span> <span class="nf">_get_last_repr</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">___</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_get_last_repr</span><span class="p">(</span><span class="n">capture_repr</span><span class="p">,</span> <span class="n">___</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Get a repr of the last expression, using first method in &#39;capture_repr&#39;</span>
 <span class="sd">    available for the last expression.&quot;&quot;&quot;</span>
-    <span class="k">for</span> <span class="n">meth</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;capture_repr&#39;</span><span class="p">]:</span>
+    <span class="k">for</span> <span class="n">meth</span> <span class="ow">in</span> <span class="n">capture_repr</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">last_repr</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">___</span><span class="p">,</span> <span class="n">meth</span><span class="p">)()</span>
             <span class="c1"># for case when last statement is print()</span>
@@ -745,7 +845,7 @@
 
 
 <span class="k">def</span> <span class="nf">_get_code_output</span><span class="p">(</span><span class="n">is_last_expr</span><span class="p">,</span> <span class="n">example_globals</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">logging_tee</span><span class="p">,</span>
-                     <span class="n">images_rst</span><span class="p">):</span>
+                     <span class="n">images_rst</span><span class="p">,</span> <span class="n">file_conf</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Obtain standard output and html output in rST.&quot;&quot;&quot;</span>
     <span class="n">last_repr</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">repr_meth</span> <span class="o">=</span> <span class="kc">None</span>
@@ -757,8 +857,10 @@
             <span class="n">ignore_repr</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
                 <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;ignore_repr_types&#39;</span><span class="p">],</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">___</span><span class="p">))</span>
             <span class="p">)</span>
-        <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;capture_repr&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">ignore_repr</span><span class="p">:</span>
-            <span class="n">last_repr</span><span class="p">,</span> <span class="n">repr_meth</span> <span class="o">=</span> <span class="n">_get_last_repr</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">___</span><span class="p">)</span>
+        <span class="n">capture_repr</span> <span class="o">=</span> <span class="n">file_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;capture_repr&#39;</span><span class="p">,</span>
+                                     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;capture_repr&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">capture_repr</span> <span class="o">!=</span> <span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">ignore_repr</span><span class="p">:</span>
+            <span class="n">last_repr</span><span class="p">,</span> <span class="n">repr_meth</span> <span class="o">=</span> <span class="n">_get_last_repr</span><span class="p">(</span><span class="n">capture_repr</span><span class="p">,</span> <span class="n">___</span><span class="p">)</span>
 
     <span class="n">captured_std</span> <span class="o">=</span> <span class="n">logging_tee</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span><span class="o">.</span><span class="n">expandtabs</span><span class="p">()</span>
     <span class="c1"># normal string output</span>
@@ -787,7 +889,7 @@
 
 
 <div class="viewcode-block" id="execute_code_block"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.execute_code_block">[docs]</a><span class="k">def</span> <span class="nf">execute_code_block</span><span class="p">(</span><span class="n">compiler</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">example_globals</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">,</span>
-                       <span class="n">gallery_conf</span><span class="p">):</span>
+                       <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">file_conf</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Execute the code block of the example file.</span>
 
 <span class="sd">    Parameters</span>
@@ -807,6 +909,10 @@
 
 <span class="sd">    gallery_conf : Dict[str, Any]</span>
 <span class="sd">        Gallery configurations.</span>
+
+<span class="sd">    file_conf : Dict[str, Any]</span>
+<span class="sd">        File-specific settings given in source file comments as:</span>
+<span class="sd">        ``# sphinx_gallery_&lt;name&gt; = &lt;value&gt;``.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -871,7 +977,7 @@
 
         <span class="n">code_output</span> <span class="o">=</span> <span class="n">_get_code_output</span><span class="p">(</span>
             <span class="n">is_last_expr</span><span class="p">,</span> <span class="n">example_globals</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">logging_tee</span><span class="p">,</span>
-            <span class="n">images_rst</span>
+            <span class="n">images_rst</span><span class="p">,</span> <span class="n">file_conf</span>
         <span class="p">)</span>
     <span class="k">finally</span><span class="p">:</span>
         <span class="n">_reset_cwd_syspath</span><span class="p">(</span><span class="n">cwd</span><span class="p">,</span> <span class="n">sys_path</span><span class="p">)</span>
@@ -912,7 +1018,7 @@
         <span class="s1">&#39;Cannot use input() builtin function in Sphinx-Gallery examples&#39;</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="execute_script"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.execute_script">[docs]</a><span class="k">def</span> <span class="nf">execute_script</span><span class="p">(</span><span class="n">script_blocks</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
+<div class="viewcode-block" id="execute_script"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.execute_script">[docs]</a><span class="k">def</span> <span class="nf">execute_script</span><span class="p">(</span><span class="n">script_blocks</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">file_conf</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Execute and capture output from python script already in block structure</span>
 
 <span class="sd">    Parameters</span>
@@ -925,6 +1031,9 @@
 <span class="sd">        Configuration and run time variables</span>
 <span class="sd">    gallery_conf : dict</span>
 <span class="sd">        Contains the configuration of Sphinx-Gallery</span>
+<span class="sd">    file_conf : dict</span>
+<span class="sd">        File-specific settings given in source file comments as:</span>
+<span class="sd">        ``# sphinx_gallery_&lt;name&gt; = &lt;value&gt;``</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -978,7 +1087,8 @@
         <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">script_blocks</span><span class="p">:</span>
             <span class="n">logging_tee</span><span class="o">.</span><span class="n">set_std_and_reset_position</span><span class="p">()</span>
             <span class="n">output_blocks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">execute_code_block</span><span class="p">(</span>
-                <span class="n">compiler</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">example_globals</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">))</span>
+                <span class="n">compiler</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">example_globals</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span>
+                <span class="n">file_conf</span><span class="p">))</span>
     <span class="n">time_elapsed</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t_start</span>
     <span class="n">sys</span><span class="o">.</span><span class="n">argv</span> <span class="o">=</span> <span class="n">argv_orig</span>
     <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;memory_delta&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;memory_delta&#39;</span><span class="p">])</span>
@@ -1060,7 +1170,8 @@
         <span class="n">clean_modules</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="s1">&#39;before&#39;</span><span class="p">)</span>
     <span class="n">output_blocks</span><span class="p">,</span> <span class="n">time_elapsed</span> <span class="o">=</span> <span class="n">execute_script</span><span class="p">(</span><span class="n">script_blocks</span><span class="p">,</span>
                                                  <span class="n">script_vars</span><span class="p">,</span>
-                                                 <span class="n">gallery_conf</span><span class="p">)</span>
+                                                 <span class="n">gallery_conf</span><span class="p">,</span>
+                                                 <span class="n">file_conf</span><span class="p">)</span>
 
     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> ran in : </span><span class="si">%.2g</span><span class="s2"> seconds</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">src_file</span><span class="p">,</span> <span class="n">time_elapsed</span><span class="p">)</span>
 
@@ -1084,6 +1195,11 @@
             <span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">remove_config_comments</span><span class="p">(</span><span class="n">content</span><span class="p">),</span> <span class="n">line_number</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">line_number</span> <span class="ow">in</span> <span class="n">script_blocks</span>
         <span class="p">]</span>
+
+    <span class="n">script_blocks</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">remove_ignore_blocks</span><span class="p">(</span><span class="n">content</span><span class="p">),</span> <span class="n">line_number</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">line_number</span> <span class="ow">in</span> <span class="n">script_blocks</span>
+    <span class="p">]</span>
 
     <span class="c1"># Remove final empty block, which can occur after config comments</span>
     <span class="c1"># are removed</span>
@@ -1118,14 +1234,23 @@
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">codeobj_fname</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
             <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">example_code_obj</span><span class="p">,</span> <span class="n">fid</span><span class="p">,</span> <span class="n">pickle</span><span class="o">.</span><span class="n">HIGHEST_PROTOCOL</span><span class="p">)</span>
         <span class="n">_replace_md5</span><span class="p">(</span><span class="n">codeobj_fname</span><span class="p">)</span>
-    <span class="n">backrefs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{module_short}</span><span class="s1">.</span><span class="si">{name}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">cobj</span><span class="p">)</span>
-                   <span class="k">for</span> <span class="n">cobjs</span> <span class="ow">in</span> <span class="n">example_code_obj</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
-                   <span class="k">for</span> <span class="n">cobj</span> <span class="ow">in</span> <span class="n">cobjs</span>
-                   <span class="k">if</span> <span class="n">cobj</span><span class="p">[</span><span class="s1">&#39;module&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;doc_module&#39;</span><span class="p">]))</span>
+    <span class="n">exclude_regex</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;exclude_implicit_doc_regex&#39;</span><span class="p">]</span>
+    <span class="n">backrefs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span>
+        <span class="s1">&#39;</span><span class="si">{module_short}</span><span class="s1">.</span><span class="si">{name}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">cobj</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">cobjs</span> <span class="ow">in</span> <span class="n">example_code_obj</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">cobj</span> <span class="ow">in</span> <span class="n">cobjs</span>
+        <span class="k">if</span> <span class="n">cobj</span><span class="p">[</span><span class="s1">&#39;module&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;doc_module&#39;</span><span class="p">])</span> <span class="ow">and</span> <span class="p">(</span>
+            <span class="n">cobj</span><span class="p">[</span><span class="s1">&#39;is_explicit&#39;</span><span class="p">]</span> <span class="ow">or</span>
+            <span class="p">(</span><span class="ow">not</span> <span class="n">exclude_regex</span><span class="p">)</span> <span class="ow">or</span>
+            <span class="p">(</span><span class="ow">not</span> <span class="n">exclude_regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{module}</span><span class="s1">.</span><span class="si">{name}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">cobj</span><span class="p">)))</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+
     <span class="c1"># Write backreferences</span>
     <span class="n">_write_backreferences</span><span class="p">(</span><span class="n">backrefs</span><span class="p">,</span> <span class="n">seen_backrefs</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span>
                           <span class="n">fname</span><span class="p">,</span> <span class="n">intro</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span>
 
+    <span class="k">del</span> <span class="n">script_vars</span><span class="p">,</span> <span class="n">global_variables</span>  <span class="c1"># don&#39;t keep these during reset</span>
     <span class="k">if</span> <span class="n">executable</span> <span class="ow">and</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;reset_modules_order&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;after&#39;</span><span class="p">,</span> <span class="s1">&#39;both&#39;</span><span class="p">]:</span>
         <span class="n">clean_modules</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="s1">&#39;after&#39;</span><span class="p">)</span>
 
@@ -1257,13 +1382,15 @@
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">binder_conf</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">binder_badge_rst</span> <span class="o">+=</span> <span class="n">gen_binder_rst</span><span class="p">(</span><span class="n">example_file</span><span class="p">,</span> <span class="n">binder_conf</span><span class="p">,</span>
                                            <span class="n">gallery_conf</span><span class="p">)</span>
+        <span class="n">binder_badge_rst</span> <span class="o">=</span> <span class="n">indent</span><span class="p">(</span><span class="n">binder_badge_rst</span><span class="p">,</span> <span class="s1">&#39;  &#39;</span><span class="p">)</span>  <span class="c1"># need an extra two</span>
 
     <span class="n">fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">example_file</span><span class="p">)</span>
     <span class="n">example_rst</span> <span class="o">+=</span> <span class="n">CODE_DOWNLOAD</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span>
                                         <span class="n">replace_py_ipynb</span><span class="p">(</span><span class="n">fname</span><span class="p">),</span>
                                         <span class="n">binder_badge_rst</span><span class="p">,</span>
                                         <span class="n">ref_fname</span><span class="p">)</span>
-    <span class="n">example_rst</span> <span class="o">+=</span> <span class="n">SPHX_GLR_SIG</span>
+    <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;show_signature&#39;</span><span class="p">]:</span>
+        <span class="n">example_rst</span> <span class="o">+=</span> <span class="n">SPHX_GLR_SIG</span>
 
     <span class="n">write_file_new</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\.py$&#39;</span><span class="p">,</span> <span class="s1">&#39;.rst.new&#39;</span><span class="p">,</span> <span class="n">example_file</span><span class="p">)</span>
     <span class="k">with</span> <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">write_file_new</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
@@ -1284,7 +1411,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2014-2021, Sphinx-gallery developers.</p>
+    <p>&#169; Copyright 2014-2022, Sphinx-gallery developers.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>sphinx_gallery.py_source_parser &mdash; Sphinx-Gallery 0.10.1-git documentation</title>
+  <title>sphinx_gallery.py_source_parser &mdash; Sphinx-Gallery 0.11.0-git documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/theme_override.css" type="text/css" />
@@ -19,6 +19,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -35,7 +36,7 @@
             <a href="../index.html" class="icon icon-home"> Sphinx-Gallery
           </a>
               <div class="version">
-                0.10.1
+                0.11.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -83,6 +84,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../auto_examples/index.html">Gallery of Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Notebook style example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../auto_mayavi_examples/index.html">Gallery of Examples using Mayavi</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_pyvista_examples/index.html">Gallery of Examples using PyVista</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API and developer reference</span></p>
 <ul class="current">
@@ -151,11 +153,11 @@
            <div itemprop="articleBody">
              
   <section id="module-sphinx_gallery.py_source_parser">
-<span id="sphinx-gallery-py-source-parser"></span><h1>sphinx_gallery.py_source_parser<a class="headerlink" href="#module-sphinx_gallery.py_source_parser" title="Permalink to this headline">¶</a></h1>
+<span id="sphinx-gallery-py-source-parser"></span><h1>sphinx_gallery.py_source_parser<a class="headerlink" href="#module-sphinx_gallery.py_source_parser" title="Permalink to this heading">¶</a></h1>
 <section id="parser-for-python-source-files">
-<h2>Parser for python source files<a class="headerlink" href="#parser-for-python-source-files" title="Permalink to this headline">¶</a></h2>
+<h2>Parser for python source files<a class="headerlink" href="#parser-for-python-source-files" title="Permalink to this heading">¶</a></h2>
 <section id="functions">
-<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h3>
+<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this heading">¶</a></h3>
 <dl class="py function">
 <dt class="sig sig-object py" id="sphinx_gallery.py_source_parser.extract_file_config">
 <span class="sig-prename descclassname"><span class="pre">sphinx_gallery.py_source_parser.</span></span><span class="sig-name descname"><span class="pre">extract_file_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sphinx_gallery/py_source_parser.html#extract_file_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sphinx_gallery.py_source_parser.extract_file_config" title="Permalink to this definition">¶</a></dt>
@@ -194,6 +196,20 @@ removed, but surrounding empty lines are preserved.</p>
 </dd></dl>
 
 <span class="target" id="sphx-glr-backref-sphinx-gallery-py-source-parser-remove-config-comments"></span><dl class="py function">
+<dt class="sig sig-object py" id="sphinx_gallery.py_source_parser.remove_ignore_blocks">
+<span class="sig-prename descclassname"><span class="pre">sphinx_gallery.py_source_parser.</span></span><span class="sig-name descname"><span class="pre">remove_ignore_blocks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code_block</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sphinx_gallery/py_source_parser.html#remove_ignore_blocks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sphinx_gallery.py_source_parser.remove_ignore_blocks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the content of <em>code_block</em> with ignored areas removed.</p>
+<p>An ignore block starts with # sphinx_gallery_begin_ignore, and ends with
+# sphinx_gallery_end_ignore. These lines and anything in between them will
+be removed, but surrounding empty lines are preserved.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>code_block</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – A code segment.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<span class="target" id="sphx-glr-backref-sphinx-gallery-py-source-parser-remove-ignore-blocks"></span><dl class="py function">
 <dt class="sig sig-object py" id="sphinx_gallery.py_source_parser.split_code_and_text_blocks">
 <span class="sig-prename descclassname"><span class="pre">sphinx_gallery.py_source_parser.</span></span><span class="sig-name descname"><span class="pre">split_code_and_text_blocks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_node</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sphinx_gallery/py_source_parser.html#split_code_and_text_blocks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sphinx_gallery.py_source_parser.split_code_and_text_blocks" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return list with source file separated into code and text blocks.</p>
@@ -219,14 +235,11 @@ the corresponding content string of block and the leading line number</p></li>
 </dd></dl>
 
 <section id="examples-using-sphinx-gallery-py-source-parser-split-code-and-text-blocks">
-<span id="sphx-glr-backref-sphinx-gallery-py-source-parser-split-code-and-text-blocks"></span><h4>Examples using <code class="docutils literal notranslate"><span class="pre">sphinx_gallery.py_source_parser.split_code_and_text_blocks</span></code><a class="headerlink" href="#examples-using-sphinx-gallery-py-source-parser-split-code-and-text-blocks" title="Permalink to this headline">¶</a></h4>
-<div class="sphx-glr-thumbcontainer" tooltip="This demonstrates how Sphinx-Gallery identifies function names to figure out which functions ar..."><figure class="align-default" id="id1">
-<img alt="Identifying function names in a script" src="../_images/sphx_glr_plot_6_function_identifier_thumb.png" />
-<figcaption>
-<p><span class="caption-text"><a class="reference internal" href="../auto_examples/plot_6_function_identifier.html#sphx-glr-auto-examples-plot-6-function-identifier-py"><span class="std std-ref">Identifying function names in a script</span></a></span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
-</figcaption>
-</figure>
-</div><div class="sphx-glr-clear"></div></section>
+<span id="sphx-glr-backref-sphinx-gallery-py-source-parser-split-code-and-text-blocks"></span><h4>Examples using <code class="docutils literal notranslate"><span class="pre">sphinx_gallery.py_source_parser.split_code_and_text_blocks</span></code><a class="headerlink" href="#examples-using-sphinx-gallery-py-source-parser-split-code-and-text-blocks" title="Permalink to this heading">¶</a></h4>
+<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="This demonstrates how Sphinx-Gallery identifies when"><img alt="Identifying function names in a script" src="../_images/sphx_glr_plot_6_function_identifier_thumb.png" />
+<p><a class="reference internal" href="../auto_examples/plot_6_function_identifier.html#sphx-glr-auto-examples-plot-6-function-identifier-py"><span class="std std-ref">Identifying function names in a script</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Identifying function names in a script</div>
+</div></div></div></section>
 </section>
 </section>
 </section>
@@ -242,7 +255,7 @@ the corresponding content string of block and the leading line number</p></li>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2014-2021, Sphinx-gallery developers.</p>
+    <p>&#169; Copyright 2014-2022, Sphinx-gallery developers.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

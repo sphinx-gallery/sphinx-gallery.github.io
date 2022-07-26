@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>sphinx_gallery.directives &mdash; Sphinx-Gallery 0.10.1-git documentation</title>
+  <title>sphinx_gallery.directives &mdash; Sphinx-Gallery 0.11.0-git documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/theme_override.css" type="text/css" />
@@ -18,6 +18,7 @@
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -32,7 +33,7 @@
             <a href="../../index.html" class="icon icon-home"> Sphinx-Gallery
           </a>
               <div class="version">
-                0.10.1
+                0.11.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -80,6 +81,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html">Gallery of Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Notebook style example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../auto_mayavi_examples/index.html">Gallery of Examples using Mayavi</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_pyvista_examples/index.html">Gallery of Examples using PyVista</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API and developer reference</span></p>
 <ul>
@@ -142,6 +144,21 @@
 <span class="kn">from</span> <span class="nn">sphinx.errors</span> <span class="kn">import</span> <span class="n">ExtensionError</span>
 
 
+<span class="n">THUMBNAIL_PARENT_DIV</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">.. raw:: html</span>
+
+<span class="s2">    &lt;div class=&quot;sphx-glr-thumbnails&quot;&gt;</span>
+
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">THUMBNAIL_PARENT_DIV_CLOSE</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">.. raw:: html</span>
+
+<span class="s2">    &lt;/div&gt;</span>
+
+<span class="s2">&quot;&quot;&quot;</span>
+
+
 <div class="viewcode-block" id="MiniGallery"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.directives.html#sphinx_gallery.directives.MiniGallery">[docs]</a><span class="k">class</span> <span class="nc">MiniGallery</span><span class="p">(</span><span class="n">Directive</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Custom directive to insert a mini-gallery</span>
@@ -200,6 +217,10 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">has_backrefs</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">obj_list</span><span class="p">):</span>
             <span class="k">return</span> <span class="p">[]</span>
 
+        <span class="c1"># Add div containing all thumbnails;</span>
+        <span class="c1"># this is helpful for controlling grid or flexbox behaviours</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">THUMBNAIL_PARENT_DIV</span><span class="p">)</span>
+
         <span class="c1"># Insert the backreferences file(s) using the `include` directive</span>
         <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">obj_list</span><span class="p">:</span>
             <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span>  <span class="c1"># Sphinx treats this as the source dir</span>
@@ -209,8 +230,8 @@
             <span class="c1"># Always remove the heading (first 5 lines) from the file</span>
             <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;.. include:: </span><span class="si">{}</span><span class="se">\n</span><span class="s1">    :start-line: 5&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
 
-        <span class="c1"># Insert the end for the gallery using the `raw` directive</span>
-        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;.. raw:: html</span><span class="se">\n\n</span><span class="s1">    &lt;div class=&quot;sphx-glr-clear&quot;&gt;&lt;/div&gt;&#39;</span><span class="p">)</span>
+        <span class="c1"># Close thumbnail parent div</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">THUMBNAIL_PARENT_DIV_CLOSE</span><span class="p">)</span>
 
         <span class="c1"># Parse the assembly of `include` and `raw` directives</span>
         <span class="n">text</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
@@ -425,7 +446,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2014-2021, Sphinx-gallery developers.</p>
+    <p>&#169; Copyright 2014-2022, Sphinx-gallery developers.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

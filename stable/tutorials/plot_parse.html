@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Alternating text and code &mdash; Sphinx-Gallery 0.10.1-git documentation</title>
+  <title>Alternating text and code &mdash; Sphinx-Gallery 0.11.0-git documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/theme_override.css" type="text/css" />
@@ -19,6 +19,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -35,7 +36,7 @@
             <a href="../index.html" class="icon icon-home"> Sphinx-Gallery
           </a>
               <div class="version">
-                0.10.1
+                0.11.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -89,6 +90,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../auto_mayavi_examples/index.html">Gallery of Examples using Mayavi</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_pyvista_examples/index.html">Gallery of Examples using PyVista</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API and developer reference</span></p>
 <ul>
@@ -140,7 +142,7 @@
 to download the full example code or to run this example in your browser via Binder</p>
 </div>
 <section class="sphx-glr-example-title" id="alternating-text-and-code">
-<span id="sphx-glr-tutorials-plot-parse-py"></span><h1>Alternating text and code<a class="headerlink" href="#alternating-text-and-code" title="Permalink to this headline">¶</a></h1>
+<span id="sphx-glr-tutorials-plot-parse-py"></span><h1>Alternating text and code<a class="headerlink" href="#alternating-text-and-code" title="Permalink to this heading">¶</a></h1>
 <p>Sphinx-Gallery is capable of transforming Python files into rST files
 with a notebook structure. For this to be used you need to respect some syntax
 rules. This example demonstrates how to alternate text and code blocks and some
@@ -197,7 +199,6 @@ above) and become too hard to escape so just don’t use code like this:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Free strings are not supported. They will be rendered as a code block&quot;&quot;&quot;</span>
 </pre></div>
 </div>
-<p class="sphx-glr-script-out">Out:</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&#39;Free strings are not supported. They will be rendered as a code block&#39;
 </pre></div>
 </div>
@@ -207,11 +208,10 @@ Everything after a block splitter and starting with <code class="docutils litera
 is interpreted by Sphinx-Gallery to be a rST text block. Keep your text
 block together using <code class="docutils literal notranslate"><span class="pre">#</span></code> and a space at the beginning of each line.</p>
 <section id="rst-header-within-text-block">
-<h2>rST header within text block<a class="headerlink" href="#rst-header-within-text-block" title="Permalink to this headline">¶</a></h2>
+<h2>rST header within text block<a class="headerlink" href="#rst-header-within-text-block" title="Permalink to this heading">¶</a></h2>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;one&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-script-out">Out:</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>one
 </pre></div>
 </div>
@@ -219,6 +219,13 @@ block together using <code class="docutils literal notranslate"><span class="pre
 <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">B</span></a> <span class="o">=</span> <span class="mi">1</span>
 </pre></div>
 </div>
+<dl>
+<dt>Code blocks containing Jupyter magic are executable</dt><dd><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>%%bash
+<span class="c1"># This could be run!</span>
+</pre></div>
+</div>
+</dd>
+</dl>
 <p>Last text block.</p>
 <p>That’s all folks !</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># -*- coding: utf-8 -*-</span>
@@ -311,6 +318,14 @@ block together using <code class="docutils literal notranslate"><span class="pre
 <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">B</span></a> <span class="o">=</span> <span class="mi">1</span>
 
 <span class="c1"># %%</span>
+<span class="c1"># Code blocks containing Jupyter magic are executable</span>
+<span class="c1">#     .. code-block:: bash</span>
+<span class="c1">#</span>
+<span class="c1">#       %%bash</span>
+<span class="c1">#       # This could be run!</span>
+<span class="c1">#</span>
+
+<span class="c1"># %%</span>
 <span class="c1"># Last text block.</span>
 <span class="c1">#</span>
 <span class="c1"># That&#39;s all folks !</span>
@@ -320,11 +335,11 @@ block together using <code class="docutils literal notranslate"><span class="pre
 <span class="c1">#</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.835 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.183 seconds)</p>
 <p><strong>Estimated memory usage:</strong>  8 MB</p>
-<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-plot-parse-py">
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-plot-parse-py">
 <div class="binder-badge docutils container">
-<a class="reference external image-reference" href="https://mybinder.org/v2/gh/sphinx-gallery/sphinx-gallery.github.io/master?urlpath=lab/tree/notebooks/tutorials/plot_parse.ipynb"><img alt="Launch binder" src="../_images/binder_badge_logo3.svg" width="150px" /></a>
+<a class="reference external image-reference" href="https://mybinder.org/v2/gh/sphinx-gallery/sphinx-gallery.github.io/master?urlpath=lab/tree/notebooks/tutorials/plot_parse.ipynb"><img alt="Launch binder" src="../_images/binder_badge_logo4.svg" width="150px" /></a>
 </div>
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/1159cf66576090dda850c8b297cae11c/plot_parse.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_parse.py</span></code></a></p>
@@ -348,7 +363,7 @@ block together using <code class="docutils literal notranslate"><span class="pre
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2014-2021, Sphinx-gallery developers.</p>
+    <p>&#169; Copyright 2014-2022, Sphinx-gallery developers.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

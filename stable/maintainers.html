@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Maintaining Sphinx Gallery &mdash; Sphinx-Gallery 0.10.1-git documentation</title>
+  <title>Maintaining Sphinx Gallery &mdash; Sphinx-Gallery 0.11.0-git documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/theme_override.css" type="text/css" />
@@ -19,6 +19,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -33,7 +34,7 @@
             <a href="index.html" class="icon icon-home"> Sphinx-Gallery
           </a>
               <div class="version">
-                0.10.1
+                0.11.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -81,6 +82,7 @@
 <li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html">Gallery of Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">Notebook style example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="auto_mayavi_examples/index.html">Gallery of Examples using Mayavi</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_pyvista_examples/index.html">Gallery of Examples using PyVista</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API and developer reference</span></p>
 <ul>
@@ -125,7 +127,7 @@
            <div itemprop="articleBody">
              
   <section id="maintaining-sphinx-gallery">
-<h1>Maintaining Sphinx Gallery<a class="headerlink" href="#maintaining-sphinx-gallery" title="Permalink to this headline">¶</a></h1>
+<h1>Maintaining Sphinx Gallery<a class="headerlink" href="#maintaining-sphinx-gallery" title="Permalink to this heading">¶</a></h1>
 <p>This document contains tips for maintenance.</p>
 <div class="contents local topic" id="contents">
 <ul class="simple">
@@ -139,9 +141,9 @@
 </ul>
 </div>
 <section id="how-to-make-a-release">
-<h2><a class="toc-backref" href="#id2">How to make a release</a><a class="headerlink" href="#how-to-make-a-release" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id2">How to make a release</a><a class="headerlink" href="#how-to-make-a-release" title="Permalink to this heading">¶</a></h2>
 <section id="check-credentials-and-prerequisites">
-<h3><a class="toc-backref" href="#id3">Check credentials and prerequisites</a><a class="headerlink" href="#check-credentials-and-prerequisites" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id3">Check credentials and prerequisites</a><a class="headerlink" href="#check-credentials-and-prerequisites" title="Permalink to this heading">¶</a></h3>
 <p>Sphinx Gallery is <a class="reference external" href="https://pypi.org/project/sphinx-gallery/">hosted on the pypi repository</a>.
 To create a new release of Sphinx Gallery, you need to do these things:
 You should double-check a few things to make sure that you can create
@@ -159,7 +161,7 @@ bundle and push new Python package distributions to pip.</p></li>
 </ol>
 </section>
 <section id="prepare-for-release">
-<h3><a class="toc-backref" href="#id4">Prepare for release</a><a class="headerlink" href="#prepare-for-release" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id4">Prepare for release</a><a class="headerlink" href="#prepare-for-release" title="Permalink to this heading">¶</a></h3>
 <ol class="arabic">
 <li><p>Update <code class="docutils literal notranslate"><span class="pre">CHANGES.rst</span></code></p>
 <blockquote>
@@ -218,23 +220,25 @@ Get somebody else to make sure all looks well, and merge this pull request.</p>
 </ol>
 </section>
 <section id="finalize-the-release">
-<h3><a class="toc-backref" href="#id5">Finalize the release</a><a class="headerlink" href="#finalize-the-release" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id5">Finalize the release</a><a class="headerlink" href="#finalize-the-release" title="Permalink to this heading">¶</a></h3>
 <ol class="arabic">
 <li><p>Create the new release on PyPI</p>
 <ul>
-<li><p>Build a source distribution:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python setup.py sdist</span>
+<li><p>Build a source distribution and an <code class="docutils literal notranslate"><span class="pre">any</span></code> wheel:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">git clean -xdf</span>
+<span class="go">python setup.py sdist bdist_wheel</span>
 </pre></div>
 </div>
 </li>
 <li><p>Check the release:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">twine check dist/sphinx-gallery-&lt;version&gt;.tar.gz</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">twine check dist/sphinx-gallery-&lt;version&gt;.*</span>
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">&lt;version&gt;</span></code> should be the release version, e.g., <code class="docutils literal notranslate"><span class="pre">0.7.0</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">&lt;version&gt;</span></code> should be the release version, e.g., <code class="docutils literal notranslate"><span class="pre">0.7.0</span></code>, and it
+should check both the source distribution and the wheel.</p>
 </li>
 <li><p>Upload to PyPI:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">twine upload dist/sphinx-gallery-&lt;version&gt;.tar.gz</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">twine upload dist/*</span>
 </pre></div>
 </div>
 <p>Again, <code class="docutils literal notranslate"><span class="pre">&lt;version&gt;</span></code> should be the release version, e.g., <code class="docutils literal notranslate"><span class="pre">0.7.0</span></code>.</p>
@@ -270,7 +274,7 @@ to the next minor (or major) release and append <code class="docutils literal no
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2014-2021, Sphinx-gallery developers.</p>
+    <p>&#169; Copyright 2014-2022, Sphinx-gallery developers.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

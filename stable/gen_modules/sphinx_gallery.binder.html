@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>sphinx_gallery.binder &mdash; Sphinx-Gallery 0.10.1-git documentation</title>
+  <title>sphinx_gallery.binder &mdash; Sphinx-Gallery 0.11.0-git documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/theme_override.css" type="text/css" />
@@ -19,6 +19,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -35,7 +36,7 @@
             <a href="../index.html" class="icon icon-home"> Sphinx-Gallery
           </a>
               <div class="version">
-                0.10.1
+                0.11.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -83,6 +84,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../auto_examples/index.html">Gallery of Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Notebook style example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../auto_mayavi_examples/index.html">Gallery of Examples using Mayavi</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_pyvista_examples/index.html">Gallery of Examples using PyVista</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API and developer reference</span></p>
 <ul class="current">
@@ -151,9 +153,9 @@
            <div itemprop="articleBody">
              
   <section id="module-sphinx_gallery.binder">
-<span id="sphinx-gallery-binder"></span><h1>sphinx_gallery.binder<a class="headerlink" href="#module-sphinx_gallery.binder" title="Permalink to this headline">¶</a></h1>
+<span id="sphinx-gallery-binder"></span><h1>sphinx_gallery.binder<a class="headerlink" href="#module-sphinx_gallery.binder" title="Permalink to this heading">¶</a></h1>
 <section id="binder-utility-functions">
-<h2>Binder utility functions<a class="headerlink" href="#binder-utility-functions" title="Permalink to this headline">¶</a></h2>
+<h2>Binder utility functions<a class="headerlink" href="#binder-utility-functions" title="Permalink to this heading">¶</a></h2>
 <p>Integration with Binder is on an experimental stage. Note that this API may
 change in the future.</p>
 <div class="admonition warning">
@@ -162,7 +164,7 @@ change in the future.</p>
 experience of users who click Binder links.</p>
 </div>
 <section id="functions">
-<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h3>
+<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this heading">¶</a></h3>
 <dl class="py function">
 <dt class="sig sig-object py" id="sphinx_gallery.binder.check_binder_conf">
 <span class="sig-prename descclassname"><span class="pre">sphinx_gallery.binder.</span></span><span class="sig-name descname"><span class="pre">check_binder_conf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">binder_conf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sphinx_gallery/binder.html#check_binder_conf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sphinx_gallery.binder.check_binder_conf" title="Permalink to this definition">¶</a></dt>
@@ -183,7 +185,7 @@ experience of users who click Binder links.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>fpath</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The path to the <cite>.py</cite> file for which a Binder badge will be generated.</p></li>
-<li><p><strong>binder_conf</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><em>None</em></a>) – <p>If a dictionary it must have the following keys:</p>
+<li><p><strong>binder_conf</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em> or </em><em>None</em>) – <p>If a dictionary it must have the following keys:</p>
 <dl class="simple">
 <dt>’binderhub_url’</dt><dd><p>The URL of the BinderHub instance that’s running a Binder service.</p>
 </dd>
@@ -217,7 +219,7 @@ experience of users who click Binder links.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>fpath</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The path to the <cite>.py</cite> file for which a Binder badge will be generated.</p></li>
-<li><p><strong>binder_conf</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><em>None</em></a>) – The Binder configuration dictionary. See <cite>gen_binder_rst</cite> for details.</p></li>
+<li><p><strong>binder_conf</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em> or </em><em>None</em>) – The Binder configuration dictionary. See <cite>gen_binder_rst</cite> for details.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -245,7 +247,7 @@ environment.</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2014-2021, Sphinx-gallery developers.</p>
+    <p>&#169; Copyright 2014-2022, Sphinx-gallery developers.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

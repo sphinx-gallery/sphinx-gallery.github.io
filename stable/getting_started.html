@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Getting Started with Sphinx-Gallery &mdash; Sphinx-Gallery 0.10.1-git documentation</title>
+  <title>Getting Started with Sphinx-Gallery &mdash; Sphinx-Gallery 0.11.0-git documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/theme_override.css" type="text/css" />
@@ -19,6 +19,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -35,7 +36,7 @@
             <a href="index.html" class="icon icon-home"> Sphinx-Gallery
           </a>
               <div class="version">
-                0.10.1
+                0.11.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -93,6 +94,7 @@
 <li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html">Gallery of Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">Notebook style example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="auto_mayavi_examples/index.html">Gallery of Examples using Mayavi</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_pyvista_examples/index.html">Gallery of Examples using PyVista</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API and developer reference</span></p>
 <ul>
@@ -137,9 +139,9 @@
            <div itemprop="articleBody">
              
   <section id="getting-started-with-sphinx-gallery">
-<h1>Getting Started with Sphinx-Gallery<a class="headerlink" href="#getting-started-with-sphinx-gallery" title="Permalink to this headline">¶</a></h1>
+<h1>Getting Started with Sphinx-Gallery<a class="headerlink" href="#getting-started-with-sphinx-gallery" title="Permalink to this heading">¶</a></h1>
 <section id="creating-a-basic-gallery">
-<span id="create-simple-gallery"></span><h2>Creating a basic Gallery<a class="headerlink" href="#creating-a-basic-gallery" title="Permalink to this headline">¶</a></h2>
+<span id="create-simple-gallery"></span><h2>Creating a basic Gallery<a class="headerlink" href="#creating-a-basic-gallery" title="Permalink to this heading">¶</a></h2>
 <p>This section describes how to set up a basic gallery for your examples
 using the Sphinx extension Sphinx-Gallery, which will do the following:</p>
 <ul class="simple">
@@ -154,8 +156,16 @@ download.</p></li>
 <p>A <a class="reference external" href="https://github.com/sphinx-gallery/sample-project">template repository</a>,
 with sample example galleries and basic configurations is also available to
 help you get started.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Working <a class="reference external" href="https://www.sphinx-doc.org/en/master/man/sphinx-build.html#options">sphinx
+builders</a>
+for sphinx_gallery include <cite>html</cite> and <cite>latex</cite>. Support for other builders
+is not guaranteed (e.g., <cite>dirhtml</cite> is known to be broken and will cause
+broken image links.).</p>
+</div>
 <section id="overview-your-project-files-and-folders">
-<span id="set-up-your-project"></span><h3>Overview your project files and folders<a class="headerlink" href="#overview-your-project-files-and-folders" title="Permalink to this headline">¶</a></h3>
+<span id="set-up-your-project"></span><h3>Overview your project files and folders<a class="headerlink" href="#overview-your-project-files-and-folders" title="Permalink to this heading">¶</a></h3>
 <p>This section describes the general files and structure needed for Sphinx-Gallery
 to build your examples.</p>
 <p>Let’s say your Python project has the following structure:</p>
@@ -191,7 +201,7 @@ creating a website for a Python tutorial.</p></li>
 which we’ll cover next.</p>
 </section>
 <section id="structure-the-examples-folder">
-<h3>Structure the examples folder<a class="headerlink" href="#structure-the-examples-folder" title="Permalink to this headline">¶</a></h3>
+<h3>Structure the examples folder<a class="headerlink" href="#structure-the-examples-folder" title="Permalink to this heading">¶</a></h3>
 <p>In order for Sphinx-Gallery to build a gallery from your <code class="docutils literal notranslate"><span class="pre">examples</span></code> folder,
 this folder must have the following things:</p>
 <ul>
@@ -235,7 +245,7 @@ example Python scripts as it is used as an internal Sphinx-Gallery variable.</p>
 </div>
 </section>
 <section id="configure-and-use-sphinx-gallery">
-<span id="id1"></span><h3>Configure and use Sphinx-Gallery<a class="headerlink" href="#configure-and-use-sphinx-gallery" title="Permalink to this headline">¶</a></h3>
+<span id="id1"></span><h3>Configure and use Sphinx-Gallery<a class="headerlink" href="#configure-and-use-sphinx-gallery" title="Permalink to this heading">¶</a></h3>
 <p>After Sphinx-Gallery is installed, we must enable and configure it to build
 with Sphinx.</p>
 <p>First, enable Sphinx-Gallery in the Sphinx <code class="docutils literal notranslate"><span class="pre">doc/conf.py</span></code> file with:</p>
@@ -295,13 +305,13 @@ they belong (more details in
 <p>For more advanced configuration, see the <a class="reference internal" href="configuration.html#configuration"><span class="std std-ref">Configuration</span></a> page.</p>
 </section>
 <section id="add-your-gallery-to-the-documentation">
-<h3>Add your gallery to the documentation<a class="headerlink" href="#add-your-gallery-to-the-documentation" title="Permalink to this headline">¶</a></h3>
+<h3>Add your gallery to the documentation<a class="headerlink" href="#add-your-gallery-to-the-documentation" title="Permalink to this heading">¶</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">index.rst</span></code> file generated for your gallery can be added to the table of
 contents tree in the main Sphinx <code class="docutils literal notranslate"><span class="pre">doc/index.rst</span></code> file  or embedded in a
 Sphinx source <code class="docutils literal notranslate"><span class="pre">.rst</span></code> file with an <code class="docutils literal notranslate"><span class="pre">..</span> <span class="pre">include::</span></code> statement.</p>
 </section>
 <section id="build-the-documentation">
-<h3>Build the documentation<a class="headerlink" href="#build-the-documentation" title="Permalink to this headline">¶</a></h3>
+<h3>Build the documentation<a class="headerlink" href="#build-the-documentation" title="Permalink to this heading">¶</a></h3>
 <p>In your Sphinx source directory, (e.g., <code class="docutils literal notranslate"><span class="pre">myproject/doc</span></code>) execute:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ make html
 </pre></div>
@@ -335,7 +345,7 @@ for this is mostly untested and results may vary.</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2014-2021, Sphinx-gallery developers.</p>
+    <p>&#169; Copyright 2014-2022, Sphinx-gallery developers.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

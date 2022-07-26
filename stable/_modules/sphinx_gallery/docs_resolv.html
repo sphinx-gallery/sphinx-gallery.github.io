@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>sphinx_gallery.docs_resolv &mdash; Sphinx-Gallery 0.10.1-git documentation</title>
+  <title>sphinx_gallery.docs_resolv &mdash; Sphinx-Gallery 0.11.0-git documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/theme_override.css" type="text/css" />
@@ -18,6 +18,7 @@
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -32,7 +33,7 @@
             <a href="../../index.html" class="icon icon-home"> Sphinx-Gallery
           </a>
               <div class="version">
-                0.10.1
+                0.11.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -80,6 +81,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html">Gallery of Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Notebook style example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../auto_mayavi_examples/index.html">Gallery of Examples using Mayavi</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_pyvista_examples/index.html">Gallery of Examples using PyVista</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API and developer reference</span></p>
 <ul>
@@ -264,7 +266,8 @@
 <span class="sd">        package).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">doc_url</span><span class="p">,</span> <span class="n">gallery_dir</span><span class="p">,</span> <span class="n">relative</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">doc_url</span><span class="p">,</span> <span class="n">gallery_dir</span><span class="p">,</span> <span class="n">relative</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">doc_url</span> <span class="o">=</span> <span class="n">doc_url</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gallery_dir</span> <span class="o">=</span> <span class="n">gallery_dir</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">relative</span> <span class="o">=</span> <span class="n">relative</span>
@@ -277,7 +280,7 @@
                     <span class="s1">&#39;URLs (doc_url cannot be absolute)&#39;</span><span class="p">)</span>
             <span class="n">index_url</span> <span class="o">=</span> <span class="n">doc_url</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span>
             <span class="n">searchindex_url</span> <span class="o">=</span> <span class="n">doc_url</span> <span class="o">+</span> <span class="s1">&#39;/searchindex.js&#39;</span>
-            <span class="n">docopts_url</span> <span class="o">=</span> <span class="n">doc_url</span> <span class="o">+</span> <span class="s1">&#39;_static/documentation_options.js&#39;</span>
+            <span class="n">docopts_url</span> <span class="o">=</span> <span class="n">doc_url</span> <span class="o">+</span> <span class="s1">&#39;/_static/documentation_options.js&#39;</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">index_url</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">doc_url</span><span class="p">,</span> <span class="s1">&#39;index.html&#39;</span><span class="p">)</span>
             <span class="n">searchindex_url</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">doc_url</span><span class="p">,</span> <span class="s1">&#39;searchindex.js&#39;</span><span class="p">)</span>
@@ -336,9 +339,12 @@
                     <span class="k">return</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="n">match</span>
 
-    <span class="k">def</span> <span class="nf">_get_link_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cobj</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_get_link_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cobj</span><span class="p">,</span> <span class="n">use_full_module</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get a valid link and type_, False if not found.&quot;&quot;&quot;</span>
-        <span class="n">first</span><span class="p">,</span> <span class="n">second</span> <span class="o">=</span> <span class="n">cobj</span><span class="p">[</span><span class="s1">&#39;module_short&#39;</span><span class="p">],</span> <span class="n">cobj</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+        <span class="n">module_type</span> <span class="o">=</span> <span class="s1">&#39;module_short&#39;</span>
+        <span class="k">if</span> <span class="n">use_full_module</span><span class="p">:</span>
+            <span class="n">module_type</span> <span class="o">=</span> <span class="s1">&#39;module&#39;</span>
+        <span class="n">first</span><span class="p">,</span> <span class="n">second</span> <span class="o">=</span> <span class="n">cobj</span><span class="p">[</span><span class="n">module_type</span><span class="p">],</span> <span class="n">cobj</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
         <span class="n">match</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_index_match</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s1">&#39;.&#39;</span> <span class="ow">in</span> <span class="n">second</span><span class="p">:</span>  <span class="c1"># possible class attribute</span>
             <span class="n">first</span><span class="p">,</span> <span class="n">second</span> <span class="o">=</span> <span class="n">second</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
@@ -401,7 +407,13 @@
         <span class="n">full_name</span> <span class="o">=</span> <span class="n">cobj</span><span class="p">[</span><span class="s1">&#39;module_short&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="n">cobj</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">full_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_link_cache</span><span class="p">:</span>
             <span class="c1"># we don&#39;t have it cached</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_link_cache</span><span class="p">[</span><span class="n">full_name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_link_type</span><span class="p">(</span><span class="n">cobj</span><span class="p">)</span>
+            <span class="n">use_full_module</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;prefer_full_module&#39;</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">full_name</span><span class="p">):</span>
+                    <span class="n">use_full_module</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">break</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_link_cache</span><span class="p">[</span><span class="n">full_name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_link_type</span><span class="p">(</span>
+                <span class="n">cobj</span><span class="p">,</span> <span class="n">use_full_module</span><span class="p">)</span>
         <span class="n">link</span><span class="p">,</span> <span class="n">type_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_link_cache</span><span class="p">[</span><span class="n">full_name</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">relative</span> <span class="ow">and</span> <span class="n">link</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -440,9 +452,11 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">url</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">doc_resolvers</span><span class="p">[</span><span class="n">this_module</span><span class="p">]</span> <span class="o">=</span> <span class="n">SphinxDocLinkResolver</span><span class="p">(</span>
+                    <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">,</span>
                     <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">outdir</span><span class="p">,</span> <span class="n">src_gallery_dir</span><span class="p">,</span> <span class="n">relative</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">doc_resolvers</span><span class="p">[</span><span class="n">this_module</span><span class="p">]</span> <span class="o">=</span> <span class="n">SphinxDocLinkResolver</span><span class="p">(</span>
+                    <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">,</span>
                     <span class="n">url</span><span class="p">,</span> <span class="n">src_gallery_dir</span><span class="p">)</span>
 
         <span class="k">except</span> <span class="p">(</span><span class="n">URLError</span><span class="p">,</span> <span class="n">HTTPError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
@@ -484,7 +498,7 @@
         <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">example_code_obj</span><span class="p">):</span>
             <span class="n">cobjs</span> <span class="o">=</span> <span class="n">example_code_obj</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
             <span class="c1"># possible names from identify_names, which in turn gets</span>
-            <span class="c1"># possibilites from NameFinder.get_mapping</span>
+            <span class="c1"># possibilities from NameFinder.get_mapping</span>
             <span class="n">link</span> <span class="o">=</span> <span class="n">type_</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="k">for</span> <span class="n">cobj</span> <span class="ow">in</span> <span class="n">cobjs</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">modname</span> <span class="ow">in</span> <span class="p">(</span><span class="n">cobj</span><span class="p">[</span><span class="s1">&#39;module_short&#39;</span><span class="p">],</span> <span class="n">cobj</span><span class="p">[</span><span class="s1">&#39;module&#39;</span><span class="p">]):</span>
@@ -594,7 +608,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2014-2021, Sphinx-gallery developers.</p>
+    <p>&#169; Copyright 2014-2022, Sphinx-gallery developers.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

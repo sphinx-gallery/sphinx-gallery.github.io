@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>sphinx_gallery.scrapers &mdash; Sphinx-Gallery 0.10.1-git documentation</title>
+  <title>sphinx_gallery.scrapers &mdash; Sphinx-Gallery 0.11.0-git documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/theme_override.css" type="text/css" />
@@ -19,6 +19,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -35,7 +36,7 @@
             <a href="../index.html" class="icon icon-home"> Sphinx-Gallery
           </a>
               <div class="version">
-                0.10.1
+                0.11.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -83,6 +84,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../auto_examples/index.html">Gallery of Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Notebook style example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../auto_mayavi_examples/index.html">Gallery of Examples using Mayavi</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_pyvista_examples/index.html">Gallery of Examples using PyVista</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API and developer reference</span></p>
 <ul class="current">
@@ -152,16 +154,16 @@
            <div itemprop="articleBody">
              
   <section id="module-sphinx_gallery.scrapers">
-<span id="sphinx-gallery-scrapers"></span><h1>sphinx_gallery.scrapers<a class="headerlink" href="#module-sphinx_gallery.scrapers" title="Permalink to this headline">¶</a></h1>
+<span id="sphinx-gallery-scrapers"></span><h1>sphinx_gallery.scrapers<a class="headerlink" href="#module-sphinx_gallery.scrapers" title="Permalink to this heading">¶</a></h1>
 <section id="scrapers-for-embedding-images">
-<h2>Scrapers for embedding images<a class="headerlink" href="#scrapers-for-embedding-images" title="Permalink to this headline">¶</a></h2>
+<h2>Scrapers for embedding images<a class="headerlink" href="#scrapers-for-embedding-images" title="Permalink to this heading">¶</a></h2>
 <p>Collect images that have been produced by code blocks.</p>
 <p>The only scrapers we support are Matplotlib and Mayavi, others should
 live in modules that will support them (e.g., PyVista, Plotly).  Scraped
 images are injected as rst <code class="docutils literal notranslate"><span class="pre">image-sg</span></code> directives into the <code class="docutils literal notranslate"><span class="pre">.rst</span></code>
 file generated for each example script.</p>
 <section id="functions">
-<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h3>
+<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this heading">¶</a></h3>
 <dl class="py function">
 <dt class="sig sig-object py" id="sphinx_gallery.scrapers.clean_modules">
 <span class="sig-prename descclassname"><span class="pre">sphinx_gallery.scrapers.</span></span><span class="sig-name descname"><span class="pre">clean_modules</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gallery_conf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">when</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sphinx_gallery/scrapers.html#clean_modules"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sphinx_gallery.scrapers.clean_modules" title="Permalink to this definition">¶</a></dt>
@@ -172,7 +174,7 @@ does not want to influence in other examples in the gallery.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>gallery_conf</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – The gallery configuration.</p></li>
-<li><p><strong>fname</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><em>None</em></a>) – The example being run. Will be None when this is called entering
+<li><p><strong>fname</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> or </em><em>None</em>) – The example being run. Will be None when this is called entering
 a directory of examples to be built.</p></li>
 <li><p><strong>when</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – <p>Whether this module is run before or after examples.</p>
 <p>This parameter is only forwarded when the callables accept 3
@@ -196,7 +198,7 @@ single rst call to ‘image’ or a horizontal list.</p>
 <li><p><strong>sources_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – absolute path of Sphinx documentation sources</p></li>
 <li><p><strong>fig_titles</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Titles of figures, empty string if no titles found. Currently
 only supported for matplotlib figures, default = ‘’.</p></li>
-<li><p><strong>srcsetpaths</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><em>None</em></a>) – List of dictionaries containing absolute paths.  If
+<li><p><strong>srcsetpaths</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em> or </em><em>None</em>) – List of dictionaries containing absolute paths.  If
 empty, then srcset field is populated with the figure path.
 (see <code class="docutils literal notranslate"><span class="pre">image_srcset</span></code> configuration option).  Otherwise,
 each dict is of the form
@@ -228,7 +230,7 @@ the path to the image created above.</p></li>
 <li><p><strong>block_vars</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Dict of block variables.</p></li>
 <li><p><strong>gallery_conf</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Contains the configuration of Sphinx-Gallery</p></li>
 <li><p><strong>**kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Additional keyword arguments to pass to
-<a class="reference external" href="https://matplotlib.org/api/figure_api.html#matplotlib.figure.Figure.savefig" title="(in Matplotlib v3.4.3)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">savefig()</span></code></a>, e.g. <code class="docutils literal notranslate"><span class="pre">format='svg'</span></code>.
+<a class="reference external" href="https://matplotlib.org/stable/api/figure_api.html#matplotlib.figure.Figure.savefig" title="(in Matplotlib v3.5.2)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">savefig()</span></code></a>, e.g. <code class="docutils literal notranslate"><span class="pre">format='svg'</span></code>.
 The <code class="docutils literal notranslate"><span class="pre">format</span></code> kwarg in particular is used to set the file extension
 of the output file (currently only ‘png’, ‘jpg’, and ‘svg’ are
 supported).</p></li>
@@ -289,7 +291,7 @@ the images. This is often produced by <a class="reference internal" href="#sphin
 
 </section>
 <section id="classes">
-<span id="sphx-glr-backref-sphinx-gallery-scrapers-save-figures"></span><h3>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h3>
+<span id="sphx-glr-backref-sphinx-gallery-scrapers-save-figures"></span><h3>Classes<a class="headerlink" href="#classes" title="Permalink to this heading">¶</a></h3>
 <dl class="py class">
 <dt class="sig sig-object py" id="sphinx_gallery.scrapers.ImagePathIterator">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sphinx_gallery.scrapers.</span></span><span class="sig-name descname"><span class="pre">ImagePathIterator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sphinx_gallery/scrapers.html#ImagePathIterator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sphinx_gallery.scrapers.ImagePathIterator" title="Permalink to this definition">¶</a></dt>
@@ -316,7 +318,7 @@ the images. This is often produced by <a class="reference internal" href="#sphin
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2014-2021, Sphinx-gallery developers.</p>
+    <p>&#169; Copyright 2014-2022, Sphinx-gallery developers.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

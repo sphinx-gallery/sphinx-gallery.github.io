@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Frequently Asked Questions &mdash; Sphinx-Gallery 0.10.1-git documentation</title>
+  <title>Frequently Asked Questions &mdash; Sphinx-Gallery 0.11.0-git documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/theme_override.css" type="text/css" />
@@ -19,6 +19,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -35,7 +36,7 @@
             <a href="index.html" class="icon icon-home"> Sphinx-Gallery
           </a>
               <div class="version">
-                0.10.1
+                0.11.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -78,6 +79,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Frequently Asked Questions</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#why-is-file-not-defined-what-can-i-use">Why is <cite>__file__</cite> not defined? What can I use?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#why-am-i-getting-text-output-for-matplotlib-functions">Why am I getting text output for Matplotlib functions?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#why-has-my-thumbnail-appearance-changed">Why has my thumbnail appearance changed?</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="utils.html">Sphinx-Gallery Utilities</a></li>
@@ -87,6 +89,7 @@
 <li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html">Gallery of Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">Notebook style example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="auto_mayavi_examples/index.html">Gallery of Examples using Mayavi</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_pyvista_examples/index.html">Gallery of Examples using PyVista</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API and developer reference</span></p>
 <ul>
@@ -131,16 +134,17 @@
            <div itemprop="articleBody">
              
   <section id="frequently-asked-questions">
-<h1>Frequently Asked Questions<a class="headerlink" href="#frequently-asked-questions" title="Permalink to this headline">¶</a></h1>
+<h1>Frequently Asked Questions<a class="headerlink" href="#frequently-asked-questions" title="Permalink to this heading">¶</a></h1>
 <div class="contents local topic" id="contents">
 <p class="topic-title"><strong>Contents</strong></p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#why-is-file-not-defined-what-can-i-use" id="id1">Why is <cite>__file__</cite> not defined? What can I use?</a></p></li>
 <li><p><a class="reference internal" href="#why-am-i-getting-text-output-for-matplotlib-functions" id="id2">Why am I getting text output for Matplotlib functions?</a></p></li>
+<li><p><a class="reference internal" href="#why-has-my-thumbnail-appearance-changed" id="id3">Why has my thumbnail appearance changed?</a></p></li>
 </ul>
 </div>
 <section id="why-is-file-not-defined-what-can-i-use">
-<h2><a class="toc-backref" href="#id1">Why is <cite>__file__</cite> not defined? What can I use?</a><a class="headerlink" href="#why-is-file-not-defined-what-can-i-use" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id1">Why is <cite>__file__</cite> not defined? What can I use?</a><a class="headerlink" href="#why-is-file-not-defined-what-can-i-use" title="Permalink to this heading">¶</a></h2>
 <p>The global <cite>__file__</cite> variable defined by Python when running scripts
 is not defined on Jupyter notebooks. Since Sphinx-Gallery supports
 notebook styled examples and also exports to Jupyter notebooks we
@@ -156,7 +160,7 @@ their source directory.</p>
 </div>
 </section>
 <section id="why-am-i-getting-text-output-for-matplotlib-functions">
-<h2><a class="toc-backref" href="#id2">Why am I getting text output for Matplotlib functions?</a><a class="headerlink" href="#why-am-i-getting-text-output-for-matplotlib-functions" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id2">Why am I getting text output for Matplotlib functions?</a><a class="headerlink" href="#why-am-i-getting-text-output-for-matplotlib-functions" title="Permalink to this heading">¶</a></h2>
 <p>The output capturing behavior of Sphinx-Gallery changed with Sphinx-Gallery
 v0.5.0. Previous to v0.5.0, only data directed to standard output (e.g., only
 Matplotlib figures) was captured. In, v0.5.0, the configuration
@@ -176,6 +180,18 @@ Alternatively, you can set <code class="docutils literal notranslate"><span clas
 prior to v0.5.0. This will also prevent you from getting any other unwanted
 output that did not occur prior to v0.5.0.</p>
 </section>
+<section id="why-has-my-thumbnail-appearance-changed">
+<h2><a class="toc-backref" href="#id3">Why has my thumbnail appearance changed?</a><a class="headerlink" href="#why-has-my-thumbnail-appearance-changed" title="Permalink to this heading">¶</a></h2>
+<p>The DOM structure of thumbnails was refactored in order to make them responsive
+and aligned on a css grid. These changes might make your existing custom css
+obsolete. You can read our
+<a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/906#issuecomment-1019542067">custom css migration guide for thumbnails</a>
+for pointers on how to update your css.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/906">Github PR #906</a></p>
+</div>
+</section>
 </section>
 
 
@@ -189,7 +205,7 @@ output that did not occur prior to v0.5.0.</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2014-2021, Sphinx-gallery developers.</p>
+    <p>&#169; Copyright 2014-2022, Sphinx-gallery developers.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
