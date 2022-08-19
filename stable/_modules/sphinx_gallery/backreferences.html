@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>sphinx_gallery.backreferences &mdash; Sphinx-Gallery 0.11.0-git documentation</title>
+  <title>sphinx_gallery.backreferences &mdash; Sphinx-Gallery 0.11.1-git documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/theme_override.css" type="text/css" />
@@ -33,7 +33,7 @@
             <a href="../../index.html" class="icon icon-home"> Sphinx-Gallery
           </a>
               <div class="version">
-                0.11.0
+                0.11.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -149,11 +149,25 @@
 <span class="kn">import</span> <span class="nn">warnings</span>
 
 <span class="kn">from</span> <span class="nn">sphinx.errors</span> <span class="kn">import</span> <span class="n">ExtensionError</span>
+<span class="kn">import</span> <span class="nn">sphinx.util</span>
 
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">sphinx_compatibility</span>
 <span class="kn">from</span> <span class="nn">.scrapers</span> <span class="kn">import</span> <span class="n">_find_image_ext</span>
 <span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">_replace_md5</span>
-<span class="kn">from</span> <span class="nn">.directives</span> <span class="kn">import</span> <span class="n">THUMBNAIL_PARENT_DIV</span><span class="p">,</span> <span class="n">THUMBNAIL_PARENT_DIV_CLOSE</span>
+
+
+<span class="n">THUMBNAIL_PARENT_DIV</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">.. raw:: html</span>
+
+<span class="s2">    &lt;div class=&quot;sphx-glr-thumbnails&quot;&gt;</span>
+
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">THUMBNAIL_PARENT_DIV_CLOSE</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">.. raw:: html</span>
+
+<span class="s2">    &lt;/div&gt;</span>
+
+<span class="s2">&quot;&quot;&quot;</span>
 
 
 <div class="viewcode-block" id="DummyClass"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.backreferences.html#sphinx_gallery.backreferences.DummyClass">[docs]</a><span class="k">class</span> <span class="nc">DummyClass</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -441,6 +455,7 @@
                 <span class="n">heading</span> <span class="o">=</span> <span class="s1">&#39;Examples using ``</span><span class="si">%s</span><span class="s1">``&#39;</span> <span class="o">%</span> <span class="n">backref</span>
                 <span class="n">ex_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">heading</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
                 <span class="n">ex_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;^&#39;</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">heading</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">ex_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">.. start-sphx-glr-thumbnails</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
                 <span class="c1"># Open a div which will contain all thumbnails</span>
                 <span class="c1"># (it will be closed in _finalize_backreferences)</span>
                 <span class="n">ex_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">THUMBNAIL_PARENT_DIV</span><span class="p">)</span>
@@ -452,7 +467,7 @@
 
 <span class="k">def</span> <span class="nf">_finalize_backreferences</span><span class="p">(</span><span class="n">seen_backrefs</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Replace backref files only if necessary.&quot;&quot;&quot;</span>
-    <span class="n">logger</span> <span class="o">=</span> <span class="n">sphinx_compatibility</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;sphinx-gallery&#39;</span><span class="p">)</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">sphinx</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;sphinx-gallery&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;backreferences_dir&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span>
 
