@@ -7,6 +7,7 @@
   <title>Configuration &mdash; Sphinx-Gallery 0.12.0.dev0-git documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
       <link rel="stylesheet" href="_static/theme_override.css" type="text/css" />
       <link rel="stylesheet" href="_static/sg_gallery.css" type="text/css" />
       <link rel="stylesheet" href="_static/sg_gallery-binder.css" type="text/css" />
@@ -124,6 +125,8 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#nesting-gallery-sections">Nesting gallery sections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#showing-api-usage">Showing API Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ignoring-api-entries">Ignoring API entries</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="projects_list.html">Who uses Sphinx-Gallery</a></li>
@@ -234,6 +237,8 @@ and <code class="docutils literal notranslate"><span class="pre">inspect_global_
 <li><p><code class="docutils literal notranslate"><span class="pre">log_level</span></code> (<a class="reference internal" href="#log-level"><span class="std std-ref">Setting log level</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">capture_repr</span></code> and <code class="docutils literal notranslate"><span class="pre">ignore_repr_types</span></code> (<a class="reference internal" href="#capture-repr"><span class="std std-ref">Controlling what output is captured</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">nested_sections</span></code> (<a class="reference internal" href="#nested-sections"><span class="std std-ref">Nesting gallery sections</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">api_usage_ignore</span></code> (<a class="reference internal" href="#api-usage-ignore"><span class="std std-ref">Ignoring API entries</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">show_api_usage</span></code> (<a class="reference internal" href="#show-api-usage"><span class="std std-ref">Showing API Usage</span></a>)</p></li>
 </ul>
 <p>Some options can also be set or overridden on a file-by-file basis:</p>
 <ul class="simple">
@@ -1947,6 +1952,32 @@ This index file will contain descriptions for the whole gallery as well as for
 each subsection, and a specific toctree for each subsection.
 In particular, sidebars generated using these toctrees might not reflect the
 actual section / folder structure.</p>
+</section>
+<section id="showing-api-usage">
+<span id="show-api-usage"></span><h2>Showing API Usage<a class="headerlink" href="#showing-api-usage" title="Permalink to this heading">¶</a></h2>
+<p>Optionally, graphs can be made of the usage of each API entry in examples,
+grouped by module. In large projects, there are many modules so this is
+set to <code class="docutils literal notranslate"><span class="pre">False</span></code> by default. Setting <code class="docutils literal notranslate"><span class="pre">show_api_usage</span></code> to <code class="docutils literal notranslate"><span class="pre">True</span></code>
+will make one graph per module showing all of the API entries connected to
+the example that they are used in. This could be helpful for making a map
+of which examples to look at if you want to learn about a particular
+module. Note: documentation and graphs of which API examples are unused
+will always be made, only the documentation and graphs of which
+examples each API entry are used in is controlled by this configuration
+parameter. <code class="docutils literal notranslate"><span class="pre">graphviz</span></code> is required for making the unused and used API
+entry graphs. See the
+<a class="reference external" href="sg_api_usage.html">Sphinx-Gallery API usage documentation and graphs</a>
+for example. This report can be found in the sphinx output directory under
+<code class="docutils literal notranslate"><span class="pre">sg_api_usage.html</span></code>.</p>
+</section>
+<section id="ignoring-api-entries">
+<span id="api-usage-ignore"></span><h2>Ignoring API entries<a class="headerlink" href="#ignoring-api-entries" title="Permalink to this heading">¶</a></h2>
+<p>By default, <code class="docutils literal notranslate"><span class="pre">api_usage_ignore='.*__.*__'</span></code> ignores files that match this
+regular expression in documenting and graphing the usage of API entries
+within the example gallery. This regular expression can be modified to
+ignore any kind of file that should not be considered. The default regular
+expression ignores functions like <code class="docutils literal notranslate"><span class="pre">__len__()</span></code> for which it may not be
+desirable to document if they are used in examples.</p>
 </section>
 </section>
 
