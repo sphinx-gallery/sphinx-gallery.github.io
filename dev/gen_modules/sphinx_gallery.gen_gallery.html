@@ -22,6 +22,7 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -92,9 +93,30 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../reference.html">Sphinx-Gallery API Reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../reference.html#sphinx-gallery">Sphinx Gallery</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">sphinx_gallery.gen_gallery</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#sphinx-gallery-generator">Sphinx-Gallery Generator</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#functions">Functions</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sphinx-gallery-generator">Sphinx-Gallery Generator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#functions">Functions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#sphinx_gallery.gen_gallery.check_duplicate_filenames"><code class="docutils literal notranslate"><span class="pre">check_duplicate_filenames()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sphinx_gallery.gen_gallery.check_spaces_in_filenames"><code class="docutils literal notranslate"><span class="pre">check_spaces_in_filenames()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sphinx_gallery.gen_gallery.clean_files"><code class="docutils literal notranslate"><span class="pre">clean_files()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sphinx_gallery.gen_gallery.collect_gallery_files"><code class="docutils literal notranslate"><span class="pre">collect_gallery_files()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sphinx_gallery.gen_gallery.cost_name_key"><code class="docutils literal notranslate"><span class="pre">cost_name_key()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sphinx_gallery.gen_gallery.generate_gallery_rst"><code class="docutils literal notranslate"><span class="pre">generate_gallery_rst()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sphinx_gallery.gen_gallery.get_default_config_value"><code class="docutils literal notranslate"><span class="pre">get_default_config_value()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sphinx_gallery.gen_gallery.get_subsections"><code class="docutils literal notranslate"><span class="pre">get_subsections()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sphinx_gallery.gen_gallery.init_api_usage"><code class="docutils literal notranslate"><span class="pre">init_api_usage()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sphinx_gallery.gen_gallery.parse_config"><code class="docutils literal notranslate"><span class="pre">parse_config()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sphinx_gallery.gen_gallery.setup"><code class="docutils literal notranslate"><span class="pre">setup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sphinx_gallery.gen_gallery.setup_module"><code class="docutils literal notranslate"><span class="pre">setup_module()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sphinx_gallery.gen_gallery.summarize_failing_examples"><code class="docutils literal notranslate"><span class="pre">summarize_failing_examples()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sphinx_gallery.gen_gallery.touch_empty_backreferences"><code class="docutils literal notranslate"><span class="pre">touch_empty_backreferences()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sphinx_gallery.gen_gallery.write_api_entries"><code class="docutils literal notranslate"><span class="pre">write_api_entries()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sphinx_gallery.gen_gallery.write_api_entry_usage"><code class="docutils literal notranslate"><span class="pre">write_api_entry_usage()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sphinx_gallery.gen_gallery.write_computation_times"><code class="docutils literal notranslate"><span class="pre">write_computation_times()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sphinx_gallery.gen_gallery.write_junit_xml"><code class="docutils literal notranslate"><span class="pre">write_junit_xml()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#classes">Classes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#sphinx_gallery.gen_gallery.DefaultResetArgv"><code class="docutils literal notranslate"><span class="pre">DefaultResetArgv</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -154,14 +176,15 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-sphinx_gallery.gen_gallery">
-<span id="sphinx-gallery-gen-gallery"></span><h1>sphinx_gallery.gen_gallery<a class="headerlink" href="#module-sphinx_gallery.gen_gallery" title="Permalink to this heading">¶</a></h1>
+  <section id="sphinx-gallery-gen-gallery">
+<h1>sphinx_gallery.gen_gallery<a class="headerlink" href="#sphinx-gallery-gen-gallery" title="Permalink to this heading">¶</a></h1>
 <section id="sphinx-gallery-generator">
 <h2>Sphinx-Gallery Generator<a class="headerlink" href="#sphinx-gallery-generator" title="Permalink to this heading">¶</a></h2>
 <p>Attaches Sphinx-Gallery to Sphinx in order to generate the galleries
 when building the documentation.</p>
-<section id="functions">
-<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this heading">¶</a></h3>
+</section>
+<span class="target" id="module-sphinx_gallery.gen_gallery"></span><section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this heading">¶</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="sphinx_gallery.gen_gallery.check_duplicate_filenames">
 <span class="sig-prename descclassname"><span class="pre">sphinx_gallery.gen_gallery.</span></span><span class="sig-name descname"><span class="pre">check_duplicate_filenames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">files</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sphinx_gallery/gen_gallery.html#check_duplicate_filenames"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sphinx_gallery.gen_gallery.check_duplicate_filenames" title="Permalink to this definition">¶</a></dt>
@@ -304,14 +327,13 @@ that they are used in.</p>
 
 </section>
 <section id="classes">
-<span id="sphx-glr-backref-sphinx-gallery-gen-gallery-write-junit-xml"></span><h3>Classes<a class="headerlink" href="#classes" title="Permalink to this heading">¶</a></h3>
+<span id="sphx-glr-backref-sphinx-gallery-gen-gallery-write-junit-xml"></span><h2>Classes<a class="headerlink" href="#classes" title="Permalink to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="sphinx_gallery.gen_gallery.DefaultResetArgv">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sphinx_gallery.gen_gallery.</span></span><span class="sig-name descname"><span class="pre">DefaultResetArgv</span></span><a class="reference internal" href="../_modules/sphinx_gallery/gen_gallery.html#DefaultResetArgv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sphinx_gallery.gen_gallery.DefaultResetArgv" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <span class="target" id="sphx-glr-backref-sphinx-gallery-gen-gallery-defaultresetargv"></span></section>
-</section>
 </section>
 
 
