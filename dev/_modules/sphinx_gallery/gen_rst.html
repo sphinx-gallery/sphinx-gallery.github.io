@@ -1238,6 +1238,9 @@
     <span class="n">_write_backreferences</span><span class="p">(</span><span class="n">backrefs</span><span class="p">,</span> <span class="n">seen_backrefs</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span>
                           <span class="n">fname</span><span class="p">,</span> <span class="n">intro</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span>
 
+    <span class="c1"># This can help with garbage collection in some instances</span>
+    <span class="k">if</span> <span class="n">global_variables</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s1">&#39;___&#39;</span> <span class="ow">in</span> <span class="n">global_variables</span><span class="p">:</span>
+        <span class="k">del</span> <span class="n">global_variables</span><span class="p">[</span><span class="s1">&#39;___&#39;</span><span class="p">]</span>
     <span class="k">del</span> <span class="n">script_vars</span><span class="p">,</span> <span class="n">global_variables</span>  <span class="c1"># don&#39;t keep these during reset</span>
     <span class="k">if</span> <span class="n">executable</span> <span class="ow">and</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;reset_modules_order&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;after&#39;</span><span class="p">,</span> <span class="s1">&#39;both&#39;</span><span class="p">]:</span>
         <span class="n">clean_modules</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="s1">&#39;after&#39;</span><span class="p">)</span>
