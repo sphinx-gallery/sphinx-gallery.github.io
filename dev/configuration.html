@@ -329,7 +329,7 @@ executed, you can modify <code class="docutils literal notranslate"><span class=
 </pre></div>
 </div>
 <p>will build all examples starting with <code class="docutils literal notranslate"><span class="pre">plot_compute_</span></code>. The key
-<code class="docutils literal notranslate"><span class="pre">filename_pattern</span></code> (and <code class="docutils literal notranslate"><span class="pre">ignore_pattern</span></code>) accepts <a class="reference external" href="https://docs.python.org/library/re.html">regular expressions</a>
+<code class="docutils literal notranslate"><span class="pre">filename_pattern</span></code> (and <code class="docutils literal notranslate"><span class="pre">ignore_pattern</span></code>) accepts <a class="reference external" href="https://docs.python.org/3/library/re.html">regular expressions</a>
 which will be matched with the full path of the example. This is the reason
 the leading <code class="docutils literal notranslate"><span class="pre">'/'</span></code> is required. Users are advised to use <code class="docutils literal notranslate"><span class="pre">re.escape(os.sep)</span></code>
 instead of <code class="docutils literal notranslate"><span class="pre">'/'</span></code> if they want to be agnostic to the operating system.</p>
@@ -344,7 +344,7 @@ In that case, you would do:</p>
 </pre></div>
 </div>
 <p>Here, one should escape the dot <code class="docutils literal notranslate"><span class="pre">r'\.'</span></code> as otherwise python
-<a class="reference external" href="https://docs.python.org/library/re.html">regular expressions</a> matches any character. Nevertheless, as
+<a class="reference external" href="https://docs.python.org/3/library/re.html">regular expressions</a> matches any character. Nevertheless, as
 one is targeting a specific file, it would match the dot in the filename even
 without this escape character.</p>
 <div class="admonition note">
@@ -367,8 +367,8 @@ building examples starting with <code class="docutils literal notranslate"><span
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>As the patterns are parsed as <a class="reference external" href="https://docs.python.org/library/re.html">regular expressions</a>, users are advised to
-consult the <a class="reference external" href="https://docs.python.org/library/re.html">regular expressions</a> module for more details.</p>
+<p>As the patterns are parsed as <a class="reference external" href="https://docs.python.org/3/library/re.html">regular expressions</a>, users are advised to
+consult the <a class="reference external" href="https://docs.python.org/3/library/re.html">regular expressions</a> module for more details.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Remember that Sphinx allows overriding <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> values from the command
@@ -668,8 +668,9 @@ because the default message is vague: “Examples of one of multiple objects”.
 <section id="auto-documenting-your-api-with-links-to-examples">
 <h3>Auto-documenting your API with links to examples<a class="headerlink" href="#auto-documenting-your-api-with-links-to-examples" title="Permalink to this heading">¶</a></h3>
 <p>The previous feature can be automated for all your modules combining
-it with the standard sphinx extensions <a class="reference external" href="http://sphinx-doc.org/ext/autodoc.html">autodoc</a> and <a class="reference external" href="http://sphinx-doc.org/ext/autosummary.html">autosummary</a>. First enable them in your
-<code class="docutils literal notranslate"><span class="pre">conf.py</span></code> extensions list:</p>
+it with the standard sphinx extensions <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html">autodoc</a> and
+<a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/extensions/autosummary.html">autosummary</a>.
+First enable them in your <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> extensions list:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sphinx_gallery</span>
 <span class="n">extensions</span> <span class="o">=</span> <span class="p">[</span>
     <span class="o">...</span>
@@ -682,9 +683,10 @@ it with the standard sphinx extensions <a class="reference external" href="http:
 <span class="n">autosummary_generate</span> <span class="o">=</span> <span class="kc">True</span>
 </pre></div>
 </div>
-<p><a class="reference external" href="http://sphinx-doc.org/ext/autodoc.html">autodoc</a> and <a class="reference external" href="http://sphinx-doc.org/ext/autosummary.html">autosummary</a> are very powerful
-extensions, please read about them. In this example we’ll explain how
-the <a class="reference internal" href="reference.html#sphx-glr-api-reference"><span class="std std-ref">Sphinx-Gallery API Reference</span></a> is automatically generated. The
+<p><a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html">autodoc</a> and
+<a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/extensions/autosummary.html">autosummary</a>
+are very powerful extensions, please read about them. In this example we’ll
+explain how the <a class="reference internal" href="reference.html#sphx-glr-api-reference"><span class="std std-ref">Sphinx-Gallery API Reference</span></a> is automatically generated. The
 documentation is done at the module level. We first start with the
 <code class="docutils literal notranslate"><span class="pre">reference.rst</span></code> file</p>
 <div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="p">..</span> <span class="nt">_sphx_glr_api_reference:</span>
@@ -1187,7 +1189,7 @@ resources.</p>
 <p>If you host your documentation on a GitHub repository, it is possible to
 auto-generate a Binder link for each notebook. Clicking this link will
 take users to a live version of the Jupyter notebook where they may
-run the code interactively. For more information see the <a class="reference external" href="https://docs.mybinder.org">Binder documentation</a>.</p>
+run the code interactively. For more information see the <a class="reference external" href="https://mybinder.readthedocs.io/en/latest/">Binder documentation</a>.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>Binder is still beta technology, so there may be instability in the
@@ -1249,7 +1251,7 @@ field.</p>
 to infer the environment needed to run your examples. For example, a
 <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> file. These will be copied into a folder  called
 <code class="docutils literal notranslate"><span class="pre">binder/</span></code> in your built documentation folder. For a list of all the possible
-dependency files you can use, see <a class="reference external" href="https://mybinder.readthedocs.io/en/latest/config_files.html#config-files">the Binder configuration documentation</a>.</p>
+dependency files you can use, see <a class="reference external" href="https://mybinder.readthedocs.io/en/latest/using/config_files.html">the Binder configuration documentation</a>.</p>
 </dd>
 <dt>filepath_prefix (type: string | None, default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)</dt><dd><p>A prefix to append to the filepath in the Binder links. You should use this if
 you will store your built documentation in a sub-folder of a repository,
@@ -1278,7 +1280,7 @@ independently build your documentation and host it on a GitHub branch
 as well as building it with readthedocs.</p>
 </div>
 <p>See the Sphinx-Gallery <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/blob/master/doc/conf.py">Sphinx configuration file</a>
-for an example that uses the <a class="reference external" href="http://mybinder.org">public Binder server</a>.</p>
+for an example that uses the <a class="reference external" href="https://mybinder.org">public Binder server</a>.</p>
 </section>
 <section id="making-cell-magic-executable-in-notebooks">
 <span id="promote-jupyter-magic"></span><h2>Making cell magic executable in notebooks<a class="headerlink" href="#making-cell-magic-executable-in-notebooks" title="Permalink to this heading">¶</a></h2>
