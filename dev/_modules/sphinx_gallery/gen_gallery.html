@@ -694,8 +694,9 @@
 
                 <span class="n">fhindex</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">subsection_index_content</span><span class="p">)</span>
 
-                <span class="c1"># Write subsection toctree in main file</span>
-                <span class="c1"># only if nested_sections is False or None</span>
+                <span class="c1"># Write subsection toctree in main file only if</span>
+                <span class="c1"># nested_sections is False or None, and</span>
+                <span class="c1"># toctree filenames were generated for the subsection.</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;nested_sections&quot;</span><span class="p">]:</span>
                     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">subsection_toctree_filenames</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                         <span class="n">subsection_index_toctree</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
@@ -704,7 +705,7 @@
 
 <span class="s2">   </span><span class="si">%s</span><span class="se">\n</span><span class="s2"></span>
 <span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">   &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">subsection_toctree_filenames</span><span class="p">)</span>
-                    <span class="n">fhindex</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">subsection_index_toctree</span><span class="p">)</span>
+                        <span class="n">fhindex</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">subsection_index_toctree</span><span class="p">)</span>
                 <span class="c1"># Otherwise, a new index.rst.new file should</span>
                 <span class="c1"># have been created and it needs to be parsed</span>
                 <span class="k">else</span><span class="p">:</span>
