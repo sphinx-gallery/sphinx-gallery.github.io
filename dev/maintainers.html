@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Maintaining Sphinx Gallery &#8212; Sphinx-Gallery 0.12.0.dev0-git documentation</title>
+    <title>Maintaining Sphinx Gallery &#8212; Sphinx-Gallery 0.12.0-git documentation</title>
   
   
   
@@ -50,7 +50,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'maintainers';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://sphinx-gallery.github.io/dev/_static/switcher.json';
-        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'dev';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'stable';
         </script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -198,7 +198,7 @@ document.write(`
 document.write(`
   <div class="version-switcher__container dropdown">
     <button type="button" class="version-switcher__button btn btn-sm navbar-btn dropdown-toggle" data-bs-toggle="dropdown">
-      dev  <!-- this text may get changed later by javascript -->
+      stable  <!-- this text may get changed later by javascript -->
       <span class="caret"></span>
     </button>
     <div class="version-switcher__menu dropdown-menu list-group-flush py-0">
@@ -334,7 +334,7 @@ document.write(`
 document.write(`
   <div class="version-switcher__container dropdown">
     <button type="button" class="version-switcher__button btn btn-sm navbar-btn dropdown-toggle" data-bs-toggle="dropdown">
-      dev  <!-- this text may get changed later by javascript -->
+      stable  <!-- this text may get changed later by javascript -->
       <span class="caret"></span>
     </button>
     <div class="version-switcher__menu dropdown-menu list-group-flush py-0">
@@ -430,122 +430,67 @@ document.write(`
 <p>This document contains tips for maintenance.</p>
 <nav class="contents local" id="contents">
 <ul class="simple">
-<li><p><a class="reference internal" href="#how-to-make-a-release" id="id2">How to make a release</a></p>
+<li><p><a class="reference internal" href="#how-to-make-a-release" id="id1">How to make a release</a></p>
 <ul>
-<li><p><a class="reference internal" href="#check-credentials-and-prerequisites" id="id3">Check credentials and prerequisites</a></p></li>
-<li><p><a class="reference internal" href="#prepare-for-release" id="id4">Prepare for release</a></p></li>
-<li><p><a class="reference internal" href="#finalize-the-release" id="id5">Finalize the release</a></p></li>
+<li><p><a class="reference internal" href="#update-changes-rst-and-version-in-a-pr" id="id2">1. Update <code class="docutils literal notranslate"><span class="pre">CHANGES.rst</span></code> and version in a PR</a></p></li>
+<li><p><a class="reference internal" href="#finalize-the-release" id="id3">2.  Finalize the release</a></p></li>
 </ul>
 </li>
 </ul>
 </nav>
 <section id="how-to-make-a-release">
-<h2><a class="toc-backref" href="#id2" role="doc-backlink">How to make a release</a><a class="headerlink" href="#how-to-make-a-release" title="Permalink to this heading">#</a></h2>
-<section id="check-credentials-and-prerequisites">
-<h3><a class="toc-backref" href="#id3" role="doc-backlink">Check credentials and prerequisites</a><a class="headerlink" href="#check-credentials-and-prerequisites" title="Permalink to this heading">#</a></h3>
-<p>Sphinx Gallery is <a class="reference external" href="https://pypi.org/project/sphinx-gallery/">hosted on the pypi repository</a>.
-To create a new release of Sphinx Gallery, you need to do these things:
-You should double-check a few things to make sure that you can create
-a new release for Sphinx Gallery.</p>
-<ol class="arabic simple">
-<li><p>Ensure that you <strong>registered an account</strong> on <a class="reference external" href="https://pypi.org/account/register/">the PyPI index</a>.</p></li>
-<li><p>Ensure you have <strong>push access</strong> to the
-<a class="reference external" href="https://pypi.org/project/sphinx-gallery/">Sphinx Gallery pypi repository</a>.
-Ask one of the Sphinx Gallery core developers if you do not.</p></li>
-<li><p>Install the <a class="reference external" href="https://github.com/github-changelog-generator/github-changelog-generator#installation">GitHub Changelog Generator</a>.
-This is a small tool written in Ruby to generate a markdown list of recent changes.</p></li>
-<li><p>Install <a class="reference external" href="https://twine.readthedocs.io/en/latest/">the twine package</a>. This is
-a package that helps you
-bundle and push new Python package distributions to pip.</p></li>
-</ol>
-</section>
-<section id="prepare-for-release">
-<h3><a class="toc-backref" href="#id4" role="doc-backlink">Prepare for release</a><a class="headerlink" href="#prepare-for-release" title="Permalink to this heading">#</a></h3>
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">How to make a release</a><a class="headerlink" href="#how-to-make-a-release" title="Permalink to this heading">#</a></h2>
+<section id="update-changes-rst-and-version-in-a-pr">
+<h3><a class="toc-backref" href="#id2" role="doc-backlink">1. Update <code class="docutils literal notranslate"><span class="pre">CHANGES.rst</span></code> and version in a PR</a><a class="headerlink" href="#update-changes-rst-and-version-in-a-pr" title="Permalink to this heading">#</a></h3>
 <ol class="arabic">
-<li><p>Update <code class="docutils literal notranslate"><span class="pre">CHANGES.rst</span></code></p>
-<blockquote>
-<div><ol class="arabic">
 <li><p>Use <a class="reference external" href="https://github.com/github-changelog-generator/github-changelog-generator#installation">github_changelog_generator</a> to
 gather all merged pull requests and closed issues during the development
 cycle. You will likely need to <a class="reference external" href="https://github.com/settings/tokens/new?description=GitHub%20Changelog%20Generator%20token">generate a Github token</a>
 as Github only allows 50 unauthenticated requests per hour. In the
 command below <code class="docutils literal notranslate"><span class="pre">&lt;version&gt;</span></code> is the current (not development) version of
-the package, e.g., <code class="docutils literal notranslate"><span class="pre">0.6.0</span></code>. We do this because our failing discipline
-of writing in the CHANGES.rst all relevant changes, this helps our
-memory. It is a good idea to add appropriate labels (e.g., ‘BUG’) to
-issues and pull requests so they are categorized correctly in the
-CHANGES.rst generated.</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">github_changelog_generator -u sphinx-gallery -p sphinx-gallery --since-tag=v&lt;version&gt; --token &lt;your-40-digit-token&gt;</span>
+the package, e.g., <code class="docutils literal notranslate"><span class="pre">0.6.0</span></code>. The changelog can generated with the following:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">github_changelog_generator --since-tag=v&lt;version&gt; --token &lt;your-40-digit-token&gt;</span>
 </pre></div>
 </div>
+<p>To avoid the need to pass <code class="docutils literal notranslate"><span class="pre">--token</span></code>, you can use <code class="docutils literal notranslate"><span class="pre">export</span> <span class="pre">CHANGELOG_GITHUB_TOKEN=&lt;your-40-digit-token&gt;</span></code> instead.</p>
 </li>
-<li><p>Edit CHANGELOG.md to look reasonable (it will be used later). It’s a
-good idea to add labels to issues and pull requests so
-<cite>github_changelog_generator</cite> can correctly categorize them in in the
-CHANGES.rst file generated.</p></li>
+<li><p>Iteratively update PR labels on GitHub and regenerate <code class="docutils literal notranslate"><span class="pre">CHANGELOG.md</span></code> so
+that PRs are categorized correctly. The labels we currently use are:</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">bug</span></code></dt><dd><p>For fixed bugs.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">enhancement</span></code></dt><dd><p>For enhancements</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">maintenance</span></code></dt><dd><p>For general project maintenance (e.g., CIs)</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">documentation</span></code></dt><dd><p>For documentation improvements.</p>
+</dd>
+</dl>
+<p>Once all PRs land in one of these categories, manually edit CHANGELOG.md to
+look reasonable if necessary.</p>
+</li>
 <li><p>Propagate the relevant changes to <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/blob/master/CHANGES.rst">CHANGES.rst</a>.
 You can easily convert it RST with pandoc:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pandoc CHANGELOG.md --wrap=none -o CHANGELOG.rst</span>
 </pre></div>
 </div>
+<p>Then copy just the sections to <code class="docutils literal notranslate"><span class="pre">CHANGES.rst</span></code>. <strong>Keep ``CHANGELOG.md`` for
+later.</strong></p>
 </li>
-</ol>
-</div></blockquote>
-</li>
-<li><p>Build the docs cleanly</p>
-<blockquote>
-<div><p>Make sure to clean all and have a clean build. Double-check visually that
-everything looks right.</p>
-</div></blockquote>
-</li>
-<li><p>Double check CIs</p>
-<blockquote>
-<div><p>Make sure CIs are green on the master branch.</p>
-</div></blockquote>
-</li>
-<li><p>Update version</p>
-<blockquote>
-<div><p>Update the version in <code class="docutils literal notranslate"><span class="pre">sphinx_gallery/__init__.py</span></code>, which should end in
-<code class="docutils literal notranslate"><span class="pre">.dev0</span></code>. You should remove <code class="docutils literal notranslate"><span class="pre">.dev0</span></code>, and the numbers that remain will
-become the version for this release.</p>
-</div></blockquote>
-</li>
-<li><p>Open a Pull Request that contains the two changes we’ve made above</p>
-<blockquote>
-<div><p>The <strong>version bump</strong> and <strong>the CHANGELOG update</strong> should be in the PR.
-Get somebody else to make sure all looks well, and merge this pull request.</p>
-</div></blockquote>
-</li>
+<li><p>Update the version in <code class="docutils literal notranslate"><span class="pre">sphinx_gallery/__init__.py</span></code>, which should end in
+<code class="docutils literal notranslate"><span class="pre">.dev0</span></code>. You should replace <code class="docutils literal notranslate"><span class="pre">.dev0</span></code> with <code class="docutils literal notranslate"><span class="pre">0</span></code> to obtain a semantic
+version (e.g., <code class="docutils literal notranslate"><span class="pre">0.12.dev0</span></code> to <code class="docutils literal notranslate"><span class="pre">0.12.0</span></code>).</p></li>
+<li><p>Open a PR with the above <strong>changelog</strong> and <strong>version</strong> changes (along with
+any updates to this <code class="docutils literal notranslate"><span class="pre">maintainers.rst</span></code> document!).</p></li>
+<li><p>Make sure CIs are green.</p></li>
+<li><p>Check that the built documentation looks correct.</p></li>
+<li><p>Get somebody else to make sure all looks well, and merge this pull request.</p></li>
 </ol>
 </section>
 <section id="finalize-the-release">
-<h3><a class="toc-backref" href="#id5" role="doc-backlink">Finalize the release</a><a class="headerlink" href="#finalize-the-release" title="Permalink to this heading">#</a></h3>
-<ol class="arabic">
-<li><p>Create the new release on PyPI</p>
-<ul>
-<li><p>Build a source distribution and an <code class="docutils literal notranslate"><span class="pre">any</span></code> wheel:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">git clean -xdf</span>
-<span class="go">python setup.py sdist bdist_wheel</span>
-</pre></div>
-</div>
-</li>
-<li><p>Check the release:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">twine check dist/sphinx-gallery-&lt;version&gt;.*</span>
-</pre></div>
-</div>
-<p><code class="docutils literal notranslate"><span class="pre">&lt;version&gt;</span></code> should be the release version, e.g., <code class="docutils literal notranslate"><span class="pre">0.7.0</span></code>, and it
-should check both the source distribution and the wheel.</p>
-</li>
-<li><p>Upload to PyPI:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">twine upload dist/*</span>
-</pre></div>
-</div>
-<p>Again, <code class="docutils literal notranslate"><span class="pre">&lt;version&gt;</span></code> should be the release version, e.g., <code class="docutils literal notranslate"><span class="pre">0.7.0</span></code>.</p>
-</li>
-<li><p>Confirm that the new version of Sphinx Gallery
-<a class="reference external" href="https://pypi.org/project/sphinx-gallery/">is posted to pypi</a>.</p></li>
-</ul>
-</li>
+<h3><a class="toc-backref" href="#id3" role="doc-backlink">2.  Finalize the release</a><a class="headerlink" href="#finalize-the-release" title="Permalink to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>Make sure CIs are green following the “Release” PR.</p></li>
 <li><p>Create a new release on GitHub</p>
 <ul class="simple">
 <li><p>Go to the <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/releases/new">Draft a new release</a> page.</p></li>
@@ -554,10 +499,12 @@ should check both the source distribution and the wheel.</p>
 <li><p>The <strong>description</strong> should contain the markdown changelog
 you generated above (in the <code class="docutils literal notranslate"><span class="pre">CHANGELOG.md</span></code> file).</p></li>
 <li><p>Click <strong>Publish release</strong> when you are done.</p></li>
+<li><p>Confirm that the new version of Sphinx Gallery
+<a class="reference external" href="https://pypi.org/project/sphinx-gallery/#history">is posted to PyPI</a>.</p></li>
 </ul>
 </li>
-<li><p>Now that the releases are complete, we need to switch the “master” branch back into a developer
-mode. Bump the <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/blob/master/sphinx_gallery/__init__.py">Sphinx Gallery version number</a>
+<li><p>Now that the releases are complete, we need to switch the <cite>master`</cite> branch
+back into a developer mode. Bump the <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/blob/master/sphinx_gallery/__init__.py">Sphinx Gallery version number</a>
 to the next minor (or major) release and append <code class="docutils literal notranslate"><span class="pre">.dev0</span></code> to the end, and make a PR for this change.</p></li>
 <li><p>Celebrate! You’ve just released a new version of Sphinx Gallery!</p></li>
 </ol>
@@ -589,9 +536,8 @@ to the next minor (or major) release and append <code class="docutils literal no
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-make-a-release">How to make a release</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#check-credentials-and-prerequisites">Check credentials and prerequisites</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prepare-for-release">Prepare for release</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#finalize-the-release">Finalize the release</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#update-changes-rst-and-version-in-a-pr">1. Update <code class="docutils literal notranslate"><span class="pre">CHANGES.rst</span></code> and version in a PR</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#finalize-the-release">2.  Finalize the release</a></li>
 </ul>
 </li>
 </ul>
