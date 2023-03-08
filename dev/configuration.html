@@ -31,6 +31,8 @@
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="_static/jupyterlite_sphinx.css" />
     <link rel="stylesheet" type="text/css" href="_static/theme_override.css" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery-binder.css" />
@@ -44,6 +46,7 @@
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/jupyterlite_sphinx.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'configuration';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://sphinx-gallery.github.io/dev/_static/switcher.json';
@@ -484,6 +487,7 @@ and <code class="docutils literal notranslate"><span class="pre">inspect_global_
 <li><p><code class="docutils literal notranslate"><span class="pre">show_memory</span></code> (<a class="reference internal" href="#show-memory"><span class="std std-ref">Showing memory consumption</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">show_signature</span></code> (<a class="reference internal" href="#show-signature"><span class="std std-ref">Show signature</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">binder</span></code> (<a class="reference internal" href="#binder-links"><span class="std std-ref">Generate Binder links for gallery notebooks (experimental)</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">jupyterlite</span></code> (<a class="reference internal" href="#jupyterlite"><span class="std std-ref">Generate JupyterLite links for gallery notebooks (experimental)</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">promote_jupyter_magic</span></code> (<a class="reference internal" href="#promote-jupyter-magic"><span class="std std-ref">Making cell magic executable in notebooks</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">first_notebook_cell</span></code> and <code class="docutils literal notranslate"><span class="pre">last_notebook_cell</span></code> (<a class="reference internal" href="#own-notebook-cell"><span class="std std-ref">Add your own first and last notebook cell</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">notebook_images</span></code> (<a class="reference internal" href="#notebook-images"><span class="std std-ref">Adding images to notebooks</span></a>)</p></li>
@@ -977,7 +981,7 @@ documentation is done at the module level. We first start with the
    notebook
    downloads
    sorting
-   binder
+   interactive_example
    directives
 
 <span class="p">..</span> <span class="ow">currentmodule</span><span class="p">::</span> sphinx_gallery.utils
@@ -1541,6 +1545,98 @@ as well as building it with readthedocs.</p>
 <p>See the Sphinx-Gallery <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/blob/master/doc/conf.py">Sphinx configuration file</a>
 for an example that uses the <a class="reference external" href="https://mybinder.org">public Binder server</a>.</p>
 </section>
+<section id="generate-jupyterlite-links-for-gallery-notebooks-experimental">
+<span id="jupyterlite"></span><h2>Generate JupyterLite links for gallery notebooks (experimental)<a class="headerlink" href="#generate-jupyterlite-links-for-gallery-notebooks-experimental" title="Permalink to this heading">#</a></h2>
+<p>Sphinx-Gallery automatically generates Jupyter notebooks for any examples built
+with the gallery. <a class="reference external" href="https://jupyterlite.readthedocs.io">JupyterLite</a> makes it
+possible to run an example in your browser. The functionality is quite similar
+to Binder in the sense that you will get a Jupyter environment where you can
+run the example interactively as a notebook. The main difference with Binder
+are:</p>
+<ul class="simple">
+<li><p>with JupyterLite, the example actually runs in your browser, there is no need
+for a separate machine in the cloud to run your Python code. That means that
+starting a Jupyter server is genrally quicker, no need to wait for the Binder
+image to be built</p></li>
+<li><p>with JupyterLite the first imports take time. At the time of writing
+(February 2023) <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">scipy</span></code> can take ~15-30s. Some innocuously looking
+Python code may just not work and break in an unexpected fashion. The Jupyter
+kernel is based on Pyodide, see some <a class="reference external" href="https://pyodide.org/en/latest/usage/wasm-constraints.html">here</a> for some
+Pyodide limitations.</p></li>
+<li><p>with JupyterLite environments are not as flexible as Binder, for example you
+can not use a docker image but only the default <a class="reference external" href="https://pyodide.org/en/stable/index.html">Pyodide</a> environment. That means that
+some non pure-Python packages may not be available, see list of <a class="reference external" href="https://pyodide.org/en/stable/usage/packages-in-pyodide.html">available
+packages in Pyodide</a>.</p></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>JupyterLite is still beta technology and less mature than Binder, so there
+may be instability or unexpected behaviour in the experience of users who
+click JupyterLite links.</p>
+</div>
+<p>In order to enable JupyterLite links with Sphinx-Gallery, you must install the
+<a class="reference external" href="https://jupyterlite-sphinx.readthedocs.io">jupyterlite-sphinx</a> package and
+add it to your extensions in <code class="docutils literal notranslate"><span class="pre">conf.py</span></code>:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">extensions</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="o">...</span><span class="p">,</span>
+    <span class="o">...</span><span class="p">,</span>
+    <span class="o">...</span><span class="p">,</span>
+    <span class="s1">&#39;jupyterlite_sphinx&#39;</span><span class="p">,</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>You can configure JupyterLite integration by setting
+<code class="docutils literal notranslate"><span class="pre">sphinx_gallery_conf['jupyterlite']</span></code> in <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> like this:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="o">...</span>
+  <span class="s1">&#39;jupyterlite&#39;</span><span class="p">:</span> <span class="p">{</span>
+     <span class="s1">&#39;jupyterlite_contents&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">str</span><span class="o">&gt;</span> <span class="c1"># JupyterLite contents where to copy the example notebooks (relative to Sphinx source directory)</span>
+     <span class="s1">&#39;use_jupyter_lab&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">bool</span><span class="o">&gt;</span> <span class="c1"># Whether JupyterLite links should start Jupyter Lab instead of the Retrolab Notebook interface.</span>
+     <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Below is a more complete explanation of each field.</p>
+<dl class="simple">
+<dt>use_jupyter_lab (type: bool, default: <code class="docutils literal notranslate"><span class="pre">True</span></code>)</dt><dd><p>Whether the default interface activated by the JupyterLite link will be for
+Jupyter Lab or the RetroLab Notebook interface.</p>
+</dd>
+<dt>jupyterlite_contents (type: string, default: <code class="docutils literal notranslate"><span class="pre">jupyterlite_contents</span></code>) The name</dt><dd><p>of a folder where the built Jupyter notebooks will be copied, relative to the
+Sphinx source directory. This is used as Jupyterlite contents.</p>
+</dd>
+</dl>
+<p>You can set variables in <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> to configure <code class="docutils literal notranslate"><span class="pre">jupyterlite-sphinx</span></code>, see
+its <a class="reference external" href="https://jupyterlite-sphinx.readthedocs.io/en/latest/configuration.html">jupyterlite-sphinx doc</a> for
+more details.</p>
+<p>If a Sphinx-Gallery configuration for JupyterLite is discovered, the following
+extra things will happen:</p>
+<ol class="arabic simple">
+<li><p>Configure <code class="docutils literal notranslate"><span class="pre">jupyterlite-sphinx</span></code> with some reasonable defaults, e.g. set
+<code class="docutils literal notranslate"><span class="pre">jupyterlite_bind_ipynb_suffix</span> <span class="pre">=</span> <span class="pre">False</span></code>.</p></li>
+<li><p>The built Jupyter Notebooks from the documentation will be copied to a
+folder called <code class="docutils literal notranslate"><span class="pre">&lt;jupyterlite_contents&gt;/</span></code> (relative to Sphinx source
+directory)</p></li>
+<li><p>The rST output of each Sphinx-Gallery example will now have a
+<code class="docutils literal notranslate"><span class="pre">launch</span> <span class="pre">JupyterLite</span></code> button in it.</p></li>
+<li><p>That button will point to a JupyterLite link which will start a Jupyter
+server in your browser with the current example as notebook</p></li>
+</ol>
+<p>If, for some reason, you want to enable the <code class="docutils literal notranslate"><span class="pre">jupyterlite-sphinx</span></code> extension
+but not use sphinx-gallery Jupyterlite integration you can do:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">extensions</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="o">...</span><span class="p">,</span>
+    <span class="n">jupyterlite_sphinx</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="o">...</span>
+  <span class="s1">&#39;jupyterlite&#39;</span><span class="p">:</span> <span class="kc">None</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>See the Sphinx-Gallery <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/blob/master/doc/conf.py">Sphinx configuration file</a>
+for an example that uses the JupyterLite integration.</p>
+</section>
 <section id="making-cell-magic-executable-in-notebooks">
 <span id="promote-jupyter-magic"></span><h2>Making cell magic executable in notebooks<a class="headerlink" href="#making-cell-magic-executable-in-notebooks" title="Permalink to this heading">#</a></h2>
 <p>Often times, tutorials will include bash code for the user to copy/paste into
@@ -1687,7 +1783,7 @@ directive tags like <code class="docutils literal notranslate"><span class="pre"
 with the <em>html</em> and <em>latex</em>  builders.</p>
 </section>
 <section id="image-scrapers">
-<span id="id6"></span><h2>Image scrapers<a class="headerlink" href="#image-scrapers" title="Permalink to this heading">#</a></h2>
+<span id="id7"></span><h2>Image scrapers<a class="headerlink" href="#image-scrapers" title="Permalink to this heading">#</a></h2>
 <p>Image scrapers are plugins that allow Sphinx-Gallery to detect images produced
 during execution of your examples, and then embed them into documentation.
 Scrapers can be activated by appending scraper names to the
@@ -2073,7 +2169,7 @@ tuple containing:</p>
 </div>
 </section>
 <section id="show-signature">
-<span id="id8"></span><h2>Show signature<a class="headerlink" href="#show-signature" title="Permalink to this heading">#</a></h2>
+<span id="id9"></span><h2>Show signature<a class="headerlink" href="#show-signature" title="Permalink to this heading">#</a></h2>
 <p>By default, Sphinx-Gallery writes a <strong>Generated by …</strong> notice in the
 generated output.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">show_signature</span></code> parameter can be used to disable it.</p>
@@ -2355,6 +2451,7 @@ desirable to document if they are used in examples.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#choosing-the-thumbnail-image">Choosing the thumbnail image</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#providing-an-image-for-the-thumbnail-image">Providing an image for the thumbnail image</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-binder-links-for-gallery-notebooks-experimental">Generate Binder links for gallery notebooks (experimental)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-jupyterlite-links-for-gallery-notebooks-experimental">Generate JupyterLite links for gallery notebooks (experimental)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#making-cell-magic-executable-in-notebooks">Making cell magic executable in notebooks</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-without-executing-examples">Building without executing examples</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#compressing-images">Compressing images</a></li>
