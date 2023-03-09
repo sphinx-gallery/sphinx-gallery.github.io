@@ -455,8 +455,7 @@ document.write(`
 <span class="kn">from</span> <span class="nn">.backreferences</span> <span class="kn">import</span> <span class="n">_finalize_backreferences</span>
 <span class="kn">from</span> <span class="nn">.gen_rst</span> <span class="kn">import</span> <span class="p">(</span><span class="n">generate_dir_rst</span><span class="p">,</span> <span class="n">SPHX_GLR_SIG</span><span class="p">,</span> <span class="n">_get_memory_base</span><span class="p">,</span>
                       <span class="n">_get_readme</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">.scrapers</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">_scraper_dict</span><span class="p">,</span> <span class="n">_reset_dict</span><span class="p">,</span> <span class="n">_import_matplotlib</span><span class="p">,</span> <span class="n">_MAYAVI_WARN</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.scrapers</span> <span class="kn">import</span> <span class="n">_scraper_dict</span><span class="p">,</span> <span class="n">_reset_dict</span><span class="p">,</span> <span class="n">_import_matplotlib</span>
 <span class="kn">from</span> <span class="nn">.docs_resolv</span> <span class="kn">import</span> <span class="n">embed_code_links</span>
 <span class="kn">from</span> <span class="nn">.downloads</span> <span class="kn">import</span> <span class="n">generate_zipfiles</span>
 <span class="kn">from</span> <span class="nn">.sorting</span> <span class="kn">import</span> <span class="n">NumberOfCodeLinesSortKey</span>
@@ -598,13 +597,6 @@ document.write(`
             <span class="n">msg</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
         <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
     <span class="n">gallery_conf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">sphinx_gallery_conf</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">sphinx_gallery_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;find_mayavi_figures&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-            <span class="s2">&quot;Deprecated image scraping variable `find_mayavi_figures`</span><span class="se">\n</span><span class="s2">&quot;</span>
-            <span class="s2">&quot;detected, use `image_scrapers` instead as:</span><span class="se">\n\n</span><span class="s2">&quot;</span>
-            <span class="s2">&quot;   image_scrapers=(&#39;matplotlib&#39;, &#39;mayavi&#39;)&quot;</span><span class="p">,</span>
-            <span class="nb">type</span><span class="o">=</span><span class="ne">DeprecationWarning</span><span class="p">)</span>
-        <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;image_scrapers&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span><span class="s1">&#39;mayavi&#39;</span><span class="p">,)</span>
     <span class="n">gallery_conf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">plot_gallery</span><span class="o">=</span><span class="n">plot_gallery</span><span class="p">)</span>
     <span class="n">gallery_conf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">abort_on_example_error</span><span class="o">=</span><span class="n">abort_on_example_error</span><span class="p">)</span>
     <span class="c1"># XXX anything that can only be a bool (rather than str) should probably be</span>
@@ -667,8 +659,6 @@ document.write(`
     <span class="k">for</span> <span class="n">si</span><span class="p">,</span> <span class="n">scraper</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">scrapers</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">scraper</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">scraper</span> <span class="ow">in</span> <span class="n">_scraper_dict</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">scraper</span> <span class="o">==</span> <span class="s1">&#39;mayavi&#39;</span><span class="p">:</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">_MAYAVI_WARN</span><span class="p">)</span>
                 <span class="n">scraper</span> <span class="o">=</span> <span class="n">_scraper_dict</span><span class="p">[</span><span class="n">scraper</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">orig_scraper</span> <span class="o">=</span> <span class="n">scraper</span>

@@ -433,7 +433,7 @@ document.write(`
 
 <span class="sd">Collect images that have been produced by code blocks.</span>
 
-<span class="sd">The only scrapers we support are Matplotlib and Mayavi, others should</span>
+<span class="sd">The only scraper we natively support is Matplotlib, others should</span>
 <span class="sd">live in modules that will support them (e.g., PyVista, Plotly).  Scraped</span>
 <span class="sd">images are injected as rst ``image-sg`` directives into the ``.rst``</span>
 <span class="sd">file generated for each example script.</span>
@@ -446,13 +446,13 @@ document.write(`
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">from</span> <span class="nn">textwrap</span> <span class="kn">import</span> <span class="n">indent</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">PurePosixPath</span>
-<span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">filterwarnings</span><span class="p">,</span> <span class="n">warn</span>
+<span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">filterwarnings</span>
 
 <span class="kn">from</span> <span class="nn">sphinx.errors</span> <span class="kn">import</span> <span class="n">ExtensionError</span>
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">scale_image</span><span class="p">,</span> <span class="n">optipng</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">optipng</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;save_figures&#39;</span><span class="p">,</span> <span class="s1">&#39;figure_rst&#39;</span><span class="p">,</span> <span class="s1">&#39;ImagePathIterator&#39;</span><span class="p">,</span> <span class="s1">&#39;clean_modules&#39;</span><span class="p">,</span>
-           <span class="s1">&#39;matplotlib_scraper&#39;</span><span class="p">,</span> <span class="s1">&#39;mayavi_scraper&#39;</span><span class="p">]</span>
+           <span class="s1">&#39;matplotlib_scraper&#39;</span><span class="p">]</span>
 
 
 <span class="c1">###############################################################################</span>
@@ -663,67 +663,8 @@ document.write(`
     <span class="k">return</span> <span class="n">_ANIMATION_RST</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">html</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="mayavi_scraper"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.mayavi_scraper">[docs]</a><span class="k">def</span> <span class="nf">mayavi_scraper</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">block_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Scrape Mayavi images.</span>
-
-<span class="sd">    .. warning::</span>
-<span class="sd">         mayavi_scraper is deprecated and will be removed in 0.13.0.</span>
-<span class="sd">         Use custom scraping code instead -- see the updated sphinx_gallery</span>
-<span class="sd">         documentation for details.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    block : tuple</span>
-<span class="sd">        A tuple containing the (label, content, line_number) of the block.</span>
-<span class="sd">    block_vars : dict</span>
-<span class="sd">        Dict of block variables.</span>
-<span class="sd">    gallery_conf : dict</span>
-<span class="sd">        Contains the configuration of Sphinx-Gallery</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    rst : str</span>
-<span class="sd">        The ReSTructuredText that will be rendered to HTML containing</span>
-<span class="sd">        the images. This is often produced by :func:`figure_rst`.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">warn</span><span class="p">(</span><span class="n">_MAYAVI_WARN</span><span class="p">,</span> <span class="ne">FutureWarning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">_MayaviScraper</span><span class="p">()(</span><span class="n">block</span><span class="p">,</span> <span class="n">block_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span></div>
-
-
-<span class="n">_MAYAVI_WARN</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="s1">&#39;mayavi_scraper is deprecated and will be removed in 0.13.0. &#39;</span>
-    <span class="s1">&#39;Use custom scraping code instead -- see the updated sphinx_gallery &#39;</span>
-    <span class="s1">&#39;documentation for details.&#39;</span>
-<span class="p">)</span>
-
-
-<span class="k">class</span> <span class="nc">_MayaviScraper</span><span class="p">():</span>
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s1">&#39;MayaviScraper&#39;</span>
-
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">block_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
-        <span class="kn">from</span> <span class="nn">mayavi</span> <span class="kn">import</span> <span class="n">mlab</span>
-        <span class="n">image_path_iterator</span> <span class="o">=</span> <span class="n">block_vars</span><span class="p">[</span><span class="s1">&#39;image_path_iterator&#39;</span><span class="p">]</span>
-        <span class="n">image_paths</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
-        <span class="n">e</span> <span class="o">=</span> <span class="n">mlab</span><span class="o">.</span><span class="n">get_engine</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">scene</span><span class="p">,</span> <span class="n">image_path</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">scenes</span><span class="p">,</span> <span class="n">image_path_iterator</span><span class="p">):</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">mlab</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">scene</span><span class="p">)</span>
-            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-                <span class="n">mlab</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="nb">all</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-                <span class="k">raise</span>
-            <span class="c1"># make sure the image is not too large</span>
-            <span class="n">scale_image</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">image_path</span><span class="p">,</span> <span class="mi">850</span><span class="p">,</span> <span class="mi">999</span><span class="p">)</span>
-            <span class="k">if</span> <span class="s1">&#39;images&#39;</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;compress_images&#39;</span><span class="p">]:</span>
-                <span class="n">optipng</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;compress_images_args&#39;</span><span class="p">])</span>
-            <span class="n">image_paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span>
-        <span class="n">mlab</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="nb">all</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">figure_rst</span><span class="p">(</span><span class="n">image_paths</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">])</span>
-
-
 <span class="n">_scraper_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
     <span class="n">matplotlib</span><span class="o">=</span><span class="n">matplotlib_scraper</span><span class="p">,</span>
-    <span class="n">mayavi</span><span class="o">=</span><span class="n">_MayaviScraper</span><span class="p">(),</span>
 <span class="p">)</span>
 
 
