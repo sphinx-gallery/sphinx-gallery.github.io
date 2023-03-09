@@ -8,7 +8,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>sphinx_gallery.gen_gallery &#8212; Sphinx-Gallery 0.12.0-git documentation</title>
+    <title>sphinx_gallery.gen_gallery &#8212; Sphinx-Gallery 0.12.1-git documentation</title>
   
   
   
@@ -535,7 +535,7 @@ document.write(`
     <span class="s1">&#39;nested_sections&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
     <span class="s1">&#39;prefer_full_module&#39;</span><span class="p">:</span> <span class="p">[],</span>
     <span class="s1">&#39;api_usage_ignore&#39;</span><span class="p">:</span> <span class="s1">&#39;.*__.*__&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;show_api_usage&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s1">&#39;show_api_usage&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>  <span class="c1"># if this changes, change write_api_entries, too</span>
     <span class="s1">&#39;copyfile_regex&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
 <span class="p">}</span>
 
@@ -585,7 +585,14 @@ document.write(`
                            <span class="n">builder_name</span><span class="o">=</span><span class="s1">&#39;html&#39;</span><span class="p">,</span> <span class="n">app</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">check_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="n">gallery_conf</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">DEFAULT_GALLERY_CONF</span><span class="p">)</span>
     <span class="n">options</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">)</span>
-    <span class="n">extra_keys</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">sphinx_gallery_conf</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">options</span><span class="p">))</span>
+    <span class="c1"># sphinx-autoapi can run before our config filling can occur, which</span>
+    <span class="c1"># when used with show_api_usage=True can cause us to add this early.</span>
+    <span class="c1"># In theory we could bump our priority above theirs, but this could have</span>
+    <span class="c1"># unintented consequences.</span>
+    <span class="n">ignore_keys</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;_sg_api_entries&#39;</span><span class="p">,)</span>
+    <span class="n">extra_keys</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+        <span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">sphinx_gallery_conf</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">options</span><span class="p">))</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">ignore_keys</span><span class="p">)</span>
+    <span class="p">)</span>
     <span class="k">if</span> <span class="n">extra_keys</span> <span class="ow">and</span> <span class="n">check_keys</span><span class="p">:</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Unknown key(s) in sphinx_gallery_conf:</span><span class="se">\n</span><span class="s1">&#39;</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">extra_keys</span><span class="p">:</span>
@@ -910,6 +917,8 @@ document.write(`
 
 <span class="s2">   </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">   &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
 
+    <span class="n">st</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+
     <span class="k">return</span> <span class="n">st</span>
 
 
@@ -1166,13 +1175,16 @@ document.write(`
 
 
 <div class="viewcode-block" id="write_api_entries"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.write_api_entries">[docs]</a><span class="k">def</span> <span class="nf">write_api_entries</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">what</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="n">lines</span><span class="p">):</span>
+    <span class="c1"># sphinx-autoapi can do this before we manage to complete our config</span>
+    <span class="k">if</span> <span class="s1">&#39;show_api_usage&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">:</span>
+        <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s1">&#39;show_api_usage&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">if</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s1">&#39;show_api_usage&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
         <span class="k">return</span>
-    <span class="k">if</span> <span class="s1">&#39;api_entries&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">:</span>
-        <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s1">&#39;api_entries&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">what</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s1">&#39;api_entries&#39;</span><span class="p">]:</span>
-        <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s1">&#39;api_entries&#39;</span><span class="p">][</span><span class="n">what</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-    <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s1">&#39;api_entries&#39;</span><span class="p">][</span><span class="n">what</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div>
+    <span class="k">if</span> <span class="s1">&#39;_sg_api_entries&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">:</span>
+        <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s1">&#39;_sg_api_entries&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">what</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s1">&#39;_sg_api_entries&#39;</span><span class="p">]:</span>
+        <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s1">&#39;_sg_api_entries&#39;</span><span class="p">][</span><span class="n">what</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s1">&#39;_sg_api_entries&#39;</span><span class="p">][</span><span class="n">what</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="init_api_usage"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.init_api_usage">[docs]</a><span class="k">def</span> <span class="nf">init_api_usage</span><span class="p">(</span><span class="n">gallery_dir</span><span class="p">):</span>
@@ -1243,7 +1255,7 @@ document.write(`
                 <span class="n">dg</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="n">node_from</span><span class="p">,</span> <span class="n">node_to</span><span class="p">)</span>
         <span class="c1"># add modules with all API entries</span>
         <span class="n">dg</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="s1">&#39;node&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;lightblue2&#39;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;api_entries&#39;</span><span class="p">][</span><span class="s1">&#39;module&#39;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;_sg_api_entries&#39;</span><span class="p">][</span><span class="s1">&#39;module&#39;</span><span class="p">]:</span>
             <span class="n">struct</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">struct</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">struct</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">lut</span><span class="p">:</span>
@@ -1283,27 +1295,27 @@ document.write(`
     <span class="c1"># to in a gallery directory, e.g. auto_examples), it runs last</span>
     <span class="c1"># which means that all the api entries will be in gallery_conf</span>
     <span class="k">if</span> <span class="s1">&#39;sg_api_usage&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">docname</span> <span class="ow">or</span> \
-            <span class="s1">&#39;api_entries&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">gallery_conf</span> <span class="ow">or</span> \
+            <span class="s1">&#39;_sg_api_entries&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">gallery_conf</span> <span class="ow">or</span> \
             <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;backreferences_dir&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span>
     <span class="n">backreferences_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">],</span>
                                       <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;backreferences_dir&#39;</span><span class="p">])</span>
 
     <span class="n">example_files</span> <span class="o">=</span> <span class="nb">set</span><span class="o">.</span><span class="n">union</span><span class="p">(</span>
-        <span class="o">*</span><span class="p">[</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;api_entries&#39;</span><span class="p">][</span><span class="n">obj_type</span><span class="p">]</span>
+        <span class="o">*</span><span class="p">[</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;_sg_api_entries&#39;</span><span class="p">][</span><span class="n">obj_type</span><span class="p">]</span>
           <span class="k">for</span> <span class="n">obj_type</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;class&#39;</span><span class="p">,</span> <span class="s1">&#39;method&#39;</span><span class="p">,</span> <span class="s1">&#39;function&#39;</span><span class="p">)</span>
-          <span class="k">if</span> <span class="n">obj_type</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;api_entries&#39;</span><span class="p">]])</span>
+          <span class="k">if</span> <span class="n">obj_type</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;_sg_api_entries&#39;</span><span class="p">]])</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">example_files</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">return</span>
 
     <span class="k">def</span> <span class="nf">get_entry_type</span><span class="p">(</span><span class="n">entry</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;api_entries&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;class&#39;</span><span class="p">,</span> <span class="p">[]):</span>
+        <span class="k">if</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;_sg_api_entries&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;class&#39;</span><span class="p">,</span> <span class="p">[]):</span>
             <span class="k">return</span> <span class="s1">&#39;class&#39;</span>
-        <span class="k">elif</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;api_entries&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;method&#39;</span><span class="p">,</span> <span class="p">[]):</span>
+        <span class="k">elif</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;_sg_api_entries&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;method&#39;</span><span class="p">,</span> <span class="p">[]):</span>
             <span class="k">return</span> <span class="s1">&#39;meth&#39;</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">assert</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;api_entries&#39;</span><span class="p">][</span><span class="s1">&#39;function&#39;</span><span class="p">]</span>
+            <span class="k">assert</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;_sg_api_entries&#39;</span><span class="p">][</span><span class="s1">&#39;function&#39;</span><span class="p">]</span>
             <span class="k">return</span> <span class="s1">&#39;func&#39;</span>
 
     <span class="c1"># find used and unused API entries</span>
