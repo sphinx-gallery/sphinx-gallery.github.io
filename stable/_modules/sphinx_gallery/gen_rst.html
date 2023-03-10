@@ -8,7 +8,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>sphinx_gallery.gen_rst &#8212; Sphinx-Gallery 0.12.1-git documentation</title>
+    <title>sphinx_gallery.gen_rst &#8212; Sphinx-Gallery 0.12.2-git documentation</title>
   
   
   
@@ -1198,6 +1198,11 @@ document.write(`
         <span class="n">captured_std</span> <span class="o">=</span> <span class="n">CODE_OUTPUT</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">indent</span><span class="p">(</span><span class="n">captured_std</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39; &#39;</span> <span class="o">*</span> <span class="mi">4</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">captured_std</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+    <span class="c1"># Sanitize ANSI escape characters for RST output</span>
+    <span class="n">ansi_escape</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\x1B(?:[@-Z</span><span class="se">\\</span><span class="s1">-_]|\[[0-?]*[ -/]*[@-~])&#39;</span><span class="p">)</span>
+    <span class="n">captured_std</span> <span class="o">=</span> <span class="n">ansi_escape</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">captured_std</span><span class="p">)</span>
+
     <span class="c1"># give html output its own header</span>
     <span class="k">if</span> <span class="n">repr_meth</span> <span class="o">==</span> <span class="s1">&#39;_repr_html_&#39;</span><span class="p">:</span>
         <span class="n">captured_html</span> <span class="o">=</span> <span class="n">HTML_HEADER</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">indent</span><span class="p">(</span><span class="n">last_repr</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39; &#39;</span> <span class="o">*</span> <span class="mi">4</span><span class="p">))</span>
@@ -1310,10 +1315,6 @@ document.write(`
     <span class="k">finally</span><span class="p">:</span>
         <span class="n">_reset_cwd_syspath</span><span class="p">(</span><span class="n">cwd</span><span class="p">,</span> <span class="n">sys_path</span><span class="p">)</span>
         <span class="n">logging_tee</span><span class="o">.</span><span class="n">restore_std</span><span class="p">()</span>
-
-    <span class="c1"># Sanitize ANSI escape characters from RST output</span>
-    <span class="n">ansi_escape</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\x1B(?:[@-Z</span><span class="se">\\</span><span class="s1">-_]|\[[0-?]*[ -/]*[@-~])&#39;</span><span class="p">)</span>
-    <span class="n">code_output</span> <span class="o">=</span> <span class="n">ansi_escape</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">code_output</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">code_output</span></div>
 
