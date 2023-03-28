@@ -765,7 +765,7 @@ document.write(`
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    fpath: str</span>
-<span class="sd">        The path to the `.ipynb` file for which a JupyterLite badge will be</span>
+<span class="sd">        The path to the `.py` file for which a JupyterLite badge will be</span>
 <span class="sd">        generated.</span>
 
 <span class="sd">    gallery_conf : dict</span>
@@ -781,10 +781,17 @@ document.write(`
     <span class="c1"># Make sure we have the right slashes (in case we&#39;re on Windows)</span>
     <span class="n">notebook_location</span> <span class="o">=</span> <span class="n">notebook_location</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">)</span>
 
+    <span class="n">lite_root_url</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">],</span> <span class="s1">&#39;lite&#39;</span><span class="p">),</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="c1"># Make sure we have the right slashes (in case we&#39;re on Windows)</span>
+    <span class="n">lite_root_url</span> <span class="o">=</span> <span class="n">lite_root_url</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;jupyterlite&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;use_jupyter_lab&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
-        <span class="n">lite_root_url</span> <span class="o">=</span> <span class="s2">&quot;/lite/lab&quot;</span>
+        <span class="n">lite_root_url</span> <span class="o">+=</span> <span class="s2">&quot;/lab&quot;</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">lite_root_url</span> <span class="o">=</span> <span class="s2">&quot;/lite/retro/notebooks&quot;</span>
+        <span class="n">lite_root_url</span> <span class="o">+=</span> <span class="s2">&quot;/retro/notebooks&quot;</span>
 
     <span class="n">lite_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">lite_root_url</span><span class="si">}</span><span class="s2">/?path=</span><span class="si">{</span><span class="n">notebook_location</span><span class="si">}</span><span class="s2">&quot;</span>
 
