@@ -1556,7 +1556,7 @@ image to be built</p></li>
 <li><p>with JupyterLite the first imports take time. At the time of writing
 (February 2023) <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">scipy</span></code> can take ~15-30s. Some innocuously looking
 Python code may just not work and break in an unexpected fashion. The Jupyter
-kernel is based on Pyodide, see some <a class="reference external" href="https://pyodide.org/en/latest/usage/wasm-constraints.html">here</a> for some
+kernel is based on Pyodide, see <a class="reference external" href="https://pyodide.org/en/latest/usage/wasm-constraints.html">here</a> for some
 Pyodide limitations.</p></li>
 <li><p>with JupyterLite environments are not as flexible as Binder, for example you
 can not use a docker image but only the default <a class="reference external" href="https://pyodide.org/en/stable/index.html">Pyodide</a> environment. That means that
@@ -1577,8 +1577,6 @@ For <cite>jupyterlite-sphinx&gt;=0.8</cite> (released 15 March 2023) you also ne
 <code class="docutils literal notranslate"><span class="pre">conf.py</span></code>:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">extensions</span> <span class="o">=</span> <span class="p">[</span>
     <span class="o">...</span><span class="p">,</span>
-    <span class="o">...</span><span class="p">,</span>
-    <span class="o">...</span><span class="p">,</span>
     <span class="s1">&#39;jupyterlite_sphinx&#39;</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
@@ -1588,8 +1586,9 @@ For <cite>jupyterlite-sphinx&gt;=0.8</cite> (released 15 March 2023) you also ne
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
   <span class="o">...</span>
   <span class="s1">&#39;jupyterlite&#39;</span><span class="p">:</span> <span class="p">{</span>
-     <span class="s1">&#39;jupyterlite_contents&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">str</span><span class="o">&gt;</span> <span class="c1"># JupyterLite contents where to copy the example notebooks (relative to Sphinx source directory)</span>
-     <span class="s1">&#39;use_jupyter_lab&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">bool</span><span class="o">&gt;</span> <span class="c1"># Whether JupyterLite links should start Jupyter Lab instead of the Retrolab Notebook interface.</span>
+     <span class="s1">&#39;use_jupyter_lab&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">bool</span><span class="o">&gt;</span><span class="p">,</span> <span class="c1"># Whether JupyterLite links should start Jupyter Lab instead of the Retrolab Notebook interface.</span>
+     <span class="s1">&#39;notebook_modification_function&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">function</span><span class="o">&gt;</span><span class="p">,</span> <span class="c1"># function that implements JupyterLite-specific modifications of notebooks</span>
+     <span class="s1">&#39;jupyterlite_contents&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">str</span><span class="o">&gt;</span><span class="p">,</span> <span class="c1"># JupyterLite contents where to copy the example notebooks (relative to Sphinx source directory)</span>
      <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
@@ -1599,12 +1598,27 @@ For <cite>jupyterlite-sphinx&gt;=0.8</cite> (released 15 March 2023) you also ne
 <dt>use_jupyter_lab (type: bool, default: <code class="docutils literal notranslate"><span class="pre">True</span></code>)</dt><dd><p>Whether the default interface activated by the JupyterLite link will be for
 Jupyter Lab or the RetroLab Notebook interface.</p>
 </dd>
-<dt>jupyterlite_contents (type: string, default: <code class="docutils literal notranslate"><span class="pre">jupyterlite_contents</span></code>) The name</dt><dd><p>of a folder where the built Jupyter notebooks will be copied, relative to the
-Sphinx source directory. This is used as Jupyterlite contents.</p>
+<dt>notebook_modification_function (type: function, default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)</dt><dd><p>Function that implements JupyterLite-specific modifications of notebooks. By
+default, it is <code class="docutils literal notranslate"><span class="pre">None</span></code> which means that notebooks are not going to be
+modified. Its signature should be <code class="docutils literal notranslate"><span class="pre">notebook_modification_function(json_dict:</span>
+<span class="pre">dict,</span> <span class="pre">notebook_filename:</span> <span class="pre">str)</span> <span class="pre">-&gt;</span> <span class="pre">None</span></code> where <code class="docutils literal notranslate"><span class="pre">json_dict</span></code> is what you get
+when you do <code class="docutils literal notranslate"><span class="pre">json.load(open(notebook_filename))</span></code>. The function is expected
+to modify <code class="docutils literal notranslate"><span class="pre">json_dict</span></code> in place by adding notebook cells. It is not expected
+to write to the file, since <code class="docutils literal notranslate"><span class="pre">sphinx-gallery</span></code> is in charge of this.
+<code class="docutils literal notranslate"><span class="pre">notebook_filename</span></code> is provided for convenience because it is useful to
+modify the notebook based on its filename. Potential usages of this function
+are installing additional packages with a <code class="docutils literal notranslate"><span class="pre">%pip</span> <span class="pre">install</span> <span class="pre">seaborn</span></code> code cell,
+or adding a markdown cell to indicate that a notebook is not expected to work
+inside JupyterLite, for example because it is using packages that are not
+packaged inside Pyodide.</p>
+</dd>
+<dt>jupyterlite_contents (type: string, default: <code class="docutils literal notranslate"><span class="pre">jupyterlite_contents</span></code>)</dt><dd><p>The name of a folder where the built Jupyter notebooks will be copied,
+relative to the Sphinx source directory. This is used as Jupyterlite
+contents.</p>
 </dd>
 </dl>
 <p>You can set variables in <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> to configure <code class="docutils literal notranslate"><span class="pre">jupyterlite-sphinx</span></code>, see
-its <a class="reference external" href="https://jupyterlite-sphinx.readthedocs.io/en/latest/configuration.html">jupyterlite-sphinx doc</a> for
+the <a class="reference external" href="https://jupyterlite-sphinx.readthedocs.io/en/latest/configuration.html">jupyterlite-sphinx doc</a> for
 more details.</p>
 <p>If a Sphinx-Gallery configuration for JupyterLite is discovered, the following
 extra things will happen:</p>
@@ -1614,6 +1628,8 @@ extra things will happen:</p>
 <li><p>The built Jupyter Notebooks from the documentation will be copied to a
 folder called <code class="docutils literal notranslate"><span class="pre">&lt;jupyterlite_contents&gt;/</span></code> (relative to Sphinx source
 directory)</p></li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">notebook_modification_function</span></code> is not <code class="docutils literal notranslate"><span class="pre">None</span></code>, this function is
+going to add JupyterLite-specific modifications to notebooks</p></li>
 <li><p>The rST output of each Sphinx-Gallery example will now have a
 <code class="docutils literal notranslate"><span class="pre">launch</span> <span class="pre">JupyterLite</span></code> button in it.</p></li>
 <li><p>That button will point to a JupyterLite link which will start a Jupyter

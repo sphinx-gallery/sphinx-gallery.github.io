@@ -444,6 +444,8 @@ document.write(`
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">from</span> <span class="nn">urllib.parse</span> <span class="kn">import</span> <span class="n">quote</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">json</span>
 
 <span class="kn">from</span> <span class="nn">sphinx.errors</span> <span class="kn">import</span> <span class="n">ConfigError</span>
 <span class="kn">import</span> <span class="nn">sphinx.util</span>
@@ -756,7 +758,27 @@ document.write(`
     <span class="k">for</span> <span class="n">i_folder</span> <span class="ow">in</span> <span class="n">iterator</span><span class="p">:</span>
         <span class="n">shutil</span><span class="o">.</span><span class="n">copytree</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span> <span class="n">i_folder</span><span class="p">),</span>
                         <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">contents_dir</span><span class="p">,</span> <span class="n">i_folder</span><span class="p">),</span>
-                        <span class="n">ignore</span><span class="o">=</span><span class="n">_remove_ipynb_files</span><span class="p">)</span></div>
+                        <span class="n">ignore</span><span class="o">=</span><span class="n">_remove_ipynb_files</span><span class="p">)</span>
+
+    <span class="n">notebook_modification_function</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;jupyterlite&#39;</span><span class="p">][</span>
+        <span class="s1">&#39;notebook_modification_function&#39;</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">notebook_modification_function</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span>
+
+    <span class="n">notebook_pattern</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">contents_dir</span><span class="p">,</span> <span class="s2">&quot;**&quot;</span><span class="p">,</span> <span class="s2">&quot;*.ipynb&quot;</span><span class="p">)</span>
+    <span class="n">notebook_filename_list</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+        <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">notebook_pattern</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Modifying Jupyterlite notebooks ...&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">notebook_filename</span> <span class="ow">in</span> <span class="n">notebook_filename_list</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">notebook_filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">notebook_content</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+        <span class="n">notebook_modification_function</span><span class="p">(</span><span class="n">notebook_content</span><span class="p">,</span> <span class="n">notebook_filename</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">notebook_filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">notebook_content</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="gen_jupyterlite_rst"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.interactive_example.html#sphinx_gallery.interactive_example.gen_jupyterlite_rst">[docs]</a><span class="k">def</span> <span class="nf">gen_jupyterlite_rst</span><span class="p">(</span><span class="n">fpath</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
@@ -832,13 +854,13 @@ document.write(`
         <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
             <span class="s1">&#39;`jupyterlite_conf` must be a dictionary&#39;</span><span class="p">)</span>
 
-    <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="n">result</span><span class="p">[</span><span class="s1">&#39;use_jupyter_lab&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">jupyterlite_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;use_jupyter_lab&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-    <span class="n">result</span><span class="p">[</span><span class="s1">&#39;jupyterlite_contents&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">jupyterlite_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-        <span class="s1">&#39;jupyterlite_contents&#39;</span><span class="p">,</span> <span class="s1">&#39;jupyterlite_contents&#39;</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">jupyterlite_conf</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;use_jupyter_lab&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;jupyterlite_contents&#39;</span><span class="p">,</span> <span class="s1">&#39;jupyterlite_contents&#39;</span><span class="p">)</span>
     <span class="n">result</span><span class="p">[</span><span class="s1">&#39;jupyterlite_contents&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
         <span class="n">app</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span>
         <span class="n">result</span><span class="p">[</span><span class="s1">&#39;jupyterlite_contents&#39;</span><span class="p">])</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;notebook_modification_function&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">result</span></div>
 </pre></div>
