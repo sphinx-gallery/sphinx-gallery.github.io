@@ -424,8 +424,7 @@ document.write(`
                 <article class="bd-article" role="main">
                   
   <h1>Source code for sphinx_gallery.backreferences</h1><div class="highlight"><pre>
-<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="c1"># Author: Óscar Nájera</span>
+<span></span><span class="c1"># Author: Óscar Nájera</span>
 <span class="c1"># License: 3-clause BSD</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Backreferences Generator</span>
@@ -433,7 +432,6 @@ document.write(`
 
 <span class="sd">Parses example file code in order to keep track of used functions</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">unicode_literals</span>
 
 <span class="kn">import</span> <span class="nn">ast</span>
 <span class="kn">import</span> <span class="nn">codecs</span>
@@ -466,7 +464,7 @@ document.write(`
 <span class="s2">&quot;&quot;&quot;</span>
 
 
-<div class="viewcode-block" id="DummyClass"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.backreferences.html#sphinx_gallery.backreferences.DummyClass">[docs]</a><span class="k">class</span> <span class="nc">DummyClass</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="DummyClass"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.backreferences.html#sphinx_gallery.backreferences.DummyClass">[docs]</a><span class="k">class</span> <span class="nc">DummyClass</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Dummy class for testing method resolution.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="DummyClass.run"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.backreferences.html#sphinx_gallery.backreferences.DummyClass.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -486,7 +484,7 @@ document.write(`
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">global_variables</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">NameFinder</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">imported_names</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">global_variables</span> <span class="o">=</span> <span class="n">global_variables</span> <span class="ow">or</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">accessed_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
@@ -591,7 +589,7 @@ document.write(`
 
 
 <span class="k">def</span> <span class="nf">_from_import</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
-    <span class="n">imp_line</span> <span class="o">=</span> <span class="s1">&#39;from </span><span class="si">%s</span><span class="s1"> import </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+    <span class="n">imp_line</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;from </span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s1"> import </span><span class="si">{</span><span class="n">b</span><span class="si">}</span><span class="s1">&#39;</span>
     <span class="n">scope</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
     <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">(</span><span class="n">record</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>  <span class="c1"># swallow warnings</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
@@ -781,7 +779,7 @@ document.write(`
             <span class="n">level</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;log_level&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;backreference_missing&#39;</span><span class="p">,</span>
                                                   <span class="s1">&#39;warning&#39;</span><span class="p">)</span>
             <span class="n">func</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="n">level</span><span class="p">)</span>
-            <span class="n">func</span><span class="p">(</span><span class="s1">&#39;Could not find backreferences file: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">path</span><span class="p">,))</span>
+            <span class="n">func</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Could not find backreferences file: </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
             <span class="n">func</span><span class="p">(</span><span class="s1">&#39;The backreferences are likely to be erroneous &#39;</span>
                  <span class="s1">&#39;due to file system case insensitivity.&#39;</span><span class="p">)</span>
 </pre></div>
@@ -847,7 +845,7 @@ document.write(`
     <div class="footer-items__end">
       
         <div class="footer-item"><p class="theme-version">
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.13.2.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.13.3.
 </p></div>
       
     </div>

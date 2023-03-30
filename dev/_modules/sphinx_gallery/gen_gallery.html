@@ -424,8 +424,7 @@ document.write(`
                 <article class="bd-article" role="main">
                   
   <h1>Source code for sphinx_gallery.gen_gallery</h1><div class="highlight"><pre>
-<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="c1"># Author: Óscar Nájera</span>
+<span></span><span class="c1"># Author: Óscar Nájera</span>
 <span class="c1"># License: 3-clause BSD</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Sphinx-Gallery Generator</span>
@@ -436,7 +435,6 @@ document.write(`
 <span class="sd">&quot;&quot;&quot;</span>
 
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">absolute_import</span>
 <span class="kn">import</span> <span class="nn">codecs</span>
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span><span class="p">,</span> <span class="n">datetime</span>
@@ -598,9 +596,9 @@ document.write(`
             <span class="n">options</span> <span class="o">=</span> <span class="n">get_close_matches</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="mf">0.66</span><span class="p">)</span>
             <span class="n">msg</span> <span class="o">+=</span> <span class="nb">repr</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">options</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="n">msg</span> <span class="o">+=</span> <span class="s1">&#39;, did you mean </span><span class="si">%r</span><span class="s1">?&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="mi">0</span><span class="p">],)</span>
+                <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;, did you mean </span><span class="si">{</span><span class="n">options</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">!r}</span><span class="s1">?&#39;</span>
             <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">options</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="n">msg</span> <span class="o">+=</span> <span class="s1">&#39;, did you mean one of </span><span class="si">%r</span><span class="s1">?&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">options</span><span class="p">,)</span>
+                <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;, did you mean one of </span><span class="si">{</span><span class="n">options</span><span class="si">!r}</span><span class="s1">?&#39;</span>
             <span class="n">msg</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
         <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
     <span class="n">gallery_conf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">sphinx_gallery_conf</span><span class="p">)</span>
@@ -678,7 +676,7 @@ document.write(`
                                       <span class="o">%</span> <span class="p">(</span><span class="n">orig_scraper</span><span class="p">,</span> <span class="n">exp</span><span class="p">))</span>
             <span class="n">scrapers</span><span class="p">[</span><span class="n">si</span><span class="p">]</span> <span class="o">=</span> <span class="n">scraper</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">callable</span><span class="p">(</span><span class="n">scraper</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s1">&#39;Scraper </span><span class="si">%r</span><span class="s1"> was not callable&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">scraper</span><span class="p">,))</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Scraper </span><span class="si">{</span><span class="n">scraper</span><span class="si">!r}</span><span class="s1"> was not callable&#39;</span><span class="p">)</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;image_scrapers&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">scrapers</span><span class="p">)</span>
     <span class="k">del</span> <span class="n">scrapers</span>
     <span class="c1"># Here we try to set up matplotlib but don&#39;t raise an error,</span>
@@ -1075,7 +1073,7 @@ document.write(`
         <span class="n">lines</span><span class="p">,</span> <span class="n">lens</span> <span class="o">=</span> <span class="n">_format_for_writing</span><span class="p">(</span>
             <span class="n">costs</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">]),</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;console&#39;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
-            <span class="n">text</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;    - </span><span class="si">%s</span><span class="s1">:   &#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,))</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="n">lens</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">10</span><span class="p">)</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s1">&#39;    - </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">:   &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="n">lens</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">10</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">t</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">text</span> <span class="o">+=</span> <span class="s1">&#39;(not run)&#39;</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
@@ -1108,7 +1106,7 @@ document.write(`
     <span class="c1"># there aren&#39;t many &gt; 99 minute scripts, but occasionally some</span>
     <span class="c1"># &gt; 9 minute ones</span>
     <span class="n">t</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">t</span><span class="p">)</span>
-    <span class="n">t</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{0:02d}</span><span class="s1">:</span><span class="si">{1:02d}</span><span class="s1">.</span><span class="si">{2:03d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:02d}</span><span class="s1">:</span><span class="si">{:02d}</span><span class="s1">.</span><span class="si">{:03d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
         <span class="n">t</span><span class="o">.</span><span class="n">hour</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">+</span> <span class="n">t</span><span class="o">.</span><span class="n">minute</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">second</span><span class="p">,</span>
         <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">microsecond</span> <span class="o">/</span> <span class="mf">1000.</span><span class="p">)))</span>
     <span class="k">return</span> <span class="n">t</span>
@@ -1130,8 +1128,8 @@ document.write(`
         <span class="k">else</span><span class="p">:</span>  <span class="c1"># like in generate_gallery</span>
             <span class="k">assert</span> <span class="n">kind</span> <span class="o">==</span> <span class="s1">&#39;console&#39;</span>
             <span class="n">name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">cost</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">path</span><span class="p">)</span>
-            <span class="n">t</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%0.2f</span><span class="s1"> sec&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">cost</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],)</span>
-        <span class="n">m</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{0:.1f}</span><span class="s1"> MB&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cost</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cost</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s1">0.2f</span><span class="si">}</span><span class="s1"> sec&#39;</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cost</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1"> MB&#39;</span>
         <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">name</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">m</span><span class="p">])</span>
     <span class="n">lens</span> <span class="o">=</span> <span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="p">[[</span><span class="nb">len</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">cost</span><span class="p">]</span>
                                   <span class="k">for</span> <span class="n">cost</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">])]</span>
@@ -1148,13 +1146,13 @@ document.write(`
     <span class="k">with</span> <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="s1">&#39;sg_execution_times.rst&#39;</span><span class="p">),</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span>
                      <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
         <span class="n">fid</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">SPHX_GLR_COMP_TIMES</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">new_ref</span><span class="p">))</span>
-        <span class="n">fid</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="si">{0}</span><span class="s1">** total execution time for **</span><span class="si">{1}</span><span class="s1">** files:</span><span class="se">\n\n</span><span class="s1">&#39;</span>
+        <span class="n">fid</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="si">{}</span><span class="s1">** total execution time for **</span><span class="si">{}</span><span class="s1">** files:</span><span class="se">\n\n</span><span class="s1">&#39;</span>
                   <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_sec_to_readable</span><span class="p">(</span><span class="n">total_time</span><span class="p">),</span> <span class="n">target_dir_clean</span><span class="p">))</span>
         <span class="n">lines</span><span class="p">,</span> <span class="n">lens</span> <span class="o">=</span> <span class="n">_format_for_writing</span><span class="p">(</span><span class="n">costs</span><span class="p">,</span> <span class="n">target_dir_clean</span><span class="p">)</span>
         <span class="k">del</span> <span class="n">costs</span>
         <span class="n">hline</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="s1">&#39;+&#39;</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="p">(</span><span class="n">length</span> <span class="o">+</span> <span class="mi">2</span><span class="p">))</span> <span class="k">for</span> <span class="n">length</span> <span class="ow">in</span> <span class="n">lens</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;+</span><span class="se">\n</span><span class="s1">&#39;</span>
         <span class="n">fid</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">hline</span><span class="p">)</span>
-        <span class="n">format_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;| {</span><span class="si">%s</span><span class="s1">} &#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">ii</span><span class="p">,)</span>
+        <span class="n">format_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;| </span><span class="se">{{</span><span class="si">{</span><span class="n">ii</span><span class="si">}</span><span class="se">}}</span><span class="s1"> &#39;</span>
                              <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span> <span class="o">+</span> <span class="s1">&#39;|</span><span class="se">\n</span><span class="s1">&#39;</span>
         <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
             <span class="n">line</span> <span class="o">=</span> <span class="p">[</span><span class="n">ll</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="n">len_</span><span class="p">)</span> <span class="k">for</span> <span class="n">ll</span><span class="p">,</span> <span class="n">len_</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">lens</span><span class="p">)]</span>
@@ -1325,7 +1323,7 @@ document.write(`
             <span class="n">unused_api_entries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">used_api_entries</span><span class="p">[</span><span class="n">entry</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">example_fname</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid2</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">example_fname</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid2</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">fid2</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;  :ref:&#39;</span><span class="p">):</span>
                         <span class="n">example_name</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;`&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
@@ -1367,8 +1365,7 @@ document.write(`
             <span class="n">source</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span>
 
         <span class="k">if</span> <span class="n">has_graphviz</span><span class="p">:</span>
-            <span class="n">used_modules</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="n">entry</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-                                <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">used_api_entries</span><span class="p">])</span>
+            <span class="n">used_modules</span> <span class="o">=</span> <span class="p">{</span><span class="n">entry</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">used_api_entries</span><span class="p">}</span>
             <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">used_modules</span><span class="p">):</span>
                 <span class="n">source</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span>
                     <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">module</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="s1">&#39;^&#39;</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">module</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span>
@@ -1422,13 +1419,13 @@ document.write(`
             <span class="k">continue</span>  <span class="c1"># not subselected by our regex</span>
         <span class="n">title</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;titles&#39;</span><span class="p">][</span><span class="n">fname</span><span class="p">]</span>
         <span class="n">output</span> <span class="o">+=</span> <span class="p">(</span>
-            <span class="sa">u</span><span class="s1">&#39;&lt;testcase classname=</span><span class="si">{0!s}</span><span class="s1"> file=</span><span class="si">{1!s}</span><span class="s1"> line=&quot;1&quot; &#39;</span>
-            <span class="sa">u</span><span class="s1">&#39;name=</span><span class="si">{2!s}</span><span class="s1"> time=&quot;</span><span class="si">{3!r}</span><span class="s1">&quot;&gt;&#39;</span>
+            <span class="s1">&#39;&lt;testcase classname=</span><span class="si">{!s}</span><span class="s1"> file=</span><span class="si">{!s}</span><span class="s1"> line=&quot;1&quot; &#39;</span>
+            <span class="s1">&#39;name=</span><span class="si">{!s}</span><span class="s1"> time=&quot;</span><span class="si">{!r}</span><span class="s1">&quot;&gt;&#39;</span>
             <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">quoteattr</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">fname</span><span class="p">))[</span><span class="mi">0</span><span class="p">]),</span>
                     <span class="n">quoteattr</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">)),</span>
                     <span class="n">quoteattr</span><span class="p">(</span><span class="n">title</span><span class="p">),</span> <span class="n">t</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">failing_as_expected</span><span class="p">:</span>
-            <span class="n">output</span> <span class="o">+=</span> <span class="sa">u</span><span class="s1">&#39;&lt;skipped message=&quot;expected example failure&quot;&gt;&lt;/skipped&gt;&#39;</span>
+            <span class="n">output</span> <span class="o">+=</span> <span class="s1">&#39;&lt;skipped message=&quot;expected example failure&quot;&gt;&lt;/skipped&gt;&#39;</span>
             <span class="n">n_skips</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">elif</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">failing_unexpectedly</span> <span class="ow">or</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">passing_unexpectedly</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">failing_unexpectedly</span><span class="p">:</span>
@@ -1436,16 +1433,16 @@ document.write(`
             <span class="k">else</span><span class="p">:</span>  <span class="c1"># fname in passing_unexpectedly</span>
                 <span class="n">traceback</span> <span class="o">=</span> <span class="s1">&#39;Passed even though it was marked to fail&#39;</span>
             <span class="n">n_failures</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="n">output</span> <span class="o">+=</span> <span class="p">(</span><span class="sa">u</span><span class="s1">&#39;&lt;failure message=</span><span class="si">{0!s}</span><span class="s1">&gt;</span><span class="si">{1!s}</span><span class="s1">&lt;/failure&gt;&#39;</span>
+            <span class="n">output</span> <span class="o">+=</span> <span class="p">(</span><span class="s1">&#39;&lt;failure message=</span><span class="si">{!s}</span><span class="s1">&gt;</span><span class="si">{!s}</span><span class="s1">&lt;/failure&gt;&#39;</span>
                        <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">quoteattr</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()),</span>
                                <span class="n">escape</span><span class="p">(</span><span class="n">traceback</span><span class="p">)))</span>
-        <span class="n">output</span> <span class="o">+=</span> <span class="sa">u</span><span class="s1">&#39;&lt;/testcase&gt;&#39;</span>
+        <span class="n">output</span> <span class="o">+=</span> <span class="s1">&#39;&lt;/testcase&gt;&#39;</span>
         <span class="n">n_tests</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="n">elapsed</span> <span class="o">+=</span> <span class="n">t</span>
-    <span class="n">output</span> <span class="o">+=</span> <span class="sa">u</span><span class="s1">&#39;&lt;/testsuite&gt;&#39;</span>
-    <span class="n">output</span> <span class="o">=</span> <span class="p">(</span><span class="sa">u</span><span class="s1">&#39;&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;&#39;</span>
-              <span class="sa">u</span><span class="s1">&#39;&lt;testsuite errors=&quot;0&quot; failures=&quot;</span><span class="si">{0}</span><span class="s1">&quot; name=&quot;sphinx-gallery&quot; &#39;</span>
-              <span class="sa">u</span><span class="s1">&#39;skipped=&quot;</span><span class="si">{1}</span><span class="s1">&quot; tests=&quot;</span><span class="si">{2}</span><span class="s1">&quot; time=&quot;</span><span class="si">{3}</span><span class="s1">&quot;&gt;&#39;</span>
+    <span class="n">output</span> <span class="o">+=</span> <span class="s1">&#39;&lt;/testsuite&gt;&#39;</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;&#39;</span>
+              <span class="s1">&#39;&lt;testsuite errors=&quot;0&quot; failures=&quot;</span><span class="si">{}</span><span class="s1">&quot; name=&quot;sphinx-gallery&quot; &#39;</span>
+              <span class="s1">&#39;skipped=&quot;</span><span class="si">{}</span><span class="s1">&quot; tests=&quot;</span><span class="si">{}</span><span class="s1">&quot; time=&quot;</span><span class="si">{}</span><span class="s1">&quot;&gt;&#39;</span>
               <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n_failures</span><span class="p">,</span> <span class="n">n_skips</span><span class="p">,</span> <span class="n">n_tests</span><span class="p">,</span> <span class="n">elapsed</span><span class="p">))</span> <span class="o">+</span> <span class="n">output</span>
     <span class="c1"># Actually write it</span>
     <span class="n">fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;junit&#39;</span><span class="p">]))</span>
@@ -1476,9 +1473,9 @@ document.write(`
 
 
 <span class="k">def</span> <span class="nf">_expected_failing_examples</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">):</span>
-    <span class="k">return</span> <span class="nb">set</span><span class="p">(</span>
+    <span class="k">return</span> <span class="p">{</span>
         <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">],</span> <span class="n">path</span><span class="p">))</span>
-        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;expected_failing_examples&#39;</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;expected_failing_examples&#39;</span><span class="p">]}</span>
 
 
 <span class="k">def</span> <span class="nf">_parse_failures</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">):</span>
@@ -1721,7 +1718,7 @@ document.write(`
     <div class="footer-items__end">
       
         <div class="footer-item"><p class="theme-version">
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.13.2.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.13.3.
 </p></div>
       
     </div>

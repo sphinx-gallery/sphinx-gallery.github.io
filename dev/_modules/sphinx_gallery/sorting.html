@@ -424,8 +424,7 @@ document.write(`
                 <article class="bd-article" role="main">
                   
   <h1>Source code for sphinx_gallery.sorting</h1><div class="highlight"><pre>
-<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Sorters for Sphinx-Gallery (sub)sections</span>
 <span class="sd">========================================</span>
 
@@ -435,7 +434,6 @@ document.write(`
 <span class="c1"># Author: Óscar Nájera</span>
 <span class="c1"># License: 3-clause BSD</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span><span class="p">,</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">print_function</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">types</span>
 
@@ -445,7 +443,7 @@ document.write(`
 <span class="kn">from</span> <span class="nn">.py_source_parser</span> <span class="kn">import</span> <span class="n">split_code_and_text_blocks</span>
 
 
-<div class="viewcode-block" id="ExplicitOrder"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.sorting.html#sphinx_gallery.sorting.ExplicitOrder">[docs]</a><span class="k">class</span> <span class="nc">ExplicitOrder</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="ExplicitOrder"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.sorting.html#sphinx_gallery.sorting.ExplicitOrder">[docs]</a><span class="k">class</span> <span class="nc">ExplicitOrder</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Sorting key for all gallery subsections.</span>
 
 <span class="sd">    This requires all folders to be listed otherwise an exception is raised.</span>
@@ -479,17 +477,17 @@ document.write(`
                               <span class="s1">&#39;found for </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">item</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s1">&#39;&lt;</span><span class="si">%s</span><span class="s1"> : </span><span class="si">%s</span><span class="s1">&gt;&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ordered_list</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1"> : </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ordered_list</span><span class="si">}</span><span class="s1">&gt;&#39;</span></div>
 
 
-<span class="k">class</span> <span class="nc">_SortKey</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">_SortKey</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for section order key classes.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">src_dir</span> <span class="o">=</span> <span class="n">src_dir</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s1">&#39;&lt;</span><span class="si">%s</span><span class="s1">&gt;&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,)</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">&gt;&#39;</span>
 
 
 <div class="viewcode-block" id="NumberOfCodeLinesSortKey"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.sorting.html#sphinx_gallery.sorting.NumberOfCodeLinesSortKey">[docs]</a><span class="k">class</span> <span class="nc">NumberOfCodeLinesSortKey</span><span class="p">(</span><span class="n">_SortKey</span><span class="p">):</span>
@@ -614,7 +612,7 @@ document.write(`
     <div class="footer-items__end">
       
         <div class="footer-item"><p class="theme-version">
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.13.2.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.13.3.
 </p></div>
       
     </div>

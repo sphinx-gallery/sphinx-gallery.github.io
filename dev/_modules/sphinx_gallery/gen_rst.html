@@ -424,8 +424,7 @@ document.write(`
                 <article class="bd-article" role="main">
                   
   <h1>Source code for sphinx_gallery.gen_rst</h1><div class="highlight"><pre>
-<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="c1"># Author: Óscar Nájera</span>
+<span></span><span class="c1"># Author: Óscar Nájera</span>
 <span class="c1"># License: 3-clause BSD</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">reST file generator</span>
@@ -437,7 +436,6 @@ document.write(`
 <span class="sd">Files that generate images should start with &#39;plot&#39;.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">absolute_import</span>
 <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">contextlib</span>
@@ -486,7 +484,7 @@ document.write(`
 <span class="c1">###############################################################################</span>
 
 
-<span class="k">class</span> <span class="nc">_LoggingTee</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">_LoggingTee</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A tee object to redirect streams to the logger.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src_filename</span><span class="p">):</span>
@@ -608,10 +606,10 @@ document.write(`
     <span class="k">if</span> <span class="n">lineno</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># Sphinx only starts numbering from the first non-empty line.</span>
         <span class="n">blank_lines</span> <span class="o">=</span> <span class="n">codestr</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">codestr</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()))</span>
-        <span class="n">lineno</span> <span class="o">=</span> <span class="s1">&#39;   :lineno-start: </span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">lineno</span> <span class="o">+</span> <span class="n">blank_lines</span><span class="p">)</span>
+        <span class="n">lineno</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;   :lineno-start: </span><span class="si">{</span><span class="n">lineno</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">blank_lines</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">lineno</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-    <span class="n">code_directive</span> <span class="o">=</span> <span class="s2">&quot;.. code-block:: </span><span class="si">{0}</span><span class="se">\n</span><span class="si">{1}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">lang</span><span class="p">,</span> <span class="n">lineno</span><span class="p">)</span>
+    <span class="n">code_directive</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;.. code-block:: </span><span class="si">{</span><span class="n">lang</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">lineno</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="n">indented_block</span> <span class="o">=</span> <span class="n">indent</span><span class="p">(</span><span class="n">codestr</span><span class="p">,</span> <span class="s1">&#39; &#39;</span> <span class="o">*</span> <span class="mi">4</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">code_directive</span> <span class="o">+</span> <span class="n">indented_block</span></div>
 
@@ -697,7 +695,7 @@ document.write(`
 
     <span class="n">src_md5_file</span> <span class="o">=</span> <span class="n">src_file</span> <span class="o">+</span> <span class="s1">&#39;.md5&#39;</span>
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">src_md5_file</span><span class="p">):</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">src_md5_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_checksum</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">src_md5_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_checksum</span><span class="p">:</span>
             <span class="n">ref_md5</span> <span class="o">=</span> <span class="n">file_checksum</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
 
         <span class="k">return</span> <span class="n">src_md5</span> <span class="o">==</span> <span class="n">ref_md5</span>
@@ -751,7 +749,7 @@ document.write(`
 
     <span class="n">base_image_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">src_file</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">thumb_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">thumb_dir</span><span class="p">,</span>
-                              <span class="s1">&#39;sphx_glr_</span><span class="si">%s</span><span class="s1">_thumb.</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">base_image_name</span><span class="p">,</span> <span class="n">ext</span><span class="p">))</span>
+                              <span class="sa">f</span><span class="s1">&#39;sphx_glr_</span><span class="si">{</span><span class="n">base_image_name</span><span class="si">}</span><span class="s1">_thumb.</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">src_file</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;failing_examples&#39;</span><span class="p">]:</span>
         <span class="n">img</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">glr_path_static</span><span class="p">(),</span> <span class="s1">&#39;broken_example.png&#39;</span><span class="p">)</span>
@@ -770,7 +768,7 @@ document.write(`
         <span class="k">return</span>
     <span class="c1"># update extension, since gallery_conf setting can be different</span>
     <span class="c1"># from file_conf</span>
-    <span class="n">thumb_file</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">thumb_file</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ext</span><span class="p">)</span>
+    <span class="n">thumb_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">thumb_file</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s1">&#39;</span>
     <span class="k">if</span> <span class="n">ext</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;svg&#39;</span><span class="p">,</span> <span class="s1">&#39;gif&#39;</span><span class="p">):</span>
         <span class="n">copyfile</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">thumb_file</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
@@ -795,8 +793,8 @@ document.write(`
                 <span class="k">return</span> <span class="n">fpth</span>
     <span class="k">if</span> <span class="n">raise_error</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
-            <span class="s2">&quot;Example directory </span><span class="si">{0}</span><span class="s2"> does not have a README file with one &quot;</span>
-            <span class="s2">&quot;of the expected file extensions </span><span class="si">{1}</span><span class="s2">. Please write one to &quot;</span>
+            <span class="s2">&quot;Example directory </span><span class="si">{}</span><span class="s2"> does not have a README file with one &quot;</span>
+            <span class="s2">&quot;of the expected file extensions </span><span class="si">{}</span><span class="s2">. Please write one to &quot;</span>
             <span class="s2">&quot;introduce your gallery.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dir_</span><span class="p">,</span> <span class="n">extensions</span><span class="p">))</span>
     <span class="k">return</span> <span class="kc">None</span>
 
@@ -912,7 +910,7 @@ document.write(`
         <span class="k">with</span> <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">subsection_index_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="p">(</span>
             <span class="n">findex</span>
         <span class="p">):</span>
-            <span class="n">findex</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\n\n</span><span class="s2">.. _sphx_glr_</span><span class="si">{0}</span><span class="s2">:</span><span class="se">\n\n</span><span class="s2">&quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">findex</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\n\n</span><span class="s2">.. _sphx_glr_</span><span class="si">{}</span><span class="s2">:</span><span class="se">\n\n</span><span class="s2">&quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">head_ref</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
             <span class="p">))</span>
             <span class="n">findex</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">subsection_index_content</span><span class="p">)</span>
@@ -1057,7 +1055,7 @@ document.write(`
         <span class="n">warnings</span><span class="o">.</span><span class="n">showwarning</span> <span class="o">=</span> <span class="n">orig_showwarning</span></div>
 
 
-<span class="k">class</span> <span class="nc">_exec_once</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">_exec_once</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Deal with memory_usage calling functions more than once (argh).&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">fake_main</span><span class="p">):</span>
@@ -1196,9 +1194,9 @@ document.write(`
     <span class="n">captured_std</span> <span class="o">=</span> <span class="n">logging_tee</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span><span class="o">.</span><span class="n">expandtabs</span><span class="p">()</span>
     <span class="c1"># normal string output</span>
     <span class="k">if</span> <span class="n">repr_meth</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;__repr__&#39;</span><span class="p">,</span> <span class="s1">&#39;__str__&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">last_repr</span><span class="p">:</span>
-        <span class="n">captured_std</span> <span class="o">=</span> <span class="sa">u</span><span class="s2">&quot;</span><span class="si">{0}</span><span class="se">\n</span><span class="si">{1}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">captured_std</span><span class="p">,</span> <span class="n">last_repr</span><span class="p">)</span>
+        <span class="n">captured_std</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">captured_std</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">last_repr</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="k">if</span> <span class="n">captured_std</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">captured_std</span><span class="o">.</span><span class="n">isspace</span><span class="p">():</span>
-        <span class="n">captured_std</span> <span class="o">=</span> <span class="n">CODE_OUTPUT</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">indent</span><span class="p">(</span><span class="n">captured_std</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39; &#39;</span> <span class="o">*</span> <span class="mi">4</span><span class="p">))</span>
+        <span class="n">captured_std</span> <span class="o">=</span> <span class="n">CODE_OUTPUT</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">indent</span><span class="p">(</span><span class="n">captured_std</span><span class="p">,</span> <span class="s1">&#39; &#39;</span> <span class="o">*</span> <span class="mi">4</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">captured_std</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 
@@ -1208,11 +1206,11 @@ document.write(`
 
     <span class="c1"># give html output its own header</span>
     <span class="k">if</span> <span class="n">repr_meth</span> <span class="o">==</span> <span class="s1">&#39;_repr_html_&#39;</span><span class="p">:</span>
-        <span class="n">captured_html</span> <span class="o">=</span> <span class="n">HTML_HEADER</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">indent</span><span class="p">(</span><span class="n">last_repr</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39; &#39;</span> <span class="o">*</span> <span class="mi">4</span><span class="p">))</span>
+        <span class="n">captured_html</span> <span class="o">=</span> <span class="n">HTML_HEADER</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">indent</span><span class="p">(</span><span class="n">last_repr</span><span class="p">,</span> <span class="s1">&#39; &#39;</span> <span class="o">*</span> <span class="mi">4</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">captured_html</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 
-    <span class="n">code_output</span> <span class="o">=</span> <span class="sa">u</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{0}</span><span class="se">\n\n</span><span class="si">{1}</span><span class="se">\n</span><span class="si">{2}</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+    <span class="n">code_output</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n\n</span><span class="si">{}</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
         <span class="n">images_rst</span><span class="p">,</span> <span class="n">captured_std</span><span class="p">,</span> <span class="n">captured_html</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">code_output</span>
@@ -1297,13 +1295,13 @@ document.write(`
             <span class="n">need_save_figures</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="n">images_rst</span> <span class="o">=</span> <span class="n">save_figures</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">images_rst</span> <span class="o">=</span> <span class="sa">u</span><span class="s1">&#39;&#39;</span>
+            <span class="n">images_rst</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
         <span class="n">logging_tee</span><span class="o">.</span><span class="n">restore_std</span><span class="p">()</span>
         <span class="n">except_rst</span> <span class="o">=</span> <span class="n">handle_exception</span><span class="p">(</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">(),</span> <span class="n">src_file</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">,</span> <span class="n">gallery_conf</span>
         <span class="p">)</span>
-        <span class="n">code_output</span> <span class="o">=</span> <span class="sa">u</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{0}</span><span class="se">\n\n\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">except_rst</span><span class="p">)</span>
+        <span class="n">code_output</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">except_rst</span><span class="si">}</span><span class="se">\n\n\n\n</span><span class="s2">&quot;</span>
         <span class="c1"># still call this even though we won&#39;t use the images so that</span>
         <span class="c1"># figures are closed</span>
         <span class="k">if</span> <span class="n">need_save_figures</span><span class="p">:</span>
@@ -1569,7 +1567,7 @@ document.write(`
             <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">example_code_obj</span><span class="p">,</span> <span class="n">fid</span><span class="p">,</span> <span class="n">pickle</span><span class="o">.</span><span class="n">HIGHEST_PROTOCOL</span><span class="p">)</span>
         <span class="n">_replace_md5</span><span class="p">(</span><span class="n">codeobj_fname</span><span class="p">)</span>
     <span class="n">exclude_regex</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;exclude_implicit_doc_regex&#39;</span><span class="p">]</span>
-    <span class="n">backrefs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span>
+    <span class="n">backrefs</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s1">&#39;</span><span class="si">{module_short}</span><span class="s1">.</span><span class="si">{name}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">cobj</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">cobjs</span> <span class="ow">in</span> <span class="n">example_code_obj</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">cobj</span> <span class="ow">in</span> <span class="n">cobjs</span>
@@ -1578,7 +1576,7 @@ document.write(`
             <span class="p">(</span><span class="ow">not</span> <span class="n">exclude_regex</span><span class="p">)</span> <span class="ow">or</span>
             <span class="p">(</span><span class="ow">not</span> <span class="n">exclude_regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{module}</span><span class="s1">.</span><span class="si">{name}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">cobj</span><span class="p">)))</span>
         <span class="p">)</span>
-    <span class="p">)</span>
+    <span class="p">}</span>
 
     <span class="c1"># Write backreferences</span>
     <span class="n">_write_backreferences</span><span class="p">(</span><span class="n">backrefs</span><span class="p">,</span> <span class="n">seen_backrefs</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span>
@@ -1730,7 +1728,7 @@ document.write(`
     <span class="n">fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">example_file</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;show_memory&#39;</span><span class="p">]:</span>
-        <span class="n">example_rst</span> <span class="o">+=</span> <span class="p">(</span><span class="s2">&quot;**Estimated memory usage:** </span><span class="si">{0: .0f}</span><span class="s2"> MB</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="n">example_rst</span> <span class="o">+=</span> <span class="p">(</span><span class="s2">&quot;**Estimated memory usage:** </span><span class="si">{: .0f}</span><span class="s2"> MB</span><span class="se">\n\n</span><span class="s2">&quot;</span>
                         <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">memory_used</span><span class="p">))</span>
 
     <span class="c1"># Generate a binder URL if specified</span>
@@ -1826,7 +1824,7 @@ document.write(`
     <div class="footer-items__end">
       
         <div class="footer-item"><p class="theme-version">
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.13.2.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.13.3.
 </p></div>
       
     </div>

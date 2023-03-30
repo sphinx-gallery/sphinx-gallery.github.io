@@ -424,8 +424,7 @@ document.write(`
                 <article class="bd-article" role="main">
                   
   <h1>Source code for sphinx_gallery.interactive_example</h1><div class="highlight"><pre>
-<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="c1"># Author: Chris Holdgraf</span>
+<span></span><span class="c1"># Author: Chris Holdgraf</span>
 <span class="c1"># License: 3-clause BSD</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Binder and Jupyterlite utility functions</span>
@@ -497,9 +496,9 @@ document.write(`
                            <span class="n">quote</span><span class="p">(</span><span class="n">binder_conf</span><span class="p">[</span><span class="s1">&#39;branch&#39;</span><span class="p">])])</span>
 
     <span class="k">if</span> <span class="n">binder_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;use_jupyter_lab&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-        <span class="n">binder_url</span> <span class="o">+=</span> <span class="s1">&#39;?urlpath=lab/tree/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">quote</span><span class="p">(</span><span class="n">path_link</span><span class="p">))</span>
+        <span class="n">binder_url</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;?urlpath=lab/tree/</span><span class="si">{</span><span class="n">quote</span><span class="p">(</span><span class="n">path_link</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">binder_url</span> <span class="o">+=</span> <span class="s1">&#39;?filepath=</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">quote</span><span class="p">(</span><span class="n">path_link</span><span class="p">))</span>
+        <span class="n">binder_url</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;?filepath=</span><span class="si">{</span><span class="n">quote</span><span class="p">(</span><span class="n">path_link</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
     <span class="k">return</span> <span class="n">binder_url</span></div>
 
 
@@ -665,7 +664,7 @@ document.write(`
 
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">binder_conf</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="n">req_values</span> <span class="o">+</span> <span class="n">optional_values</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s2">&quot;Unknown Binder config key: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown Binder config key: </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="c1"># Ensure we have http in the URL</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">binder_conf</span><span class="p">[</span><span class="s1">&#39;binderhub_url&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">ii</span><span class="p">)</span>
@@ -938,7 +937,7 @@ document.write(`
     <div class="footer-items__end">
       
         <div class="footer-item"><p class="theme-version">
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.13.2.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.13.3.
 </p></div>
       
     </div>
