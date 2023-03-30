@@ -854,13 +854,25 @@ document.write(`
         <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
             <span class="s1">&#39;`jupyterlite_conf` must be a dictionary&#39;</span><span class="p">)</span>
 
+    <span class="n">conf_defaults</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;jupyterlite_contents&#39;</span><span class="p">:</span> <span class="s1">&#39;jupyterlite_contents&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;notebook_modification_function&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s1">&#39;use_jupyter_lab&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">}</span>
+
     <span class="n">result</span> <span class="o">=</span> <span class="n">jupyterlite_conf</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-    <span class="n">result</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;use_jupyter_lab&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-    <span class="n">result</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;jupyterlite_contents&#39;</span><span class="p">,</span> <span class="s1">&#39;jupyterlite_contents&#39;</span><span class="p">)</span>
+    <span class="n">unknown_keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">conf_defaults</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">unknown_keys</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Found some unknown keys in sphinx_gallery_conf[&#39;jupyterlite&#39;]: &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">unknown_keys</span><span class="p">)</span><span class="si">}</span><span class="s2">. &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Allowed keys are: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">conf_defaults</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">default_value</span> <span class="ow">in</span> <span class="n">conf_defaults</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">default_value</span><span class="p">)</span>
     <span class="n">result</span><span class="p">[</span><span class="s1">&#39;jupyterlite_contents&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
         <span class="n">app</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span>
         <span class="n">result</span><span class="p">[</span><span class="s1">&#39;jupyterlite_contents&#39;</span><span class="p">])</span>
-    <span class="n">result</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;notebook_modification_function&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">result</span></div>
 </pre></div>
