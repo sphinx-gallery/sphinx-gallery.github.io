@@ -548,24 +548,6 @@ document.write(`
     <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="parse_config"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.parse_config">[docs]</a><span class="k">def</span> <span class="nf">parse_config</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">check_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Process the Sphinx Gallery configuration.&quot;&quot;&quot;</span>
-    <span class="n">plot_gallery</span> <span class="o">=</span> <span class="n">_bool_eval</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">plot_gallery</span><span class="p">)</span>
-    <span class="n">src_dir</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span>
-    <span class="n">abort_on_example_error</span> <span class="o">=</span> <span class="n">_bool_eval</span><span class="p">(</span>
-        <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">abort_on_example_error</span><span class="p">)</span>
-    <span class="n">lang</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">highlight_language</span>
-    <span class="n">gallery_conf</span> <span class="o">=</span> <span class="n">_complete_gallery_conf</span><span class="p">(</span>
-        <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">,</span> <span class="n">plot_gallery</span><span class="p">,</span>
-        <span class="n">abort_on_example_error</span><span class="p">,</span> <span class="n">lang</span><span class="p">,</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">app</span><span class="p">,</span>
-        <span class="n">check_keys</span><span class="p">)</span>
-
-    <span class="c1"># this assures I can call the config in other places</span>
-    <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="n">gallery_conf</span>
-    <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">html_static_path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">glr_path_static</span><span class="p">())</span>
-    <span class="k">return</span> <span class="n">gallery_conf</span></div>
-
-
 <span class="k">def</span> <span class="nf">_update_gallery_conf</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Update gallery config.</span>
 
@@ -577,19 +559,24 @@ document.write(`
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;exclude_implicit_doc_regex&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">exclude_regex</span>
 
 
-<span class="k">def</span> <span class="nf">_complete_gallery_conf</span><span class="p">(</span><span class="n">sphinx_gallery_conf</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">,</span> <span class="n">plot_gallery</span><span class="p">,</span>
-                           <span class="n">abort_on_example_error</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s1">&#39;python&#39;</span><span class="p">,</span>
-                           <span class="n">builder_name</span><span class="o">=</span><span class="s1">&#39;html&#39;</span><span class="p">,</span> <span class="n">app</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">check_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_complete_gallery_conf_builder_inited</span><span class="p">(</span>
+        <span class="n">sphinx_gallery_conf</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">,</span> <span class="n">plot_gallery</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">abort_on_example_error</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s1">&#39;python&#39;</span><span class="p">,</span>
+        <span class="n">builder_name</span><span class="o">=</span><span class="s1">&#39;html&#39;</span><span class="p">):</span>
+    <span class="n">sphinx_gallery_conf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">plot_gallery</span><span class="o">=</span><span class="n">plot_gallery</span><span class="p">)</span>
+    <span class="n">sphinx_gallery_conf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">abort_on_example_error</span><span class="o">=</span><span class="n">abort_on_example_error</span><span class="p">)</span>
+    <span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">src_dir</span>
+    <span class="n">lang</span> <span class="o">=</span> <span class="n">lang</span> <span class="k">if</span> <span class="n">lang</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;python&#39;</span><span class="p">,</span> <span class="s1">&#39;python3&#39;</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="s1">&#39;python&#39;</span>
+    <span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s1">&#39;lang&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lang</span>
+    <span class="c1"># Make it easy to know which builder we&#39;re in</span>
+    <span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s1">&#39;builder_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">builder_name</span>
+
+
+<span class="k">def</span> <span class="nf">_complete_gallery_conf_config_inited</span><span class="p">(</span><span class="n">sphinx_gallery_conf</span><span class="p">,</span> <span class="n">app</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                         <span class="n">check_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="n">gallery_conf</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">DEFAULT_GALLERY_CONF</span><span class="p">)</span>
     <span class="n">options</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">)</span>
-    <span class="c1"># sphinx-autoapi can run before our config filling can occur, which</span>
-    <span class="c1"># when used with show_api_usage=True can cause us to add this early.</span>
-    <span class="c1"># In theory we could bump our priority above theirs, but this could have</span>
-    <span class="c1"># unintented consequences.</span>
-    <span class="n">ignore_keys</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;_sg_api_entries&#39;</span><span class="p">,)</span>
-    <span class="n">extra_keys</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
-        <span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">sphinx_gallery_conf</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">options</span><span class="p">))</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">ignore_keys</span><span class="p">)</span>
-    <span class="p">)</span>
+    <span class="n">extra_keys</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">sphinx_gallery_conf</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">options</span><span class="p">))</span>
     <span class="k">if</span> <span class="n">extra_keys</span> <span class="ow">and</span> <span class="n">check_keys</span><span class="p">:</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Unknown key(s) in sphinx_gallery_conf:</span><span class="se">\n</span><span class="s1">&#39;</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">extra_keys</span><span class="p">:</span>
@@ -602,13 +589,10 @@ document.write(`
             <span class="n">msg</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
         <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
     <span class="n">gallery_conf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">sphinx_gallery_conf</span><span class="p">)</span>
-    <span class="n">gallery_conf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">plot_gallery</span><span class="o">=</span><span class="n">plot_gallery</span><span class="p">)</span>
-    <span class="n">gallery_conf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">abort_on_example_error</span><span class="o">=</span><span class="n">abort_on_example_error</span><span class="p">)</span>
     <span class="c1"># XXX anything that can only be a bool (rather than str) should probably be</span>
     <span class="c1"># evaluated this way as it allows setting via -D on the command line</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;promote_jupyter_magic&#39;</span><span class="p">,</span> <span class="s1">&#39;run_stale_examples&#39;</span><span class="p">,):</span>
         <span class="n">gallery_conf</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">_bool_eval</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
-    <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">src_dir</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;app&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">app</span>
 
     <span class="c1"># Check capture_repr</span>
@@ -744,8 +728,6 @@ document.write(`
                           <span class="s2">&quot;[&#39;before&#39;, &#39;after&#39;, &#39;both&#39;], &quot;</span>
                           <span class="s1">&#39;got </span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;reset_modules_order&#39;</span><span class="p">])</span>
 
-    <span class="n">lang</span> <span class="o">=</span> <span class="n">lang</span> <span class="k">if</span> <span class="n">lang</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;python&#39;</span><span class="p">,</span> <span class="s1">&#39;python3&#39;</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="s1">&#39;python&#39;</span>
-    <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;lang&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lang</span>
     <span class="k">del</span> <span class="n">resetters</span>
 
     <span class="c1"># Ensure the first cell text is a string if we have it</span>
@@ -783,8 +765,6 @@ document.write(`
                                   <span class="s2">&quot;values: </span><span class="si">%s</span><span class="s2">, got: </span><span class="si">%s</span><span class="s2">.&quot;</span>
                                   <span class="o">%</span> <span class="p">(</span><span class="n">accepted_keys</span><span class="p">,</span> <span class="n">key</span><span class="p">))</span>
 
-    <span class="c1"># Make it easy to know which builder we&#39;re in</span>
-    <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;builder_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">builder_name</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;titles&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="c1"># Ensure &#39;backreferences_dir&#39; is str, pathlib.Path or None</span>
     <span class="n">backref</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;backreferences_dir&#39;</span><span class="p">]</span>
@@ -802,7 +782,6 @@ document.write(`
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;binder&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">check_binder_conf</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;binder&#39;</span><span class="p">])</span>
 
     <span class="c1"># jupyterlite</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;_complete_gallery_conf&#39;</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;jupyterlite&#39;</span><span class="p">))</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;jupyterlite&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">check_jupyterlite_conf</span><span class="p">(</span>
         <span class="n">gallery_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;jupyterlite&#39;</span><span class="p">,</span> <span class="p">{}),</span> <span class="n">app</span><span class="p">)</span>
 
@@ -929,7 +908,7 @@ document.write(`
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;generating gallery...&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">)</span>
-    <span class="n">gallery_conf</span> <span class="o">=</span> <span class="n">parse_config</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+    <span class="n">gallery_conf</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span>
 
     <span class="n">seen_backrefs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
 
@@ -1163,9 +1142,6 @@ document.write(`
 
 
 <div class="viewcode-block" id="write_api_entries"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.write_api_entries">[docs]</a><span class="k">def</span> <span class="nf">write_api_entries</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">what</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="n">lines</span><span class="p">):</span>
-    <span class="c1"># sphinx-autoapi can do this before we manage to complete our config</span>
-    <span class="k">if</span> <span class="s1">&#39;show_api_usage&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">:</span>
-        <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s1">&#39;show_api_usage&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">if</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s1">&#39;show_api_usage&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
         <span class="k">return</span>
     <span class="k">if</span> <span class="s1">&#39;_sg_api_entries&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">:</span>
@@ -1491,7 +1467,7 @@ document.write(`
     <span class="c1"># filter from examples actually run</span>
     <span class="n">passing_unexpectedly</span> <span class="o">=</span> <span class="p">[</span>
         <span class="n">src_file</span> <span class="k">for</span> <span class="n">src_file</span> <span class="ow">in</span> <span class="n">passing_unexpectedly</span>
-        <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">gallery_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;filename_pattern&#39;</span><span class="p">),</span> <span class="n">src_file</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;filename_pattern&#39;</span><span class="p">],</span> <span class="n">src_file</span><span class="p">)]</span>
     <span class="k">return</span> <span class="n">failing_as_expected</span><span class="p">,</span> <span class="n">failing_unexpectedly</span><span class="p">,</span> <span class="n">passing_unexpectedly</span>
 
 
@@ -1613,12 +1589,38 @@ document.write(`
     <span class="k">return</span> <span class="n">default_getter</span></div>
 
 
+<div class="viewcode-block" id="normalize_gallery_conf_config_inited"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.normalize_gallery_conf_config_inited">[docs]</a><span class="k">def</span> <span class="nf">normalize_gallery_conf_config_inited</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">check_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="n">new_sphinx_gallery_conf</span> <span class="o">=</span> <span class="n">_complete_gallery_conf_config_inited</span><span class="p">(</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">,</span> <span class="n">app</span><span class="o">=</span><span class="n">app</span><span class="p">,</span> <span class="n">check_keys</span><span class="o">=</span><span class="n">check_keys</span><span class="p">)</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="n">new_sphinx_gallery_conf</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">html_static_path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">glr_path_static</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="normalize_gallery_conf_builder_inited"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.normalize_gallery_conf_builder_inited">[docs]</a><span class="k">def</span> <span class="nf">normalize_gallery_conf_builder_inited</span><span class="p">(</span><span class="n">app</span><span class="p">):</span>
+    <span class="n">plot_gallery</span> <span class="o">=</span> <span class="n">_bool_eval</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">plot_gallery</span><span class="p">)</span>
+    <span class="n">src_dir</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span>
+    <span class="n">abort_on_example_error</span> <span class="o">=</span> <span class="n">_bool_eval</span><span class="p">(</span>
+        <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">abort_on_example_error</span><span class="p">)</span>
+    <span class="n">lang</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">highlight_language</span>
+    <span class="n">_complete_gallery_conf_builder_inited</span><span class="p">(</span>
+        <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">,</span>
+        <span class="n">src_dir</span><span class="p">,</span>
+        <span class="n">plot_gallery</span><span class="o">=</span><span class="n">plot_gallery</span><span class="p">,</span>
+        <span class="n">abort_on_example_error</span><span class="o">=</span><span class="n">abort_on_example_error</span><span class="p">,</span>
+        <span class="n">lang</span><span class="o">=</span><span class="n">lang</span><span class="p">,</span>
+        <span class="n">builder_name</span><span class="o">=</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">name</span>
+    <span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="setup"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.setup">[docs]</a><span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="n">app</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Setup Sphinx-Gallery sphinx extension&quot;&quot;&quot;</span>
     <span class="n">app</span><span class="o">.</span><span class="n">add_config_value</span><span class="p">(</span><span class="s1">&#39;sphinx_gallery_conf&#39;</span><span class="p">,</span> <span class="n">DEFAULT_GALLERY_CONF</span><span class="p">,</span> <span class="s1">&#39;html&#39;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;plot_gallery&#39;</span><span class="p">,</span> <span class="s1">&#39;abort_on_example_error&#39;</span><span class="p">]:</span>
         <span class="n">app</span><span class="o">.</span><span class="n">add_config_value</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">get_default_config_value</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="s1">&#39;html&#39;</span><span class="p">)</span>
 
+    <span class="c1"># Early normalization of sphinx_gallery_conf at config-inited</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;config-inited&#39;</span><span class="p">,</span> <span class="n">normalize_gallery_conf_config_inited</span><span class="p">,</span>
+                <span class="n">priority</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
     <span class="c1"># set small priority value, so that pre_configure_jupyterlite_sphinx is</span>
     <span class="c1"># called before jupyterlite_sphinx config-inited</span>
     <span class="n">app</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
@@ -1639,6 +1641,9 @@ document.write(`
 
     <span class="n">imagesg_addnode</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
 
+    <span class="c1"># Early normalization of sphinx_gallery_conf at builder-inited</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;builder-inited&#39;</span><span class="p">,</span> <span class="n">normalize_gallery_conf_builder_inited</span><span class="p">,</span>
+                <span class="n">priority</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
     <span class="n">app</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;builder-inited&#39;</span><span class="p">,</span> <span class="n">generate_gallery_rst</span><span class="p">)</span>
     <span class="n">app</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;build-finished&#39;</span><span class="p">,</span> <span class="n">copy_binder_files</span><span class="p">)</span>
     <span class="n">app</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;build-finished&#39;</span><span class="p">,</span> <span class="n">create_jupyterlite_contents</span><span class="p">)</span>

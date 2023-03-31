@@ -474,8 +474,8 @@ document.write(`
                                <span class="n">remove_ignore_blocks</span><span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">.notebook</span> <span class="kn">import</span> <span class="n">jupyter_notebook</span><span class="p">,</span> <span class="n">save_notebook</span>
-<span class="kn">from</span> <span class="nn">.interactive_example</span> <span class="kn">import</span> <span class="n">check_binder_conf</span><span class="p">,</span> <span class="n">gen_binder_rst</span>
-<span class="kn">from</span> <span class="nn">.interactive_example</span> <span class="kn">import</span> <span class="n">check_jupyterlite_conf</span><span class="p">,</span> <span class="n">gen_jupyterlite_rst</span>
+<span class="kn">from</span> <span class="nn">.interactive_example</span> <span class="kn">import</span> <span class="n">gen_binder_rst</span>
+<span class="kn">from</span> <span class="nn">.interactive_example</span> <span class="kn">import</span> <span class="n">gen_jupyterlite_rst</span>
 
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">sphinx</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;sphinx-gallery&#39;</span><span class="p">)</span>
@@ -757,7 +757,7 @@ document.write(`
         <span class="n">img</span> <span class="o">=</span> <span class="n">thumbnail_image_path</span>
     <span class="k">elif</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">thumb_file</span><span class="p">):</span>
         <span class="c1"># create something to replace the thumbnail</span>
-        <span class="n">default_thumb_path</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;default_thumb_file&quot;</span><span class="p">)</span>
+        <span class="n">default_thumb_path</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;default_thumb_file&quot;</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">default_thumb_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">default_thumb_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
                 <span class="n">glr_path_static</span><span class="p">(),</span>
@@ -936,7 +936,7 @@ document.write(`
         <span class="n">subsection_index_content</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="c1"># Copy over any other files.</span>
-    <span class="n">copyregex</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;copyfile_regex&#39;</span><span class="p">)</span>
+    <span class="n">copyregex</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;copyfile_regex&#39;</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">copyregex</span><span class="p">:</span>
         <span class="n">listdir</span> <span class="o">=</span> <span class="p">[</span><span class="n">fname</span> <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">src_dir</span><span class="p">)</span> <span class="k">if</span>
                    <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">copyregex</span><span class="p">,</span> <span class="n">fname</span><span class="p">)]</span>
@@ -1337,7 +1337,7 @@ document.write(`
 <span class="sd">        True if script has to be executed</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">filename_pattern</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;filename_pattern&#39;</span><span class="p">)</span>
+    <span class="n">filename_pattern</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;filename_pattern&#39;</span><span class="p">]</span>
     <span class="n">execute</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">filename_pattern</span><span class="p">,</span> <span class="n">src_file</span><span class="p">)</span> <span class="ow">and</span> <span class="n">gallery_conf</span><span class="p">[</span>
         <span class="s1">&#39;plot_gallery&#39;</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">execute</span></div>
@@ -1656,7 +1656,7 @@ document.write(`
         <span class="k">if</span> <span class="n">blabel</span> <span class="o">==</span> <span class="s1">&#39;code&#39;</span><span class="p">:</span>
 
             <span class="k">if</span> <span class="ow">not</span> <span class="n">file_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;line_numbers&#39;</span><span class="p">,</span>
-                                 <span class="n">gallery_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;line_numbers&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)):</span>
+                                 <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;line_numbers&#39;</span><span class="p">]):</span>
                 <span class="n">lineno</span> <span class="o">=</span> <span class="kc">None</span>
 
             <span class="n">code_rst</span> <span class="o">=</span> <span class="n">codestr2rst</span><span class="p">(</span><span class="n">bcontent</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;lang&#39;</span><span class="p">],</span>
@@ -1698,12 +1698,10 @@ document.write(`
     <span class="n">example_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">example_file</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">])</span>
     <span class="n">ref_fname</span> <span class="o">=</span> <span class="n">example_fname</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
 
-    <span class="n">binder_conf</span> <span class="o">=</span> <span class="n">check_binder_conf</span><span class="p">(</span><span class="n">gallery_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;binder&#39;</span><span class="p">))</span>
+    <span class="n">binder_conf</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;binder&#39;</span><span class="p">]</span>
     <span class="n">is_binder_enabled</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">binder_conf</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
 
-    <span class="n">jupyterlite_conf</span> <span class="o">=</span> <span class="n">check_jupyterlite_conf</span><span class="p">(</span>
-        <span class="n">gallery_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;jupyterlite&#39;</span><span class="p">,</span> <span class="p">{}),</span>
-        <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;app&#39;</span><span class="p">])</span>
+    <span class="n">jupyterlite_conf</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;jupyterlite&#39;</span><span class="p">]</span>
     <span class="n">is_jupyterlite_enabled</span> <span class="o">=</span> <span class="n">jupyterlite_conf</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
     <span class="n">interactive_example_text</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
