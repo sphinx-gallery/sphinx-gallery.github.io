@@ -628,8 +628,8 @@ this section describes how to write a custom scraper.</p>
 things:</p>
 <ol class="arabic simple">
 <li><p>Collect a list of images created in the latest execution of code.</p></li>
-<li><p>Write these images to disk in PNG, JPEG, SVG, or GIF format (with .png,
-.jpg, .svg, or .gif extensions, respectively)</p></li>
+<li><p>Write these images to disk in PNG, JPEG, SVG, GIF, or WebP format (with .png,
+.jpg, .svg, .gif, or .webp extensions, respectively)</p></li>
 <li><p>Return reST that embeds these figures in the built documentation.</p></li>
 </ol>
 <p>The function should take the following inputs (in this order):</p>
@@ -670,8 +670,8 @@ the helper function <a class="reference internal" href="gen_modules/sphinx_galle
 reST (see below).</p>
 <p>This function will be called once for each code block of your examples.
 Sphinx-Gallery will take care of scaling images for the gallery
-index page thumbnails. PNG images are scaled using Pillow, and
-SVG images are copied.</p>
+index page thumbnails. PNG, JPEG and WebP images are scaled using Pillow, and
+SVG and GIF images are copied.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>SVG images do not work with <code class="docutils literal notranslate"><span class="pre">latex</span></code> build modes, thus will not
@@ -777,8 +777,8 @@ package in a module called <code class="docutils literal notranslate"><span clas
 <h3><a class="toc-backref" href="#id11" role="doc-backlink">Example 3: matplotlib with SVG format</a><a class="headerlink" href="#example-3-matplotlib-with-svg-format" title="Permalink to this heading">#</a></h3>
 <p>The <a class="reference internal" href="gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.matplotlib_scraper" title="sphinx_gallery.scrapers.matplotlib_scraper"><code class="xref py py-func docutils literal notranslate"><span class="pre">sphinx_gallery.scrapers.matplotlib_scraper()</span></code></a> supports <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>
 to pass to <a class="reference external" href="https://matplotlib.org/stable/api/figure_api.html#matplotlib.figure.Figure.savefig" title="(in Matplotlib v3.7.1)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">matplotlib.figure.Figure.savefig()</span></code></a>, one of which is the
-<code class="docutils literal notranslate"><span class="pre">format</span></code> argument. Currently Sphinx-Gallery supports PNG (default) and SVG
-output formats. To use SVG, you can do:</p>
+<code class="docutils literal notranslate"><span class="pre">format</span></code> argument. See <a class="reference internal" href="#custom-scraper"><span class="std std-ref">Write a custom image scraper</span></a> for supported formats.
+To use SVG, you can do:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sphinx_gallery.scrapers</span> <span class="kn">import</span> <span class="n">matplotlib_scraper</span>
 
 <span class="k">class</span> <span class="nc">matplotlib_svg_scraper</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
