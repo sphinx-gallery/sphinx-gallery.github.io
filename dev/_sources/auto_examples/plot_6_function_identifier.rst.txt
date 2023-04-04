@@ -52,7 +52,7 @@ This functionality is used to add documentation hyperlinks to your code
     import os.path as op  # noqa, analysis:ignore
     import matplotlib.pyplot as plt
     import sphinx_gallery
-    from sphinx_gallery.backreferences import identify_names
+    from sphinx_gallery.backreferences import identify_names, _make_ref_regex
     from sphinx_gallery.py_source_parser import split_code_and_text_blocks
 
     filename = 'plot_6_function_identifier.py'
@@ -62,7 +62,7 @@ This functionality is used to add documentation hyperlinks to your code
 
     _, script_blocks = split_code_and_text_blocks(filename)
 
-    names = identify_names(script_blocks)
+    names = identify_names(script_blocks, _make_ref_regex())
 
 
 
@@ -120,9 +120,9 @@ on the left and the full resolved import path is on the right.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.762 seconds)
+   **Total running time of the script:** ( 0 minutes  0.836 seconds)
 
-**Estimated memory usage:**  9 MB
+**Estimated memory usage:**  8 MB
 
 
 .. _sphx_glr_download_auto_examples_plot_6_function_identifier.py:

@@ -630,17 +630,22 @@ document.write(`
     <span class="k">return</span> <span class="n">short_name</span>
 
 
-<span class="c1"># keep in synch w/ configuration.rst &quot;Add mini-galleries for API documentation&quot;</span>
-<span class="n">_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;:(?:&#39;</span>
-                    <span class="sa">r</span><span class="s1">&#39;func|&#39;</span>
-                    <span class="sa">r</span><span class="s1">&#39;meth|&#39;</span>
-                    <span class="sa">r</span><span class="s1">&#39;attr|&#39;</span>
-                    <span class="sa">r</span><span class="s1">&#39;obj|&#39;</span>
-                    <span class="sa">r</span><span class="s1">&#39;class):`~?(\S*)`&#39;</span>
-                    <span class="p">)</span>
+<span class="k">def</span> <span class="nf">_make_ref_regex</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Make regex to find reference to python objects.&quot;&quot;&quot;</span>
+    <span class="c1"># keep roles variable in sync values shown in configuration.rst</span>
+    <span class="c1"># &quot;Add mini-galleries for API documentation&quot;</span>
+    <span class="n">roles</span> <span class="o">=</span> <span class="s1">&#39;func|meth|attr|obj|class&#39;</span>
+    <span class="n">default_role</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;default_role&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="s1">&#39;&#39;</span> <span class="k">if</span> <span class="n">config</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">def_role_regex</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s1">&#39;|[^:]?&#39;</span> <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(?:py:)?(</span><span class="si">{</span><span class="n">roles</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">,</span> <span class="n">default_role</span><span class="p">)</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+    <span class="p">)</span>
+    <span class="c1"># reference can have a separate title `title &lt;reference&gt;`,</span>
+    <span class="c1"># don&#39;t match ``literal`` or `!disabled.references`</span>
+    <span class="k">return</span> <span class="p">(</span><span class="sa">rf</span><span class="s1">&#39;(?::(?:</span><span class="si">{</span><span class="n">roles</span><span class="si">}</span><span class="s1">):</span><span class="si">{</span><span class="n">def_role_regex</span><span class="si">}</span><span class="s1">)&#39;</span>        <span class="c1"># role prefix</span>
+            <span class="sa">r</span><span class="s1">&#39;(?!``)`~?[^!]*?&lt;?([^!~\s&lt;&gt;`]+)&gt;?(?!``)`&#39;</span><span class="p">)</span>  <span class="c1"># reference</span>
 
 
-<div class="viewcode-block" id="identify_names"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.backreferences.html#sphinx_gallery.backreferences.identify_names">[docs]</a><span class="k">def</span> <span class="nf">identify_names</span><span class="p">(</span><span class="n">script_blocks</span><span class="p">,</span> <span class="n">global_variables</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">node</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="identify_names"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.backreferences.html#sphinx_gallery.backreferences.identify_names">[docs]</a><span class="k">def</span> <span class="nf">identify_names</span><span class="p">(</span><span class="n">script_blocks</span><span class="p">,</span> <span class="n">ref_regex</span><span class="p">,</span> <span class="n">global_variables</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">node</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Build a codeobj summary by identifying and resolving used names.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">node</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>  <span class="c1"># mostly convenience for testing functions</span>
         <span class="n">c</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">txt</span> <span class="k">for</span> <span class="n">kind</span><span class="p">,</span> <span class="n">txt</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">script_blocks</span> <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s1">&#39;code&#39;</span><span class="p">)</span>
@@ -652,7 +657,9 @@ document.write(`
     <span class="n">names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">finder</span><span class="o">.</span><span class="n">get_mapping</span><span class="p">())</span>
     <span class="c1"># Get matches from docstring inspection (explicit matches)</span>
     <span class="n">text</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">txt</span> <span class="k">for</span> <span class="n">kind</span><span class="p">,</span> <span class="n">txt</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">script_blocks</span> <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s1">&#39;text&#39;</span><span class="p">)</span>
-    <span class="n">names</span><span class="o">.</span><span class="n">extend</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">_regex</span><span class="p">,</span> <span class="n">text</span><span class="p">))</span>
+    <span class="n">names</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">ref_regex</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="p">)</span>
     <span class="n">example_code_obj</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">()</span>  <span class="c1"># order is important</span>
     <span class="c1"># Make a list of all guesses, in `_embed_code_links` we will break</span>
     <span class="c1"># when we find a match</span>
