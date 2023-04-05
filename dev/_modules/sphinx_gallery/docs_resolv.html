@@ -448,6 +448,8 @@ document.write(`
 <span class="kn">from</span> <span class="nn">sphinx.search</span> <span class="kn">import</span> <span class="n">js_index</span>
 <span class="kn">import</span> <span class="nn">sphinx.util</span>
 
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">status_iterator</span>
+
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">sphinx</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;sphinx-gallery&#39;</span><span class="p">)</span>
 
@@ -769,7 +771,7 @@ document.write(`
     <span class="n">flat</span> <span class="o">=</span> <span class="p">[[</span><span class="n">dirpath</span><span class="p">,</span> <span class="n">filename</span><span class="p">]</span>
             <span class="k">for</span> <span class="n">dirpath</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">filenames</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">html_gallery_dir</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">]</span>
-    <span class="n">iterator</span> <span class="o">=</span> <span class="n">sphinx</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">status_iterator</span><span class="p">(</span>
+    <span class="n">iterator</span> <span class="o">=</span> <span class="n">status_iterator</span><span class="p">(</span>
         <span class="n">flat</span><span class="p">,</span> <span class="s1">&#39;embedding documentation hyperlinks for </span><span class="si">%s</span><span class="s1">... &#39;</span> <span class="o">%</span> <span class="n">gallery_dir</span><span class="p">,</span>
         <span class="n">color</span><span class="o">=</span><span class="s1">&#39;fuchsia&#39;</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">flat</span><span class="p">),</span>
         <span class="n">stringify_func</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
