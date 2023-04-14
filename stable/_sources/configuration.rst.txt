@@ -37,8 +37,7 @@ file:
 - ``remove_config_comments`` (:ref:`removing_config_comments`)
 - ``download_all_examples`` (:ref:`disable_all_scripts_download`)
 - ``plot_gallery`` (:ref:`without_execution`)
-- ``image_scrapers`` (and the deprecated ``find_mayavi_figures``)
-  (:ref:`image_scrapers`)
+- ``image_scrapers`` (:ref:`image_scrapers`)
 - ``compress_images`` (:ref:`compress_images`)
 - ``image_srcset`` (:ref:`image_srcset`)
 - ``reset_modules`` (:ref:`reset_modules`)
@@ -408,7 +407,7 @@ If you do not use ``intersphinx``, then you should add entries that
 point to the directory containing ``searchindex.js``, such as
 ``'matplotlib': 'https://matplotlib.org'``.
 
-If you wish to do the same for ordinary RST documentation,
+If you wish to do the same for ordinary reST documentation,
 see :ref:`plain_rst`.
 
 If you are using inheritance for your documented code and you are experience
@@ -447,7 +446,9 @@ enables you to link to any examples that either:
    code.
 2. Refer to that function/method/attribute/object/class using sphinx markup
    ``:func:``/``:meth:``/``:attr:``/``:obj:``/``:class:`` in a text
-   block.
+   block. You can omit this role markup if you have set the `default_role
+   <https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-default_role>`_
+   in your ``conf.py`` to any of these roles.
 
 The former is useful for auto-documenting functions that are used and classes
 that are explicitly instantiated. The generated links are called implicit
@@ -746,24 +747,19 @@ Add your own first and last notebook cell
 Sphinx-Gallery allows you to add your own first and/or last cell to *every*
 generated notebook. Adding a first cell can be useful for including code that
 is required to run properly in the notebook, but not in a ``.py`` file. By
-default, the following first cell is added to each notebook:
-
-.. code-block:: ipython
-
-    %matplotlib inline
+default, no first cell is added.
 
 Adding a last cell can be useful for performing a desired action such as
 reporting on the user's environment. By default no last cell is added.
 
 You can choose whatever text you like by modifying the ``first_notebook_cell``
-and ``last_notebook_cell`` configuration parameters. For example, the gallery
-of this documentation adds the following first cell:
+and ``last_notebook_cell`` configuration parameters. For example, you can add
+the following first cell:
 
 .. code-block:: ipython
 
     # This cell is added by sphinx-gallery
     # It can be customized to whatever you like
-    %matplotlib inline
 
 Which is achieved by the following configuration::
 
@@ -771,7 +767,7 @@ Which is achieved by the following configuration::
         ...
         'first_notebook_cell': ("# This cell is added by sphinx-gallery\n"
                                 "# It can be customized to whatever you like\n"
-                                "%matplotlib inline")
+                                )
     }
 
 A last cell may be added similarly by setting the ``last_notebook_cell``
@@ -781,7 +777,7 @@ parameter::
         ...
         'first_notebook_cell': ("# This cell is added by sphinx-gallery\n"
                                 "# It can be customized to whatever you like\n"
-                                "%matplotlib inline"),
+                                ),
         'last_notebook_cell': "# This is the last cell",
     }
 
@@ -794,7 +790,7 @@ Adding images to notebooks
 ==========================
 
 When notebooks are produced, by default (``notebook_images = False``) image
-paths from the `image` directive in rST documentation blocks (not images
+paths from the `image` directive in reST documentation blocks (not images
 generated fom code) are included in markdown using their original paths. This
 includes paths to images expected to be present on the local filesystem which
 is unlikely to be the case for those downloading the notebook.
@@ -818,7 +814,7 @@ following configuration::
         ...
     }
 
-with an example `image` directive in an rST documentation block being:
+with an example `image` directive in an reST documentation block being:
 
 .. code-block:: rst
 
@@ -827,7 +823,7 @@ with an example `image` directive in an rST documentation block being:
 
 The image will be added to the generated notebook pointing to the source URL
 ``https://project.example.com/en/latest/_static/example.jpg``. Note the image
-path in the rST examples above is a relative path, therefore the URL doesn't
+path in the reST examples above is a relative path, therefore the URL doesn't
 contain ``auto_examples`` as ``../`` moved up a directory to the documentation
 source directory. Both relative and absolute (from source directory) paths are
 supported; so in the example above ``/_static/example.jpg`` would have resulted
@@ -853,17 +849,17 @@ included in the prefix if it's required.
 
 .. _use_pypandoc:
 
-Using pypandoc to convert rST to markdown
-=========================================
+Using pypandoc to convert reST to markdown
+==========================================
 
 Sphinx-Gallery can use `pypandoc <https://github.com/bebraw/pypandoc>`_
-(if installed) to convert rST text blocks to markdown for the iPython
+(if installed) to convert reST text blocks to markdown for the iPython
 notebooks (``.ipynb`` files) generated for each example. These are made
 available for download, along with the raw ``.py`` version, at the bottom
 of each example.
 
-The Sphinx-Gallery rST to markdown converter has limited support for more
-complex rST syntax. If your examples have more complex rST, ``pypandoc`` may
+The Sphinx-Gallery reST to markdown converter has limited support for more
+complex reST syntax. If your examples have more complex reST, ``pypandoc`` may
 produce better results. By default, the 'pypandoc' configuration is set to
 ``False`` and ``pypandoc`` is not used.
 
@@ -1057,7 +1053,7 @@ things will happen:
    folder called ``<notebooks_dir/>`` at the root of
    your built documentation (they will follow the same folder hierarchy within
    the notebooks directory folder.
-3. The rST output of each Sphinx-Gallery example will now have a
+3. The reST output of each Sphinx-Gallery example will now have a
    ``launch binder`` button in it.
 4. That button will point to a binder link with the following structure
 
@@ -1137,7 +1133,7 @@ are:
 - with JupyterLite the first imports take time. At the time of writing
   (February 2023) ``import scipy`` can take ~15-30s. Some innocuously looking
   Python code may just not work and break in an unexpected fashion. The Jupyter
-  kernel is based on Pyodide, see some `here
+  kernel is based on Pyodide, see `here
   <https://pyodide.org/en/latest/usage/wasm-constraints.html>`__ for some
   Pyodide limitations.
 - with JupyterLite environments are not as flexible as Binder, for example you
@@ -1153,13 +1149,15 @@ are:
    may be instability or unexpected behaviour in the experience of users who
    click JupyterLite links.
 
-In order to enable JupyterLite links with Sphinx-Gallery, you must install the
-`jupyterlite-sphinx <https://jupyterlite-sphinx.readthedocs.io>`_ package and
-add it to your extensions in ``conf.py``::
+In order to enable JupyterLite links with Sphinx-Gallery, you need to install
+the `jupyterlite-sphinx <https://jupyterlite-sphinx.readthedocs.io>`_ package.
+For `jupyterlite-sphinx>=0.8` (released 15 March 2023) you also need to install
+`jupyterlite-pyodide-kernel`.
+
+You then need to add `jupyterlite_sphinx` to your Sphinx extensions in
+``conf.py``::
 
     extensions = [
-        ...,
-        ...,
         ...,
         'jupyterlite_sphinx',
     ]
@@ -1170,8 +1168,9 @@ You can configure JupyterLite integration by setting
     sphinx_gallery_conf = {
       ...
       'jupyterlite': {
-         'jupyterlite_contents': <str> # JupyterLite contents where to copy the example notebooks (relative to Sphinx source directory)
-         'use_jupyter_lab': <bool> # Whether JupyterLite links should start Jupyter Lab instead of the Retrolab Notebook interface.
+         'use_jupyter_lab': <bool>, # Whether JupyterLite links should start Jupyter Lab instead of the Retrolab Notebook interface.
+         'notebook_modification_function': <function>, # function that implements JupyterLite-specific modifications of notebooks
+         'jupyterlite_contents': <str>, # JupyterLite contents where to copy the example notebooks (relative to Sphinx source directory)
          }
     }
 
@@ -1181,12 +1180,28 @@ use_jupyter_lab (type: bool, default: ``True``)
   Whether the default interface activated by the JupyterLite link will be for
   Jupyter Lab or the RetroLab Notebook interface.
 
-jupyterlite_contents (type: string, default: ``jupyterlite_contents``) The name
-  of a folder where the built Jupyter notebooks will be copied, relative to the
-  Sphinx source directory. This is used as Jupyterlite contents.
+notebook_modification_function (type: function, default: ``None``)
+  Function that implements JupyterLite-specific modifications of notebooks. By
+  default, it is ``None`` which means that notebooks are not going to be
+  modified. Its signature should be ``notebook_modification_function(json_dict:
+  dict, notebook_filename: str) -> None`` where ``json_dict`` is what you get
+  when you do ``json.load(open(notebook_filename))``. The function is expected
+  to modify ``json_dict`` in place by adding notebook cells. It is not expected
+  to write to the file, since ``sphinx-gallery`` is in charge of this.
+  ``notebook_filename`` is provided for convenience because it is useful to
+  modify the notebook based on its filename. Potential usages of this function
+  are installing additional packages with a ``%pip install seaborn`` code cell,
+  or adding a markdown cell to indicate that a notebook is not expected to work
+  inside JupyterLite, for example because it is using packages that are not
+  packaged inside Pyodide.
+
+jupyterlite_contents (type: string, default: ``jupyterlite_contents``)
+  The name of a folder where the built Jupyter notebooks will be copied,
+  relative to the Sphinx source directory. This is used as Jupyterlite
+  contents.
 
 You can set variables in ``conf.py`` to configure ``jupyterlite-sphinx``, see
-its `jupyterlite-sphinx doc
+the `jupyterlite-sphinx doc
 <https://jupyterlite-sphinx.readthedocs.io/en/latest/configuration.html>`__ for
 more details.
 
@@ -1198,9 +1213,11 @@ extra things will happen:
 2. The built Jupyter Notebooks from the documentation will be copied to a
    folder called ``<jupyterlite_contents>/`` (relative to Sphinx source
    directory)
-3. The rST output of each Sphinx-Gallery example will now have a
+3. If ``notebook_modification_function`` is not ``None``, this function is
+   going to add JupyterLite-specific modifications to notebooks
+4. The reST output of each Sphinx-Gallery example will now have a
    ``launch JupyterLite`` button in it.
-4. That button will point to a JupyterLite link which will start a Jupyter
+5. That button will point to a JupyterLite link which will start a Jupyter
    server in your browser with the current example as notebook
 
 If, for some reason, you want to enable the ``jupyterlite-sphinx`` extension
@@ -1393,11 +1410,11 @@ Image scrapers are plugins that allow Sphinx-Gallery to detect images produced
 during execution of your examples, and then embed them into documentation.
 Scrapers can be activated by appending scraper names to the
 ``'image_scrapers'`` tuple in your Sphinx-Gallery configuration. For example,
-to scrape both matplotlib and Mayavi images you can do::
+to scrape matplotlib images you can do::
 
       sphinx_gallery_conf = {
           ...
-          'image_scrapers': ('matplotlib', 'mayavi'),
+          'image_scrapers': ('matplotlib',),
       }
 
 The default value is ``'image_scrapers': ('matplotlib',)`` which only scrapes
@@ -1427,16 +1444,15 @@ The following scrapers are supported:
     Sphinx-Gallery maintains a scraper for
     :mod:`matplotlib <matplotlib.pyplot>` figures via the string
     ``'matplotlib'``.
-- Mayavi
-    Sphinx-Gallery maintains a scraper for
-    :mod:`Mayavi <mayavi.mlab>` figures via the string
-    ``'mayavi'``.
 - PyVista
     `PyVista <https://github.com/pyvista/pyvista>`__ maintains a scraper
     (for PyVista >= 0.20.3) enabled by the string ``'pyvista'``.
 - PyGMT
     See `their website <https://www.pygmt.org/dev/>`__ for more information on
     how to integrate with Sphinx-Gallery.
+- qtgallery
+    This library provides a scraper for Qt windows. See `their repository <https://github.com/ixjlyons/qtgallery>`_
+    for instructions on integrating with Sphinx-Gallery. 
 
 It is possible to write custom scrapers for images generated by packages
 outside of those listed above. This is accomplished

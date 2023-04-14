@@ -8,7 +8,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>sphinx_gallery.gen_gallery &#8212; Sphinx-Gallery 0.12.2-git documentation</title>
+    <title>sphinx_gallery.gen_gallery &#8212; Sphinx-Gallery 0.13.0-git documentation</title>
   
   
   
@@ -18,12 +18,12 @@
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=12da95d707ffb74b382d" rel="stylesheet" />
-<link href="../../_static/styles/bootstrap.css?digest=12da95d707ffb74b382d" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=12da95d707ffb74b382d" rel="stylesheet" />
+  <link href="../../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
 
   
-  <link href="../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=12da95d707ffb74b382d" rel="stylesheet" />
+  <link href="../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
   <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
@@ -39,8 +39,8 @@
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=12da95d707ffb74b382d" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=12da95d707ffb74b382d" />
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
 
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/doctools.js"></script>
@@ -424,8 +424,7 @@ document.write(`
                 <article class="bd-article" role="main">
                   
   <h1>Source code for sphinx_gallery.gen_gallery</h1><div class="highlight"><pre>
-<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="c1"># Author: Óscar Nájera</span>
+<span></span><span class="c1"># Author: Óscar Nájera</span>
 <span class="c1"># License: 3-clause BSD</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Sphinx-Gallery Generator</span>
@@ -436,7 +435,6 @@ document.write(`
 <span class="sd">&quot;&quot;&quot;</span>
 
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">absolute_import</span>
 <span class="kn">import</span> <span class="nn">codecs</span>
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span><span class="p">,</span> <span class="n">datetime</span>
@@ -455,8 +453,7 @@ document.write(`
 <span class="kn">from</span> <span class="nn">.backreferences</span> <span class="kn">import</span> <span class="n">_finalize_backreferences</span>
 <span class="kn">from</span> <span class="nn">.gen_rst</span> <span class="kn">import</span> <span class="p">(</span><span class="n">generate_dir_rst</span><span class="p">,</span> <span class="n">SPHX_GLR_SIG</span><span class="p">,</span> <span class="n">_get_memory_base</span><span class="p">,</span>
                       <span class="n">_get_readme</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">.scrapers</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">_scraper_dict</span><span class="p">,</span> <span class="n">_reset_dict</span><span class="p">,</span> <span class="n">_import_matplotlib</span><span class="p">,</span> <span class="n">_MAYAVI_WARN</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.scrapers</span> <span class="kn">import</span> <span class="n">_scraper_dict</span><span class="p">,</span> <span class="n">_reset_dict</span><span class="p">,</span> <span class="n">_import_matplotlib</span>
 <span class="kn">from</span> <span class="nn">.docs_resolv</span> <span class="kn">import</span> <span class="n">embed_code_links</span>
 <span class="kn">from</span> <span class="nn">.downloads</span> <span class="kn">import</span> <span class="n">generate_zipfiles</span>
 <span class="kn">from</span> <span class="nn">.sorting</span> <span class="kn">import</span> <span class="n">NumberOfCodeLinesSortKey</span>
@@ -517,7 +514,7 @@ document.write(`
     <span class="s1">&#39;compress_images&#39;</span><span class="p">:</span> <span class="p">(),</span>
     <span class="s1">&#39;reset_modules&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;matplotlib&#39;</span><span class="p">,</span> <span class="s1">&#39;seaborn&#39;</span><span class="p">),</span>
     <span class="s1">&#39;reset_modules_order&#39;</span><span class="p">:</span> <span class="s1">&#39;before&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;first_notebook_cell&#39;</span><span class="p">:</span> <span class="s1">&#39;%matplotlib inline&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;first_notebook_cell&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
     <span class="s1">&#39;last_notebook_cell&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
     <span class="s1">&#39;notebook_images&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
     <span class="s1">&#39;pypandoc&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
@@ -551,26 +548,8 @@ document.write(`
     <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="parse_config"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.parse_config">[docs]</a><span class="k">def</span> <span class="nf">parse_config</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">check_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Process the Sphinx Gallery configuration.&quot;&quot;&quot;</span>
-    <span class="n">plot_gallery</span> <span class="o">=</span> <span class="n">_bool_eval</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">plot_gallery</span><span class="p">)</span>
-    <span class="n">src_dir</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span>
-    <span class="n">abort_on_example_error</span> <span class="o">=</span> <span class="n">_bool_eval</span><span class="p">(</span>
-        <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">abort_on_example_error</span><span class="p">)</span>
-    <span class="n">lang</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">highlight_language</span>
-    <span class="n">gallery_conf</span> <span class="o">=</span> <span class="n">_complete_gallery_conf</span><span class="p">(</span>
-        <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">,</span> <span class="n">plot_gallery</span><span class="p">,</span>
-        <span class="n">abort_on_example_error</span><span class="p">,</span> <span class="n">lang</span><span class="p">,</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">app</span><span class="p">,</span>
-        <span class="n">check_keys</span><span class="p">)</span>
-
-    <span class="c1"># this assures I can call the config in other places</span>
-    <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="n">gallery_conf</span>
-    <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">html_static_path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">glr_path_static</span><span class="p">())</span>
-    <span class="k">return</span> <span class="n">gallery_conf</span></div>
-
-
-<span class="k">def</span> <span class="nf">_update_gallery_conf</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Update gallery config.</span>
+<span class="k">def</span> <span class="nf">_update_gallery_conf_exclude_implicit_doc</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Update gallery config exclude_implicit_doc.</span>
 
 <span class="sd">    This is separate function for better testability.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -580,45 +559,40 @@ document.write(`
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;exclude_implicit_doc_regex&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">exclude_regex</span>
 
 
-<span class="k">def</span> <span class="nf">_complete_gallery_conf</span><span class="p">(</span><span class="n">sphinx_gallery_conf</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">,</span> <span class="n">plot_gallery</span><span class="p">,</span>
-                           <span class="n">abort_on_example_error</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s1">&#39;python&#39;</span><span class="p">,</span>
-                           <span class="n">builder_name</span><span class="o">=</span><span class="s1">&#39;html&#39;</span><span class="p">,</span> <span class="n">app</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">check_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_update_gallery_conf_builder_inited</span><span class="p">(</span>
+        <span class="n">sphinx_gallery_conf</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">,</span> <span class="n">plot_gallery</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">abort_on_example_error</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s1">&#39;python&#39;</span><span class="p">,</span>
+        <span class="n">builder_name</span><span class="o">=</span><span class="s1">&#39;html&#39;</span><span class="p">):</span>
+    <span class="n">sphinx_gallery_conf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">plot_gallery</span><span class="o">=</span><span class="n">plot_gallery</span><span class="p">)</span>
+    <span class="n">sphinx_gallery_conf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">abort_on_example_error</span><span class="o">=</span><span class="n">abort_on_example_error</span><span class="p">)</span>
+    <span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">src_dir</span>
+    <span class="n">lang</span> <span class="o">=</span> <span class="n">lang</span> <span class="k">if</span> <span class="n">lang</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;python&#39;</span><span class="p">,</span> <span class="s1">&#39;python3&#39;</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="s1">&#39;python&#39;</span>
+    <span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s1">&#39;lang&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lang</span>
+    <span class="c1"># Make it easy to know which builder we&#39;re in</span>
+    <span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s1">&#39;builder_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">builder_name</span>
+
+
+<span class="k">def</span> <span class="nf">_fill_gallery_conf_defaults</span><span class="p">(</span><span class="n">sphinx_gallery_conf</span><span class="p">,</span> <span class="n">app</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                <span class="n">check_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="n">gallery_conf</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">DEFAULT_GALLERY_CONF</span><span class="p">)</span>
     <span class="n">options</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">)</span>
-    <span class="c1"># sphinx-autoapi can run before our config filling can occur, which</span>
-    <span class="c1"># when used with show_api_usage=True can cause us to add this early.</span>
-    <span class="c1"># In theory we could bump our priority above theirs, but this could have</span>
-    <span class="c1"># unintented consequences.</span>
-    <span class="n">ignore_keys</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;_sg_api_entries&#39;</span><span class="p">,)</span>
-    <span class="n">extra_keys</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
-        <span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">sphinx_gallery_conf</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">options</span><span class="p">))</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">ignore_keys</span><span class="p">)</span>
-    <span class="p">)</span>
+    <span class="n">extra_keys</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">sphinx_gallery_conf</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">options</span><span class="p">))</span>
     <span class="k">if</span> <span class="n">extra_keys</span> <span class="ow">and</span> <span class="n">check_keys</span><span class="p">:</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Unknown key(s) in sphinx_gallery_conf:</span><span class="se">\n</span><span class="s1">&#39;</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">extra_keys</span><span class="p">:</span>
             <span class="n">options</span> <span class="o">=</span> <span class="n">get_close_matches</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="mf">0.66</span><span class="p">)</span>
             <span class="n">msg</span> <span class="o">+=</span> <span class="nb">repr</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">options</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="n">msg</span> <span class="o">+=</span> <span class="s1">&#39;, did you mean </span><span class="si">%r</span><span class="s1">?&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="mi">0</span><span class="p">],)</span>
+                <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;, did you mean </span><span class="si">{</span><span class="n">options</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">!r}</span><span class="s1">?&#39;</span>
             <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">options</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="n">msg</span> <span class="o">+=</span> <span class="s1">&#39;, did you mean one of </span><span class="si">%r</span><span class="s1">?&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">options</span><span class="p">,)</span>
+                <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;, did you mean one of </span><span class="si">{</span><span class="n">options</span><span class="si">!r}</span><span class="s1">?&#39;</span>
             <span class="n">msg</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
         <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
     <span class="n">gallery_conf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">sphinx_gallery_conf</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">sphinx_gallery_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;find_mayavi_figures&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-            <span class="s2">&quot;Deprecated image scraping variable `find_mayavi_figures`</span><span class="se">\n</span><span class="s2">&quot;</span>
-            <span class="s2">&quot;detected, use `image_scrapers` instead as:</span><span class="se">\n\n</span><span class="s2">&quot;</span>
-            <span class="s2">&quot;   image_scrapers=(&#39;matplotlib&#39;, &#39;mayavi&#39;)&quot;</span><span class="p">,</span>
-            <span class="nb">type</span><span class="o">=</span><span class="ne">DeprecationWarning</span><span class="p">)</span>
-        <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;image_scrapers&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span><span class="s1">&#39;mayavi&#39;</span><span class="p">,)</span>
-    <span class="n">gallery_conf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">plot_gallery</span><span class="o">=</span><span class="n">plot_gallery</span><span class="p">)</span>
-    <span class="n">gallery_conf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">abort_on_example_error</span><span class="o">=</span><span class="n">abort_on_example_error</span><span class="p">)</span>
     <span class="c1"># XXX anything that can only be a bool (rather than str) should probably be</span>
     <span class="c1"># evaluated this way as it allows setting via -D on the command line</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;promote_jupyter_magic&#39;</span><span class="p">,</span> <span class="s1">&#39;run_stale_examples&#39;</span><span class="p">,):</span>
         <span class="n">gallery_conf</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">_bool_eval</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
-    <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">src_dir</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;app&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">app</span>
 
     <span class="c1"># Check capture_repr</span>
@@ -640,7 +614,7 @@ document.write(`
     <span class="c1"># deal with show_memory</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;memory_base&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
     <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;show_memory&#39;</span><span class="p">]:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">callable</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;show_memory&#39;</span><span class="p">]):</span>  <span class="c1"># True-like</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;show_memory&#39;</span><span class="p">]):</span>  <span class="c1"># True-like</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="kn">from</span> <span class="nn">memory_profiler</span> <span class="kn">import</span> <span class="n">memory_usage</span>  <span class="c1"># noqa</span>
             <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
@@ -664,7 +638,7 @@ document.write(`
         <span class="k">def</span> <span class="nf">call_memory</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
             <span class="k">return</span> <span class="mf">0.</span><span class="p">,</span> <span class="n">func</span><span class="p">()</span>
         <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;call_memory&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">call_memory</span>
-    <span class="k">assert</span> <span class="n">callable</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;call_memory&#39;</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="nb">callable</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;call_memory&#39;</span><span class="p">])</span>
 
     <span class="c1"># deal with scrapers</span>
     <span class="n">scrapers</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;image_scrapers&#39;</span><span class="p">]</span>
@@ -674,8 +648,6 @@ document.write(`
     <span class="k">for</span> <span class="n">si</span><span class="p">,</span> <span class="n">scraper</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">scrapers</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">scraper</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">scraper</span> <span class="ow">in</span> <span class="n">_scraper_dict</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">scraper</span> <span class="o">==</span> <span class="s1">&#39;mayavi&#39;</span><span class="p">:</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">_MAYAVI_WARN</span><span class="p">)</span>
                 <span class="n">scraper</span> <span class="o">=</span> <span class="n">_scraper_dict</span><span class="p">[</span><span class="n">scraper</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">orig_scraper</span> <span class="o">=</span> <span class="n">scraper</span>
@@ -687,8 +659,8 @@ document.write(`
                     <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s1">&#39;Unknown image scraper </span><span class="si">%r</span><span class="s1">, got:</span><span class="se">\n</span><span class="si">%s</span><span class="s1">&#39;</span>
                                       <span class="o">%</span> <span class="p">(</span><span class="n">orig_scraper</span><span class="p">,</span> <span class="n">exp</span><span class="p">))</span>
             <span class="n">scrapers</span><span class="p">[</span><span class="n">si</span><span class="p">]</span> <span class="o">=</span> <span class="n">scraper</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">callable</span><span class="p">(</span><span class="n">scraper</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s1">&#39;Scraper </span><span class="si">%r</span><span class="s1"> was not callable&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">scraper</span><span class="p">,))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="n">scraper</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Scraper </span><span class="si">{</span><span class="n">scraper</span><span class="si">!r}</span><span class="s1"> was not callable&#39;</span><span class="p">)</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;image_scrapers&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">scrapers</span><span class="p">)</span>
     <span class="k">del</span> <span class="n">scrapers</span>
     <span class="c1"># Here we try to set up matplotlib but don&#39;t raise an error,</span>
@@ -743,7 +715,7 @@ document.write(`
                 <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s1">&#39;Unknown module resetter named </span><span class="si">%r</span><span class="s1">&#39;</span>
                                   <span class="o">%</span> <span class="p">(</span><span class="n">resetter</span><span class="p">,))</span>
             <span class="n">resetters</span><span class="p">[</span><span class="n">ri</span><span class="p">]</span> <span class="o">=</span> <span class="n">_reset_dict</span><span class="p">[</span><span class="n">resetter</span><span class="p">]</span>
-        <span class="k">elif</span> <span class="ow">not</span> <span class="n">callable</span><span class="p">(</span><span class="n">resetter</span><span class="p">):</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="n">resetter</span><span class="p">):</span>
             <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s1">&#39;Module resetter </span><span class="si">%r</span><span class="s1"> was not callable&#39;</span>
                               <span class="o">%</span> <span class="p">(</span><span class="n">resetter</span><span class="p">,))</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;reset_modules&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">resetters</span><span class="p">)</span>
@@ -756,8 +728,6 @@ document.write(`
                           <span class="s2">&quot;[&#39;before&#39;, &#39;after&#39;, &#39;both&#39;], &quot;</span>
                           <span class="s1">&#39;got </span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;reset_modules_order&#39;</span><span class="p">])</span>
 
-    <span class="n">lang</span> <span class="o">=</span> <span class="n">lang</span> <span class="k">if</span> <span class="n">lang</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;python&#39;</span><span class="p">,</span> <span class="s1">&#39;python3&#39;</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="s1">&#39;python&#39;</span>
-    <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;lang&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lang</span>
     <span class="k">del</span> <span class="n">resetters</span>
 
     <span class="c1"># Ensure the first cell text is a string if we have it</span>
@@ -795,8 +765,6 @@ document.write(`
                                   <span class="s2">&quot;values: </span><span class="si">%s</span><span class="s2">, got: </span><span class="si">%s</span><span class="s2">.&quot;</span>
                                   <span class="o">%</span> <span class="p">(</span><span class="n">accepted_keys</span><span class="p">,</span> <span class="n">key</span><span class="p">))</span>
 
-    <span class="c1"># Make it easy to know which builder we&#39;re in</span>
-    <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;builder_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">builder_name</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;titles&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="c1"># Ensure &#39;backreferences_dir&#39; is str, pathlib.Path or None</span>
     <span class="n">backref</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;backreferences_dir&#39;</span><span class="p">]</span>
@@ -814,7 +782,6 @@ document.write(`
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;binder&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">check_binder_conf</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;binder&#39;</span><span class="p">])</span>
 
     <span class="c1"># jupyterlite</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;_complete_gallery_conf&#39;</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;jupyterlite&#39;</span><span class="p">))</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;jupyterlite&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">check_jupyterlite_conf</span><span class="p">(</span>
         <span class="n">gallery_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;jupyterlite&#39;</span><span class="p">,</span> <span class="p">{}),</span> <span class="n">app</span><span class="p">)</span>
 
@@ -839,7 +806,7 @@ document.write(`
             <span class="s1">&#39;gallery_conf[&quot;show_api_usage&quot;] must be True, False or &quot;unused&quot;, &#39;</span>
             <span class="s1">&#39;got </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;show_api_usage&#39;</span><span class="p">])</span>
 
-    <span class="n">_update_gallery_conf</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">)</span>
+    <span class="n">_update_gallery_conf_exclude_implicit_doc</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">gallery_conf</span>
 
@@ -941,7 +908,7 @@ document.write(`
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;generating gallery...&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">)</span>
-    <span class="n">gallery_conf</span> <span class="o">=</span> <span class="n">parse_config</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+    <span class="n">gallery_conf</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span>
 
     <span class="n">seen_backrefs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
 
@@ -1085,7 +1052,7 @@ document.write(`
         <span class="n">lines</span><span class="p">,</span> <span class="n">lens</span> <span class="o">=</span> <span class="n">_format_for_writing</span><span class="p">(</span>
             <span class="n">costs</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">]),</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;console&#39;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
-            <span class="n">text</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;    - </span><span class="si">%s</span><span class="s1">:   &#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,))</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="n">lens</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">10</span><span class="p">)</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s1">&#39;    - </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">:   &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="n">lens</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">10</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">t</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">text</span> <span class="o">+=</span> <span class="s1">&#39;(not run)&#39;</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
@@ -1118,7 +1085,7 @@ document.write(`
     <span class="c1"># there aren&#39;t many &gt; 99 minute scripts, but occasionally some</span>
     <span class="c1"># &gt; 9 minute ones</span>
     <span class="n">t</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">t</span><span class="p">)</span>
-    <span class="n">t</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{0:02d}</span><span class="s1">:</span><span class="si">{1:02d}</span><span class="s1">.</span><span class="si">{2:03d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:02d}</span><span class="s1">:</span><span class="si">{:02d}</span><span class="s1">.</span><span class="si">{:03d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
         <span class="n">t</span><span class="o">.</span><span class="n">hour</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">+</span> <span class="n">t</span><span class="o">.</span><span class="n">minute</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">second</span><span class="p">,</span>
         <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">microsecond</span> <span class="o">/</span> <span class="mf">1000.</span><span class="p">)))</span>
     <span class="k">return</span> <span class="n">t</span>
@@ -1140,8 +1107,8 @@ document.write(`
         <span class="k">else</span><span class="p">:</span>  <span class="c1"># like in generate_gallery</span>
             <span class="k">assert</span> <span class="n">kind</span> <span class="o">==</span> <span class="s1">&#39;console&#39;</span>
             <span class="n">name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">cost</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">path</span><span class="p">)</span>
-            <span class="n">t</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%0.2f</span><span class="s1"> sec&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">cost</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],)</span>
-        <span class="n">m</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{0:.1f}</span><span class="s1"> MB&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cost</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cost</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s1">0.2f</span><span class="si">}</span><span class="s1"> sec&#39;</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cost</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1"> MB&#39;</span>
         <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">name</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">m</span><span class="p">])</span>
     <span class="n">lens</span> <span class="o">=</span> <span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="p">[[</span><span class="nb">len</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">cost</span><span class="p">]</span>
                                   <span class="k">for</span> <span class="n">cost</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">])]</span>
@@ -1158,13 +1125,13 @@ document.write(`
     <span class="k">with</span> <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="s1">&#39;sg_execution_times.rst&#39;</span><span class="p">),</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span>
                      <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
         <span class="n">fid</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">SPHX_GLR_COMP_TIMES</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">new_ref</span><span class="p">))</span>
-        <span class="n">fid</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="si">{0}</span><span class="s1">** total execution time for **</span><span class="si">{1}</span><span class="s1">** files:</span><span class="se">\n\n</span><span class="s1">&#39;</span>
+        <span class="n">fid</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;**</span><span class="si">{}</span><span class="s1">** total execution time for **</span><span class="si">{}</span><span class="s1">** files:</span><span class="se">\n\n</span><span class="s1">&#39;</span>
                   <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_sec_to_readable</span><span class="p">(</span><span class="n">total_time</span><span class="p">),</span> <span class="n">target_dir_clean</span><span class="p">))</span>
         <span class="n">lines</span><span class="p">,</span> <span class="n">lens</span> <span class="o">=</span> <span class="n">_format_for_writing</span><span class="p">(</span><span class="n">costs</span><span class="p">,</span> <span class="n">target_dir_clean</span><span class="p">)</span>
         <span class="k">del</span> <span class="n">costs</span>
         <span class="n">hline</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="s1">&#39;+&#39;</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="p">(</span><span class="n">length</span> <span class="o">+</span> <span class="mi">2</span><span class="p">))</span> <span class="k">for</span> <span class="n">length</span> <span class="ow">in</span> <span class="n">lens</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;+</span><span class="se">\n</span><span class="s1">&#39;</span>
         <span class="n">fid</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">hline</span><span class="p">)</span>
-        <span class="n">format_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;| {</span><span class="si">%s</span><span class="s1">} &#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">ii</span><span class="p">,)</span>
+        <span class="n">format_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;| </span><span class="se">{{</span><span class="si">{</span><span class="n">ii</span><span class="si">}</span><span class="se">}}</span><span class="s1"> &#39;</span>
                              <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span> <span class="o">+</span> <span class="s1">&#39;|</span><span class="se">\n</span><span class="s1">&#39;</span>
         <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
             <span class="n">line</span> <span class="o">=</span> <span class="p">[</span><span class="n">ll</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="n">len_</span><span class="p">)</span> <span class="k">for</span> <span class="n">ll</span><span class="p">,</span> <span class="n">len_</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">lens</span><span class="p">)]</span>
@@ -1175,9 +1142,6 @@ document.write(`
 
 
 <div class="viewcode-block" id="write_api_entries"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.write_api_entries">[docs]</a><span class="k">def</span> <span class="nf">write_api_entries</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">what</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="n">lines</span><span class="p">):</span>
-    <span class="c1"># sphinx-autoapi can do this before we manage to complete our config</span>
-    <span class="k">if</span> <span class="s1">&#39;show_api_usage&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">:</span>
-        <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s1">&#39;show_api_usage&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">if</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s1">&#39;show_api_usage&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
         <span class="k">return</span>
     <span class="k">if</span> <span class="s1">&#39;_sg_api_entries&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">:</span>
@@ -1335,7 +1299,7 @@ document.write(`
             <span class="n">unused_api_entries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">used_api_entries</span><span class="p">[</span><span class="n">entry</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">example_fname</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid2</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">example_fname</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid2</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">fid2</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;  :ref:&#39;</span><span class="p">):</span>
                         <span class="n">example_name</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;`&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
@@ -1377,8 +1341,7 @@ document.write(`
             <span class="n">source</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span>
 
         <span class="k">if</span> <span class="n">has_graphviz</span><span class="p">:</span>
-            <span class="n">used_modules</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="n">entry</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-                                <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">used_api_entries</span><span class="p">])</span>
+            <span class="n">used_modules</span> <span class="o">=</span> <span class="p">{</span><span class="n">entry</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">used_api_entries</span><span class="p">}</span>
             <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">used_modules</span><span class="p">):</span>
                 <span class="n">source</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span>
                     <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">module</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="s1">&#39;^&#39;</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">module</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span>
@@ -1432,13 +1395,13 @@ document.write(`
             <span class="k">continue</span>  <span class="c1"># not subselected by our regex</span>
         <span class="n">title</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;titles&#39;</span><span class="p">][</span><span class="n">fname</span><span class="p">]</span>
         <span class="n">output</span> <span class="o">+=</span> <span class="p">(</span>
-            <span class="sa">u</span><span class="s1">&#39;&lt;testcase classname=</span><span class="si">{0!s}</span><span class="s1"> file=</span><span class="si">{1!s}</span><span class="s1"> line=&quot;1&quot; &#39;</span>
-            <span class="sa">u</span><span class="s1">&#39;name=</span><span class="si">{2!s}</span><span class="s1"> time=&quot;</span><span class="si">{3!r}</span><span class="s1">&quot;&gt;&#39;</span>
+            <span class="s1">&#39;&lt;testcase classname=</span><span class="si">{!s}</span><span class="s1"> file=</span><span class="si">{!s}</span><span class="s1"> line=&quot;1&quot; &#39;</span>
+            <span class="s1">&#39;name=</span><span class="si">{!s}</span><span class="s1"> time=&quot;</span><span class="si">{!r}</span><span class="s1">&quot;&gt;&#39;</span>
             <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">quoteattr</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">fname</span><span class="p">))[</span><span class="mi">0</span><span class="p">]),</span>
                     <span class="n">quoteattr</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">)),</span>
                     <span class="n">quoteattr</span><span class="p">(</span><span class="n">title</span><span class="p">),</span> <span class="n">t</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">failing_as_expected</span><span class="p">:</span>
-            <span class="n">output</span> <span class="o">+=</span> <span class="sa">u</span><span class="s1">&#39;&lt;skipped message=&quot;expected example failure&quot;&gt;&lt;/skipped&gt;&#39;</span>
+            <span class="n">output</span> <span class="o">+=</span> <span class="s1">&#39;&lt;skipped message=&quot;expected example failure&quot;&gt;&lt;/skipped&gt;&#39;</span>
             <span class="n">n_skips</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">elif</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">failing_unexpectedly</span> <span class="ow">or</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">passing_unexpectedly</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">failing_unexpectedly</span><span class="p">:</span>
@@ -1446,16 +1409,16 @@ document.write(`
             <span class="k">else</span><span class="p">:</span>  <span class="c1"># fname in passing_unexpectedly</span>
                 <span class="n">traceback</span> <span class="o">=</span> <span class="s1">&#39;Passed even though it was marked to fail&#39;</span>
             <span class="n">n_failures</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="n">output</span> <span class="o">+=</span> <span class="p">(</span><span class="sa">u</span><span class="s1">&#39;&lt;failure message=</span><span class="si">{0!s}</span><span class="s1">&gt;</span><span class="si">{1!s}</span><span class="s1">&lt;/failure&gt;&#39;</span>
+            <span class="n">output</span> <span class="o">+=</span> <span class="p">(</span><span class="s1">&#39;&lt;failure message=</span><span class="si">{!s}</span><span class="s1">&gt;</span><span class="si">{!s}</span><span class="s1">&lt;/failure&gt;&#39;</span>
                        <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">quoteattr</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()),</span>
                                <span class="n">escape</span><span class="p">(</span><span class="n">traceback</span><span class="p">)))</span>
-        <span class="n">output</span> <span class="o">+=</span> <span class="sa">u</span><span class="s1">&#39;&lt;/testcase&gt;&#39;</span>
+        <span class="n">output</span> <span class="o">+=</span> <span class="s1">&#39;&lt;/testcase&gt;&#39;</span>
         <span class="n">n_tests</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="n">elapsed</span> <span class="o">+=</span> <span class="n">t</span>
-    <span class="n">output</span> <span class="o">+=</span> <span class="sa">u</span><span class="s1">&#39;&lt;/testsuite&gt;&#39;</span>
-    <span class="n">output</span> <span class="o">=</span> <span class="p">(</span><span class="sa">u</span><span class="s1">&#39;&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;&#39;</span>
-              <span class="sa">u</span><span class="s1">&#39;&lt;testsuite errors=&quot;0&quot; failures=&quot;</span><span class="si">{0}</span><span class="s1">&quot; name=&quot;sphinx-gallery&quot; &#39;</span>
-              <span class="sa">u</span><span class="s1">&#39;skipped=&quot;</span><span class="si">{1}</span><span class="s1">&quot; tests=&quot;</span><span class="si">{2}</span><span class="s1">&quot; time=&quot;</span><span class="si">{3}</span><span class="s1">&quot;&gt;&#39;</span>
+    <span class="n">output</span> <span class="o">+=</span> <span class="s1">&#39;&lt;/testsuite&gt;&#39;</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;&#39;</span>
+              <span class="s1">&#39;&lt;testsuite errors=&quot;0&quot; failures=&quot;</span><span class="si">{}</span><span class="s1">&quot; name=&quot;sphinx-gallery&quot; &#39;</span>
+              <span class="s1">&#39;skipped=&quot;</span><span class="si">{}</span><span class="s1">&quot; tests=&quot;</span><span class="si">{}</span><span class="s1">&quot; time=&quot;</span><span class="si">{}</span><span class="s1">&quot;&gt;&#39;</span>
               <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n_failures</span><span class="p">,</span> <span class="n">n_skips</span><span class="p">,</span> <span class="n">n_tests</span><span class="p">,</span> <span class="n">elapsed</span><span class="p">))</span> <span class="o">+</span> <span class="n">output</span>
     <span class="c1"># Actually write it</span>
     <span class="n">fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;junit&#39;</span><span class="p">]))</span>
@@ -1486,9 +1449,9 @@ document.write(`
 
 
 <span class="k">def</span> <span class="nf">_expected_failing_examples</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">):</span>
-    <span class="k">return</span> <span class="nb">set</span><span class="p">(</span>
+    <span class="k">return</span> <span class="p">{</span>
         <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">],</span> <span class="n">path</span><span class="p">))</span>
-        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;expected_failing_examples&#39;</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;expected_failing_examples&#39;</span><span class="p">]}</span>
 
 
 <span class="k">def</span> <span class="nf">_parse_failures</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">):</span>
@@ -1504,7 +1467,7 @@ document.write(`
     <span class="c1"># filter from examples actually run</span>
     <span class="n">passing_unexpectedly</span> <span class="o">=</span> <span class="p">[</span>
         <span class="n">src_file</span> <span class="k">for</span> <span class="n">src_file</span> <span class="ow">in</span> <span class="n">passing_unexpectedly</span>
-        <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">gallery_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;filename_pattern&#39;</span><span class="p">),</span> <span class="n">src_file</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;filename_pattern&#39;</span><span class="p">],</span> <span class="n">src_file</span><span class="p">)]</span>
     <span class="k">return</span> <span class="n">failing_as_expected</span><span class="p">,</span> <span class="n">failing_unexpectedly</span><span class="p">,</span> <span class="n">passing_unexpectedly</span>
 
 
@@ -1626,12 +1589,46 @@ document.write(`
     <span class="k">return</span> <span class="n">default_getter</span></div>
 
 
+<div class="viewcode-block" id="fill_gallery_conf_defaults"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.fill_gallery_conf_defaults">[docs]</a><span class="k">def</span> <span class="nf">fill_gallery_conf_defaults</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">check_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check the sphinx-gallery config and set its defaults.</span>
+
+<span class="sd">    This is called early at config-inited, so that all the rest of the code can</span>
+<span class="sd">    do things like ``sphinx_gallery_conf[&#39;binder&#39;][&#39;use_jupyter_lab&#39;]``, even</span>
+<span class="sd">    if the keys have not been set explicitly in conf.py.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">new_sphinx_gallery_conf</span> <span class="o">=</span> <span class="n">_fill_gallery_conf_defaults</span><span class="p">(</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">,</span> <span class="n">app</span><span class="o">=</span><span class="n">app</span><span class="p">,</span> <span class="n">check_keys</span><span class="o">=</span><span class="n">check_keys</span><span class="p">)</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="n">new_sphinx_gallery_conf</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">html_static_path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">glr_path_static</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="update_gallery_conf_builder_inited"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.update_gallery_conf_builder_inited">[docs]</a><span class="k">def</span> <span class="nf">update_gallery_conf_builder_inited</span><span class="p">(</span><span class="n">app</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Update the the sphinx-gallery config at builder-inited.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">plot_gallery</span> <span class="o">=</span> <span class="n">_bool_eval</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">plot_gallery</span><span class="p">)</span>
+    <span class="n">src_dir</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span>
+    <span class="n">abort_on_example_error</span> <span class="o">=</span> <span class="n">_bool_eval</span><span class="p">(</span>
+        <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">abort_on_example_error</span><span class="p">)</span>
+    <span class="n">lang</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">highlight_language</span>
+    <span class="n">_update_gallery_conf_builder_inited</span><span class="p">(</span>
+        <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">,</span>
+        <span class="n">src_dir</span><span class="p">,</span>
+        <span class="n">plot_gallery</span><span class="o">=</span><span class="n">plot_gallery</span><span class="p">,</span>
+        <span class="n">abort_on_example_error</span><span class="o">=</span><span class="n">abort_on_example_error</span><span class="p">,</span>
+        <span class="n">lang</span><span class="o">=</span><span class="n">lang</span><span class="p">,</span>
+        <span class="n">builder_name</span><span class="o">=</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">name</span>
+    <span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="setup"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.setup">[docs]</a><span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="n">app</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Setup Sphinx-Gallery sphinx extension&quot;&quot;&quot;</span>
     <span class="n">app</span><span class="o">.</span><span class="n">add_config_value</span><span class="p">(</span><span class="s1">&#39;sphinx_gallery_conf&#39;</span><span class="p">,</span> <span class="n">DEFAULT_GALLERY_CONF</span><span class="p">,</span> <span class="s1">&#39;html&#39;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;plot_gallery&#39;</span><span class="p">,</span> <span class="s1">&#39;abort_on_example_error&#39;</span><span class="p">]:</span>
         <span class="n">app</span><span class="o">.</span><span class="n">add_config_value</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">get_default_config_value</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="s1">&#39;html&#39;</span><span class="p">)</span>
 
+    <span class="c1"># Early filling of sphinx_gallery_conf defaults at config-inited</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;config-inited&#39;</span><span class="p">,</span> <span class="n">fill_gallery_conf_defaults</span><span class="p">,</span>
+                <span class="n">priority</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
     <span class="c1"># set small priority value, so that pre_configure_jupyterlite_sphinx is</span>
     <span class="c1"># called before jupyterlite_sphinx config-inited</span>
     <span class="n">app</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
@@ -1652,6 +1649,9 @@ document.write(`
 
     <span class="n">imagesg_addnode</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
 
+    <span class="c1"># Early update of sphinx_gallery_conf at builder-inited</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;builder-inited&#39;</span><span class="p">,</span> <span class="n">update_gallery_conf_builder_inited</span><span class="p">,</span>
+                <span class="n">priority</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
     <span class="n">app</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;builder-inited&#39;</span><span class="p">,</span> <span class="n">generate_gallery_rst</span><span class="p">)</span>
     <span class="n">app</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;build-finished&#39;</span><span class="p">,</span> <span class="n">copy_binder_files</span><span class="p">)</span>
     <span class="n">app</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;build-finished&#39;</span><span class="p">,</span> <span class="n">create_jupyterlite_contents</span><span class="p">)</span>
@@ -1675,9 +1675,15 @@ document.write(`
               
               
                 <footer class="bd-footer-article">
-                  <!-- Previous / next buttons -->
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
+</div></div>
+  
 </div>
+
                 </footer>
               
             </div>
@@ -1687,7 +1693,7 @@ document.write(`
             
           </div>
           <footer class="bd-footer-content">
-            <div class="bd-footer-content__inner"></div>
+            
           </footer>
         
       </main>
@@ -1695,8 +1701,8 @@ document.write(`
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../_static/scripts/bootstrap.js?digest=12da95d707ffb74b382d"></script>
-<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=12da95d707ffb74b382d"></script>
+  <script src="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -1714,7 +1720,7 @@ document.write(`
       
         <div class="footer-item">
   <p class="sphinx-version">
-    Created using <a href="https://sphinx-doc.org/">Sphinx</a> 6.1.3.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
     <br/>
   </p>
 </div>
@@ -1725,7 +1731,7 @@ document.write(`
     <div class="footer-items__end">
       
         <div class="footer-item"><p class="theme-version">
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.13.1.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.13.3.
 </p></div>
       
     </div>

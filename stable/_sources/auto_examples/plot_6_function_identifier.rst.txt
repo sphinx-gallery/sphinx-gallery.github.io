@@ -41,7 +41,7 @@ This functionality is used to add documentation hyperlinks to your code
 (:ref:`link_to_documentation`) and for mini-gallery creation
 (:ref:`references_to_examples`).
 
-.. GENERATED FROM PYTHON SOURCE LINES 26-45
+.. GENERATED FROM PYTHON SOURCE LINES 25-44
 
 .. code-block:: python3
 
@@ -52,7 +52,7 @@ This functionality is used to add documentation hyperlinks to your code
     import os.path as op  # noqa, analysis:ignore
     import matplotlib.pyplot as plt
     import sphinx_gallery
-    from sphinx_gallery.backreferences import identify_names
+    from sphinx_gallery.backreferences import identify_names, _make_ref_regex
     from sphinx_gallery.py_source_parser import split_code_and_text_blocks
 
     filename = 'plot_6_function_identifier.py'
@@ -62,7 +62,7 @@ This functionality is used to add documentation hyperlinks to your code
 
     _, script_blocks = split_code_and_text_blocks(filename)
 
-    names = identify_names(script_blocks)
+    names = identify_names(script_blocks, _make_ref_regex())
 
 
 
@@ -71,14 +71,14 @@ This functionality is used to add documentation hyperlinks to your code
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 46-50
+.. GENERATED FROM PYTHON SOURCE LINES 45-49
 
 In the code block above, we use the internal function ``identify_names`` to
 obtain all identified names from this file and their full resolved import
 path. We then plot this below, where the identified names functions are
 on the left and the full resolved import path is on the right.
 
-.. GENERATED FROM PYTHON SOURCE LINES 50-73
+.. GENERATED FROM PYTHON SOURCE LINES 49-72
 
 .. code-block:: python3
 
@@ -120,7 +120,7 @@ on the left and the full resolved import path is on the right.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.704 seconds)
+   **Total running time of the script:** ( 0 minutes  0.687 seconds)
 
 **Estimated memory usage:**  9 MB
 
