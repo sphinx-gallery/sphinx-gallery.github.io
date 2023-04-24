@@ -602,14 +602,15 @@ document.write(`
         <span class="k">for</span> <span class="n">rep</span> <span class="ow">in</span> <span class="n">capture_repr</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">rep</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">supported_reprs</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s2">&quot;All entries in &#39;capture_repr&#39; must be one &quot;</span>
-                                  <span class="s2">&quot;of </span><span class="si">%s</span><span class="s2">, got: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">supported_reprs</span><span class="p">,</span> <span class="n">rep</span><span class="p">))</span>
+                                  <span class="sa">f</span><span class="s2">&quot;of </span><span class="si">{</span><span class="n">supported_reprs</span><span class="si">}</span><span class="s2">, got: </span><span class="si">{</span><span class="n">rep</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s2">&quot;&#39;capture_repr&#39; must be a tuple, got: </span><span class="si">%s</span><span class="s2">&quot;</span>
-                          <span class="o">%</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">capture_repr</span><span class="p">),))</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;&#39;capture_repr&#39; must be a tuple, got: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">capture_repr</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
     <span class="c1"># Check ignore_repr_types</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;ignore_repr_types&#39;</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s2">&quot;&#39;ignore_repr_types&#39; must be a string, got: </span><span class="si">%s</span><span class="s2">&quot;</span>
-                          <span class="o">%</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;ignore_repr_types&#39;</span><span class="p">]),))</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s2">&quot;&#39;ignore_repr_types&#39; must be a string, got: &quot;</span> <span class="o">+</span>
+                          <span class="nb">type</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;ignore_repr_types&#39;</span><span class="p">]))</span>
 
     <span class="c1"># deal with show_memory</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;memory_base&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
@@ -656,8 +657,9 @@ document.write(`
                     <span class="n">scraper</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">scraper</span><span class="p">,</span> <span class="s1">&#39;_get_sg_image_scraper&#39;</span><span class="p">)</span>
                     <span class="n">scraper</span> <span class="o">=</span> <span class="n">scraper</span><span class="p">()</span>
                 <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exp</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s1">&#39;Unknown image scraper </span><span class="si">%r</span><span class="s1">, got:</span><span class="se">\n</span><span class="si">%s</span><span class="s1">&#39;</span>
-                                      <span class="o">%</span> <span class="p">(</span><span class="n">orig_scraper</span><span class="p">,</span> <span class="n">exp</span><span class="p">))</span>
+                    <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s1">&#39;Unknown image scraper </span><span class="si">{</span><span class="n">orig_scraper</span><span class="si">!r}</span><span class="s1">, got:</span><span class="se">\n</span><span class="si">{</span><span class="n">exp</span><span class="si">}</span><span class="s1">&#39;</span>
+                    <span class="p">)</span>
             <span class="n">scrapers</span><span class="p">[</span><span class="n">si</span><span class="p">]</span> <span class="o">=</span> <span class="n">scraper</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="n">scraper</span><span class="p">):</span>
             <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Scraper </span><span class="si">{</span><span class="n">scraper</span><span class="si">!r}</span><span class="s1"> was not callable&#39;</span><span class="p">)</span>
@@ -683,7 +685,7 @@ document.write(`
         <span class="n">compress_images</span> <span class="o">=</span> <span class="p">[</span><span class="n">compress_images</span><span class="p">]</span>
     <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">compress_images</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
         <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s1">&#39;compress_images must be a tuple, list, or str, &#39;</span>
-                          <span class="s1">&#39;got </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">compress_images</span><span class="p">),))</span>
+                          <span class="sa">f</span><span class="s1">&#39;got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">compress_images</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="n">compress_images</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">compress_images</span><span class="p">)</span>
     <span class="n">allowed_values</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;images&#39;</span><span class="p">,</span> <span class="s1">&#39;thumbnails&#39;</span><span class="p">)</span>
     <span class="n">pops</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
@@ -693,13 +695,13 @@ document.write(`
                 <span class="n">pops</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ki</span><span class="p">)</span>
                 <span class="k">continue</span>
             <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s1">&#39;All entries in compress_images must be one of &#39;</span>
-                              <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> or a command-line switch starting with &quot;-&quot;, &#39;</span>
-                              <span class="s1">&#39;got </span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">allowed_values</span><span class="p">,</span> <span class="n">kind</span><span class="p">))</span>
+                              <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">allowed_values</span><span class="si">}</span><span class="s1"> or a command-line switch &#39;</span>
+                              <span class="sa">f</span><span class="s1">&#39;starting with &quot;-&quot;, got </span><span class="si">{</span><span class="n">kind</span><span class="si">!r}</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="n">compress_images_args</span> <span class="o">=</span> <span class="p">[</span><span class="n">compress_images</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pops</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">compress_images</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">_has_optipng</span><span class="p">():</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-            <span class="s1">&#39;optipng binaries not found, PNG </span><span class="si">%s</span><span class="s1"> will not be optimized&#39;</span>
-            <span class="o">%</span> <span class="p">(</span><span class="s1">&#39; and &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">compress_images</span><span class="p">),))</span>
+            <span class="s1">&#39;optipng binaries not found, PNG </span><span class="si">%s</span><span class="s1"> will not be optimized&#39;</span><span class="p">,</span>
+            <span class="s1">&#39; and &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">compress_images</span><span class="p">))</span>
         <span class="n">compress_images</span> <span class="o">=</span> <span class="p">()</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;compress_images&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">compress_images</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;compress_images_args&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">compress_images_args</span>
@@ -712,21 +714,21 @@ document.write(`
     <span class="k">for</span> <span class="n">ri</span><span class="p">,</span> <span class="n">resetter</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">resetters</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">resetter</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">resetter</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_reset_dict</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s1">&#39;Unknown module resetter named </span><span class="si">%r</span><span class="s1">&#39;</span>
-                                  <span class="o">%</span> <span class="p">(</span><span class="n">resetter</span><span class="p">,))</span>
+                <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s1">&#39;Unknown module resetter named </span><span class="si">{</span><span class="n">resetter</span><span class="si">!r}</span><span class="s1">&#39;</span>
+                <span class="p">)</span>
             <span class="n">resetters</span><span class="p">[</span><span class="n">ri</span><span class="p">]</span> <span class="o">=</span> <span class="n">_reset_dict</span><span class="p">[</span><span class="n">resetter</span><span class="p">]</span>
         <span class="k">elif</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="n">resetter</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s1">&#39;Module resetter </span><span class="si">%r</span><span class="s1"> was not callable&#39;</span>
-                              <span class="o">%</span> <span class="p">(</span><span class="n">resetter</span><span class="p">,))</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Module resetter </span><span class="si">{</span><span class="n">resetter</span><span class="si">!r}</span><span class="s1"> was not callable&#39;</span><span class="p">)</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;reset_modules&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">resetters</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;reset_modules_order&#39;</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s1">&#39;reset_modules_order must be a str, &#39;</span>
-                          <span class="s1">&#39;got </span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;reset_modules_order&#39;</span><span class="p">])</span>
+                          <span class="sa">f</span><span class="s1">&#39;got </span><span class="si">{</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;reset_modules_order&quot;</span><span class="p">]</span><span class="si">!r}</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;reset_modules_order&#39;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;before&#39;</span><span class="p">,</span> <span class="s1">&#39;after&#39;</span><span class="p">,</span> <span class="s1">&#39;both&#39;</span><span class="p">]:</span>
         <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s2">&quot;reset_modules_order must be in&quot;</span>
                           <span class="s2">&quot;[&#39;before&#39;, &#39;after&#39;, &#39;both&#39;], &quot;</span>
-                          <span class="s1">&#39;got </span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;reset_modules_order&#39;</span><span class="p">])</span>
+                          <span class="sa">f</span><span class="s2">&quot;got </span><span class="si">{</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;reset_modules_order&#39;</span><span class="p">]</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">del</span> <span class="n">resetters</span>
 
@@ -734,17 +736,17 @@ document.write(`
     <span class="n">first_cell</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;first_notebook_cell&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">first_cell</span><span class="p">,</span> <span class="nb">str</span><span class="p">))</span> <span class="ow">and</span> <span class="p">(</span><span class="n">first_cell</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s2">&quot;The &#39;first_notebook_cell&#39; parameter must be type &quot;</span>
-                          <span class="s2">&quot;str or None, found type </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">first_cell</span><span class="p">))</span>
+                          <span class="sa">f</span><span class="s2">&quot;str or None, found type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">first_cell</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="c1"># Ensure the last cell text is a string if we have it</span>
     <span class="n">last_cell</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;last_notebook_cell&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">last_cell</span><span class="p">,</span> <span class="nb">str</span><span class="p">))</span> <span class="ow">and</span> <span class="p">(</span><span class="n">last_cell</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s2">&quot;The &#39;last_notebook_cell&#39; parameter must be type str&quot;</span>
-                          <span class="s2">&quot; or None, found type </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">last_cell</span><span class="p">))</span>
+                          <span class="sa">f</span><span class="s2">&quot; or None, found type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">last_cell</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="c1"># Check pypandoc</span>
     <span class="n">pypandoc</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;pypandoc&#39;</span><span class="p">]</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pypandoc</span><span class="p">,</span> <span class="p">(</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)):</span>
         <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s2">&quot;&#39;pypandoc&#39; parameter must be of type bool or dict,&quot;</span>
-                          <span class="s2">&quot;got: </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">pypandoc</span><span class="p">))</span>
+                          <span class="sa">f</span><span class="s2">&quot;got: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">pypandoc</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;pypandoc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span> <span class="k">if</span> <span class="n">pypandoc</span> <span class="ow">is</span> <span class="kc">True</span> <span class="k">else</span> <span class="n">pypandoc</span>
     <span class="n">has_pypandoc</span><span class="p">,</span> <span class="n">version</span> <span class="o">=</span> <span class="n">_has_pypandoc</span><span class="p">()</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;pypandoc&#39;</span><span class="p">],</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="n">has_pypandoc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -753,7 +755,7 @@ document.write(`
         <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;pypandoc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;pypandoc&#39;</span><span class="p">],</span> <span class="nb">dict</span><span class="p">):</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Using pandoc version: </span><span class="si">%s</span><span class="s2"> to convert rst text blocks to &quot;</span>
-                    <span class="s2">&quot;markdown for .ipynb files&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">version</span><span class="p">,))</span>
+                    <span class="s2">&quot;markdown for .ipynb files&quot;</span><span class="p">,</span> <span class="n">version</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Using Sphinx-Gallery to convert rst text blocks to &quot;</span>
                     <span class="s2">&quot;markdown for .ipynb files.&quot;</span><span class="p">)</span>
@@ -762,8 +764,7 @@ document.write(`
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">pypandoc</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">accepted_keys</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s2">&quot;&#39;pypandoc&#39; only accepts the following key &quot;</span>
-                                  <span class="s2">&quot;values: </span><span class="si">%s</span><span class="s2">, got: </span><span class="si">%s</span><span class="s2">.&quot;</span>
-                                  <span class="o">%</span> <span class="p">(</span><span class="n">accepted_keys</span><span class="p">,</span> <span class="n">key</span><span class="p">))</span>
+                                  <span class="sa">f</span><span class="s2">&quot;values: </span><span class="si">{</span><span class="n">accepted_keys</span><span class="si">}</span><span class="s2">, got: </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
 
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;titles&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="c1"># Ensure &#39;backreferences_dir&#39; is str, pathlib.Path or None</span>
@@ -772,7 +773,7 @@ document.write(`
             <span class="p">(</span><span class="n">backref</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s2">&quot;The &#39;backreferences_dir&#39; parameter must be of type &quot;</span>
                           <span class="s2">&quot;str, pathlib.Path or None, &quot;</span>
-                          <span class="s2">&quot;found type </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">backref</span><span class="p">))</span>
+                          <span class="sa">f</span><span class="s2">&quot;found type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">backref</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="c1"># if &#39;backreferences_dir&#39; is pathlib.Path, make str for Python &lt;=3.5</span>
     <span class="c1"># compatibility</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">backref</span><span class="p">,</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">):</span>
@@ -786,25 +787,26 @@ document.write(`
         <span class="n">gallery_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;jupyterlite&#39;</span><span class="p">,</span> <span class="p">{}),</span> <span class="n">app</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;css&#39;</span><span class="p">],</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
-        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s1">&#39;gallery_conf[&quot;css&quot;] must be list or tuple, got </span><span class="si">%r</span><span class="s1">&#39;</span>
-                          <span class="o">%</span> <span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;css&#39;</span><span class="p">],))</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s1">&#39;gallery_conf[&quot;css&quot;] must be list or tuple, got &#39;</span>
+                          <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;css&quot;</span><span class="p">]</span><span class="si">!r}</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">css</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;css&#39;</span><span class="p">]:</span>
         <span class="k">if</span> <span class="n">css</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_KNOWN_CSS</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s1">&#39;Unknown css </span><span class="si">%r</span><span class="s1">, must be one of </span><span class="si">%r</span><span class="s1">&#39;</span>
-                              <span class="o">%</span> <span class="p">(</span><span class="n">css</span><span class="p">,</span> <span class="n">_KNOWN_CSS</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;Unknown css </span><span class="si">{</span><span class="n">css</span><span class="si">!r}</span><span class="s1">, must be one of </span><span class="si">{</span><span class="n">_KNOWN_CSS</span><span class="si">!r}</span><span class="s1">&#39;</span>
+            <span class="p">)</span>
         <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;app&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># can be None in testing</span>
             <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;app&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">add_css_file</span><span class="p">(</span><span class="n">css</span> <span class="o">+</span> <span class="s1">&#39;.css&#39;</span><span class="p">)</span>
 
     <span class="c1"># check API usage</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;api_usage_ignore&#39;</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s1">&#39;gallery_conf[&quot;api_usage_ignore&quot;] must be str, &#39;</span>
-                          <span class="s1">&#39;got </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;api_usage_ignore&#39;</span><span class="p">]))</span>
+                          <span class="sa">f</span><span class="s1">&#39;got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;api_usage_ignore&quot;</span><span class="p">])</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;show_api_usage&#39;</span><span class="p">],</span> <span class="nb">bool</span><span class="p">)</span> <span class="ow">and</span> \
             <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;show_api_usage&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;unused&#39;</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
             <span class="s1">&#39;gallery_conf[&quot;show_api_usage&quot;] must be True, False or &quot;unused&quot;, &#39;</span>
-            <span class="s1">&#39;got </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;show_api_usage&#39;</span><span class="p">])</span>
+            <span class="sa">f</span><span class="s1">&#39;got </span><span class="si">{</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;show_api_usage&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
     <span class="n">_update_gallery_conf_exclude_implicit_doc</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">)</span>
 
@@ -882,7 +884,7 @@ document.write(`
 <span class="s2">&quot;&quot;&quot;</span>
     <span class="n">st</span> <span class="o">+=</span> <span class="s2">&quot;&quot;&quot;</span>
 
-<span class="s2">   </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">   &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
+<span class="s2">   </span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">   &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">items</span><span class="p">))</span>
 
     <span class="n">st</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
 
@@ -1121,7 +1123,7 @@ document.write(`
         <span class="k">return</span>
     <span class="n">target_dir_clean</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span>
         <span class="n">target_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
-    <span class="n">new_ref</span> <span class="o">=</span> <span class="s1">&#39;sphx_glr_</span><span class="si">%s</span><span class="s1">_sg_execution_times&#39;</span> <span class="o">%</span> <span class="n">target_dir_clean</span>
+    <span class="n">new_ref</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;sphx_glr_</span><span class="si">{</span><span class="n">target_dir_clean</span><span class="si">}</span><span class="s1">_sg_execution_times&#39;</span>
     <span class="k">with</span> <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="s1">&#39;sg_execution_times.rst&#39;</span><span class="p">),</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span>
                      <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
         <span class="n">fid</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">SPHX_GLR_COMP_TIMES</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">new_ref</span><span class="p">))</span>
@@ -1350,7 +1352,7 @@ document.write(`
                     <span class="s1">&#39;    :layout: neato</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
             <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">used_modules</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Making API usage graph for </span><span class="si">{</span><span class="n">module</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Making API usage graph for </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">module</span><span class="p">)</span>
                 <span class="c1"># select and format entries for this module</span>
                 <span class="n">entries</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
                 <span class="k">for</span> <span class="n">entry</span><span class="p">,</span> <span class="n">ref</span> <span class="ow">in</span> <span class="n">used_api_entries</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -1441,7 +1443,7 @@ document.write(`
     <span class="n">examples_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span>
                                  <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span>
                                      <span class="s2">&quot;backreferences_dir&quot;</span><span class="p">],</span>
-                                 <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">.examples&quot;</span> <span class="o">%</span> <span class="n">name</span><span class="p">)</span>
+                                 <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">.examples&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">examples_path</span><span class="p">):</span>
         <span class="c1"># touch file</span>
@@ -1521,12 +1523,11 @@ document.write(`
                 <span class="s1">&#39;    gallery_conf[&quot;filename_pattern&quot;] = </span><span class="si">%r</span><span class="se">\n</span><span class="s1">&#39;</span>
                 <span class="s1">&#39;    gallery_conf[&quot;ignore_pattern&quot;]   = </span><span class="si">%r</span><span class="se">\n</span><span class="s1">&#39;</span>
                 <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">after excluding </span><span class="si">%d</span><span class="s1"> file</span><span class="si">%s</span><span class="s1"> that had previously been run &#39;</span>
-                <span class="s1">&#39;(based on MD5).</span><span class="se">\n</span><span class="s1">&#39;</span>
-                <span class="o">%</span> <span class="p">(</span><span class="n">n_good</span><span class="p">,</span> <span class="n">n_tot</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span> <span class="k">if</span> <span class="n">n_tot</span> <span class="o">!=</span> <span class="mi">1</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-                   <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;filename_pattern&#39;</span><span class="p">],</span>
-                   <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;ignore_pattern&#39;</span><span class="p">],</span>
-                   <span class="n">n_stale</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span> <span class="k">if</span> <span class="n">n_stale</span> <span class="o">!=</span> <span class="mi">1</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-                   <span class="p">),</span>
+                <span class="s1">&#39;(based on MD5).</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span>
+                <span class="n">n_good</span><span class="p">,</span> <span class="n">n_tot</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span> <span class="k">if</span> <span class="n">n_tot</span> <span class="o">!=</span> <span class="mi">1</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;filename_pattern&#39;</span><span class="p">],</span>
+                <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;ignore_pattern&#39;</span><span class="p">],</span>
+                <span class="n">n_stale</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span> <span class="k">if</span> <span class="n">n_stale</span> <span class="o">!=</span> <span class="mi">1</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
                 <span class="n">color</span><span class="o">=</span><span class="s1">&#39;brown&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">fail_msgs</span><span class="p">:</span>
@@ -1569,7 +1570,7 @@ document.write(`
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
             <span class="s1">&#39;Duplicate example file name(s) found. Having duplicate file &#39;</span>
             <span class="s1">&#39;names will break some links. &#39;</span>
-            <span class="s1">&#39;List of files: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">dup_names</span><span class="p">),))</span></div>
+            <span class="s1">&#39;List of files: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">dup_names</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="check_spaces_in_filenames"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.check_spaces_in_filenames">[docs]</a><span class="k">def</span> <span class="nf">check_spaces_in_filenames</span><span class="p">(</span><span class="n">files</span><span class="p">):</span>
@@ -1580,7 +1581,7 @@ document.write(`
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
             <span class="s1">&#39;Example file name(s) with space(s) found. Having space(s) in &#39;</span>
             <span class="s1">&#39;file names will break some links. &#39;</span>
-            <span class="s1">&#39;List of files: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">files_with_space</span><span class="p">),))</span></div>
+            <span class="s1">&#39;List of files: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">files_with_space</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="get_default_config_value"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.get_default_config_value">[docs]</a><span class="k">def</span> <span class="nf">get_default_config_value</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
@@ -1720,7 +1721,7 @@ document.write(`
       
         <div class="footer-item">
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.0.
     <br/>
   </p>
 </div>
