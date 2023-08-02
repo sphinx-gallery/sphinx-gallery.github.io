@@ -441,6 +441,7 @@ document.write(`
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">urllib.request</span> <span class="k">as</span> <span class="nn">urllib_request</span>
 <span class="kn">import</span> <span class="nn">urllib.parse</span> <span class="k">as</span> <span class="nn">urllib_parse</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">urllib.error</span> <span class="kn">import</span> <span class="n">HTTPError</span><span class="p">,</span> <span class="n">URLError</span>
 
 <span class="kn">from</span> <span class="nn">sphinx.errors</span> <span class="kn">import</span> <span class="n">ExtensionError</span>
@@ -568,7 +569,12 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">relative</span> <span class="o">=</span> <span class="n">relative</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_link_cache</span> <span class="o">=</span> <span class="p">{}</span>
 
-        <span class="k">if</span> <span class="n">doc_url</span><span class="o">.</span><span class="n">startswith</span><span class="p">((</span><span class="s1">&#39;http://&#39;</span><span class="p">,</span> <span class="s1">&#39;https://&#39;</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">doc_url</span><span class="p">,</span> <span class="n">Path</span><span class="p">):</span>
+            <span class="n">index_url</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">doc_url</span><span class="p">,</span> <span class="s1">&#39;index.html&#39;</span><span class="p">)</span>
+            <span class="n">searchindex_url</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">doc_url</span><span class="p">,</span> <span class="s1">&#39;searchindex.js&#39;</span><span class="p">)</span>
+            <span class="n">docopts_url</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="n">doc_url</span><span class="p">,</span> <span class="s1">&#39;_static&#39;</span><span class="p">,</span> <span class="s1">&#39;documentation_options.js&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">relative</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
                     <span class="s1">&#39;Relative links are only supported for local &#39;</span>
@@ -576,15 +582,9 @@ document.write(`
             <span class="n">index_url</span> <span class="o">=</span> <span class="n">doc_url</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span>
             <span class="n">searchindex_url</span> <span class="o">=</span> <span class="n">doc_url</span> <span class="o">+</span> <span class="s1">&#39;/searchindex.js&#39;</span>
             <span class="n">docopts_url</span> <span class="o">=</span> <span class="n">doc_url</span> <span class="o">+</span> <span class="s1">&#39;/_static/documentation_options.js&#39;</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">index_url</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">doc_url</span><span class="p">,</span> <span class="s1">&#39;index.html&#39;</span><span class="p">)</span>
-            <span class="n">searchindex_url</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">doc_url</span><span class="p">,</span> <span class="s1">&#39;searchindex.js&#39;</span><span class="p">)</span>
-            <span class="n">docopts_url</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-                <span class="n">doc_url</span><span class="p">,</span> <span class="s1">&#39;_static&#39;</span><span class="p">,</span> <span class="s1">&#39;documentation_options.js&#39;</span><span class="p">)</span>
 
         <span class="c1"># detect if we are using relative links on a Windows system</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;nt&#39;</span> <span class="ow">and</span>
-                <span class="ow">not</span> <span class="n">doc_url</span><span class="o">.</span><span class="n">startswith</span><span class="p">((</span><span class="s1">&#39;http://&#39;</span><span class="p">,</span> <span class="s1">&#39;https://&#39;</span><span class="p">))):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;nt&#39;</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">doc_url</span><span class="p">,</span> <span class="n">Path</span><span class="p">)):</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">relative</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
                     <span class="s1">&#39;You have to use relative=True for the local&#39;</span>
@@ -753,7 +753,7 @@ document.write(`
             <span class="k">if</span> <span class="n">url</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">doc_resolvers</span><span class="p">[</span><span class="n">this_module</span><span class="p">]</span> <span class="o">=</span> <span class="n">SphinxDocLinkResolver</span><span class="p">(</span>
                     <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">,</span>
-                    <span class="nb">str</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">outdir</span><span class="p">),</span> <span class="n">src_gallery_dir</span><span class="p">,</span> <span class="n">relative</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="n">Path</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">outdir</span><span class="p">),</span> <span class="n">src_gallery_dir</span><span class="p">,</span> <span class="n">relative</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">doc_resolvers</span><span class="p">[</span><span class="n">this_module</span><span class="p">]</span> <span class="o">=</span> <span class="n">SphinxDocLinkResolver</span><span class="p">(</span>
                     <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">,</span>
@@ -951,7 +951,7 @@ document.write(`
       
         <div class="footer-item">
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.1.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
     <br/>
   </p>
 </div>
