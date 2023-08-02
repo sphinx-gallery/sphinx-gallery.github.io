@@ -683,9 +683,14 @@ document.write(`
 <span class="sd">        cobj : dict</span>
 <span class="sd">            Dict with information about the &quot;code object&quot; for which we are</span>
 <span class="sd">            resolving a link.</span>
-<span class="sd">            cobj[&#39;name&#39;] : function or class name (str)</span>
-<span class="sd">            cobj[&#39;module_short&#39;] : shortened module name (str)</span>
-<span class="sd">            cobj[&#39;module&#39;] : module name (str)</span>
+
+<span class="sd">                - cobj[&#39;name&#39;] : function or class name (str)</span>
+<span class="sd">                - cobj[&#39;module&#39;] : module name (str)</span>
+<span class="sd">                - cobj[&#39;module_short&#39;] : shortened module name (str)</span>
+<span class="sd">                - cobj[&#39;is_class&#39;] : whether object is class (bool)</span>
+<span class="sd">                - cobj[&#39;is_explicit&#39;] : whether object is an explicit</span>
+<span class="sd">                  backreference (referred to by sphinx markup) (bool)</span>
+
 <span class="sd">        this_url: str</span>
 <span class="sd">            URL of the current page. Needed to construct relative URLs</span>
 <span class="sd">            (only used if relative=True in constructor).</span>
@@ -704,7 +709,7 @@ document.write(`
             <span class="c1"># we don&#39;t have it cached</span>
             <span class="n">use_full_module</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;prefer_full_module&#39;</span><span class="p">]:</span>
-                <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">full_name</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">cobj</span><span class="p">[</span><span class="s1">&#39;module&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="n">cobj</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]):</span>
                     <span class="n">use_full_module</span> <span class="o">=</span> <span class="kc">True</span>
                     <span class="k">break</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_link_cache</span><span class="p">[</span><span class="n">full_name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_link_type</span><span class="p">(</span>
