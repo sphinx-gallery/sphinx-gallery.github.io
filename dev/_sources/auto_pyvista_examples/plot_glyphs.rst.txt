@@ -47,14 +47,14 @@ Use vectors in a dataset to plot and orient glyphs/geometric objects.
 
 Glyphying can be done via the :meth:`pyvista.DataSetFilters.glyph` filter
 
-.. GENERATED FROM PYTHON SOURCE LINES 18-38
+.. GENERATED FROM PYTHON SOURCE LINES 18-40
 
 .. code-block:: python3
 
 
     mesh = examples.download_carotid().threshold(145, scalars="scalars")
-    mask = mesh['scalars'] < 210
-    mesh['scalars'][mask] = 0  # null out smaller vectors
+    mask = mesh["scalars"] < 210
+    mesh["scalars"][mask] = 0  # null out smaller vectors
 
     # Make a geometric object to use as the glyph
     geom = pv.Arrow()  # This could be any dataset
@@ -64,10 +64,12 @@ Glyphying can be done via the :meth:`pyvista.DataSetFilters.glyph` filter
 
     # plot using the plotting class
     pl = pv.Plotter()
-    pl.add_mesh(glyphs, show_scalar_bar=False, lighting=False, cmap='coolwarm')
-    pl.camera_position = [(146.53, 91.28, 21.70),
-                          (125.00, 94.45, 19.81),
-                          (-0.086, 0.007, 0.996)]  # view only part of the vector field
+    pl.add_mesh(glyphs, show_scalar_bar=False, lighting=False, cmap="coolwarm")
+    pl.camera_position = [
+        (146.53, 91.28, 21.70),
+        (125.00, 94.45, 19.81),
+        (-0.086, 0.007, 0.996),
+    ]  # view only part of the vector field
     cpos = pl.show(return_cpos=True)
 
 
@@ -83,12 +85,12 @@ Glyphying can be done via the :meth:`pyvista.DataSetFilters.glyph` filter
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 39-41
+.. GENERATED FROM PYTHON SOURCE LINES 41-43
 
 Another approach is to load the vectors directly to the mesh object and then
 access the :attr:`pyvista.DataSet.arrows` property.
 
-.. GENERATED FROM PYTHON SOURCE LINES 41-60
+.. GENERATED FROM PYTHON SOURCE LINES 43-62
 
 .. code-block:: python3
 
@@ -123,18 +125,17 @@ access the :attr:`pyvista.DataSet.arrows` property.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 61-62
+.. GENERATED FROM PYTHON SOURCE LINES 63-64
 
 Plot the arrows and the sphere.
 
-.. GENERATED FROM PYTHON SOURCE LINES 62-70
+.. GENERATED FROM PYTHON SOURCE LINES 64-71
 
 .. code-block:: python3
 
 
     p = pv.Plotter()
-    p.add_mesh(sphere.arrows, lighting=False,
-               scalar_bar_args={'title': "Vector Magnitude"})
+    p.add_mesh(sphere.arrows, lighting=False, scalar_bar_args={"title": "Vector Magnitude"})
     p.add_mesh(sphere, color="grey", ambient=0.6, opacity=0.5, show_edges=False)
     p.show()
 
@@ -151,7 +152,7 @@ Plot the arrows and the sphere.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 71-78
+.. GENERATED FROM PYTHON SOURCE LINES 72-79
 
 Subset of Glyphs
 ++++++++++++++++
@@ -161,7 +162,7 @@ this case, you can choose to build glyphs for a subset of the input dataset
 by using a merging tolerance. Here we specify a merging tolerance of five
 percent which equates to five percent of the bounding box's length.
 
-.. GENERATED FROM PYTHON SOURCE LINES 78-89
+.. GENERATED FROM PYTHON SOURCE LINES 79-90
 
 .. code-block:: python3
 
@@ -191,9 +192,9 @@ percent which equates to five percent of the bounding box's length.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 4.265 seconds)
+   **Total running time of the script:** (0 minutes 3.815 seconds)
 
-**Estimated memory usage:**  336 MB
+**Estimated memory usage:**  346 MB
 
 
 .. _sphx_glr_download_auto_pyvista_examples_plot_glyphs.py:

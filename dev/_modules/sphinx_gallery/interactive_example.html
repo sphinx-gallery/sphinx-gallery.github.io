@@ -452,7 +452,7 @@ document.write(`
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">glr_path_static</span>
 
 
-<span class="n">logger</span> <span class="o">=</span> <span class="n">sphinx</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;sphinx-gallery&#39;</span><span class="p">)</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">sphinx</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;sphinx-gallery&quot;</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="gen_binder_url"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.interactive_example.html#sphinx_gallery.interactive_example.gen_binder_url">[docs]</a><span class="k">def</span> <span class="nf">gen_binder_url</span><span class="p">(</span><span class="n">fpath</span><span class="p">,</span> <span class="n">binder_conf</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
@@ -472,32 +472,36 @@ document.write(`
 <span class="sd">        environment.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Build the URL</span>
-    <span class="n">fpath_prefix</span> <span class="o">=</span> <span class="n">binder_conf</span><span class="p">[</span><span class="s1">&#39;filepath_prefix&#39;</span><span class="p">]</span>
-    <span class="n">link_base</span> <span class="o">=</span> <span class="n">binder_conf</span><span class="p">[</span><span class="s1">&#39;notebooks_dir&#39;</span><span class="p">]</span>
+    <span class="n">fpath_prefix</span> <span class="o">=</span> <span class="n">binder_conf</span><span class="p">[</span><span class="s2">&quot;filepath_prefix&quot;</span><span class="p">]</span>
+    <span class="n">link_base</span> <span class="o">=</span> <span class="n">binder_conf</span><span class="p">[</span><span class="s2">&quot;notebooks_dir&quot;</span><span class="p">]</span>
 
     <span class="c1"># We want to keep the relative path to sub-folders</span>
-    <span class="n">relative_link</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">fpath</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">])</span>
-    <span class="n">path_link</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-        <span class="n">link_base</span><span class="p">,</span> <span class="n">replace_py_ipynb</span><span class="p">(</span><span class="n">relative_link</span><span class="p">))</span>
+    <span class="n">relative_link</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">fpath</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">])</span>
+    <span class="n">path_link</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">link_base</span><span class="p">,</span> <span class="n">replace_py_ipynb</span><span class="p">(</span><span class="n">relative_link</span><span class="p">))</span>
 
     <span class="c1"># In case our website is hosted in a sub-folder</span>
     <span class="k">if</span> <span class="n">fpath_prefix</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">path_link</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">fpath_prefix</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">),</span> <span class="n">path_link</span><span class="p">])</span>
+        <span class="n">path_link</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">fpath_prefix</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">),</span> <span class="n">path_link</span><span class="p">])</span>
 
     <span class="c1"># Make sure we have the right slashes (in case we&#39;re on Windows)</span>
-    <span class="n">path_link</span> <span class="o">=</span> <span class="n">path_link</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">)</span>
+    <span class="n">path_link</span> <span class="o">=</span> <span class="n">path_link</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span><span class="p">)</span>
 
     <span class="c1"># Create the URL</span>
-    <span class="n">binder_url</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">binder_conf</span><span class="p">[</span><span class="s1">&#39;binderhub_url&#39;</span><span class="p">],</span>
-                           <span class="s1">&#39;v2&#39;</span><span class="p">,</span> <span class="s1">&#39;gh&#39;</span><span class="p">,</span>
-                           <span class="n">binder_conf</span><span class="p">[</span><span class="s1">&#39;org&#39;</span><span class="p">],</span>
-                           <span class="n">binder_conf</span><span class="p">[</span><span class="s1">&#39;repo&#39;</span><span class="p">],</span>
-                           <span class="n">quote</span><span class="p">(</span><span class="n">binder_conf</span><span class="p">[</span><span class="s1">&#39;branch&#39;</span><span class="p">])])</span>
+    <span class="n">binder_url</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="n">binder_conf</span><span class="p">[</span><span class="s2">&quot;binderhub_url&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;v2&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;gh&quot;</span><span class="p">,</span>
+            <span class="n">binder_conf</span><span class="p">[</span><span class="s2">&quot;org&quot;</span><span class="p">],</span>
+            <span class="n">binder_conf</span><span class="p">[</span><span class="s2">&quot;repo&quot;</span><span class="p">],</span>
+            <span class="n">quote</span><span class="p">(</span><span class="n">binder_conf</span><span class="p">[</span><span class="s2">&quot;branch&quot;</span><span class="p">]),</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">binder_conf</span><span class="p">[</span><span class="s1">&#39;use_jupyter_lab&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-        <span class="n">binder_url</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;?urlpath=lab/tree/</span><span class="si">{</span><span class="n">quote</span><span class="p">(</span><span class="n">path_link</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="k">if</span> <span class="n">binder_conf</span><span class="p">[</span><span class="s2">&quot;use_jupyter_lab&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">binder_url</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;?urlpath=lab/tree/</span><span class="si">{</span><span class="n">quote</span><span class="p">(</span><span class="n">path_link</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">binder_url</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;?filepath=</span><span class="si">{</span><span class="n">quote</span><span class="p">(</span><span class="n">path_link</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">binder_url</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;?filepath=</span><span class="si">{</span><span class="n">quote</span><span class="p">(</span><span class="n">path_link</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="k">return</span> <span class="n">binder_url</span></div>
 
 
@@ -542,19 +546,21 @@ document.write(`
     <span class="c1"># a few copies, and there will be an extra in `_static` at the end of the</span>
     <span class="c1"># build, but it at least works...</span>
     <span class="n">physical_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">fpath</span><span class="p">),</span> <span class="s1">&#39;images&#39;</span><span class="p">,</span> <span class="s1">&#39;binder_badge_logo.svg&#39;</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">fpath</span><span class="p">),</span> <span class="s2">&quot;images&quot;</span><span class="p">,</span> <span class="s2">&quot;binder_badge_logo.svg&quot;</span>
+    <span class="p">)</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">physical_path</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">physical_path</span><span class="p">):</span>
         <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">glr_path_static</span><span class="p">(),</span> <span class="s1">&#39;binder_badge_logo.svg&#39;</span><span class="p">),</span>
-            <span class="n">physical_path</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">glr_path_static</span><span class="p">(),</span> <span class="s2">&quot;binder_badge_logo.svg&quot;</span><span class="p">),</span> <span class="n">physical_path</span>
+        <span class="p">)</span>
     <span class="n">rst</span> <span class="o">=</span> <span class="p">(</span>
         <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="s2">&quot;  .. container:: binder-badge</span><span class="se">\n\n</span><span class="s2">&quot;</span>
         <span class="s2">&quot;    .. image:: images/binder_badge_logo.svg</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="s2">&quot;      :target: </span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="s2">&quot;      :alt: Launch binder</span><span class="se">\n</span><span class="s2">&quot;</span>
-        <span class="s2">&quot;      :width: 150 px</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">binder_url</span><span class="p">)</span>
+        <span class="s2">&quot;      :width: 150 px</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">binder_url</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">rst</span></div>
 
 
@@ -563,31 +569,31 @@ document.write(`
     <span class="k">if</span> <span class="n">exception</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span>
 
-    <span class="k">if</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;html&#39;</span><span class="p">,</span> <span class="s1">&#39;readthedocs&#39;</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;html&quot;</span><span class="p">,</span> <span class="s2">&quot;readthedocs&quot;</span><span class="p">]:</span>
         <span class="k">return</span>
 
     <span class="n">gallery_conf</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span>
-    <span class="n">binder_conf</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;binder&#39;</span><span class="p">]</span>
+    <span class="n">binder_conf</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;binder&quot;</span><span class="p">]</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">binder_conf</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">return</span>
 
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;copying binder requirements...&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;copying binder requirements...&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">)</span>
     <span class="n">_copy_binder_reqs</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">binder_conf</span><span class="p">)</span>
     <span class="n">_copy_binder_notebooks</span><span class="p">(</span><span class="n">app</span><span class="p">)</span></div>
 
 
 <span class="k">def</span> <span class="nf">_copy_binder_reqs</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">binder_conf</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Copy Binder requirements files to a &quot;binder&quot; folder in the docs.&quot;&quot;&quot;</span>
-    <span class="n">path_reqs</span> <span class="o">=</span> <span class="n">binder_conf</span><span class="p">[</span><span class="s1">&#39;dependencies&#39;</span><span class="p">]</span>
+    <span class="n">path_reqs</span> <span class="o">=</span> <span class="n">binder_conf</span><span class="p">[</span><span class="s2">&quot;dependencies&quot;</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">path_reqs</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span> <span class="n">path</span><span class="p">)):</span>
             <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
                 <span class="s2">&quot;Couldn&#39;t find the Binder requirements file: </span><span class="si">{}</span><span class="s2">, &quot;</span>
-                <span class="s2">&quot;did you specify the path correctly?&quot;</span>
-                <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+                <span class="s2">&quot;did you specify the path correctly?&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+            <span class="p">)</span>
 
-    <span class="n">binder_folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">outdir</span><span class="p">,</span> <span class="s1">&#39;binder&#39;</span><span class="p">)</span>
+    <span class="n">binder_folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">outdir</span><span class="p">,</span> <span class="s2">&quot;binder&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">binder_folder</span><span class="p">):</span>
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">binder_folder</span><span class="p">)</span>
 
@@ -603,7 +609,7 @@ document.write(`
 <span class="sd">    Used with the `shutil` &quot;ignore&quot; keyword to filter out non-ipynb files.&quot;&quot;&quot;</span>
     <span class="n">contents_return</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">contents</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">entry</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.ipynb&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">entry</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.ipynb&quot;</span><span class="p">):</span>
             <span class="c1"># Don&#39;t include ipynb files</span>
             <span class="k">pass</span>
         <span class="k">elif</span> <span class="p">(</span><span class="n">entry</span> <span class="o">!=</span> <span class="s2">&quot;images&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">entry</span><span class="p">)):</span>
@@ -622,9 +628,9 @@ document.write(`
 <span class="sd">    Jupyter notebook files.&quot;&quot;&quot;</span>
 
     <span class="n">gallery_conf</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span>
-    <span class="n">gallery_dirs</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;gallery_dirs&#39;</span><span class="p">]</span>
-    <span class="n">binder_conf</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;binder&#39;</span><span class="p">]</span>
-    <span class="n">notebooks_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">outdir</span><span class="p">,</span> <span class="n">binder_conf</span><span class="p">[</span><span class="s1">&#39;notebooks_dir&#39;</span><span class="p">])</span>
+    <span class="n">gallery_dirs</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;gallery_dirs&quot;</span><span class="p">]</span>
+    <span class="n">binder_conf</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;binder&quot;</span><span class="p">]</span>
+    <span class="n">notebooks_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">outdir</span><span class="p">,</span> <span class="n">binder_conf</span><span class="p">[</span><span class="s2">&quot;notebooks_dir&quot;</span><span class="p">])</span>
     <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">notebooks_dir</span><span class="p">,</span> <span class="n">ignore_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">notebooks_dir</span><span class="p">)</span>
 
@@ -632,12 +638,15 @@ document.write(`
         <span class="n">gallery_dirs</span> <span class="o">=</span> <span class="p">[</span><span class="n">gallery_dirs</span><span class="p">]</span>
 
     <span class="n">iterator</span> <span class="o">=</span> <span class="n">status_iterator</span><span class="p">(</span>
-        <span class="n">gallery_dirs</span><span class="p">,</span> <span class="s1">&#39;copying binder notebooks...&#39;</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">gallery_dirs</span><span class="p">))</span>
+        <span class="n">gallery_dirs</span><span class="p">,</span> <span class="s2">&quot;copying binder notebooks...&quot;</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">gallery_dirs</span><span class="p">)</span>
+    <span class="p">)</span>
 
     <span class="k">for</span> <span class="n">i_folder</span> <span class="ow">in</span> <span class="n">iterator</span><span class="p">:</span>
-        <span class="n">shutil</span><span class="o">.</span><span class="n">copytree</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span> <span class="n">i_folder</span><span class="p">),</span>
-                        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">notebooks_dir</span><span class="p">,</span> <span class="n">i_folder</span><span class="p">),</span>
-                        <span class="n">ignore</span><span class="o">=</span><span class="n">_remove_ipynb_files</span><span class="p">)</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">copytree</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span> <span class="n">i_folder</span><span class="p">),</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">notebooks_dir</span><span class="p">,</span> <span class="n">i_folder</span><span class="p">),</span>
+            <span class="n">ignore</span><span class="o">=</span><span class="n">_remove_ipynb_files</span><span class="p">,</span>
+        <span class="p">)</span>
 
 
 <div class="viewcode-block" id="check_binder_conf"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.interactive_example.html#sphinx_gallery.interactive_example.check_binder_conf">[docs]</a><span class="k">def</span> <span class="nf">check_binder_conf</span><span class="p">(</span><span class="n">binder_conf</span><span class="p">):</span>
@@ -645,62 +654,65 @@ document.write(`
     <span class="c1"># Grab the configuration and return None if it&#39;s not configured</span>
     <span class="n">binder_conf</span> <span class="o">=</span> <span class="p">{}</span> <span class="k">if</span> <span class="n">binder_conf</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">binder_conf</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">binder_conf</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s1">&#39;`binder_conf` must be a dictionary or None.&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s2">&quot;`binder_conf` must be a dictionary or None.&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">binder_conf</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">binder_conf</span>
 
     <span class="c1"># Ensure all fields are populated</span>
-    <span class="n">req_values</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;binderhub_url&#39;</span><span class="p">,</span> <span class="s1">&#39;org&#39;</span><span class="p">,</span> <span class="s1">&#39;repo&#39;</span><span class="p">,</span> <span class="s1">&#39;branch&#39;</span><span class="p">,</span> <span class="s1">&#39;dependencies&#39;</span><span class="p">]</span>
-    <span class="n">optional_values</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;filepath_prefix&#39;</span><span class="p">,</span> <span class="s1">&#39;notebooks_dir&#39;</span><span class="p">,</span> <span class="s1">&#39;use_jupyter_lab&#39;</span><span class="p">]</span>
+    <span class="n">req_values</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;binderhub_url&quot;</span><span class="p">,</span> <span class="s2">&quot;org&quot;</span><span class="p">,</span> <span class="s2">&quot;repo&quot;</span><span class="p">,</span> <span class="s2">&quot;branch&quot;</span><span class="p">,</span> <span class="s2">&quot;dependencies&quot;</span><span class="p">]</span>
+    <span class="n">optional_values</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;filepath_prefix&quot;</span><span class="p">,</span> <span class="s2">&quot;notebooks_dir&quot;</span><span class="p">,</span> <span class="s2">&quot;use_jupyter_lab&quot;</span><span class="p">]</span>
     <span class="n">missing_values</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">req_values</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">binder_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">missing_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">missing_values</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s1">&#39;binder_conf is missing values for: </span><span class="si">{</span><span class="n">missing_values</span><span class="si">}</span><span class="s1">&#39;</span>
-        <span class="p">)</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;binder_conf is missing values for: </span><span class="si">{</span><span class="n">missing_values</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">binder_conf</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="n">req_values</span> <span class="o">+</span> <span class="n">optional_values</span><span class="p">):</span>
             <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown Binder config key: </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="c1"># Ensure we have http in the URL</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">binder_conf</span><span class="p">[</span><span class="s1">&#39;binderhub_url&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">ii</span><span class="p">)</span>
-               <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;http://&#39;</span><span class="p">,</span> <span class="s1">&#39;https://&#39;</span><span class="p">]):</span>
-        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s1">&#39;did not supply a valid url, &#39;</span>
-                          <span class="s1">&#39;gave binderhub_url: </span><span class="si">{}</span><span class="s1">&#39;</span>
-                          <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">binder_conf</span><span class="p">[</span><span class="s1">&#39;binderhub_url&#39;</span><span class="p">]))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span>
+        <span class="n">binder_conf</span><span class="p">[</span><span class="s2">&quot;binderhub_url&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">ii</span><span class="p">)</span> <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;http://&quot;</span><span class="p">,</span> <span class="s2">&quot;https://&quot;</span><span class="p">]</span>
+    <span class="p">):</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
+            <span class="s2">&quot;did not supply a valid url, &quot;</span>
+            <span class="s2">&quot;gave binderhub_url: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">binder_conf</span><span class="p">[</span><span class="s2">&quot;binderhub_url&quot;</span><span class="p">])</span>
+        <span class="p">)</span>
 
     <span class="c1"># Ensure we have at least one dependency file</span>
     <span class="c1"># Need at least one of these three files</span>
-    <span class="n">required_reqs_files</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;requirements.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;environment.yml&#39;</span><span class="p">,</span> <span class="s1">&#39;Dockerfile&#39;</span><span class="p">]</span>
-    <span class="n">path_reqs</span> <span class="o">=</span> <span class="n">binder_conf</span><span class="p">[</span><span class="s1">&#39;dependencies&#39;</span><span class="p">]</span>
+    <span class="n">required_reqs_files</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;requirements.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;environment.yml&quot;</span><span class="p">,</span> <span class="s2">&quot;Dockerfile&quot;</span><span class="p">]</span>
+    <span class="n">path_reqs</span> <span class="o">=</span> <span class="n">binder_conf</span><span class="p">[</span><span class="s2">&quot;dependencies&quot;</span><span class="p">]</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">path_reqs</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">path_reqs</span> <span class="o">=</span> <span class="p">[</span><span class="n">path_reqs</span><span class="p">]</span>
-        <span class="n">binder_conf</span><span class="p">[</span><span class="s1">&#39;dependencies&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">path_reqs</span>
+        <span class="n">binder_conf</span><span class="p">[</span><span class="s2">&quot;dependencies&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">path_reqs</span>
     <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">path_reqs</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
-        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s2">&quot;`dependencies` value should be a list of strings. &quot;</span>
-                          <span class="s2">&quot;Got type </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">path_reqs</span><span class="p">)))</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
+            <span class="s2">&quot;`dependencies` value should be a list of strings. &quot;</span>
+            <span class="s2">&quot;Got type </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">path_reqs</span><span class="p">))</span>
+        <span class="p">)</span>
 
-    <span class="n">binder_conf</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;filepath_prefix&#39;</span><span class="p">)</span>
-    <span class="n">binder_conf</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;notebooks_dir&#39;</span><span class="p">,</span> <span class="s1">&#39;notebooks&#39;</span><span class="p">)</span>
-    <span class="n">binder_conf</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;use_jupyter_lab&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="n">binder_conf</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;filepath_prefix&quot;</span><span class="p">)</span>
+    <span class="n">binder_conf</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;notebooks_dir&quot;</span><span class="p">,</span> <span class="s2">&quot;notebooks&quot;</span><span class="p">)</span>
+    <span class="n">binder_conf</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;use_jupyter_lab&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
     <span class="n">path_reqs_filenames</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">ii</span><span class="p">)</span> <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="n">path_reqs</span><span class="p">]</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">ii</span> <span class="ow">in</span> <span class="n">path_reqs_filenames</span> <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="n">required_reqs_files</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
-            <span class="s1">&#39;Did not find one of `requirements.txt` or `environment.yml` &#39;</span>
+            <span class="s2">&quot;Did not find one of `requirements.txt` or `environment.yml` &quot;</span>
             <span class="s1">&#39;in the &quot;dependencies&quot; section of the binder configuration &#39;</span>
-            <span class="s1">&#39;for Sphinx-Gallery. A path to at least one of these files &#39;</span>
-            <span class="s1">&#39;must exist in your Binder dependencies.&#39;</span><span class="p">)</span>
+            <span class="s2">&quot;for Sphinx-Gallery. A path to at least one of these files &quot;</span>
+            <span class="s2">&quot;must exist in your Binder dependencies.&quot;</span>
+        <span class="p">)</span>
     <span class="k">return</span> <span class="n">binder_conf</span></div>
 
 
 <div class="viewcode-block" id="pre_configure_jupyterlite_sphinx"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.interactive_example.html#sphinx_gallery.interactive_example.pre_configure_jupyterlite_sphinx">[docs]</a><span class="k">def</span> <span class="nf">pre_configure_jupyterlite_sphinx</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
     <span class="n">is_jupyterlite_enabled</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="s1">&#39;jupyterlite_sphinx&#39;</span> <span class="ow">in</span> <span class="n">app</span><span class="o">.</span><span class="n">extensions</span>
-        <span class="ow">and</span> <span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s1">&#39;jupyterlite&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="s2">&quot;jupyterlite_sphinx&quot;</span> <span class="ow">in</span> <span class="n">app</span><span class="o">.</span><span class="n">extensions</span>
+        <span class="ow">and</span> <span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;jupyterlite&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
     <span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">is_jupyterlite_enabled</span><span class="p">:</span>
         <span class="k">return</span>
@@ -712,10 +724,11 @@ document.write(`
 
 
 <div class="viewcode-block" id="post_configure_jupyterlite_sphinx"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.interactive_example.html#sphinx_gallery.interactive_example.post_configure_jupyterlite_sphinx">[docs]</a><span class="k">def</span> <span class="nf">post_configure_jupyterlite_sphinx</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
-    <span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s1">&#39;jupyterlite&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">check_jupyterlite_conf</span><span class="p">(</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s1">&#39;jupyterlite&#39;</span><span class="p">],</span> <span class="n">app</span><span class="p">)</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;jupyterlite&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">check_jupyterlite_conf</span><span class="p">(</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;jupyterlite&quot;</span><span class="p">],</span> <span class="n">app</span>
+    <span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s1">&#39;jupyterlite&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;jupyterlite&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span>
 
     <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">jupyterlite_contents</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -723,27 +736,29 @@ document.write(`
 
     <span class="c1"># Append to jupyterlite_contents in case they have been set in conf.py</span>
     <span class="n">config</span><span class="o">.</span><span class="n">jupyterlite_contents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s1">&#39;jupyterlite&#39;</span><span class="p">][</span><span class="s1">&#39;jupyterlite_contents&#39;</span><span class="p">])</span></div>
+        <span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;jupyterlite&quot;</span><span class="p">][</span><span class="s2">&quot;jupyterlite_contents&quot;</span><span class="p">]</span>
+    <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="create_jupyterlite_contents"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.interactive_example.html#sphinx_gallery.interactive_example.create_jupyterlite_contents">[docs]</a><span class="k">def</span> <span class="nf">create_jupyterlite_contents</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">exception</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">exception</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span>
 
-    <span class="k">if</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;html&#39;</span><span class="p">,</span> <span class="s1">&#39;readthedocs&#39;</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;html&quot;</span><span class="p">,</span> <span class="s2">&quot;readthedocs&quot;</span><span class="p">]:</span>
         <span class="k">return</span>
 
     <span class="n">gallery_conf</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span>
     <span class="n">is_jupyterlite_enabled</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="s1">&#39;jupyterlite_sphinx&#39;</span> <span class="ow">in</span> <span class="n">app</span><span class="o">.</span><span class="n">extensions</span>
-        <span class="ow">and</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;jupyterlite&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="s2">&quot;jupyterlite_sphinx&quot;</span> <span class="ow">in</span> <span class="n">app</span><span class="o">.</span><span class="n">extensions</span>
+        <span class="ow">and</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;jupyterlite&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+    <span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">is_jupyterlite_enabled</span><span class="p">:</span>
         <span class="k">return</span>
 
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;copying Jupyterlite contents ...&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">)</span>
-    <span class="n">gallery_dirs</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;gallery_dirs&#39;</span><span class="p">]</span>
-    <span class="n">contents_dir</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;jupyterlite&#39;</span><span class="p">][</span><span class="s1">&#39;jupyterlite_contents&#39;</span><span class="p">]</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;copying Jupyterlite contents ...&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">)</span>
+    <span class="n">gallery_dirs</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;gallery_dirs&quot;</span><span class="p">]</span>
+    <span class="n">contents_dir</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;jupyterlite&quot;</span><span class="p">][</span><span class="s2">&quot;jupyterlite_contents&quot;</span><span class="p">]</span>
 
     <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">contents_dir</span><span class="p">,</span> <span class="n">ignore_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">contents_dir</span><span class="p">)</span>
@@ -752,25 +767,27 @@ document.write(`
         <span class="n">gallery_dirs</span> <span class="o">=</span> <span class="p">[</span><span class="n">gallery_dirs</span><span class="p">]</span>
 
     <span class="n">iterator</span> <span class="o">=</span> <span class="n">status_iterator</span><span class="p">(</span>
-        <span class="n">gallery_dirs</span><span class="p">,</span> <span class="s1">&#39;Copying Jupyterlite contents ...&#39;</span><span class="p">,</span>
-        <span class="n">length</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">gallery_dirs</span><span class="p">))</span>
+        <span class="n">gallery_dirs</span><span class="p">,</span> <span class="s2">&quot;Copying Jupyterlite contents ...&quot;</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">gallery_dirs</span><span class="p">)</span>
+    <span class="p">)</span>
 
     <span class="k">for</span> <span class="n">i_folder</span> <span class="ow">in</span> <span class="n">iterator</span><span class="p">:</span>
-        <span class="n">shutil</span><span class="o">.</span><span class="n">copytree</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span> <span class="n">i_folder</span><span class="p">),</span>
-                        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">contents_dir</span><span class="p">,</span> <span class="n">i_folder</span><span class="p">),</span>
-                        <span class="n">ignore</span><span class="o">=</span><span class="n">_remove_ipynb_files</span><span class="p">)</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">copytree</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span> <span class="n">i_folder</span><span class="p">),</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">contents_dir</span><span class="p">,</span> <span class="n">i_folder</span><span class="p">),</span>
+            <span class="n">ignore</span><span class="o">=</span><span class="n">_remove_ipynb_files</span><span class="p">,</span>
+        <span class="p">)</span>
 
-    <span class="n">notebook_modification_function</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;jupyterlite&#39;</span><span class="p">][</span>
-        <span class="s1">&#39;notebook_modification_function&#39;</span><span class="p">]</span>
+    <span class="n">notebook_modification_function</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;jupyterlite&quot;</span><span class="p">][</span>
+        <span class="s2">&quot;notebook_modification_function&quot;</span>
+    <span class="p">]</span>
 
     <span class="k">if</span> <span class="n">notebook_modification_function</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span>
 
     <span class="n">notebook_pattern</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">contents_dir</span><span class="p">,</span> <span class="s2">&quot;**&quot;</span><span class="p">,</span> <span class="s2">&quot;*.ipynb&quot;</span><span class="p">)</span>
-    <span class="n">notebook_filename_list</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
-        <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">notebook_pattern</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+    <span class="n">notebook_filename_list</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">notebook_pattern</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
 
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Modifying Jupyterlite notebooks ...&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Modifying Jupyterlite notebooks ...&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">notebook_filename</span> <span class="ow">in</span> <span class="n">notebook_filename_list</span><span class="p">:</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">notebook_filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">notebook_content</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
@@ -798,17 +815,16 @@ document.write(`
 <span class="sd">    rst : str</span>
 <span class="sd">        The reStructuredText for the JupyterLite badge that links to this file.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">relative_link</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">fpath</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">])</span>
-    <span class="n">notebook_location</span> <span class="o">=</span> <span class="n">relative_link</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.py&#39;</span><span class="p">,</span> <span class="s1">&#39;.ipynb&#39;</span><span class="p">)</span>
+    <span class="n">relative_link</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">fpath</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">])</span>
+    <span class="n">notebook_location</span> <span class="o">=</span> <span class="n">relative_link</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.py&quot;</span><span class="p">,</span> <span class="s2">&quot;.ipynb&quot;</span><span class="p">)</span>
     <span class="c1"># Make sure we have the right slashes (in case we&#39;re on Windows)</span>
-    <span class="n">notebook_location</span> <span class="o">=</span> <span class="n">notebook_location</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">)</span>
+    <span class="n">notebook_location</span> <span class="o">=</span> <span class="n">notebook_location</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span><span class="p">)</span>
 
     <span class="n">lite_root_url</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">],</span> <span class="s1">&#39;lite&#39;</span><span class="p">),</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">],</span> <span class="s2">&quot;lite&quot;</span><span class="p">),</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span>
     <span class="p">)</span>
     <span class="c1"># Make sure we have the right slashes (in case we&#39;re on Windows)</span>
-    <span class="n">lite_root_url</span> <span class="o">=</span> <span class="n">lite_root_url</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">)</span>
+    <span class="n">lite_root_url</span> <span class="o">=</span> <span class="n">lite_root_url</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;jupyterlite&quot;</span><span class="p">][</span><span class="s2">&quot;use_jupyter_lab&quot;</span><span class="p">]:</span>
         <span class="n">lite_root_url</span> <span class="o">+=</span> <span class="s2">&quot;/lab&quot;</span>
@@ -820,19 +836,21 @@ document.write(`
     <span class="c1"># Similar work-around for badge file as in</span>
     <span class="c1"># gen_binder_rst</span>
     <span class="n">physical_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">fpath</span><span class="p">),</span> <span class="s1">&#39;images&#39;</span><span class="p">,</span> <span class="s1">&#39;jupyterlite_badge_logo.svg&#39;</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">fpath</span><span class="p">),</span> <span class="s2">&quot;images&quot;</span><span class="p">,</span> <span class="s2">&quot;jupyterlite_badge_logo.svg&quot;</span>
+    <span class="p">)</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">physical_path</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">physical_path</span><span class="p">):</span>
         <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">glr_path_static</span><span class="p">(),</span> <span class="s1">&#39;jupyterlite_badge_logo.svg&#39;</span><span class="p">),</span>
-            <span class="n">physical_path</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">glr_path_static</span><span class="p">(),</span> <span class="s2">&quot;jupyterlite_badge_logo.svg&quot;</span><span class="p">),</span> <span class="n">physical_path</span>
+        <span class="p">)</span>
     <span class="n">rst</span> <span class="o">=</span> <span class="p">(</span>
         <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="s2">&quot;  .. container:: lite-badge</span><span class="se">\n\n</span><span class="s2">&quot;</span>
         <span class="s2">&quot;    .. image:: images/jupyterlite_badge_logo.svg</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="s2">&quot;      :target: </span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="s2">&quot;      :alt: Launch JupyterLite</span><span class="se">\n</span><span class="s2">&quot;</span>
-        <span class="s2">&quot;      :width: 150 px</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">lite_url</span><span class="p">)</span>
+        <span class="s2">&quot;      :width: 150 px</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">lite_url</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">rst</span></div>
 
 
@@ -843,21 +861,19 @@ document.write(`
         <span class="n">is_jupyterlite_disabled</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">is_jupyterlite_disabled</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="s1">&#39;jupyterlite_sphinx&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">app</span><span class="o">.</span><span class="n">extensions</span>
-            <span class="ow">or</span> <span class="n">jupyterlite_conf</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="s2">&quot;jupyterlite_sphinx&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">app</span><span class="o">.</span><span class="n">extensions</span> <span class="ow">or</span> <span class="n">jupyterlite_conf</span> <span class="ow">is</span> <span class="kc">None</span>
         <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">is_jupyterlite_disabled</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">jupyterlite_conf</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
-            <span class="s1">&#39;`jupyterlite_conf` must be a dictionary&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s2">&quot;`jupyterlite_conf` must be a dictionary&quot;</span><span class="p">)</span>
 
     <span class="n">conf_defaults</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;jupyterlite_contents&#39;</span><span class="p">:</span> <span class="s1">&#39;jupyterlite_contents&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;notebook_modification_function&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="s1">&#39;use_jupyter_lab&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;jupyterlite_contents&quot;</span><span class="p">:</span> <span class="s2">&quot;jupyterlite_contents&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;notebook_modification_function&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">&quot;use_jupyter_lab&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">}</span>
 
     <span class="n">result</span> <span class="o">=</span> <span class="n">jupyterlite_conf</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -866,13 +882,14 @@ document.write(`
         <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;Found some unknown keys in sphinx_gallery_conf[&#39;jupyterlite&#39;]: &quot;</span>
             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">unknown_keys</span><span class="p">)</span><span class="si">}</span><span class="s2">. &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;Allowed keys are: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">conf_defaults</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="sa">f</span><span class="s2">&quot;Allowed keys are: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">conf_defaults</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
 
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">default_value</span> <span class="ow">in</span> <span class="n">conf_defaults</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="n">result</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">default_value</span><span class="p">)</span>
-    <span class="n">result</span><span class="p">[</span><span class="s1">&#39;jupyterlite_contents&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-        <span class="n">app</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span>
-        <span class="n">result</span><span class="p">[</span><span class="s1">&#39;jupyterlite_contents&#39;</span><span class="p">])</span>
+    <span class="n">result</span><span class="p">[</span><span class="s2">&quot;jupyterlite_contents&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="n">app</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;jupyterlite_contents&quot;</span><span class="p">]</span>
+    <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">result</span></div>
 </pre></div>

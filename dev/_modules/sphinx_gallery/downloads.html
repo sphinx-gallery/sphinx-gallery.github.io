@@ -471,7 +471,7 @@ document.write(`
 <span class="s2">&quot;&quot;&quot;</span>
 
 
-<div class="viewcode-block" id="python_zip"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.downloads.html#sphinx_gallery.downloads.python_zip">[docs]</a><span class="k">def</span> <span class="nf">python_zip</span><span class="p">(</span><span class="n">file_list</span><span class="p">,</span> <span class="n">gallery_path</span><span class="p">,</span> <span class="n">extension</span><span class="o">=</span><span class="s1">&#39;.py&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="python_zip"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.downloads.html#sphinx_gallery.downloads.python_zip">[docs]</a><span class="k">def</span> <span class="nf">python_zip</span><span class="p">(</span><span class="n">file_list</span><span class="p">,</span> <span class="n">gallery_path</span><span class="p">,</span> <span class="n">extension</span><span class="o">=</span><span class="s2">&quot;.py&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Stores all files in file_list into an zip file</span>
 
 <span class="sd">    Parameters</span>
@@ -492,10 +492,10 @@ document.write(`
 <span class="sd">        depending on the extension</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">zipname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">gallery_path</span><span class="p">))</span>
-    <span class="n">zipname</span> <span class="o">+=</span> <span class="s1">&#39;_python&#39;</span> <span class="k">if</span> <span class="n">extension</span> <span class="o">==</span> <span class="s1">&#39;.py&#39;</span> <span class="k">else</span> <span class="s1">&#39;_jupyter&#39;</span>
-    <span class="n">zipname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gallery_path</span><span class="p">,</span> <span class="n">zipname</span> <span class="o">+</span> <span class="s1">&#39;.zip&#39;</span><span class="p">)</span>
-    <span class="n">zipname_new</span> <span class="o">=</span> <span class="n">zipname</span> <span class="o">+</span> <span class="s1">&#39;.new&#39;</span>
-    <span class="k">with</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">zipname_new</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">zipf</span><span class="p">:</span>
+    <span class="n">zipname</span> <span class="o">+=</span> <span class="s2">&quot;_python&quot;</span> <span class="k">if</span> <span class="n">extension</span> <span class="o">==</span> <span class="s2">&quot;.py&quot;</span> <span class="k">else</span> <span class="s2">&quot;_jupyter&quot;</span>
+    <span class="n">zipname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gallery_path</span><span class="p">,</span> <span class="n">zipname</span> <span class="o">+</span> <span class="s2">&quot;.zip&quot;</span><span class="p">)</span>
+    <span class="n">zipname_new</span> <span class="o">=</span> <span class="n">zipname</span> <span class="o">+</span> <span class="s2">&quot;.new&quot;</span>
+    <span class="k">with</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">zipname_new</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">zipf</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">file_list</span><span class="p">:</span>
             <span class="n">file_src</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">fname</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">extension</span>
             <span class="n">zipf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">file_src</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">file_src</span><span class="p">,</span> <span class="n">gallery_path</span><span class="p">))</span>
@@ -515,9 +515,11 @@ document.write(`
 <span class="sd">    list</span>
 <span class="sd">        list of paths to all Python source files in `target_dir`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">target_dir</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">fname</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.py&#39;</span><span class="p">)]</span></div>
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">target_dir</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">fname</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.py&quot;</span><span class="p">)</span>
+    <span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="generate_zipfiles"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.downloads.html#sphinx_gallery.downloads.generate_zipfiles">[docs]</a><span class="k">def</span> <span class="nf">generate_zipfiles</span><span class="p">(</span><span class="n">gallery_dir</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">):</span>
@@ -549,12 +551,14 @@ document.write(`
 
     <span class="k">def</span> <span class="nf">rst_path</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
         <span class="n">filepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">src_dir</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">filepath</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">filepath</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span><span class="p">)</span>
 
-    <span class="n">dw_rst</span> <span class="o">=</span> <span class="n">CODE_ZIP_DOWNLOAD</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">py_zipfile</span><span class="p">),</span>
-                                      <span class="n">rst_path</span><span class="p">(</span><span class="n">py_zipfile</span><span class="p">),</span>
-                                      <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">jy_zipfile</span><span class="p">),</span>
-                                      <span class="n">rst_path</span><span class="p">(</span><span class="n">jy_zipfile</span><span class="p">))</span>
+    <span class="n">dw_rst</span> <span class="o">=</span> <span class="n">CODE_ZIP_DOWNLOAD</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">py_zipfile</span><span class="p">),</span>
+        <span class="n">rst_path</span><span class="p">(</span><span class="n">py_zipfile</span><span class="p">),</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">jy_zipfile</span><span class="p">),</span>
+        <span class="n">rst_path</span><span class="p">(</span><span class="n">jy_zipfile</span><span class="p">),</span>
+    <span class="p">)</span>
     <span class="k">return</span> <span class="n">dw_rst</span></div>
 </pre></div>
 

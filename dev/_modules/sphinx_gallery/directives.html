@@ -455,21 +455,26 @@ document.write(`
 <span class="sd">    * `heading-level` specifies the heading level of the heading as a single</span>
 <span class="sd">      character.  If omitted, the default heading level is `&#39;^&#39;`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">required_arguments</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">optional_arguments</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">final_argument_whitespace</span> <span class="o">=</span> <span class="kc">True</span>
-    <span class="n">option_spec</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;add-heading&#39;</span><span class="p">:</span> <span class="n">directives</span><span class="o">.</span><span class="n">unchanged</span><span class="p">,</span>
-                   <span class="s1">&#39;heading-level&#39;</span><span class="p">:</span> <span class="n">directives</span><span class="o">.</span><span class="n">single_char_or_unicode</span><span class="p">}</span>
+    <span class="n">option_spec</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;add-heading&quot;</span><span class="p">:</span> <span class="n">directives</span><span class="o">.</span><span class="n">unchanged</span><span class="p">,</span>
+        <span class="s2">&quot;heading-level&quot;</span><span class="p">:</span> <span class="n">directives</span><span class="o">.</span><span class="n">single_char_or_unicode</span><span class="p">,</span>
+    <span class="p">}</span>
 
     <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Respect the same disabling options as the `raw` directive</span>
-        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">document</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">raw_enabled</span>
-                <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">document</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">file_insertion_enabled</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">document</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">raw_enabled</span>
+            <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">document</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">file_insertion_enabled</span>
+        <span class="p">):</span>
             <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&quot; directive disabled.&#39;</span><span class="p">)</span>
 
         <span class="c1"># Retrieve the backreferences directory</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">document</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">config</span>
-        <span class="n">backreferences_dir</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s1">&#39;backreferences_dir&#39;</span><span class="p">]</span>
+        <span class="n">backreferences_dir</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;backreferences_dir&quot;</span><span class="p">]</span>
 
         <span class="c1"># Parse the argument into the individual objects</span>
         <span class="n">obj_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">arguments</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
@@ -477,21 +482,20 @@ document.write(`
         <span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="c1"># Add a heading if requested</span>
-        <span class="k">if</span> <span class="s1">&#39;add-heading&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">:</span>
-            <span class="n">heading</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;add-heading&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s2">&quot;add-heading&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">:</span>
+            <span class="n">heading</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;add-heading&quot;</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">heading</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">obj_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-                    <span class="n">heading</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Examples using ``</span><span class="si">{</span><span class="n">obj_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">``&#39;</span>
+                    <span class="n">heading</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Examples using ``</span><span class="si">{</span><span class="n">obj_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">``&quot;</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">heading</span> <span class="o">=</span> <span class="s1">&#39;Examples using one of multiple objects&#39;</span>
+                    <span class="n">heading</span> <span class="o">=</span> <span class="s2">&quot;Examples using one of multiple objects&quot;</span>
             <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">heading</span><span class="p">)</span>
-            <span class="n">heading_level</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;heading-level&#39;</span><span class="p">,</span> <span class="s1">&#39;^&#39;</span><span class="p">)</span>
+            <span class="n">heading_level</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;heading-level&quot;</span><span class="p">,</span> <span class="s2">&quot;^&quot;</span><span class="p">)</span>
             <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">heading_level</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">heading</span><span class="p">))</span>
 
         <span class="k">def</span> <span class="nf">has_backrefs</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
-            <span class="n">src_dir</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s1">&#39;src_dir&#39;</span><span class="p">]</span>
-            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">backreferences_dir</span><span class="p">,</span>
-                                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">obj</span><span class="si">}</span><span class="s1">.examples&#39;</span><span class="p">)</span>
+            <span class="n">src_dir</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">]</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">backreferences_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">obj</span><span class="si">}</span><span class="s2">.examples&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">has_backrefs</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">obj_list</span><span class="p">):</span>
@@ -501,19 +505,22 @@ document.write(`
         <span class="c1"># This already includes the opening &lt;div class=&quot;sphx-glr-thumbnails&quot;&gt;</span>
         <span class="c1"># and its closing &lt;/div&gt;.</span>
         <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">obj_list</span><span class="p">:</span>
-            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span>  <span class="c1"># Sphinx treats this as the source dir</span>
-                                <span class="n">backreferences_dir</span><span class="p">,</span>
-                                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">obj</span><span class="si">}</span><span class="s1">.examples&#39;</span><span class="p">)</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="s2">&quot;/&quot;</span><span class="p">,</span>  <span class="c1"># Sphinx treats this as the source dir</span>
+                <span class="n">backreferences_dir</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">obj</span><span class="si">}</span><span class="s2">.examples&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
 
             <span class="c1"># Always remove the heading from the file</span>
-            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
 <span class="s2">.. include:: </span><span class="si">{</span><span class="n">path</span><span class="si">}</span>
-<span class="s2">    :start-after: start-sphx-glr-thumbnails&quot;&quot;&quot;</span><span class="p">)</span>
+<span class="s2">    :start-after: start-sphx-glr-thumbnails&quot;&quot;&quot;</span>
+            <span class="p">)</span>
 
         <span class="c1"># Parse the assembly of `include` and `raw` directives</span>
-        <span class="n">text</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
-        <span class="n">include_lines</span> <span class="o">=</span> <span class="n">statemachine</span><span class="o">.</span><span class="n">string2lines</span><span class="p">(</span><span class="n">text</span><span class="p">,</span>
-                                                  <span class="n">convert_whitespace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+        <span class="n">include_lines</span> <span class="o">=</span> <span class="n">statemachine</span><span class="o">.</span><span class="n">string2lines</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">convert_whitespace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">state_machine</span><span class="o">.</span><span class="n">insert_input</span><span class="p">(</span><span class="n">include_lines</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="p">[]</span></div>
@@ -533,11 +540,13 @@ document.write(`
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No argument provided but required&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;yes&quot;</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">,</span> <span class="s2">&quot;ok&quot;</span><span class="p">]:</span>
         <span class="k">return</span> <span class="kc">True</span>
-    <span class="k">elif</span> <span class="n">value</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;no&#39;</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;false&#39;</span><span class="p">,</span> <span class="s1">&#39;none&#39;</span><span class="p">]:</span>
+    <span class="k">elif</span> <span class="n">value</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;no&quot;</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;false&quot;</span><span class="p">,</span> <span class="s2">&quot;none&quot;</span><span class="p">]:</span>
         <span class="k">return</span> <span class="kc">False</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Please use one of: yes, true, no, false. &quot;</span>
-                         <span class="s2">&quot;Do not use `</span><span class="si">{}</span><span class="s2">` as boolean.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">value</span><span class="p">))</span></div>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Please use one of: yes, true, no, false. &quot;</span>
+            <span class="s2">&quot;Do not use `</span><span class="si">{}</span><span class="s2">` as boolean.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ImageSg"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.directives.html#sphinx_gallery.directives.ImageSg">[docs]</a><span class="k">class</span> <span class="nc">ImageSg</span><span class="p">(</span><span class="n">images</span><span class="o">.</span><span class="n">Image</span><span class="p">):</span>
@@ -568,34 +577,34 @@ document.write(`
     <span class="n">optional_arguments</span> <span class="o">=</span> <span class="mi">3</span>
     <span class="n">final_argument_whitespace</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">option_spec</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;srcset&#39;</span><span class="p">:</span> <span class="n">directives</span><span class="o">.</span><span class="n">unchanged</span><span class="p">,</span>
-        <span class="s1">&#39;class&#39;</span><span class="p">:</span> <span class="n">directives</span><span class="o">.</span><span class="n">class_option</span><span class="p">,</span>
-        <span class="s1">&#39;alt&#39;</span><span class="p">:</span> <span class="n">directives</span><span class="o">.</span><span class="n">unchanged</span><span class="p">,</span>
+        <span class="s2">&quot;srcset&quot;</span><span class="p">:</span> <span class="n">directives</span><span class="o">.</span><span class="n">unchanged</span><span class="p">,</span>
+        <span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="n">directives</span><span class="o">.</span><span class="n">class_option</span><span class="p">,</span>
+        <span class="s2">&quot;alt&quot;</span><span class="p">:</span> <span class="n">directives</span><span class="o">.</span><span class="n">unchanged</span><span class="p">,</span>
     <span class="p">}</span>
 
     <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">image_node</span> <span class="o">=</span> <span class="n">imgsgnode</span><span class="p">()</span>
 
         <span class="n">imagenm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">arguments</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">image_node</span><span class="p">[</span><span class="s1">&#39;alt&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;alt&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-        <span class="n">image_node</span><span class="p">[</span><span class="s1">&#39;class&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;class&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">image_node</span><span class="p">[</span><span class="s2">&quot;alt&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;alt&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="n">image_node</span><span class="p">[</span><span class="s2">&quot;class&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
         <span class="c1"># we would like uri to be the highest dpi version so that</span>
         <span class="c1"># latex etc will use that.  But for now, lets just make</span>
         <span class="c1"># imagenm</span>
 
-        <span class="n">image_node</span><span class="p">[</span><span class="s1">&#39;uri&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">imagenm</span>
-        <span class="n">image_node</span><span class="p">[</span><span class="s1">&#39;srcset&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;srcset&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">image_node</span><span class="p">[</span><span class="s2">&quot;uri&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">imagenm</span>
+        <span class="n">image_node</span><span class="p">[</span><span class="s2">&quot;srcset&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;srcset&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="p">[</span><span class="n">image_node</span><span class="p">]</span></div>
 
 
 <span class="k">def</span> <span class="nf">_parse_srcset</span><span class="p">(</span><span class="n">st</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; parse st&quot;&quot;&quot;</span>
-    <span class="n">entries</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;parse st&quot;&quot;&quot;</span>
+    <span class="n">entries</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
     <span class="n">srcset</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">entries</span><span class="p">:</span>
-        <span class="n">spl</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+        <span class="n">spl</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">spl</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">srcset</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">spl</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">spl</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
@@ -607,79 +616,76 @@ document.write(`
 
 
 <div class="viewcode-block" id="visit_imgsg_html"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.directives.html#sphinx_gallery.directives.visit_imgsg_html">[docs]</a><span class="k">def</span> <span class="nf">visit_imgsg_html</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-
-    <span class="k">if</span> <span class="n">node</span><span class="p">[</span><span class="s1">&#39;srcset&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">node</span><span class="p">[</span><span class="s2">&quot;srcset&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">visit_image</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
         <span class="k">return</span>
 
     <span class="n">imagedir</span><span class="p">,</span> <span class="n">srcset</span> <span class="o">=</span> <span class="n">_copy_images</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span>
 
     <span class="c1"># /doc/examples/subd/plot_1.rst</span>
-    <span class="n">docsource</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">document</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">]</span>
+    <span class="n">docsource</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">document</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">]</span>
     <span class="c1"># /doc/</span>
     <span class="c1"># make sure to add the trailing slash:</span>
-    <span class="n">srctop</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">srctop</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
     <span class="c1"># examples/subd/plot_1.rst</span>
     <span class="n">relsource</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">docsource</span><span class="p">,</span> <span class="n">srctop</span><span class="p">)</span>
     <span class="c1"># /doc/build/html</span>
-    <span class="n">desttop</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">outdir</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">desttop</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">outdir</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
     <span class="c1"># /doc/build/html/examples/subd</span>
     <span class="n">dest</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">desttop</span><span class="p">,</span> <span class="n">relsource</span><span class="p">)</span>
 
     <span class="c1"># ../../_images/ for dirhtml and ../_images/ for html</span>
     <span class="n">imagerel</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">imagedir</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">dest</span><span class="p">))</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;dirhtml&quot;</span><span class="p">:</span>
-        <span class="n">imagerel</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="n">imagerel</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">imagerel</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">,</span> <span class="n">imagerel</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>  <span class="c1"># html</span>
-        <span class="n">imagerel</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">imagerel</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">imagerel</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">imagerel</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span> <span class="ow">in</span> <span class="n">imagerel</span><span class="p">:</span>
-        <span class="n">imagerel</span> <span class="o">=</span> <span class="n">imagerel</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">&quot;</span> <span class="ow">in</span> <span class="n">imagerel</span><span class="p">:</span>
+        <span class="n">imagerel</span> <span class="o">=</span> <span class="n">imagerel</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span><span class="p">)</span>
     <span class="c1"># make srcset str.  Need to change all the prefixes!</span>
-    <span class="n">srcsetst</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">srcsetst</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="k">for</span> <span class="n">mult</span> <span class="ow">in</span> <span class="n">srcset</span><span class="p">:</span>
         <span class="n">nm</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">srcset</span><span class="p">[</span><span class="n">mult</span><span class="p">][</span><span class="mi">1</span><span class="p">:])</span>
         <span class="c1"># ../../_images/plot_1_2_0x.png</span>
-        <span class="n">relpath</span> <span class="o">=</span> <span class="n">imagerel</span><span class="o">+</span><span class="n">nm</span>
-        <span class="n">srcsetst</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">relpath</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">relpath</span> <span class="o">=</span> <span class="n">imagerel</span> <span class="o">+</span> <span class="n">nm</span>
+        <span class="n">srcsetst</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">relpath</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="k">if</span> <span class="n">mult</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">srcsetst</span> <span class="o">+=</span> <span class="s1">&#39;, &#39;</span>
+            <span class="n">srcsetst</span> <span class="o">+=</span> <span class="s2">&quot;, &quot;</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">srcsetst</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39; </span><span class="si">{</span><span class="n">mult</span><span class="si">:</span><span class="s1">1.2f</span><span class="si">}</span><span class="s1">x, &#39;</span>
+            <span class="n">srcsetst</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="n">mult</span><span class="si">:</span><span class="s2">1.2f</span><span class="si">}</span><span class="s2">x, &quot;</span>
     <span class="c1"># trim trailing comma and space...</span>
     <span class="n">srcsetst</span> <span class="o">=</span> <span class="n">srcsetst</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
 
     <span class="c1"># make uri also be relative...</span>
-    <span class="n">nm</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">node</span><span class="p">[</span><span class="s1">&#39;uri&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">:])</span>
+    <span class="n">nm</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">node</span><span class="p">[</span><span class="s2">&quot;uri&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">:])</span>
     <span class="n">uri</span> <span class="o">=</span> <span class="n">imagerel</span> <span class="o">+</span> <span class="n">nm</span>
 
-    <span class="n">alt</span> <span class="o">=</span> <span class="n">node</span><span class="p">[</span><span class="s1">&#39;alt&#39;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="n">node</span><span class="p">[</span><span class="s1">&#39;class&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">classst</span> <span class="o">=</span> <span class="n">node</span><span class="p">[</span><span class="s1">&#39;class&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">alt</span> <span class="o">=</span> <span class="n">node</span><span class="p">[</span><span class="s2">&quot;alt&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">node</span><span class="p">[</span><span class="s2">&quot;class&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">classst</span> <span class="o">=</span> <span class="n">node</span><span class="p">[</span><span class="s2">&quot;class&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">classst</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;class = &quot;</span><span class="si">{</span><span class="n">classst</span><span class="si">}</span><span class="s1">&quot;&#39;</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">classst</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">classst</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 
-    <span class="n">html_block</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&lt;img src=&quot;</span><span class="si">{</span><span class="n">uri</span><span class="si">}</span><span class="s1">&quot; srcset=&quot;</span><span class="si">{</span><span class="n">srcsetst</span><span class="si">}</span><span class="s1">&quot; alt=&quot;</span><span class="si">{</span><span class="n">alt</span><span class="si">}</span><span class="s1">&quot;&#39;</span> <span class="o">+</span>
-                  <span class="sa">f</span><span class="s1">&#39; </span><span class="si">{</span><span class="n">classst</span><span class="si">}</span><span class="s1">/&gt;&#39;</span><span class="p">)</span>
+    <span class="n">html_block</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&lt;img src=&quot;</span><span class="si">{</span><span class="n">uri</span><span class="si">}</span><span class="s1">&quot; srcset=&quot;</span><span class="si">{</span><span class="n">srcsetst</span><span class="si">}</span><span class="s1">&quot; alt=&quot;</span><span class="si">{</span><span class="n">alt</span><span class="si">}</span><span class="s1">&quot;&#39;</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="n">classst</span><span class="si">}</span><span class="s2">/&gt;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">html_block</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="visit_imgsg_latex"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.directives.html#sphinx_gallery.directives.visit_imgsg_latex">[docs]</a><span class="k">def</span> <span class="nf">visit_imgsg_latex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-
-    <span class="k">if</span> <span class="n">node</span><span class="p">[</span><span class="s1">&#39;srcset&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">node</span><span class="p">[</span><span class="s2">&quot;srcset&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">imagedir</span><span class="p">,</span> <span class="n">srcset</span> <span class="o">=</span> <span class="n">_copy_images</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span>
         <span class="n">maxmult</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
         <span class="c1"># choose the highest res version for latex:</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">srcset</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="n">maxmult</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxmult</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
-        <span class="n">node</span><span class="p">[</span><span class="s1">&#39;uri&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">PurePosixPath</span><span class="p">(</span><span class="n">srcset</span><span class="p">[</span><span class="n">maxmult</span><span class="p">])</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">node</span><span class="p">[</span><span class="s2">&quot;uri&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">PurePosixPath</span><span class="p">(</span><span class="n">srcset</span><span class="p">[</span><span class="n">maxmult</span><span class="p">])</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
     <span class="bp">self</span><span class="o">.</span><span class="n">visit_image</span><span class="p">(</span><span class="n">node</span><span class="p">)</span></div>
 
 
 <span class="k">def</span> <span class="nf">_copy_images</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-    <span class="n">srcset</span> <span class="o">=</span> <span class="n">_parse_srcset</span><span class="p">(</span><span class="n">node</span><span class="p">[</span><span class="s1">&#39;srcset&#39;</span><span class="p">])</span>
+    <span class="n">srcset</span> <span class="o">=</span> <span class="n">_parse_srcset</span><span class="p">(</span><span class="n">node</span><span class="p">[</span><span class="s2">&quot;srcset&quot;</span><span class="p">])</span>
 
     <span class="c1"># where the sources are.  i.e. myproj/source</span>
     <span class="n">srctop</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span>
@@ -687,7 +693,7 @@ document.write(`
     <span class="c1"># copy image from source to imagedir.  This is</span>
     <span class="c1"># *probably* supposed to be done by a builder but...</span>
     <span class="c1"># ie myproj/build/html/_images</span>
-    <span class="n">imagedir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">imagedir</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">imagedir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">imagedir</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
     <span class="n">imagedir</span> <span class="o">=</span> <span class="n">PurePosixPath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">outdir</span><span class="p">,</span> <span class="n">imagedir</span><span class="p">)</span>
 
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">imagedir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -705,8 +711,8 @@ document.write(`
 
 
 <div class="viewcode-block" id="visit_sg_other"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.directives.html#sphinx_gallery.directives.visit_sg_other">[docs]</a><span class="k">def</span> <span class="nf">visit_sg_other</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">node</span><span class="p">[</span><span class="s1">&#39;uri&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;/&#39;</span><span class="p">:</span>
-        <span class="n">node</span><span class="p">[</span><span class="s1">&#39;uri&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">node</span><span class="p">[</span><span class="s1">&#39;uri&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="k">if</span> <span class="n">node</span><span class="p">[</span><span class="s2">&quot;uri&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;/&quot;</span><span class="p">:</span>
+        <span class="n">node</span><span class="p">[</span><span class="s2">&quot;uri&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">node</span><span class="p">[</span><span class="s2">&quot;uri&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">visit_image</span><span class="p">(</span><span class="n">node</span><span class="p">)</span></div>
 
 
@@ -715,9 +721,11 @@ document.write(`
 
 
 <div class="viewcode-block" id="imagesg_addnode"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.directives.html#sphinx_gallery.directives.imagesg_addnode">[docs]</a><span class="k">def</span> <span class="nf">imagesg_addnode</span><span class="p">(</span><span class="n">app</span><span class="p">):</span>
-    <span class="n">app</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">imgsgnode</span><span class="p">,</span>
-                 <span class="n">html</span><span class="o">=</span><span class="p">(</span><span class="n">visit_imgsg_html</span><span class="p">,</span> <span class="n">depart_imgsg_html</span><span class="p">),</span>
-                 <span class="n">latex</span><span class="o">=</span><span class="p">(</span><span class="n">visit_imgsg_latex</span><span class="p">,</span> <span class="n">depart_imgsg_latex</span><span class="p">))</span></div>
+    <span class="n">app</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span>
+        <span class="n">imgsgnode</span><span class="p">,</span>
+        <span class="n">html</span><span class="o">=</span><span class="p">(</span><span class="n">visit_imgsg_html</span><span class="p">,</span> <span class="n">depart_imgsg_html</span><span class="p">),</span>
+        <span class="n">latex</span><span class="o">=</span><span class="p">(</span><span class="n">visit_imgsg_latex</span><span class="p">,</span> <span class="n">depart_imgsg_latex</span><span class="p">),</span>
+    <span class="p">)</span></div>
 </pre></div>
 
                 </article>
