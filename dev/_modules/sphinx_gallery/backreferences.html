@@ -667,16 +667,16 @@ document.write(`
             <span class="n">example_code_obj</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
         <span class="c1"># name is as written in file (e.g. np.asarray)</span>
         <span class="c1"># full_name includes resolved import path (e.g. numpy.asarray)</span>
-        <span class="n">splitted</span> <span class="o">=</span> <span class="n">full_name</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">class_like</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">splitted</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">splitted</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;builtins&quot;</span><span class="p">,</span> <span class="n">splitted</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">splitted</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>  <span class="c1"># class-like</span>
+        <span class="n">splits</span> <span class="o">=</span> <span class="n">full_name</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">class_like</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">splits</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">splits</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;builtins&quot;</span><span class="p">,</span> <span class="n">splits</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">splits</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>  <span class="c1"># class-like</span>
             <span class="k">assert</span> <span class="n">class_like</span>
-            <span class="n">splitted</span> <span class="o">=</span> <span class="p">(</span><span class="n">splitted</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">splitted</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span>
+            <span class="n">splits</span> <span class="o">=</span> <span class="p">(</span><span class="n">splits</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">splits</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">assert</span> <span class="ow">not</span> <span class="n">class_like</span>
 
-        <span class="n">module</span><span class="p">,</span> <span class="n">attribute</span> <span class="o">=</span> <span class="n">splitted</span>
+        <span class="n">module</span><span class="p">,</span> <span class="n">attribute</span> <span class="o">=</span> <span class="n">splits</span>
 
         <span class="c1"># get shortened module name</span>
         <span class="n">module_short</span> <span class="o">=</span> <span class="n">_get_short_module_name</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">attribute</span><span class="p">)</span>
