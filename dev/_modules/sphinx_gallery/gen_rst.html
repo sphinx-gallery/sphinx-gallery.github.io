@@ -1564,9 +1564,9 @@ document.write(`
     <span class="k">if</span> <span class="ow">not</span> <span class="n">executable</span><span class="p">:</span>
         <span class="n">dummy_image</span> <span class="o">=</span> <span class="n">file_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dummy_images&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">dummy_image</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">dummy_image</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">int</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dummy_image</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dummy_image</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
-                    <span class="s2">&quot;sphinx_gallery_dummy_images setting is not a number, &quot;</span>
+                    <span class="s2">&quot;sphinx_gallery_dummy_images setting is not an integer, &quot;</span>
                     <span class="s2">&quot;got </span><span class="si">{dummy_image!r}</span><span class="s2">&quot;</span>
                 <span class="p">)</span>
 
