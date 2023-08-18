@@ -423,10 +423,7 @@ document.write(`
                 <article class="bd-article" role="main">
                   
   <h1>Source code for sphinx_gallery.directives</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Custom Sphinx directives</span>
-<span class="sd">========================</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;Custom Sphinx directives.&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">PurePosixPath</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
@@ -442,8 +439,7 @@ document.write(`
 <div class="viewcode-block" id="MiniGallery">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.directives.html#sphinx_gallery.directives.MiniGallery">[docs]</a>
 <span class="k">class</span> <span class="nc">MiniGallery</span><span class="p">(</span><span class="n">Directive</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Custom directive to insert a mini-gallery</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Custom directive to insert a mini-gallery.</span>
 
 <span class="sd">    The required argument is one or more fully qualified names of objects,</span>
 <span class="sd">    separated by spaces.  The mini-gallery will be the subset of gallery</span>
@@ -466,7 +462,10 @@ document.write(`
         <span class="s2">&quot;heading-level&quot;</span><span class="p">:</span> <span class="n">directives</span><span class="o">.</span><span class="n">single_char_or_unicode</span><span class="p">,</span>
     <span class="p">}</span>
 
+<div class="viewcode-block" id="MiniGallery.run">
+<a class="viewcode-back" href="../../gen_modules/sphinx_gallery.directives.html#sphinx_gallery.directives.MiniGallery.run">[docs]</a>
     <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Insert backreferences file with appropriate heading.&quot;&quot;&quot;</span>
         <span class="c1"># Respect the same disabling options as the `raw` directive</span>
         <span class="k">if</span> <span class="p">(</span>
             <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">document</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">raw_enabled</span>
@@ -526,6 +525,7 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">state_machine</span><span class="o">.</span><span class="n">insert_input</span><span class="p">(</span><span class="n">include_lines</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="p">[]</span></div>
+</div>
 
 
 
@@ -537,33 +537,18 @@ document.write(`
 <div class="viewcode-block" id="imgsgnode">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.directives.html#sphinx_gallery.directives.imgsgnode">[docs]</a>
 <span class="k">class</span> <span class="nc">imgsgnode</span><span class="p">(</span><span class="n">nodes</span><span class="o">.</span><span class="n">General</span><span class="p">,</span> <span class="n">nodes</span><span class="o">.</span><span class="n">Element</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sphinx Gallery image node class.&quot;&quot;&quot;</span>
+
     <span class="k">pass</span></div>
-
-
-
-<div class="viewcode-block" id="directive_boolean">
-<a class="viewcode-back" href="../../gen_modules/sphinx_gallery.directives.html#sphinx_gallery.directives.directive_boolean">[docs]</a>
-<span class="k">def</span> <span class="nf">directive_boolean</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No argument provided but required&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;yes&quot;</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">,</span> <span class="s2">&quot;ok&quot;</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="kc">True</span>
-    <span class="k">elif</span> <span class="n">value</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;no&quot;</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;false&quot;</span><span class="p">,</span> <span class="s2">&quot;none&quot;</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="kc">False</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="s2">&quot;Please use one of: yes, true, no, false. &quot;</span>
-            <span class="s2">&quot;Do not use `</span><span class="si">{}</span><span class="s2">` as boolean.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-        <span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="ImageSg">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.directives.html#sphinx_gallery.directives.ImageSg">[docs]</a>
 <span class="k">class</span> <span class="nc">ImageSg</span><span class="p">(</span><span class="n">images</span><span class="o">.</span><span class="n">Image</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Implements a directive to allow an optional hidpi image.  Meant to be</span>
-<span class="sd">    used with the `image_srcset` configuration option.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Implements a directive to allow an optional hidpi image.</span>
+
+<span class="sd">    Meant to be used with the `image_srcset` configuration option.</span>
 
 <span class="sd">    e.g.::</span>
 
@@ -580,7 +565,6 @@ document.write(`
 <span class="sd">                    _images/sphx_glr_bar_001_2_00x.png 2x&quot;,</span>
 <span class="sd">            alt=&quot;bar&quot;</span>
 <span class="sd">            class=&quot;sphx-glr-single-img&quot; /&gt;</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">has_content</span> <span class="o">=</span> <span class="kc">False</span>
@@ -593,7 +577,10 @@ document.write(`
         <span class="s2">&quot;alt&quot;</span><span class="p">:</span> <span class="n">directives</span><span class="o">.</span><span class="n">unchanged</span><span class="p">,</span>
     <span class="p">}</span>
 
+<div class="viewcode-block" id="ImageSg.run">
+<a class="viewcode-back" href="../../gen_modules/sphinx_gallery.directives.html#sphinx_gallery.directives.ImageSg.run">[docs]</a>
     <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update node contents.&quot;&quot;&quot;</span>
         <span class="n">image_node</span> <span class="o">=</span> <span class="n">imgsgnode</span><span class="p">()</span>
 
         <span class="n">imagenm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">arguments</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -608,6 +595,7 @@ document.write(`
         <span class="n">image_node</span><span class="p">[</span><span class="s2">&quot;srcset&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;srcset&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="p">[</span><span class="n">image_node</span><span class="p">]</span></div>
+</div>
 
 
 
@@ -630,6 +618,11 @@ document.write(`
 <div class="viewcode-block" id="visit_imgsg_html">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.directives.html#sphinx_gallery.directives.visit_imgsg_html">[docs]</a>
 <span class="k">def</span> <span class="nf">visit_imgsg_html</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Handle HTML image tag depending on &#39;srcset&#39; configuration.</span>
+
+<span class="sd">    If &#39;srcset&#39; is not `None`, copy images, generate image html tag with &#39;srcset&#39;</span>
+<span class="sd">    and add to HTML `body`. If &#39;srcset&#39; is `None` run `visit_image` on `node`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">node</span><span class="p">[</span><span class="s2">&quot;srcset&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">visit_image</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
         <span class="k">return</span>
@@ -690,6 +683,7 @@ document.write(`
 <div class="viewcode-block" id="visit_imgsg_latex">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.directives.html#sphinx_gallery.directives.visit_imgsg_latex">[docs]</a>
 <span class="k">def</span> <span class="nf">visit_imgsg_latex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Copy images, set node[uri] to highest resolution image and call `visit_image`.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">node</span><span class="p">[</span><span class="s2">&quot;srcset&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">imagedir</span><span class="p">,</span> <span class="n">srcset</span> <span class="o">=</span> <span class="n">_copy_images</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span>
         <span class="n">maxmult</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
@@ -727,22 +721,15 @@ document.write(`
 <div class="viewcode-block" id="depart_imgsg_html">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.directives.html#sphinx_gallery.directives.depart_imgsg_html">[docs]</a>
 <span class="k">def</span> <span class="nf">depart_imgsg_html</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;HTML depart node visitor function.&quot;&quot;&quot;</span>
     <span class="k">pass</span></div>
-
-
-
-<div class="viewcode-block" id="visit_sg_other">
-<a class="viewcode-back" href="../../gen_modules/sphinx_gallery.directives.html#sphinx_gallery.directives.visit_sg_other">[docs]</a>
-<span class="k">def</span> <span class="nf">visit_sg_other</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">node</span><span class="p">[</span><span class="s2">&quot;uri&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;/&quot;</span><span class="p">:</span>
-        <span class="n">node</span><span class="p">[</span><span class="s2">&quot;uri&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">node</span><span class="p">[</span><span class="s2">&quot;uri&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">visit_image</span><span class="p">(</span><span class="n">node</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="depart_imgsg_latex">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.directives.html#sphinx_gallery.directives.depart_imgsg_latex">[docs]</a>
 <span class="k">def</span> <span class="nf">depart_imgsg_latex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;LaTeX depart node visitor function.&quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">depart_image</span><span class="p">(</span><span class="n">node</span><span class="p">)</span></div>
 
 
@@ -750,6 +737,7 @@ document.write(`
 <div class="viewcode-block" id="imagesg_addnode">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.directives.html#sphinx_gallery.directives.imagesg_addnode">[docs]</a>
 <span class="k">def</span> <span class="nf">imagesg_addnode</span><span class="p">(</span><span class="n">app</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add `imgsgnode` to Sphinx app with visitor functions for HTML and LaTeX.&quot;&quot;&quot;</span>
     <span class="n">app</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span>
         <span class="n">imgsgnode</span><span class="p">,</span>
         <span class="n">html</span><span class="o">=</span><span class="p">(</span><span class="n">visit_imgsg_html</span><span class="p">,</span> <span class="n">depart_imgsg_html</span><span class="p">),</span>

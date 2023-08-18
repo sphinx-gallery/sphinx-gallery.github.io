@@ -425,9 +425,7 @@ document.write(`
   <h1>Source code for sphinx_gallery.gen_gallery</h1><div class="highlight"><pre>
 <span></span><span class="c1"># Author: Óscar Nájera</span>
 <span class="c1"># License: 3-clause BSD</span>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Sphinx-Gallery Generator</span>
-<span class="sd">========================</span>
+<span class="sd">&quot;&quot;&quot;Sphinx-Gallery Generator.</span>
 
 <span class="sd">Attaches Sphinx-Gallery to Sphinx in order to generate the galleries</span>
 <span class="sd">when building the documentation.</span>
@@ -476,10 +474,13 @@ document.write(`
 <div class="viewcode-block" id="DefaultResetArgv">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.DefaultResetArgv">[docs]</a>
 <span class="k">class</span> <span class="nc">DefaultResetArgv</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Provides default &#39;reset_argv&#39; callable that returns empty list.&quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;DefaultResetArgv&quot;</span>
 
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return empty list.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[]</span></div>
 
 
@@ -547,6 +548,7 @@ document.write(`
 
 
 <span class="k">def</span> <span class="nf">_bool_eval</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Evaluate bool only configs, to allow setting via -D on the command line.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">x</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
@@ -587,6 +589,7 @@ document.write(`
 
 
 <span class="k">def</span> <span class="nf">_fill_gallery_conf_defaults</span><span class="p">(</span><span class="n">sphinx_gallery_conf</span><span class="p">,</span> <span class="n">app</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">check_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Handle user configs and update default gallery configs.&quot;&quot;&quot;</span>
     <span class="n">gallery_conf</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">DEFAULT_GALLERY_CONF</span><span class="p">)</span>
     <span class="n">options</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">)</span>
     <span class="n">extra_keys</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">sphinx_gallery_conf</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">options</span><span class="p">))</span>
@@ -877,8 +880,8 @@ document.write(`
 <span class="sd">        absolute path to directory containing conf.py</span>
 <span class="sd">    examples_dir : str</span>
 <span class="sd">        path to the examples directory relative to conf.py</span>
-<span class="sd">    gallery_conf : dict</span>
-<span class="sd">        The gallery configuration.</span>
+<span class="sd">    gallery_conf : Dict[str, Any]</span>
+<span class="sd">        Sphinx-Gallery configuration dictionary.</span>
 <span class="sd">    check_for_index : bool</span>
 <span class="sd">        only return subfolders with a ReadMe, default True</span>
 
@@ -919,7 +922,7 @@ document.write(`
 
 
 <span class="k">def</span> <span class="nf">_prepare_sphx_glr_dirs</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">srcdir</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates necessary folders for sphinx_gallery files&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates necessary folders for sphinx_gallery files.&quot;&quot;&quot;</span>
     <span class="n">examples_dirs</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;examples_dirs&quot;</span><span class="p">]</span>
     <span class="n">gallery_dirs</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;gallery_dirs&quot;</span><span class="p">]</span>
 
@@ -938,8 +941,7 @@ document.write(`
 
 
 <span class="k">def</span> <span class="nf">_format_toctree</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">includehidden</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Format a toc tree&quot;&quot;&quot;</span>
-
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Format a toc tree.&quot;&quot;&quot;</span>
     <span class="n">st</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">.. toctree::</span>
 <span class="s2">   :hidden:&quot;&quot;&quot;</span>
@@ -961,7 +963,7 @@ document.write(`
 <div class="viewcode-block" id="generate_gallery_rst">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.generate_gallery_rst">[docs]</a>
 <span class="k">def</span> <span class="nf">generate_gallery_rst</span><span class="p">(</span><span class="n">app</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate the Main examples gallery reStructuredText</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate the Main examples gallery reStructuredText.</span>
 
 <span class="sd">    Start the Sphinx-Gallery configuration and recursively scan the examples</span>
 <span class="sd">    directories in order to populate the examples gallery.</span>
@@ -977,7 +979,6 @@ document.write(`
 <span class="sd">    Eventually, we create a toctree in the current index file</span>
 <span class="sd">    which points to section index files.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;generating gallery...&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">)</span>
     <span class="n">gallery_conf</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span>
 
@@ -1174,6 +1175,7 @@ document.write(`
 <div class="viewcode-block" id="cost_name_key">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.cost_name_key">[docs]</a>
 <span class="k">def</span> <span class="nf">cost_name_key</span><span class="p">(</span><span class="n">cost_name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Cost (time_elapsed, memory_used) sorting function.&quot;&quot;&quot;</span>
     <span class="n">cost</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="n">cost_name</span>
     <span class="c1"># sort by descending computation time, descending memory, alphabetical name</span>
     <span class="k">return</span> <span class="p">(</span><span class="o">-</span><span class="n">cost</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="n">cost</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">name</span><span class="p">)</span></div>
@@ -1181,6 +1183,27 @@ document.write(`
 
 
 <span class="k">def</span> <span class="nf">_format_for_writing</span><span class="p">(</span><span class="n">costs</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;rst&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Provide formatted computation summary text.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    costs: List[Tuple[Tuple[float], str]]</span>
+<span class="sd">        List of tuples of computation costs and absolute paths to example, of format:</span>
+<span class="sd">        ((time_elapsed, memory_used), example_path).</span>
+<span class="sd">    path: str</span>
+<span class="sd">        Source directory.</span>
+<span class="sd">    kind: &#39;rst&#39; or &#39;console&#39;, default=&#39;rst&#39;</span>
+<span class="sd">        Format for printing to &#39;console&#39; or for writing `sg_execution_times.rst&#39; (&#39;rst&#39;)</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    lines: List[List[str]]</span>
+<span class="sd">        Formatted computation text for each example, of format:</span>
+<span class="sd">        [example_file, time_elapsed, memory_used]</span>
+
+<span class="sd">    lens: List[int]</span>
+<span class="sd">        Character length of each string in `lines`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">lines</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">cost</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">costs</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">cost_name_key</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;rst&quot;</span><span class="p">:</span>  <span class="c1"># like in sg_execution_times</span>
@@ -1201,6 +1224,18 @@ document.write(`
 <div class="viewcode-block" id="write_computation_times">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.write_computation_times">[docs]</a>
 <span class="k">def</span> <span class="nf">write_computation_times</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">costs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Write computation times to `sg_execution_times.rst`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    gallery_conf : Dict[str, Any]</span>
+<span class="sd">        Sphinx-Gallery configuration dictionary.</span>
+<span class="sd">    target_dir : str</span>
+<span class="sd">        Path to directory where example python source file are.</span>
+<span class="sd">    costs: List[Tuple[Tuple[float], str]]</span>
+<span class="sd">        List of tuples of computation costs and absolute paths to example, of format:</span>
+<span class="sd">        ((time_elapsed, memory_used), example_path).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">total_time</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">cost</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">cost</span> <span class="ow">in</span> <span class="n">costs</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">total_time</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">return</span>
@@ -1234,6 +1269,28 @@ document.write(`
 <div class="viewcode-block" id="write_api_entries">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.write_api_entries">[docs]</a>
 <span class="k">def</span> <span class="nf">write_api_entries</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">what</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="n">lines</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Write api entries to `_sg_api_entries` configuration.</span>
+
+<span class="sd">    To connect to `autodoc-process-docstring` event.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    app :</span>
+<span class="sd">        The Sphinx application object.</span>
+<span class="sd">    what: str</span>
+<span class="sd">        The type of the object which the docstring belongs to. One of</span>
+<span class="sd">        &quot;module&quot;, &quot;class&quot;, &quot;exception&quot;, &quot;function&quot;, &quot;method&quot;, &quot;attribute&quot;.</span>
+<span class="sd">    name :</span>
+<span class="sd">        The fully qualified name of the object.</span>
+<span class="sd">    obj :</span>
+<span class="sd">        The object itself.</span>
+<span class="sd">    options :</span>
+<span class="sd">        The options given to the directive: an object with attributes inherited_members,</span>
+<span class="sd">        undoc_members, show_inheritance and no-index that are true if the flag option of</span>
+<span class="sd">        same name was given to the auto directive.</span>
+<span class="sd">    lines :</span>
+<span class="sd">        The lines of the docstring, see above.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;show_api_usage&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
         <span class="k">return</span>
     <span class="k">if</span> <span class="s2">&quot;_sg_api_entries&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">:</span>
@@ -1265,6 +1322,15 @@ document.write(`
 <span class="sd">    That way you can see the examples that each API entry is used in</span>
 <span class="sd">    for that module (if this was done for the whole project at once,</span>
 <span class="sd">    the graph would get too large very large quickly).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    fname: str</span>
+<span class="sd">        Path to &#39;*sg_api_unused.dot&#39; file.</span>
+<span class="sd">    entries: Dict[str, List] or List[str]</span>
+<span class="sd">        Used (List) or unused (Dict) API entries.</span>
+<span class="sd">    gallery_conf : Dict[str, Any]</span>
+<span class="sd">        Sphinx-Gallery configuration dictionary.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">import</span> <span class="nn">graphviz</span>
 
@@ -1353,6 +1419,15 @@ document.write(`
 <span class="sd">    of which examples that API entry is used in, and a graph that</span>
 <span class="sd">    connects all of the API entries in a module to the examples</span>
 <span class="sd">    that they are used in.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    app :</span>
+<span class="sd">        The Sphinx application object.</span>
+<span class="sd">    docname :</span>
+<span class="sd">        Docname of the document currently being parsed.</span>
+<span class="sd">    source :</span>
+<span class="sd">        List whose single element is the contents of the source file</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">docname</span> <span class="o">=</span> <span class="n">docname</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>  <span class="c1"># can be None on Sphinx 7.2</span>
     <span class="n">gallery_conf</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span>
@@ -1486,6 +1561,10 @@ document.write(`
 <div class="viewcode-block" id="clean_api_usage_files">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.clean_api_usage_files">[docs]</a>
 <span class="k">def</span> <span class="nf">clean_api_usage_files</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove api usage .dot files.</span>
+
+<span class="sd">    To connect to &#39;build-finished&#39; event.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span> <span class="s2">&quot;sg_api_usage.rst&quot;</span><span class="p">)):</span>
         <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span> <span class="s2">&quot;sg_api_usage.rst&quot;</span><span class="p">))</span>
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span> <span class="s2">&quot;sg_api_unused.dot&quot;</span><span class="p">)):</span>
@@ -1499,6 +1578,18 @@ document.write(`
 <div class="viewcode-block" id="write_junit_xml">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.write_junit_xml">[docs]</a>
 <span class="k">def</span> <span class="nf">write_junit_xml</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">costs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Write JUnit XML file of example run times, successes, and failures.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    gallery_conf : Dict[str, Any]</span>
+<span class="sd">        Sphinx-Gallery configuration dictionary.</span>
+<span class="sd">    target_dir : Union[str, pathlib.Path]</span>
+<span class="sd">        Build directory.</span>
+<span class="sd">    costs: List[Tuple[Tuple[float], str]]</span>
+<span class="sd">        List of tuples of computation costs and absolute paths to example, of format:</span>
+<span class="sd">        ((time_elapsed, memory_used), example_path).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;junit&quot;</span><span class="p">]</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;plot_gallery&quot;</span><span class="p">]:</span>
         <span class="k">return</span>
     <span class="n">failing_as_expected</span><span class="p">,</span> <span class="n">failing_unexpectedly</span><span class="p">,</span> <span class="n">passing_unexpectedly</span> <span class="o">=</span> <span class="n">_parse_failures</span><span class="p">(</span>
@@ -1571,8 +1662,8 @@ document.write(`
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate empty back-reference example files.</span>
 
 <span class="sd">    This avoids inclusion errors/warnings if there are no gallery</span>
-<span class="sd">    examples for a class / module that is being parsed by autodoc&quot;&quot;&quot;</span>
-
+<span class="sd">    examples for a class / module that is being parsed by autodoc.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">bool</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;backreferences_dir&quot;</span><span class="p">]):</span>
         <span class="k">return</span>
 
@@ -1753,6 +1844,8 @@ document.write(`
 <div class="viewcode-block" id="get_default_config_value">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.get_default_config_value">[docs]</a>
 <span class="k">def</span> <span class="nf">get_default_config_value</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get default configuration function.&quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="nf">default_getter</span><span class="p">(</span><span class="n">conf</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">conf</span><span class="p">[</span><span class="s2">&quot;sphinx_gallery_conf&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">DEFAULT_GALLERY_CONF</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
 
@@ -1799,7 +1892,7 @@ document.write(`
 <div class="viewcode-block" id="setup">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.setup">[docs]</a>
 <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="n">app</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Setup Sphinx-Gallery sphinx extension&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Setup Sphinx-Gallery sphinx extension.&quot;&quot;&quot;</span>
     <span class="n">app</span><span class="o">.</span><span class="n">add_config_value</span><span class="p">(</span><span class="s2">&quot;sphinx_gallery_conf&quot;</span><span class="p">,</span> <span class="n">DEFAULT_GALLERY_CONF</span><span class="p">,</span> <span class="s2">&quot;html&quot;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;plot_gallery&quot;</span><span class="p">,</span> <span class="s2">&quot;abort_on_example_error&quot;</span><span class="p">]:</span>
         <span class="n">app</span><span class="o">.</span><span class="n">add_config_value</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">get_default_config_value</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="s2">&quot;html&quot;</span><span class="p">)</span>
@@ -1845,7 +1938,7 @@ document.write(`
 <div class="viewcode-block" id="setup_module">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.setup_module">[docs]</a>
 <span class="k">def</span> <span class="nf">setup_module</span><span class="p">():</span>
-    <span class="c1"># HACK: Stop nosetests running setup() above</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Hack to stop nosetests running setup() above.&quot;&quot;&quot;</span>
     <span class="k">pass</span></div>
 
 </pre></div>

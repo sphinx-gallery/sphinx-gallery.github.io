@@ -425,9 +425,7 @@ document.write(`
   <h1>Source code for sphinx_gallery.gen_rst</h1><div class="highlight"><pre>
 <span></span><span class="c1"># Author: Óscar Nájera</span>
 <span class="c1"># License: 3-clause BSD</span>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">reST file generator</span>
-<span class="sd">===================</span>
+<span class="sd">&quot;&quot;&quot;reST file generator.</span>
 
 <span class="sd">Generate the rst files for the examples by iterating over the python</span>
 <span class="sd">example files.</span>
@@ -732,8 +730,7 @@ document.write(`
 <div class="viewcode-block" id="md5sum_is_current">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.md5sum_is_current">[docs]</a>
 <span class="k">def</span> <span class="nf">md5sum_is_current</span><span class="p">(</span><span class="n">src_file</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Checks whether src_file has the same md5 hash as the one on disk&quot;&quot;&quot;</span>
-
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Checks whether src_file has the same md5 hash as the one on disk.&quot;&quot;&quot;</span>
     <span class="n">src_md5</span> <span class="o">=</span> <span class="n">get_md5sum</span><span class="p">(</span><span class="n">src_file</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
 
     <span class="n">src_md5_file</span> <span class="o">=</span> <span class="n">src_file</span> <span class="o">+</span> <span class="s2">&quot;.md5&quot;</span>
@@ -750,7 +747,7 @@ document.write(`
 <div class="viewcode-block" id="save_thumbnail">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.save_thumbnail">[docs]</a>
 <span class="k">def</span> <span class="nf">save_thumbnail</span><span class="p">(</span><span class="n">image_path_template</span><span class="p">,</span> <span class="n">src_file</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">,</span> <span class="n">file_conf</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate and Save the thumbnail image</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate and Save the thumbnail image.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -766,7 +763,6 @@ document.write(`
 <span class="sd">    gallery_conf : dict</span>
 <span class="sd">        Sphinx-Gallery configuration dictionary</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="n">thumb_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">image_path_template</span><span class="p">),</span> <span class="s2">&quot;thumb&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">thumb_dir</span><span class="p">):</span>
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">thumb_dir</span><span class="p">)</span>
@@ -886,7 +882,8 @@ document.write(`
 <span class="sd">        Content which will be written to the index rst file</span>
 <span class="sd">        presenting the current example gallery</span>
 <span class="sd">    costs: list,</span>
-<span class="sd">        List of costs for building each element of the gallery</span>
+<span class="sd">        List of costs (time_elapsed, memory_used) for building each element of the</span>
+<span class="sd">        gallery and absolute path to the example file</span>
 <span class="sd">    toctree_items: list,</span>
 <span class="sd">        List of files included in toctree</span>
 <span class="sd">        (independent of include_toctree&#39;s value)</span>
@@ -1168,8 +1165,7 @@ document.write(`
 
 
 <span class="k">def</span> <span class="nf">_ast_module</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get ast.Module function, dealing with:</span>
-<span class="sd">    https://bugs.python.org/issue35894&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get ast.Module function, dealing with: https://bugs.python.org/issue35894.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">):</span>
         <span class="n">ast_Module</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">type_ignores</span><span class="o">=</span><span class="p">[])</span>
     <span class="k">else</span><span class="p">:</span>
@@ -1189,8 +1185,28 @@ document.write(`
 
 
 <span class="k">def</span> <span class="nf">_exec_and_get_memory</span><span class="p">(</span><span class="n">compiler</span><span class="p">,</span> <span class="n">ast_Module</span><span class="p">,</span> <span class="n">code_ast</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Execute ast, capturing output if last line is expression and get max</span>
-<span class="sd">    memory usage.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Execute ast, capturing output if last line expression and get max mem usage.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    compiler : codeop.Compile</span>
+<span class="sd">        Compiler to compile AST of code block.</span>
+<span class="sd">    ast_Module : Callable</span>
+<span class="sd">        ast.Module function.</span>
+<span class="sd">    code_ast : ast.Module</span>
+<span class="sd">        AST parsed code to execute.</span>
+<span class="sd">    gallery_conf : Dict[str, Any]</span>
+<span class="sd">        Gallery configurations.</span>
+<span class="sd">    script_vars : Dict[str, Any]</span>
+<span class="sd">        Configuration and runtime variables.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    is_last_expr : bool</span>
+<span class="sd">        Whether the last expression in `code_ast` is an ast.Expr.</span>
+<span class="sd">    mem_max : float</span>
+<span class="sd">        Max memory used during execution.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">src_file</span> <span class="o">=</span> <span class="n">script_vars</span><span class="p">[</span><span class="s2">&quot;src_file&quot;</span><span class="p">]</span>
     <span class="c1"># capture output if last line is expression</span>
     <span class="n">is_last_expr</span> <span class="o">=</span> <span class="kc">False</span>
@@ -1221,8 +1237,7 @@ document.write(`
 
 
 <span class="k">def</span> <span class="nf">_get_last_repr</span><span class="p">(</span><span class="n">capture_repr</span><span class="p">,</span> <span class="n">___</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a repr of the last expression, using first method in &#39;capture_repr&#39;</span>
-<span class="sd">    available for the last expression.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get repr of last expression, using first method in &#39;capture_repr&#39; available.&quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">meth</span> <span class="ow">in</span> <span class="n">capture_repr</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">last_repr</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">___</span><span class="p">,</span> <span class="n">meth</span><span class="p">)()</span>
@@ -1243,7 +1258,29 @@ document.write(`
 <span class="k">def</span> <span class="nf">_get_code_output</span><span class="p">(</span>
     <span class="n">is_last_expr</span><span class="p">,</span> <span class="n">example_globals</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">logging_tee</span><span class="p">,</span> <span class="n">images_rst</span><span class="p">,</span> <span class="n">file_conf</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Obtain standard output and html output in reST.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Obtain standard output and html output in reST.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    is_last_expr : bool</span>
+<span class="sd">        Whether the last expression in executed code is an ast.Expr.</span>
+<span class="sd">    example_globals: Dict[str, Any]</span>
+<span class="sd">        Global variables for examples.</span>
+<span class="sd">    logging_tee : _LoggingTee</span>
+<span class="sd">        Logging tee.</span>
+<span class="sd">    images_rst : str</span>
+<span class="sd">        rst code to embed the images in the document.</span>
+<span class="sd">    gallery_conf : Dict[str, Any]</span>
+<span class="sd">        Gallery configurations.</span>
+<span class="sd">    file_conf : Dict[str, Any]</span>
+<span class="sd">        File-specific settings given in source file comments as:</span>
+<span class="sd">        ``# sphinx_gallery_&lt;name&gt; = &lt;value&gt;``.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    code_output : str</span>
+<span class="sd">        reST of output of executed code block, including images and captured output.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">last_repr</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">repr_meth</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="n">is_last_expr</span><span class="p">:</span>
@@ -1296,20 +1333,15 @@ document.write(`
 <span class="sd">    ----------</span>
 <span class="sd">    compiler : codeop.Compile</span>
 <span class="sd">        Compiler to compile AST of code block.</span>
-
 <span class="sd">    block : List[Tuple[str, str, int]]</span>
 <span class="sd">        List of Tuples, each Tuple contains label (&#39;text&#39; or &#39;code&#39;),</span>
 <span class="sd">        the corresponding content string of block and the leading line number.</span>
-
 <span class="sd">    example_globals: Dict[str, Any]</span>
 <span class="sd">        Global variables for examples.</span>
-
 <span class="sd">    script_vars : Dict[str, Any]</span>
 <span class="sd">        Configuration and runtime variables.</span>
-
 <span class="sd">    gallery_conf : Dict[str, Any]</span>
 <span class="sd">        Gallery configurations.</span>
-
 <span class="sd">    file_conf : Dict[str, Any]</span>
 <span class="sd">        File-specific settings given in source file comments as:</span>
 <span class="sd">        ``# sphinx_gallery_&lt;name&gt; = &lt;value&gt;``.</span>
@@ -1395,7 +1427,7 @@ document.write(`
 <div class="viewcode-block" id="executable_script">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.executable_script">[docs]</a>
 <span class="k">def</span> <span class="nf">executable_script</span><span class="p">(</span><span class="n">src_file</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate if script has to be run according to gallery configuration</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate if script has to be run according to gallery configuration.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1410,7 +1442,6 @@ document.write(`
 <span class="sd">    bool</span>
 <span class="sd">        True if script has to be executed</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="n">filename_pattern</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;filename_pattern&quot;</span><span class="p">]</span>
     <span class="n">execute</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">filename_pattern</span><span class="p">,</span> <span class="n">src_file</span><span class="p">)</span> <span class="ow">and</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;plot_gallery&quot;</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">execute</span></div>
@@ -1426,7 +1457,7 @@ document.write(`
 <div class="viewcode-block" id="execute_script">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.execute_script">[docs]</a>
 <span class="k">def</span> <span class="nf">execute_script</span><span class="p">(</span><span class="n">script_blocks</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">file_conf</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Execute and capture output from python script already in block structure</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Execute and capture output from python script already in block structure.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1529,22 +1560,23 @@ document.write(`
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    fname : str</span>
-<span class="sd">        Filename of python script</span>
+<span class="sd">        Filename of python script.</span>
 <span class="sd">    target_dir : str</span>
-<span class="sd">        Absolute path to directory in documentation where examples are saved</span>
+<span class="sd">        Absolute path to directory in documentation where examples are saved.</span>
 <span class="sd">    src_dir : str</span>
-<span class="sd">        Absolute path to directory where source examples are stored</span>
+<span class="sd">        Absolute path to directory where source examples are stored.</span>
 <span class="sd">    gallery_conf : dict</span>
-<span class="sd">        Contains the configuration of Sphinx-Gallery</span>
+<span class="sd">        Contains the configuration of Sphinx-Gallery.</span>
 <span class="sd">    seen_backrefs : set</span>
 <span class="sd">        The seen backreferences.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    intro: str</span>
-<span class="sd">        The introduction of the example</span>
+<span class="sd">        The introduction of the example.</span>
 <span class="sd">    cost : tuple</span>
-<span class="sd">        A tuple containing the ``(time, memory)`` required to run the script.</span>
+<span class="sd">        A tuple containing the ``(time_elapsed, memory_used)`` required to run the</span>
+<span class="sd">        script.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">seen_backrefs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span> <span class="k">if</span> <span class="n">seen_backrefs</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">seen_backrefs</span>
     <span class="n">src_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">))</span>
@@ -1732,7 +1764,6 @@ document.write(`
 <span class="sd">    out : str</span>
 <span class="sd">        rst notebook</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="c1"># A simple example has two blocks: one for the</span>
     <span class="c1"># example introduction/explanation and one for the code</span>
     <span class="n">is_example_notebook_like</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">script_blocks</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span>
@@ -1775,7 +1806,7 @@ document.write(`
 <span class="k">def</span> <span class="nf">save_rst_example</span><span class="p">(</span>
     <span class="n">example_rst</span><span class="p">,</span> <span class="n">example_file</span><span class="p">,</span> <span class="n">time_elapsed</span><span class="p">,</span> <span class="n">memory_used</span><span class="p">,</span> <span class="n">gallery_conf</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Saves the rst notebook to example_file including header &amp; footer</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Saves the rst notebook to example_file including header &amp; footer.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1790,7 +1821,6 @@ document.write(`
 <span class="sd">    gallery_conf : dict</span>
 <span class="sd">        Sphinx-Gallery configuration dictionary</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="n">example_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">example_file</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">])</span>
     <span class="n">ref_fname</span> <span class="o">=</span> <span class="n">example_fname</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
 

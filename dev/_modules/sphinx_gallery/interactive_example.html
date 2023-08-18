@@ -425,9 +425,7 @@ document.write(`
   <h1>Source code for sphinx_gallery.interactive_example</h1><div class="highlight"><pre>
 <span></span><span class="c1"># Author: Chris Holdgraf</span>
 <span class="c1"># License: 3-clause BSD</span>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Binder and Jupyterlite utility functions</span>
-<span class="sd">========================================</span>
+<span class="sd">&quot;&quot;&quot;Binder and Jupyterlite utility functions.</span>
 
 <span class="sd">Integration with Binder and Jupyterlite is on an experimental stage. Note that</span>
 <span class="sd">this API may change in the future.</span>
@@ -612,10 +610,11 @@ document.write(`
 
 
 <span class="k">def</span> <span class="nf">_remove_ipynb_files</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">contents</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Given a list of files in `contents`, remove all files named `ipynb` or</span>
-<span class="sd">    directories named `images` and return the result.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove files with `.ipynb` and directories named `images` from list of files.</span>
 
-<span class="sd">    Used with the `shutil` &quot;ignore&quot; keyword to filter out non-ipynb files.&quot;&quot;&quot;</span>
+<span class="sd">    `contents` should be a list of files, which is returned after file removal.</span>
+<span class="sd">    Used with the `shutil` &quot;ignore&quot; keyword to filter out non-ipynb files.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">contents_return</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">contents</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">entry</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.ipynb&quot;</span><span class="p">):</span>
@@ -634,8 +633,8 @@ document.write(`
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Copy Jupyter notebooks to the binder notebooks directory.</span>
 
 <span class="sd">    Copy each output gallery directory structure but only including the</span>
-<span class="sd">    Jupyter notebook files.&quot;&quot;&quot;</span>
-
+<span class="sd">    Jupyter notebook files.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">gallery_conf</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span>
     <span class="n">gallery_dirs</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;gallery_dirs&quot;</span><span class="p">]</span>
     <span class="n">binder_conf</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;binder&quot;</span><span class="p">]</span>
@@ -724,6 +723,10 @@ document.write(`
 <div class="viewcode-block" id="pre_configure_jupyterlite_sphinx">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.interactive_example.html#sphinx_gallery.interactive_example.pre_configure_jupyterlite_sphinx">[docs]</a>
 <span class="k">def</span> <span class="nf">pre_configure_jupyterlite_sphinx</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configure &#39;jupyterlite_bind_ipynb_suffix&#39; if jupyterlite enabled.</span>
+
+<span class="sd">    Connected to &quot;config-inited&quot; event.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">is_jupyterlite_enabled</span> <span class="o">=</span> <span class="p">(</span>
         <span class="s2">&quot;jupyterlite_sphinx&quot;</span> <span class="ow">in</span> <span class="n">app</span><span class="o">.</span><span class="n">extensions</span>
         <span class="ow">and</span> <span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;jupyterlite&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
@@ -741,6 +744,11 @@ document.write(`
 <div class="viewcode-block" id="post_configure_jupyterlite_sphinx">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.interactive_example.html#sphinx_gallery.interactive_example.post_configure_jupyterlite_sphinx">[docs]</a>
 <span class="k">def</span> <span class="nf">post_configure_jupyterlite_sphinx</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check SG &quot;jupyterlite&quot; and update Jupyterlite config &quot;jupyterlite_contents&quot;.</span>
+
+<span class="sd">    Connected to &quot;config-inited&quot; event but lower priority so called after</span>
+<span class="sd">    `pre_configure_jupyterlite_sphinx`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;jupyterlite&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">check_jupyterlite_conf</span><span class="p">(</span>
         <span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;jupyterlite&quot;</span><span class="p">],</span> <span class="n">app</span>
     <span class="p">)</span>
@@ -761,6 +769,7 @@ document.write(`
 <div class="viewcode-block" id="create_jupyterlite_contents">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.interactive_example.html#sphinx_gallery.interactive_example.create_jupyterlite_contents">[docs]</a>
 <span class="k">def</span> <span class="nf">create_jupyterlite_contents</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create Jupyterlite contents according to &quot;jupyterlite&quot; configuration.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">exception</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span>
 
@@ -881,7 +890,7 @@ document.write(`
 <div class="viewcode-block" id="check_jupyterlite_conf">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.interactive_example.html#sphinx_gallery.interactive_example.check_jupyterlite_conf">[docs]</a>
 <span class="k">def</span> <span class="nf">check_jupyterlite_conf</span><span class="p">(</span><span class="n">jupyterlite_conf</span><span class="p">,</span> <span class="n">app</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return full JupyterLite configuration with defaults&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return full JupyterLite configuration with defaults.&quot;&quot;&quot;</span>
     <span class="c1"># app=None can happen for testing</span>
     <span class="k">if</span> <span class="n">app</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">is_jupyterlite_disabled</span> <span class="o">=</span> <span class="kc">True</span>

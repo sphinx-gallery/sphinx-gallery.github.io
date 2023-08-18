@@ -462,16 +462,47 @@ document.write(`
                   
   <section id="sphinx-gallery-backreferences">
 <h1>sphinx_gallery.backreferences<a class="headerlink" href="#sphinx-gallery-backreferences" title="Link to this heading">#</a></h1>
-<section id="backreferences-generator">
-<span id="module-sphinx_gallery.backreferences"></span><h2>Backreferences Generator<a class="headerlink" href="#backreferences-generator" title="Link to this heading">#</a></h2>
-<p>Parses example file code in order to keep track of used functions</p>
-</section>
+<p id="module-sphinx_gallery.backreferences">Backreferences Generator.</p>
+<p>Parses example file code in order to keep track of used functions.</p>
 <section id="functions">
 <h2>Functions<a class="headerlink" href="#functions" title="Link to this heading">#</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="sphinx_gallery.backreferences.identify_names">
 <span class="sig-prename descclassname"><span class="pre">sphinx_gallery.backreferences.</span></span><span class="sig-name descname"><span class="pre">identify_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">script_blocks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_regex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">global_variables</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sphinx_gallery/backreferences.html#identify_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sphinx_gallery.backreferences.identify_names" title="Link to this definition">#</a></dt>
 <dd><p>Build a codeobj summary by identifying and resolving used names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>script_blocks</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a>) – (label, content, line_number)
+List where each element is a tuple with the label (‘text’ or ‘code’),
+the corresponding content string of block and the leading line number.</p></li>
+<li><p><strong>ref_regex</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Regex to find references to python objects.</p></li>
+<li><p><strong>example_globals</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><em>Any</em><em>]</em><em>]</em>) – Global variables for examples. Default=None</p></li>
+<li><p><strong>node</strong> (<a class="reference external" href="https://docs.python.org/3/library/ast.html#ast.Module" title="(in Python v3.11)"><em>ast.Module</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The parsed node. Default=””</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p><strong>example_code_obj</strong> – OrderedDict with information about all code object references found in an
+example. OrderedDict contains the following keys:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>example_code_obj[‘name’] : function or class name (str)</p></li>
+<li><p>example_code_obj[‘module’] : module name (str)</p></li>
+<li><p>example_code_obj[‘module_short’] : shortened module name (str)</p></li>
+<li><p>example_code_obj[‘is_class’] : whether object is class (bool)</p></li>
+<li><dl class="simple">
+<dt>example_code_obj[‘is_explicit’]<span class="classifier">whether object is an explicit</span></dt><dd><p>backreference (referred to by sphinx markup) (bool)</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>OrderedDict[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a>, Any]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <section id="examples-using-sphinx-gallery-backreferences-identify-names">
@@ -506,6 +537,53 @@ document.write(`
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sphinx_gallery.backreferences.</span></span><span class="sig-name descname"><span class="pre">NameFinder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">global_variables</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sphinx_gallery/backreferences.html#NameFinder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sphinx_gallery.backreferences.NameFinder" title="Link to this definition">#</a></dt>
 <dd><p>Finds the longest form of variable names and their imports in code.</p>
 <p>Only retains names from imported modules.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="sphinx_gallery.backreferences.NameFinder.get_mapping">
+<span class="sig-name descname"><span class="pre">get_mapping</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sphinx_gallery/backreferences.html#NameFinder.get_mapping"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sphinx_gallery.backreferences.NameFinder.get_mapping" title="Link to this definition">#</a></dt>
+<dd><p>Map names used in code, using AST nodes, to their fully qualified names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><p><strong>options</strong> – List of tuples, each tuple containing the following information about
+an <cite>accessed_name</cite>:</p>
+<blockquote>
+<div><p>accessed name : str,
+fully qualified name : str
+if it is a class attribute (i.e., property or method) : bool
+if it is a class : bool
+if it is an explicit backreference : bool (always false here)</p>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[Tuple[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sphinx_gallery.backreferences.NameFinder.visit_Attribute">
+<span class="sig-name descname"><span class="pre">visit_Attribute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sphinx_gallery/backreferences.html#NameFinder.visit_Attribute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sphinx_gallery.backreferences.NameFinder.visit_Attribute" title="Link to this definition">#</a></dt>
+<dd><p>Add attributes, including their prefix, to <cite>accessed_names</cite>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sphinx_gallery.backreferences.NameFinder.visit_Import">
+<span class="sig-name descname"><span class="pre">visit_Import</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sphinx_gallery/backreferences.html#NameFinder.visit_Import"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sphinx_gallery.backreferences.NameFinder.visit_Import" title="Link to this definition">#</a></dt>
+<dd><p>For ‘import’ add node names to <cite>imported_names</cite>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sphinx_gallery.backreferences.NameFinder.visit_ImportFrom">
+<span class="sig-name descname"><span class="pre">visit_ImportFrom</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sphinx_gallery/backreferences.html#NameFinder.visit_ImportFrom"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sphinx_gallery.backreferences.NameFinder.visit_ImportFrom" title="Link to this definition">#</a></dt>
+<dd><p>For ‘from import’ add node names to <cite>imported_names</cite>, incl module prefix.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sphinx_gallery.backreferences.NameFinder.visit_Name">
+<span class="sig-name descname"><span class="pre">visit_Name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sphinx_gallery/backreferences.html#NameFinder.visit_Name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sphinx_gallery.backreferences.NameFinder.visit_Name" title="Link to this definition">#</a></dt>
+<dd><p>Add node id to <cite>accessed_names</cite>.</p>
+</dd></dl>
+
 </dd></dl>
 
 <span class="target" id="sphx-glr-backref-sphinx-gallery-backreferences-namefinder"></span></section>
@@ -558,7 +636,6 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#backreferences-generator">Backreferences Generator</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sphinx_gallery.backreferences.identify_names"><code class="docutils literal notranslate"><span class="pre">identify_names()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#examples-using-sphinx-gallery-backreferences-identify-names">Examples using <code class="docutils literal notranslate"><span class="pre">sphinx_gallery.backreferences.identify_names</span></code></a></li>
@@ -570,7 +647,14 @@ document.write(`
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#sphinx_gallery.backreferences.DummyClass.run"><code class="docutils literal notranslate"><span class="pre">DummyClass.run()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sphinx_gallery.backreferences.NameFinder"><code class="docutils literal notranslate"><span class="pre">NameFinder</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sphinx_gallery.backreferences.NameFinder"><code class="docutils literal notranslate"><span class="pre">NameFinder</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#sphinx_gallery.backreferences.NameFinder.get_mapping"><code class="docutils literal notranslate"><span class="pre">NameFinder.get_mapping()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#sphinx_gallery.backreferences.NameFinder.visit_Attribute"><code class="docutils literal notranslate"><span class="pre">NameFinder.visit_Attribute()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#sphinx_gallery.backreferences.NameFinder.visit_Import"><code class="docutils literal notranslate"><span class="pre">NameFinder.visit_Import()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#sphinx_gallery.backreferences.NameFinder.visit_ImportFrom"><code class="docutils literal notranslate"><span class="pre">NameFinder.visit_ImportFrom()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#sphinx_gallery.backreferences.NameFinder.visit_Name"><code class="docutils literal notranslate"><span class="pre">NameFinder.visit_Name()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

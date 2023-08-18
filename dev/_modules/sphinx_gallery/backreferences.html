@@ -425,11 +425,9 @@ document.write(`
   <h1>Source code for sphinx_gallery.backreferences</h1><div class="highlight"><pre>
 <span></span><span class="c1"># Author: Óscar Nájera</span>
 <span class="c1"># License: 3-clause BSD</span>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Backreferences Generator</span>
-<span class="sd">========================</span>
+<span class="sd">&quot;&quot;&quot;Backreferences Generator.</span>
 
-<span class="sd">Parses example file code in order to keep track of used functions</span>
+<span class="sd">Parses example file code in order to keep track of used functions.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">ast</span>
@@ -496,18 +494,33 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">global_variables</span> <span class="o">=</span> <span class="n">global_variables</span> <span class="ow">or</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">accessed_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
 
+<div class="viewcode-block" id="NameFinder.visit_Import">
+<a class="viewcode-back" href="../../gen_modules/sphinx_gallery.backreferences.html#sphinx_gallery.backreferences.NameFinder.visit_Import">[docs]</a>
     <span class="k">def</span> <span class="nf">visit_Import</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;For &#39;import&#39; add node names to `imported_names`.&quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">alias</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">names</span><span class="p">:</span>
             <span class="n">local_name</span> <span class="o">=</span> <span class="n">alias</span><span class="o">.</span><span class="n">asname</span> <span class="ow">or</span> <span class="n">alias</span><span class="o">.</span><span class="n">name</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">imported_names</span><span class="p">[</span><span class="n">local_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">prefix</span> <span class="o">+</span> <span class="n">alias</span><span class="o">.</span><span class="n">name</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">imported_names</span><span class="p">[</span><span class="n">local_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">prefix</span> <span class="o">+</span> <span class="n">alias</span><span class="o">.</span><span class="n">name</span></div>
 
+
+<div class="viewcode-block" id="NameFinder.visit_ImportFrom">
+<a class="viewcode-back" href="../../gen_modules/sphinx_gallery.backreferences.html#sphinx_gallery.backreferences.NameFinder.visit_ImportFrom">[docs]</a>
     <span class="k">def</span> <span class="nf">visit_ImportFrom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">visit_Import</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">module</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span><span class="p">)</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;For &#39;from import&#39; add node names to `imported_names`, incl module prefix.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">visit_Import</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">module</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span><span class="p">)</span></div>
 
+
+<div class="viewcode-block" id="NameFinder.visit_Name">
+<a class="viewcode-back" href="../../gen_modules/sphinx_gallery.backreferences.html#sphinx_gallery.backreferences.NameFinder.visit_Name">[docs]</a>
     <span class="k">def</span> <span class="nf">visit_Name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">accessed_names</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add node id to `accessed_names`.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">accessed_names</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">id</span><span class="p">)</span></div>
 
+
+<div class="viewcode-block" id="NameFinder.visit_Attribute">
+<a class="viewcode-back" href="../../gen_modules/sphinx_gallery.backreferences.html#sphinx_gallery.backreferences.NameFinder.visit_Attribute">[docs]</a>
     <span class="k">def</span> <span class="nf">visit_Attribute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add attributes, including their prefix, to `accessed_names`.&quot;&quot;&quot;</span>
         <span class="n">attrs</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">while</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Attribute</span><span class="p">):</span>
             <span class="n">attrs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">attr</span><span class="p">)</span>
@@ -519,9 +532,26 @@ document.write(`
             <span class="bp">self</span><span class="o">.</span><span class="n">accessed_names</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">attrs</span><span class="p">)))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># need to get a in a().b</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="p">)</span></div>
 
+
+<div class="viewcode-block" id="NameFinder.get_mapping">
+<a class="viewcode-back" href="../../gen_modules/sphinx_gallery.backreferences.html#sphinx_gallery.backreferences.NameFinder.get_mapping">[docs]</a>
     <span class="k">def</span> <span class="nf">get_mapping</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Map names used in code, using AST nodes, to their fully qualified names.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        options : List[Tuple[str]]</span>
+<span class="sd">            List of tuples, each tuple containing the following information about</span>
+<span class="sd">            an `accessed_name`:</span>
+
+<span class="sd">                accessed name : str,</span>
+<span class="sd">                fully qualified name : str</span>
+<span class="sd">                if it is a class attribute (i.e., property or method) : bool</span>
+<span class="sd">                if it is a class : bool</span>
+<span class="sd">                if it is an explicit backreference : bool (always false here)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">options</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">accessed_names</span><span class="p">:</span>
             <span class="n">local_name_split</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
@@ -593,6 +623,7 @@ document.write(`
                     <span class="n">is_class</span> <span class="o">=</span> <span class="n">class_attr</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># can&#39;t tell without import</span>
                     <span class="n">options</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">name</span><span class="p">,</span> <span class="n">full_name</span><span class="p">,</span> <span class="n">class_attr</span><span class="p">,</span> <span class="n">is_class</span><span class="p">,</span> <span class="kc">False</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">options</span></div>
+</div>
 
 
 
@@ -658,7 +689,34 @@ document.write(`
 <div class="viewcode-block" id="identify_names">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.backreferences.html#sphinx_gallery.backreferences.identify_names">[docs]</a>
 <span class="k">def</span> <span class="nf">identify_names</span><span class="p">(</span><span class="n">script_blocks</span><span class="p">,</span> <span class="n">ref_regex</span><span class="p">,</span> <span class="n">global_variables</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">node</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build a codeobj summary by identifying and resolving used names.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build a codeobj summary by identifying and resolving used names.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    script_blocks : list</span>
+<span class="sd">        (label, content, line_number)</span>
+<span class="sd">        List where each element is a tuple with the label (&#39;text&#39; or &#39;code&#39;),</span>
+<span class="sd">        the corresponding content string of block and the leading line number.</span>
+<span class="sd">    ref_regex : str</span>
+<span class="sd">        Regex to find references to python objects.</span>
+<span class="sd">    example_globals: Optional[Dict[str, Any]]</span>
+<span class="sd">        Global variables for examples. Default=None</span>
+<span class="sd">    node : ast.Module or str</span>
+<span class="sd">        The parsed node. Default=&quot;&quot;</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    example_code_obj : OrderedDict[str, Any]</span>
+<span class="sd">        OrderedDict with information about all code object references found in an</span>
+<span class="sd">        example. OrderedDict contains the following keys:</span>
+
+<span class="sd">            - example_code_obj[&#39;name&#39;] : function or class name (str)</span>
+<span class="sd">            - example_code_obj[&#39;module&#39;] : module name (str)</span>
+<span class="sd">            - example_code_obj[&#39;module_short&#39;] : shortened module name (str)</span>
+<span class="sd">            - example_code_obj[&#39;is_class&#39;] : whether object is class (bool)</span>
+<span class="sd">            - example_code_obj[&#39;is_explicit&#39;] : whether object is an explicit</span>
+<span class="sd">                backreference (referred to by sphinx markup) (bool)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">node</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>  <span class="c1"># mostly convenience for testing functions</span>
         <span class="n">c</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">txt</span> <span class="k">for</span> <span class="n">kind</span><span class="p">,</span> <span class="n">txt</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">script_blocks</span> <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;code&quot;</span><span class="p">)</span>
         <span class="n">node</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
@@ -761,7 +819,25 @@ document.write(`
 <span class="k">def</span> <span class="nf">_write_backreferences</span><span class="p">(</span>
     <span class="n">backrefs</span><span class="p">,</span> <span class="n">seen_backrefs</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">snippet</span><span class="p">,</span> <span class="n">title</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Write backreference file including a thumbnail list of examples.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Write backreference file for one example including a thumbnail list of examples.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    backrefs : set[str]</span>
+<span class="sd">        Back references to write.</span>
+<span class="sd">    seen_backrefs: set</span>
+<span class="sd">        Back references already encountered when parsing this example.</span>
+<span class="sd">    gallery_conf : Dict[str, Any]</span>
+<span class="sd">        Gallery configurations.</span>
+<span class="sd">    target_dir : str</span>
+<span class="sd">        Absolute path to directory where examples are saved.</span>
+<span class="sd">    fname : str</span>
+<span class="sd">        Filename of current example python file.</span>
+<span class="sd">    snippet : str</span>
+<span class="sd">        Introductory docstring of example.</span>
+<span class="sd">    title: str</span>
+<span class="sd">        Title of example.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;backreferences_dir&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span>
 
