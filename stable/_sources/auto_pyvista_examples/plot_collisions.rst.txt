@@ -74,7 +74,7 @@ initialize an initial ``"collisions"`` mask.
 .. code-block:: python3
 
     sphere0 = pv.Sphere()
-    sphere0['collisions'] = np.zeros(sphere0.n_cells, dtype=bool)
+    sphere0["collisions"] = np.zeros(sphere0.n_cells, dtype=bool)
 
     # This mesh will be the moving mesh
     sphere1 = pv.Sphere(radius=0.6, center=(-1, 0, 0))
@@ -98,9 +98,9 @@ Setup the plotter open a movie, and write a frame after moving the sphere.
 
     pl = pv.Plotter()
     pl.enable_hidden_line_removal()
-    pl.add_mesh(sphere0, show_scalar_bar=False, cmap='bwr')
-    pl.camera_position = 'xz'
-    pl.add_mesh(sphere1, style='wireframe', color='green', line_width=5)
+    pl.add_mesh(sphere0, show_scalar_bar=False, cmap="bwr")
+    pl.camera_position = "xz"
+    pl.add_mesh(sphere1, style="wireframe", color="green", line_width=5)
 
     # for this example
     pl.open_gif("collision_movie.gif")
@@ -109,14 +109,14 @@ Setup the plotter open a movie, and write a frame after moving the sphere.
     # pl.show(auto_close=False, interactive=False)
 
     delta_x = 0.05
-    for i in range(int(2/delta_x)):
+    for i in range(int(2 / delta_x)):
         sphere1.translate([delta_x, 0, 0])
         col, n_contacts = sphere0.collision(sphere1)
 
         collision_mask = np.zeros(sphere0.n_cells, dtype=bool)
         if n_contacts:
-            collision_mask[col['ContactCells']] = True
-        sphere0['collisions'] = collision_mask
+            collision_mask[col["ContactCells"]] = True
+        sphere0["collisions"] = collision_mask
         pl.write_frame()
 
         # alternatively, disable movie plotting and simply render the image
@@ -126,9 +126,9 @@ Setup the plotter open a movie, and write a frame after moving the sphere.
 
 
 
-.. image-sg:: /auto_pyvista_examples/images/sphx_glr_plot_collisions_001.png
+.. image-sg:: /auto_pyvista_examples/images/sphx_glr_plot_collisions_001.gif
    :alt: plot collisions
-   :srcset: /auto_pyvista_examples/images/sphx_glr_plot_collisions_001.png
+   :srcset: /auto_pyvista_examples/images/sphx_glr_plot_collisions_001.gif
    :class: sphx-glr-single-img
 
 
@@ -138,9 +138,9 @@ Setup the plotter open a movie, and write a frame after moving the sphere.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  5.362 seconds)
+   **Total running time of the script:** (0 minutes 6.427 seconds)
 
-**Estimated memory usage:**  121 MB
+**Estimated memory usage:**  241 MB
 
 
 .. _sphx_glr_download_auto_pyvista_examples_plot_collisions.py:

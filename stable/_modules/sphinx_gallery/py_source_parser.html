@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 
 
@@ -8,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>sphinx_gallery.py_source_parser &#8212; Sphinx-Gallery 0.13.0-git documentation</title>
+    <title>sphinx_gallery.py_source_parser &#8212; Sphinx-Gallery 0.14.0-git documentation</title>
   
   
   
@@ -28,24 +27,24 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
-    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/theme_override.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=13b285a0" />
+    <link rel="stylesheet" type="text/css" href="../../_static/theme_override.css?v=6ecc848e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
 
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/sphinx_highlight.js"></script>
-    <script src="../../_static/jupyterlite_sphinx.js"></script>
+    <script src="../../_static/documentation_options.js?v=3d30d8ad"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=0b35d31f"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/sphinx_gallery/py_source_parser';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://sphinx-gallery.github.io/dev/_static/switcher.json';
@@ -424,10 +423,7 @@ document.write(`
                 <article class="bd-article" role="main">
                   
   <h1>Source code for sphinx_gallery.py_source_parser</h1><div class="highlight"><pre>
-<span></span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Parser for python source files</span>
-<span class="sd">==============================</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Parser for python source files.&quot;&quot;&quot;</span>
 <span class="c1"># Created Sun Nov 27 14:03:07 2016</span>
 <span class="c1"># Author: Óscar Nájera</span>
 
@@ -442,7 +438,7 @@ document.write(`
 <span class="kn">from</span> <span class="nn">sphinx.errors</span> <span class="kn">import</span> <span class="n">ExtensionError</span>
 <span class="kn">from</span> <span class="nn">sphinx.util.logging</span> <span class="kn">import</span> <span class="n">getLogger</span>
 
-<span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;sphinx-gallery&#39;</span><span class="p">)</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;sphinx-gallery&quot;</span><span class="p">)</span>
 
 <span class="n">SYNTAX_ERROR_DOCSTRING</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">SyntaxError</span>
@@ -463,17 +459,19 @@ document.write(`
 <span class="c1">#     b = 2</span>
 <span class="n">FLAG_START</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;^[\ \t]*#\s*&quot;</span>
 <span class="n">INFILE_CONFIG_PATTERN</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
-    <span class="n">FLAG_START</span> <span class="o">+</span> <span class="sa">r</span><span class="s2">&quot;sphinx_gallery_([A-Za-z0-9_]+)(\s*=\s*(.+))?[\ \t]*\n?&quot;</span><span class="p">,</span>
-    <span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span><span class="p">)</span>
+    <span class="n">FLAG_START</span> <span class="o">+</span> <span class="sa">r</span><span class="s2">&quot;sphinx_gallery_([A-Za-z0-9_]+)(\s*=\s*(.+))?[\ \t]*\n?&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span>
+<span class="p">)</span>
 
 <span class="n">START_IGNORE_FLAG</span> <span class="o">=</span> <span class="n">FLAG_START</span> <span class="o">+</span> <span class="s2">&quot;sphinx_gallery_start_ignore&quot;</span>
 <span class="n">END_IGNORE_FLAG</span> <span class="o">=</span> <span class="n">FLAG_START</span> <span class="o">+</span> <span class="s2">&quot;sphinx_gallery_end_ignore&quot;</span>
 <span class="n">IGNORE_BLOCK_PATTERN</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
-    <span class="sa">rf</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">START_IGNORE_FLAG</span><span class="si">}</span><span class="s2">(?:[\s\S]*?)</span><span class="si">{</span><span class="n">END_IGNORE_FLAG</span><span class="si">}</span><span class="s2">\n?&quot;</span><span class="p">,</span>
-    <span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span><span class="p">)</span>
+    <span class="sa">rf</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">START_IGNORE_FLAG</span><span class="si">}</span><span class="s2">(?:[\s\S]*?)</span><span class="si">{</span><span class="n">END_IGNORE_FLAG</span><span class="si">}</span><span class="s2">\n?&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span>
+<span class="p">)</span>
 
 
-<div class="viewcode-block" id="parse_source_file"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.py_source_parser.html#sphinx_gallery.py_source_parser.parse_source_file">[docs]</a><span class="k">def</span> <span class="nf">parse_source_file</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+<div class="viewcode-block" id="parse_source_file">
+<a class="viewcode-back" href="../../gen_modules/sphinx_gallery.py_source_parser.html#sphinx_gallery.py_source_parser.parse_source_file">[docs]</a>
+<span class="k">def</span> <span class="nf">parse_source_file</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse source file into AST node.</span>
 
 <span class="sd">    Parameters</span>
@@ -486,16 +484,17 @@ document.write(`
 <span class="sd">    node : AST node</span>
 <span class="sd">    content : utf-8 encoded string</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">with</span> <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
         <span class="n">content</span> <span class="o">=</span> <span class="n">fid</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
     <span class="c1"># change from Windows format to UNIX for uniformity</span>
-    <span class="n">content</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\r\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\r\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">node</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">node</span><span class="p">,</span> <span class="n">content</span>
     <span class="k">except</span> <span class="ne">SyntaxError</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="n">content</span></div>
+
 
 
 <span class="k">def</span> <span class="nf">_get_docstring_and_rest</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
@@ -511,8 +510,9 @@ document.write(`
 <span class="sd">        ``filename`` content without the docstring</span>
 <span class="sd">    lineno : int</span>
 <span class="sd">        The line number.</span>
-<span class="sd">    node : ast Node</span>
-<span class="sd">        The node.</span>
+<span class="sd">    node : ast.Module</span>
+<span class="sd">        The ast node. When `filename` parsed with `mode=&#39;exec&#39;` node should be</span>
+<span class="sd">        of type `ast.Module`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">node</span><span class="p">,</span> <span class="n">content</span> <span class="o">=</span> <span class="n">parse_source_file</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
 
@@ -520,24 +520,28 @@ document.write(`
         <span class="k">return</span> <span class="n">SYNTAX_ERROR_DOCSTRING</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">node</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span><span class="s2">&quot;This function only supports modules. &quot;</span>
-                             <span class="s2">&quot;You provided </span><span class="si">{}</span><span class="s2">&quot;</span>
-                             <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">body</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ast</span><span class="o">.</span><span class="n">Expr</span><span class="p">)</span> <span class="ow">and</span>
-            <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Str</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
+            <span class="s2">&quot;This function only supports modules. &quot;</span>
+            <span class="s2">&quot;You provided </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span>
+        <span class="n">node</span><span class="o">.</span><span class="n">body</span>
+        <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ast</span><span class="o">.</span><span class="n">Expr</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Str</span><span class="p">)</span>
+    <span class="p">):</span>
         <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
             <span class="s1">&#39;Could not find docstring in file &quot;</span><span class="si">{}</span><span class="s1">&quot;. &#39;</span>
-            <span class="s1">&#39;A docstring is required by sphinx-gallery &#39;</span>
-            <span class="s1">&#39;unless the file is ignored by &quot;ignore_pattern&quot;&#39;</span>
-            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+            <span class="s2">&quot;A docstring is required by sphinx-gallery &quot;</span>
+            <span class="s1">&#39;unless the file is ignored by &quot;ignore_pattern&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="p">)</span>
 
     <span class="c1"># Python 3.7+ way</span>
     <span class="n">docstring</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">get_docstring</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">docstring</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>  <span class="c1"># should be guaranteed above</span>
     <span class="c1"># This is just for backward compat</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">s</span><span class="p">)</span> <span class="ow">and</span> <span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">s</span><span class="p">)</span> <span class="ow">and</span> <span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">:</span>
         <span class="c1"># just for strict backward compat here</span>
-        <span class="n">docstring</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">docstring</span>
+        <span class="n">docstring</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">docstring</span>
     <span class="n">ts</span> <span class="o">=</span> <span class="n">tokenize</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">content</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">readline</span><span class="p">)</span>
     <span class="c1"># find the first string according to the tokenizer and get its end row</span>
     <span class="k">for</span> <span class="n">tk</span> <span class="ow">in</span> <span class="n">ts</span><span class="p">:</span>
@@ -549,15 +553,15 @@ document.write(`
 
     <span class="c1"># This get the content of the file after the docstring last line</span>
     <span class="c1"># Note: &#39;maxsplit&#39; argument is not a keyword argument in python2</span>
-    <span class="n">rest</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">content</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)[</span><span class="n">lineno</span><span class="p">:])</span>
+    <span class="n">rest</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">content</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)[</span><span class="n">lineno</span><span class="p">:])</span>
     <span class="n">lineno</span> <span class="o">+=</span> <span class="mi">1</span>
     <span class="k">return</span> <span class="n">docstring</span><span class="p">,</span> <span class="n">rest</span><span class="p">,</span> <span class="n">lineno</span><span class="p">,</span> <span class="n">node</span>
 
 
-<div class="viewcode-block" id="extract_file_config"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.py_source_parser.html#sphinx_gallery.py_source_parser.extract_file_config">[docs]</a><span class="k">def</span> <span class="nf">extract_file_config</span><span class="p">(</span><span class="n">content</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Pull out the file-specific config specified in the docstring.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="extract_file_config">
+<a class="viewcode-back" href="../../gen_modules/sphinx_gallery.py_source_parser.html#sphinx_gallery.py_source_parser.extract_file_config">[docs]</a>
+<span class="k">def</span> <span class="nf">extract_file_config</span><span class="p">(</span><span class="n">content</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Pull out the file-specific config specified in the docstring.&quot;&quot;&quot;</span>
     <span class="n">file_conf</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="n">INFILE_CONFIG_PATTERN</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
         <span class="n">name</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -568,14 +572,17 @@ document.write(`
             <span class="n">value</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
         <span class="k">except</span> <span class="p">(</span><span class="ne">SyntaxError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                <span class="s1">&#39;Sphinx-gallery option </span><span class="si">%s</span><span class="s1"> was passed invalid value </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span>
-                <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+                <span class="s2">&quot;Sphinx-gallery option </span><span class="si">%s</span><span class="s2"> was passed invalid value </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span>
+            <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">file_conf</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
     <span class="k">return</span> <span class="n">file_conf</span></div>
 
 
-<div class="viewcode-block" id="split_code_and_text_blocks"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.py_source_parser.html#sphinx_gallery.py_source_parser.split_code_and_text_blocks">[docs]</a><span class="k">def</span> <span class="nf">split_code_and_text_blocks</span><span class="p">(</span><span class="n">source_file</span><span class="p">,</span> <span class="n">return_node</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+<div class="viewcode-block" id="split_code_and_text_blocks">
+<a class="viewcode-back" href="../../gen_modules/sphinx_gallery.py_source_parser.html#sphinx_gallery.py_source_parser.split_code_and_text_blocks">[docs]</a>
+<span class="k">def</span> <span class="nf">split_code_and_text_blocks</span><span class="p">(</span><span class="n">source_file</span><span class="p">,</span> <span class="n">return_node</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return list with source file separated into code and text blocks.</span>
 
 <span class="sd">    Parameters</span>
@@ -593,40 +600,40 @@ document.write(`
 <span class="sd">    blocks : list</span>
 <span class="sd">        (label, content, line_number)</span>
 <span class="sd">        List where each element is a tuple with the label (&#39;text&#39; or &#39;code&#39;),</span>
-<span class="sd">        the corresponding content string of block and the leading line number</span>
-<span class="sd">    node : ast Node</span>
-<span class="sd">        The parsed node.</span>
+<span class="sd">        the corresponding content string of block and the leading line number.</span>
+<span class="sd">    node : ast.Module</span>
+<span class="sd">        The parsed ast node.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">docstring</span><span class="p">,</span> <span class="n">rest_of_content</span><span class="p">,</span> <span class="n">lineno</span><span class="p">,</span> <span class="n">node</span> <span class="o">=</span> <span class="n">_get_docstring_and_rest</span><span class="p">(</span>
-        <span class="n">source_file</span><span class="p">)</span>
-    <span class="n">blocks</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;text&#39;</span><span class="p">,</span> <span class="n">docstring</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]</span>
+    <span class="n">docstring</span><span class="p">,</span> <span class="n">rest_of_content</span><span class="p">,</span> <span class="n">lineno</span><span class="p">,</span> <span class="n">node</span> <span class="o">=</span> <span class="n">_get_docstring_and_rest</span><span class="p">(</span><span class="n">source_file</span><span class="p">)</span>
+    <span class="n">blocks</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="n">docstring</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]</span>
 
     <span class="n">file_conf</span> <span class="o">=</span> <span class="n">extract_file_config</span><span class="p">(</span><span class="n">rest_of_content</span><span class="p">)</span>
 
     <span class="n">pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
-        <span class="sa">r</span><span class="s1">&#39;(?P&lt;header_line&gt;^#{20,}.*|^# ?</span><span class="si">%%</span><span class="s1">.*)\s(?P&lt;text_content&gt;(?:^#.*\s?)*)&#39;</span><span class="p">,</span>
-        <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">M</span><span class="p">)</span>
-    <span class="n">sub_pat</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;^#&#39;</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">M</span><span class="p">)</span>
+        <span class="sa">r</span><span class="s2">&quot;(?P&lt;header_line&gt;^#{20,}.*|^# ?</span><span class="si">%%</span><span class="s2">.*)\s(?P&lt;text_content&gt;(?:^#.*\s?)*)&quot;</span><span class="p">,</span>
+        <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">M</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">sub_pat</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;^#&quot;</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">M</span><span class="p">)</span>
 
     <span class="n">pos_so_far</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">rest_of_content</span><span class="p">):</span>
-        <span class="n">code_block_content</span> <span class="o">=</span> <span class="n">rest_of_content</span><span class="p">[</span><span class="n">pos_so_far</span><span class="p">:</span><span class="n">match</span><span class="o">.</span><span class="n">start</span><span class="p">()]</span>
+        <span class="n">code_block_content</span> <span class="o">=</span> <span class="n">rest_of_content</span><span class="p">[</span><span class="n">pos_so_far</span> <span class="p">:</span> <span class="n">match</span><span class="o">.</span><span class="n">start</span><span class="p">()]</span>
         <span class="k">if</span> <span class="n">code_block_content</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
-            <span class="n">blocks</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;code&#39;</span><span class="p">,</span> <span class="n">code_block_content</span><span class="p">,</span> <span class="n">lineno</span><span class="p">))</span>
-        <span class="n">lineno</span> <span class="o">+=</span> <span class="n">code_block_content</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">blocks</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s2">&quot;code&quot;</span><span class="p">,</span> <span class="n">code_block_content</span><span class="p">,</span> <span class="n">lineno</span><span class="p">))</span>
+        <span class="n">lineno</span> <span class="o">+=</span> <span class="n">code_block_content</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
         <span class="n">lineno</span> <span class="o">+=</span> <span class="mi">1</span>  <span class="c1"># Ignored header line of hashes.</span>
-        <span class="n">text_content</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s1">&#39;text_content&#39;</span><span class="p">)</span>
-        <span class="n">text_block_content</span> <span class="o">=</span> <span class="n">dedent</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">sub_pat</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">text_content</span><span class="p">))</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()</span>
+        <span class="n">text_content</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;text_content&quot;</span><span class="p">)</span>
+        <span class="n">text_block_content</span> <span class="o">=</span> <span class="n">dedent</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">sub_pat</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">text_content</span><span class="p">))</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">text_block_content</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
-            <span class="n">blocks</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;text&#39;</span><span class="p">,</span> <span class="n">text_block_content</span><span class="p">,</span> <span class="n">lineno</span><span class="p">))</span>
-        <span class="n">lineno</span> <span class="o">+=</span> <span class="n">text_content</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">blocks</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="n">text_block_content</span><span class="p">,</span> <span class="n">lineno</span><span class="p">))</span>
+        <span class="n">lineno</span> <span class="o">+=</span> <span class="n">text_content</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
         <span class="n">pos_so_far</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">end</span><span class="p">()</span>
 
     <span class="n">remaining_content</span> <span class="o">=</span> <span class="n">rest_of_content</span><span class="p">[</span><span class="n">pos_so_far</span><span class="p">:]</span>
     <span class="k">if</span> <span class="n">remaining_content</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
-        <span class="n">blocks</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;code&#39;</span><span class="p">,</span> <span class="n">remaining_content</span><span class="p">,</span> <span class="n">lineno</span><span class="p">))</span>
+        <span class="n">blocks</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s2">&quot;code&quot;</span><span class="p">,</span> <span class="n">remaining_content</span><span class="p">,</span> <span class="n">lineno</span><span class="p">))</span>
 
     <span class="n">out</span> <span class="o">=</span> <span class="p">(</span><span class="n">file_conf</span><span class="p">,</span> <span class="n">blocks</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">return_node</span><span class="p">:</span>
@@ -634,7 +641,10 @@ document.write(`
     <span class="k">return</span> <span class="n">out</span></div>
 
 
-<div class="viewcode-block" id="remove_ignore_blocks"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.py_source_parser.html#sphinx_gallery.py_source_parser.remove_ignore_blocks">[docs]</a><span class="k">def</span> <span class="nf">remove_ignore_blocks</span><span class="p">(</span><span class="n">code_block</span><span class="p">):</span>
+
+<div class="viewcode-block" id="remove_ignore_blocks">
+<a class="viewcode-back" href="../../gen_modules/sphinx_gallery.py_source_parser.html#sphinx_gallery.py_source_parser.remove_ignore_blocks">[docs]</a>
+<span class="k">def</span> <span class="nf">remove_ignore_blocks</span><span class="p">(</span><span class="n">code_block</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return the content of *code_block* with ignored areas removed.</span>
 
@@ -655,10 +665,13 @@ document.write(`
             <span class="s1">&#39;All &quot;sphinx_gallery_start_ignore&quot; flags must have a matching &#39;</span>
             <span class="s1">&#39;&quot;sphinx_gallery_end_ignore&quot; flag!&#39;</span>
         <span class="p">)</span>
-    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">subn</span><span class="p">(</span><span class="n">IGNORE_BLOCK_PATTERN</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">code_block</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">subn</span><span class="p">(</span><span class="n">IGNORE_BLOCK_PATTERN</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">code_block</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="remove_config_comments"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.py_source_parser.html#sphinx_gallery.py_source_parser.remove_config_comments">[docs]</a><span class="k">def</span> <span class="nf">remove_config_comments</span><span class="p">(</span><span class="n">code_block</span><span class="p">):</span>
+
+<div class="viewcode-block" id="remove_config_comments">
+<a class="viewcode-back" href="../../gen_modules/sphinx_gallery.py_source_parser.html#sphinx_gallery.py_source_parser.remove_config_comments">[docs]</a>
+<span class="k">def</span> <span class="nf">remove_config_comments</span><span class="p">(</span><span class="n">code_block</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return the content of *code_block* with in-file config comments removed.</span>
 
@@ -670,8 +683,9 @@ document.write(`
 <span class="sd">    code_block : str</span>
 <span class="sd">        A code segment.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">parsed_code</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">subn</span><span class="p">(</span><span class="n">INFILE_CONFIG_PATTERN</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">code_block</span><span class="p">)</span>
+    <span class="n">parsed_code</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">subn</span><span class="p">(</span><span class="n">INFILE_CONFIG_PATTERN</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">code_block</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">parsed_code</span></div>
+
 </pre></div>
 
                 </article>
@@ -724,7 +738,7 @@ document.write(`
       
         <div class="footer-item">
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.2.
     <br/>
   </p>
 </div>

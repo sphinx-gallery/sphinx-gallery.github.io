@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 
 
@@ -8,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>sphinx_gallery.docs_resolv &#8212; Sphinx-Gallery 0.13.0-git documentation</title>
+    <title>sphinx_gallery.docs_resolv &#8212; Sphinx-Gallery 0.14.0-git documentation</title>
   
   
   
@@ -28,24 +27,24 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
-    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/theme_override.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=13b285a0" />
+    <link rel="stylesheet" type="text/css" href="../../_static/theme_override.css?v=6ecc848e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
 
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/sphinx_highlight.js"></script>
-    <script src="../../_static/jupyterlite_sphinx.js"></script>
+    <script src="../../_static/documentation_options.js?v=3d30d8ad"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=0b35d31f"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/sphinx_gallery/docs_resolv';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://sphinx-gallery.github.io/dev/_static/switcher.json';
@@ -426,10 +425,7 @@ document.write(`
   <h1>Source code for sphinx_gallery.docs_resolv</h1><div class="highlight"><pre>
 <span></span><span class="c1"># Author: Óscar Nájera</span>
 <span class="c1"># License: 3-clause BSD</span>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Link resolver objects</span>
-<span class="sd">=====================</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">&quot;&quot;&quot;Link resolver objects.&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">codecs</span>
 <span class="kn">import</span> <span class="nn">gzip</span>
@@ -442,6 +438,7 @@ document.write(`
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">urllib.request</span> <span class="k">as</span> <span class="nn">urllib_request</span>
 <span class="kn">import</span> <span class="nn">urllib.parse</span> <span class="k">as</span> <span class="nn">urllib_parse</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">urllib.error</span> <span class="kn">import</span> <span class="n">HTTPError</span><span class="p">,</span> <span class="n">URLError</span>
 
 <span class="kn">from</span> <span class="nn">sphinx.errors</span> <span class="kn">import</span> <span class="n">ExtensionError</span>
@@ -451,37 +448,39 @@ document.write(`
 <span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">status_iterator</span>
 
 
-<span class="n">logger</span> <span class="o">=</span> <span class="n">sphinx</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;sphinx-gallery&#39;</span><span class="p">)</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">sphinx</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;sphinx-gallery&quot;</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_get_data</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get data over http(s) or from a local file.&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">urllib_parse</span><span class="o">.</span><span class="n">urlparse</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">scheme</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;http&#39;</span><span class="p">,</span> <span class="s1">&#39;https&#39;</span><span class="p">):</span>
-        <span class="n">user_agent</span> <span class="o">=</span> <span class="s1">&#39;Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11&#39;</span>  <span class="c1"># noqa: E501</span>
-        <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;User-Agent&#39;</span><span class="p">:</span> <span class="n">user_agent</span><span class="p">}</span>
+    <span class="k">if</span> <span class="n">urllib_parse</span><span class="o">.</span><span class="n">urlparse</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">scheme</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;http&quot;</span><span class="p">,</span> <span class="s2">&quot;https&quot;</span><span class="p">):</span>
+        <span class="n">user_agent</span> <span class="o">=</span> <span class="s2">&quot;Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11&quot;</span>  <span class="c1"># noqa: E501</span>
+        <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;User-Agent&quot;</span><span class="p">:</span> <span class="n">user_agent</span><span class="p">}</span>
         <span class="n">req</span> <span class="o">=</span> <span class="n">urllib_request</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">headers</span><span class="p">)</span>
         <span class="n">resp</span> <span class="o">=</span> <span class="n">urllib_request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">req</span><span class="p">)</span>
-        <span class="n">encoding</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;content-encoding&#39;</span><span class="p">,</span> <span class="s1">&#39;plain&#39;</span><span class="p">)</span>
+        <span class="n">encoding</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;content-encoding&quot;</span><span class="p">,</span> <span class="s2">&quot;plain&quot;</span><span class="p">)</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">encoding</span> <span class="o">==</span> <span class="s1">&#39;gzip&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">encoding</span> <span class="o">==</span> <span class="s2">&quot;gzip&quot;</span><span class="p">:</span>
             <span class="n">data</span> <span class="o">=</span> <span class="n">gzip</span><span class="o">.</span><span class="n">GzipFile</span><span class="p">(</span><span class="n">fileobj</span><span class="o">=</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">data</span><span class="p">))</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-        <span class="k">elif</span> <span class="n">encoding</span> <span class="o">!=</span> <span class="s1">&#39;plain&#39;</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;unknown encoding </span><span class="si">{</span><span class="n">encoding</span><span class="si">!r}</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">encoding</span> <span class="o">!=</span> <span class="s2">&quot;plain&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;unknown encoding </span><span class="si">{</span><span class="n">encoding</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">with</span> <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
             <span class="n">data</span> <span class="o">=</span> <span class="n">fid</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
 
     <span class="k">return</span> <span class="n">data</span>
 
 
-<div class="viewcode-block" id="get_data"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.docs_resolv.html#sphinx_gallery.docs_resolv.get_data">[docs]</a><span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">gallery_dir</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Persistent dictionary usage to retrieve the search indexes&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="get_data">
+<a class="viewcode-back" href="../../gen_modules/sphinx_gallery.docs_resolv.html#sphinx_gallery.docs_resolv.get_data">[docs]</a>
+<span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">gallery_dir</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Persistent dictionary usage to retrieve the search indexes.&quot;&quot;&quot;</span>
     <span class="c1"># shelve keys need to be str in python 2</span>
     <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="n">url</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
 
-    <span class="n">cached_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gallery_dir</span><span class="p">,</span> <span class="s1">&#39;searchindex&#39;</span><span class="p">)</span>
+    <span class="n">cached_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gallery_dir</span><span class="p">,</span> <span class="s2">&quot;searchindex&quot;</span><span class="p">)</span>
     <span class="n">search_index</span> <span class="o">=</span> <span class="n">shelve</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">cached_file</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">search_index</span><span class="p">:</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">search_index</span><span class="p">[</span><span class="n">url</span><span class="p">]</span>
@@ -493,9 +492,11 @@ document.write(`
     <span class="k">return</span> <span class="n">data</span></div>
 
 
-<div class="viewcode-block" id="parse_sphinx_docopts"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.docs_resolv.html#sphinx_gallery.docs_resolv.parse_sphinx_docopts">[docs]</a><span class="k">def</span> <span class="nf">parse_sphinx_docopts</span><span class="p">(</span><span class="n">index</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Parse the Sphinx index for documentation options.</span>
+
+<div class="viewcode-block" id="parse_sphinx_docopts">
+<a class="viewcode-back" href="../../gen_modules/sphinx_gallery.docs_resolv.html#sphinx_gallery.docs_resolv.parse_sphinx_docopts">[docs]</a>
+<span class="k">def</span> <span class="nf">parse_sphinx_docopts</span><span class="p">(</span><span class="n">index</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse the Sphinx index for documentation options.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -507,33 +508,31 @@ document.write(`
 <span class="sd">    docopts : dict</span>
 <span class="sd">        The documentation options from the page.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">pos</span> <span class="o">=</span> <span class="n">index</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;var DOCUMENTATION_OPTIONS&#39;</span><span class="p">)</span>
+    <span class="n">pos</span> <span class="o">=</span> <span class="n">index</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;var DOCUMENTATION_OPTIONS&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">pos</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
-            <span class="s1">&#39;Documentation options could not be found in index.&#39;</span><span class="p">)</span>
-    <span class="n">pos</span> <span class="o">=</span> <span class="n">index</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;{&#39;</span><span class="p">,</span> <span class="n">pos</span><span class="p">)</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="n">index</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;const DOCUMENTATION_OPTIONS&quot;</span><span class="p">)</span>  <span class="c1"># Sphinx 7.2+</span>
     <span class="k">if</span> <span class="n">pos</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
-            <span class="s1">&#39;Documentation options could not be found in index.&#39;</span><span class="p">)</span>
-    <span class="n">endpos</span> <span class="o">=</span> <span class="n">index</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;};&#39;</span><span class="p">,</span> <span class="n">pos</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span><span class="s2">&quot;Documentation options could not be found in index.&quot;</span><span class="p">)</span>
+    <span class="n">pos</span> <span class="o">=</span> <span class="n">index</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;{&quot;</span><span class="p">,</span> <span class="n">pos</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">pos</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span><span class="s2">&quot;Documentation options could not be found in index.&quot;</span><span class="p">)</span>
+    <span class="n">endpos</span> <span class="o">=</span> <span class="n">index</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;};&quot;</span><span class="p">,</span> <span class="n">pos</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">endpos</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
-            <span class="s1">&#39;Documentation options could not be found in index.&#39;</span><span class="p">)</span>
-    <span class="n">block</span> <span class="o">=</span> <span class="n">index</span><span class="p">[</span><span class="n">pos</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span><span class="n">endpos</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span><span class="s2">&quot;Documentation options could not be found in index.&quot;</span><span class="p">)</span>
+    <span class="n">block</span> <span class="o">=</span> <span class="n">index</span><span class="p">[</span><span class="n">pos</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:</span> <span class="n">endpos</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
     <span class="n">docopts</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">block</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
-        <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="n">key</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)</span>
 
         <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">value</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;,&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">value</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;,&quot;</span><span class="p">:</span>
             <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="s1">&#39;&quot;</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="s2">&quot;</span><span class="se">\&quot;</span><span class="s2">&#39;&quot;</span><span class="p">:</span>
             <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        <span class="k">elif</span> <span class="n">value</span> <span class="o">==</span> <span class="s1">&#39;false&#39;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">value</span> <span class="o">==</span> <span class="s2">&quot;false&quot;</span><span class="p">:</span>
             <span class="n">value</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">elif</span> <span class="n">value</span> <span class="o">==</span> <span class="s1">&#39;true&#39;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">value</span> <span class="o">==</span> <span class="s2">&quot;true&quot;</span><span class="p">:</span>
             <span class="n">value</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
@@ -550,8 +549,11 @@ document.write(`
     <span class="k">return</span> <span class="n">docopts</span></div>
 
 
-<div class="viewcode-block" id="SphinxDocLinkResolver"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.docs_resolv.html#sphinx_gallery.docs_resolv.SphinxDocLinkResolver">[docs]</a><span class="k">class</span> <span class="nc">SphinxDocLinkResolver</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Resolve documentation links using searchindex.js generated by Sphinx</span>
+
+<div class="viewcode-block" id="SphinxDocLinkResolver">
+<a class="viewcode-back" href="../../gen_modules/sphinx_gallery.docs_resolv.html#sphinx_gallery.docs_resolv.SphinxDocLinkResolver">[docs]</a>
+<span class="k">class</span> <span class="nc">SphinxDocLinkResolver</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Resolve documentation links using searchindex.js generated by Sphinx.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -569,27 +571,27 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">relative</span> <span class="o">=</span> <span class="n">relative</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_link_cache</span> <span class="o">=</span> <span class="p">{}</span>
 
-        <span class="k">if</span> <span class="n">doc_url</span><span class="o">.</span><span class="n">startswith</span><span class="p">((</span><span class="s1">&#39;http://&#39;</span><span class="p">,</span> <span class="s1">&#39;https://&#39;</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">doc_url</span><span class="p">,</span> <span class="n">Path</span><span class="p">):</span>
+            <span class="n">index_url</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">doc_url</span><span class="p">,</span> <span class="s2">&quot;index.html&quot;</span><span class="p">)</span>
+            <span class="n">searchindex_url</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">doc_url</span><span class="p">,</span> <span class="s2">&quot;searchindex.js&quot;</span><span class="p">)</span>
+            <span class="n">docopts_url</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">doc_url</span><span class="p">,</span> <span class="s2">&quot;_static&quot;</span><span class="p">,</span> <span class="s2">&quot;documentation_options.js&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">relative</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
-                    <span class="s1">&#39;Relative links are only supported for local &#39;</span>
-                    <span class="s1">&#39;URLs (doc_url cannot be absolute)&#39;</span><span class="p">)</span>
-            <span class="n">index_url</span> <span class="o">=</span> <span class="n">doc_url</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span>
-            <span class="n">searchindex_url</span> <span class="o">=</span> <span class="n">doc_url</span> <span class="o">+</span> <span class="s1">&#39;/searchindex.js&#39;</span>
-            <span class="n">docopts_url</span> <span class="o">=</span> <span class="n">doc_url</span> <span class="o">+</span> <span class="s1">&#39;/_static/documentation_options.js&#39;</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">index_url</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">doc_url</span><span class="p">,</span> <span class="s1">&#39;index.html&#39;</span><span class="p">)</span>
-            <span class="n">searchindex_url</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">doc_url</span><span class="p">,</span> <span class="s1">&#39;searchindex.js&#39;</span><span class="p">)</span>
-            <span class="n">docopts_url</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-                <span class="n">doc_url</span><span class="p">,</span> <span class="s1">&#39;_static&#39;</span><span class="p">,</span> <span class="s1">&#39;documentation_options.js&#39;</span><span class="p">)</span>
+                    <span class="s2">&quot;Relative links are only supported for local &quot;</span>
+                    <span class="s2">&quot;URLs (doc_url cannot be absolute)&quot;</span>
+                <span class="p">)</span>
+            <span class="n">index_url</span> <span class="o">=</span> <span class="n">doc_url</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span>
+            <span class="n">searchindex_url</span> <span class="o">=</span> <span class="n">doc_url</span> <span class="o">+</span> <span class="s2">&quot;/searchindex.js&quot;</span>
+            <span class="n">docopts_url</span> <span class="o">=</span> <span class="n">doc_url</span> <span class="o">+</span> <span class="s2">&quot;/_static/documentation_options.js&quot;</span>
 
         <span class="c1"># detect if we are using relative links on a Windows system</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;nt&#39;</span> <span class="ow">and</span>
-                <span class="ow">not</span> <span class="n">doc_url</span><span class="o">.</span><span class="n">startswith</span><span class="p">((</span><span class="s1">&#39;http://&#39;</span><span class="p">,</span> <span class="s1">&#39;https://&#39;</span><span class="p">))):</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;nt&quot;</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">doc_url</span><span class="p">,</span> <span class="n">Path</span><span class="p">):</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">relative</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
-                    <span class="s1">&#39;You have to use relative=True for the local&#39;</span>
-                    <span class="s1">&#39; package on a Windows system.&#39;</span><span class="p">)</span>
+                    <span class="s2">&quot;You have to use relative=True for the local&quot;</span>
+                    <span class="s2">&quot; package on a Windows system.&quot;</span>
+                <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_is_windows</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_is_windows</span> <span class="o">=</span> <span class="kc">False</span>
@@ -602,7 +604,7 @@ document.write(`
         <span class="c1"># first and if that doesn&#39;t work, check for the</span>
         <span class="c1"># documentation_options.js file.</span>
         <span class="n">index</span> <span class="o">=</span> <span class="n">get_data</span><span class="p">(</span><span class="n">index_url</span><span class="p">,</span> <span class="n">gallery_dir</span><span class="p">)</span>
-        <span class="k">if</span> <span class="s1">&#39;var DOCUMENTATION_OPTIONS&#39;</span> <span class="ow">in</span> <span class="n">index</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;var DOCUMENTATION_OPTIONS&quot;</span> <span class="ow">in</span> <span class="n">index</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_docopts</span> <span class="o">=</span> <span class="n">parse_sphinx_docopts</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">docopts</span> <span class="o">=</span> <span class="n">get_data</span><span class="p">(</span><span class="n">docopts_url</span><span class="p">,</span> <span class="n">gallery_dir</span><span class="p">)</span>
@@ -614,7 +616,7 @@ document.write(`
 
     <span class="k">def</span> <span class="nf">_get_index_match</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">match</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_searchindex</span><span class="p">[</span><span class="s1">&#39;objects&#39;</span><span class="p">][</span><span class="n">first</span><span class="p">]</span>
+            <span class="n">match</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_searchindex</span><span class="p">[</span><span class="s2">&quot;objects&quot;</span><span class="p">][</span><span class="n">first</span><span class="p">]</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
@@ -637,14 +639,14 @@ document.write(`
 
     <span class="k">def</span> <span class="nf">_get_link_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cobj</span><span class="p">,</span> <span class="n">use_full_module</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a valid link and type_, False if not found.&quot;&quot;&quot;</span>
-        <span class="n">module_type</span> <span class="o">=</span> <span class="s1">&#39;module_short&#39;</span>
+        <span class="n">module_type</span> <span class="o">=</span> <span class="s2">&quot;module_short&quot;</span>
         <span class="k">if</span> <span class="n">use_full_module</span><span class="p">:</span>
-            <span class="n">module_type</span> <span class="o">=</span> <span class="s1">&#39;module&#39;</span>
-        <span class="n">first</span><span class="p">,</span> <span class="n">second</span> <span class="o">=</span> <span class="n">cobj</span><span class="p">[</span><span class="n">module_type</span><span class="p">],</span> <span class="n">cobj</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+            <span class="n">module_type</span> <span class="o">=</span> <span class="s2">&quot;module&quot;</span>
+        <span class="n">first</span><span class="p">,</span> <span class="n">second</span> <span class="o">=</span> <span class="n">cobj</span><span class="p">[</span><span class="n">module_type</span><span class="p">],</span> <span class="n">cobj</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
         <span class="n">match</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_index_match</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s1">&#39;.&#39;</span> <span class="ow">in</span> <span class="n">second</span><span class="p">:</span>  <span class="c1"># possible class attribute</span>
-            <span class="n">first</span><span class="p">,</span> <span class="n">second</span> <span class="o">=</span> <span class="n">second</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="n">first</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">cobj</span><span class="p">[</span><span class="s1">&#39;module_short&#39;</span><span class="p">],</span> <span class="n">first</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s2">&quot;.&quot;</span> <span class="ow">in</span> <span class="n">second</span><span class="p">:</span>  <span class="c1"># possible class attribute</span>
+            <span class="n">first</span><span class="p">,</span> <span class="n">second</span> <span class="o">=</span> <span class="n">second</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">first</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">cobj</span><span class="p">[</span><span class="s2">&quot;module_short&quot;</span><span class="p">],</span> <span class="n">first</span><span class="p">])</span>
             <span class="n">match</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_index_match</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">link</span> <span class="o">=</span> <span class="n">type_</span> <span class="o">=</span> <span class="kc">None</span>
@@ -652,41 +654,47 @@ document.write(`
             <span class="n">fname_idx</span> <span class="o">=</span> <span class="n">match</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">objname_idx</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">match</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
             <span class="n">anchor</span> <span class="o">=</span> <span class="n">match</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
-            <span class="n">type_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_searchindex</span><span class="p">[</span><span class="s1">&#39;objtypes&#39;</span><span class="p">][</span><span class="n">objname_idx</span><span class="p">]</span>
+            <span class="n">type_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_searchindex</span><span class="p">[</span><span class="s2">&quot;objtypes&quot;</span><span class="p">][</span><span class="n">objname_idx</span><span class="p">]</span>
 
-            <span class="n">fname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_searchindex</span><span class="p">[</span><span class="s1">&#39;filenames&#39;</span><span class="p">][</span><span class="n">fname_idx</span><span class="p">]</span>
+            <span class="n">fname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_searchindex</span><span class="p">[</span><span class="s2">&quot;filenames&quot;</span><span class="p">][</span><span class="n">fname_idx</span><span class="p">]</span>
             <span class="c1"># In 1.5+ Sphinx seems to have changed from .rst.html to only</span>
             <span class="c1"># .html extension in converted files. Find this from the options.</span>
-            <span class="n">ext</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_docopts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;FILE_SUFFIX&#39;</span><span class="p">,</span> <span class="s1">&#39;.rst.html&#39;</span><span class="p">)</span>
+            <span class="n">ext</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_docopts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;FILE_SUFFIX&quot;</span><span class="p">,</span> <span class="s2">&quot;.rst.html&quot;</span><span class="p">)</span>
             <span class="n">fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">fname</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">ext</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_windows</span><span class="p">:</span>
-                <span class="n">fname</span> <span class="o">=</span> <span class="n">fname</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">fname</span> <span class="o">=</span> <span class="n">fname</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="n">link</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">doc_url</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">link</span> <span class="o">=</span> <span class="n">posixpath</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">doc_url</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
 
-            <span class="n">fullname</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">])</span>
-            <span class="k">if</span> <span class="n">anchor</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="n">fullname</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">anchor</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
                 <span class="n">anchor</span> <span class="o">=</span> <span class="n">fullname</span>
-            <span class="k">elif</span> <span class="n">anchor</span> <span class="o">==</span> <span class="s1">&#39;-&#39;</span><span class="p">:</span>
-                <span class="n">anchor</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_searchindex</span><span class="p">[</span><span class="s1">&#39;objnames&#39;</span><span class="p">][</span><span class="n">objname_idx</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span>
-                          <span class="n">fullname</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">anchor</span> <span class="o">==</span> <span class="s2">&quot;-&quot;</span><span class="p">:</span>
+                <span class="n">anchor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_searchindex</span><span class="p">[</span><span class="s2">&quot;objnames&quot;</span><span class="p">][</span><span class="n">objname_idx</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">+</span> <span class="n">fullname</span>
 
-            <span class="n">link</span> <span class="o">=</span> <span class="n">link</span> <span class="o">+</span> <span class="s1">&#39;#&#39;</span> <span class="o">+</span> <span class="n">anchor</span>
+            <span class="n">link</span> <span class="o">=</span> <span class="n">link</span> <span class="o">+</span> <span class="s2">&quot;#&quot;</span> <span class="o">+</span> <span class="n">anchor</span>
 
         <span class="k">return</span> <span class="n">link</span><span class="p">,</span> <span class="n">type_</span>
 
-<div class="viewcode-block" id="SphinxDocLinkResolver.resolve"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.docs_resolv.html#sphinx_gallery.docs_resolv.SphinxDocLinkResolver.resolve">[docs]</a>    <span class="k">def</span> <span class="nf">resolve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cobj</span><span class="p">,</span> <span class="n">this_url</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Resolve the link to the documentation, returns None if not found</span>
+<div class="viewcode-block" id="SphinxDocLinkResolver.resolve">
+<a class="viewcode-back" href="../../gen_modules/sphinx_gallery.docs_resolv.html#sphinx_gallery.docs_resolv.SphinxDocLinkResolver.resolve">[docs]</a>
+    <span class="k">def</span> <span class="nf">resolve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cobj</span><span class="p">,</span> <span class="n">this_url</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Resolve the link to the documentation, returns None if not found.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        cobj : dict</span>
-<span class="sd">            Dict with information about the &quot;code object&quot; for which we are</span>
+<span class="sd">        cobj : OrderedDict[str, Any]</span>
+<span class="sd">            OrderedDict with information about the &quot;code object&quot; for which we are</span>
 <span class="sd">            resolving a link.</span>
-<span class="sd">            cobj[&#39;name&#39;] : function or class name (str)</span>
-<span class="sd">            cobj[&#39;module_short&#39;] : shortened module name (str)</span>
-<span class="sd">            cobj[&#39;module&#39;] : module name (str)</span>
+
+<span class="sd">                - cobj[&#39;name&#39;] : function or class name (str)</span>
+<span class="sd">                - cobj[&#39;module&#39;] : module name (str)</span>
+<span class="sd">                - cobj[&#39;module_short&#39;] : shortened module name (str)</span>
+<span class="sd">                - cobj[&#39;is_class&#39;] : whether object is class (bool)</span>
+<span class="sd">                - cobj[&#39;is_explicit&#39;] : whether object is an explicit</span>
+<span class="sd">                  backreference (referred to by sphinx markup) (bool)</span>
+
 <span class="sd">        this_url: str</span>
 <span class="sd">            URL of the current page. Needed to construct relative URLs</span>
 <span class="sd">            (only used if relative=True in constructor).</span>
@@ -700,94 +708,104 @@ document.write(`
 <span class="sd">        type_ : str</span>
 <span class="sd">            The type. Only returned if return_type is True.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">full_name</span> <span class="o">=</span> <span class="n">cobj</span><span class="p">[</span><span class="s1">&#39;module_short&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="n">cobj</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+        <span class="n">full_name</span> <span class="o">=</span> <span class="n">cobj</span><span class="p">[</span><span class="s2">&quot;module_short&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="n">cobj</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">full_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_link_cache</span><span class="p">:</span>
             <span class="c1"># we don&#39;t have it cached</span>
             <span class="n">use_full_module</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;prefer_full_module&#39;</span><span class="p">]:</span>
-                <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">full_name</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;prefer_full_module&quot;</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">cobj</span><span class="p">[</span><span class="s2">&quot;module&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="n">cobj</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]):</span>
                     <span class="n">use_full_module</span> <span class="o">=</span> <span class="kc">True</span>
                     <span class="k">break</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_link_cache</span><span class="p">[</span><span class="n">full_name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_link_type</span><span class="p">(</span>
-                <span class="n">cobj</span><span class="p">,</span> <span class="n">use_full_module</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_link_cache</span><span class="p">[</span><span class="n">full_name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_link_type</span><span class="p">(</span><span class="n">cobj</span><span class="p">,</span> <span class="n">use_full_module</span><span class="p">)</span>
         <span class="n">link</span><span class="p">,</span> <span class="n">type_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_link_cache</span><span class="p">[</span><span class="n">full_name</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">relative</span> <span class="ow">and</span> <span class="n">link</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">link</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">link</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="n">this_url</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_windows</span><span class="p">:</span>
                 <span class="c1"># replace &#39;\&#39; with &#39;/&#39; so it on the web</span>
-                <span class="n">link</span> <span class="o">=</span> <span class="n">link</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">)</span>
+                <span class="n">link</span> <span class="o">=</span> <span class="n">link</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span><span class="p">)</span>
 
             <span class="c1"># for some reason, the relative link goes one directory too high up</span>
             <span class="n">link</span> <span class="o">=</span> <span class="n">link</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span>
 
-        <span class="k">return</span> <span class="p">(</span><span class="n">link</span><span class="p">,</span> <span class="n">type_</span><span class="p">)</span> <span class="k">if</span> <span class="n">return_type</span> <span class="k">else</span> <span class="n">link</span></div></div>
+        <span class="k">return</span> <span class="p">(</span><span class="n">link</span><span class="p">,</span> <span class="n">type_</span><span class="p">)</span> <span class="k">if</span> <span class="n">return_type</span> <span class="k">else</span> <span class="n">link</span></div>
+</div>
 
 
-<span class="k">def</span> <span class="nf">_handle_http_url_error</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="s1">&#39;fetching&#39;</span><span class="p">):</span>
+
+<span class="k">def</span> <span class="nf">_handle_http_url_error</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;fetching&quot;</span><span class="p">):</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">HTTPError</span><span class="p">):</span>
-        <span class="n">error_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">msg</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">url</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">code</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">msg</span><span class="si">}</span><span class="s1">)&#39;</span>
+        <span class="n">error_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">msg</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">url</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">code</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">msg</span><span class="si">}</span><span class="s2">)&quot;</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">URLError</span><span class="p">):</span>
-        <span class="n">error_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">msg</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="si">}</span><span class="s1">&#39;</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;The following </span><span class="si">{}</span><span class="s1"> has occurred </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-        <span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">error_msg</span><span class="p">))</span>
+        <span class="n">error_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">msg</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+        <span class="s2">&quot;The following </span><span class="si">{}</span><span class="s2"> has occurred </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">error_msg</span><span class="p">)</span>
+    <span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_sanitize_css_class</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="s1">&#39;~!@$%^&amp;*()+=,./</span><span class="se">\&#39;</span><span class="s1">;:&quot;?&gt;&lt;[]</span><span class="se">\\</span><span class="si">{}</span><span class="s1">|`#&#39;</span><span class="p">:</span>
-        <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="s2">&quot;~!@$%^&amp;*()+=,./&#39;;:</span><span class="se">\&quot;</span><span class="s2">?&gt;&lt;[]</span><span class="se">\\</span><span class="si">{}</span><span class="s2">|`#&quot;</span><span class="p">:</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">s</span>
 
 
 <span class="k">def</span> <span class="nf">_embed_code_links</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">gallery_dir</span><span class="p">):</span>
-    <span class="c1"># Add resolvers for the packages for which we want to show links</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add resolvers for the packages for which we want to show links.&quot;&quot;&quot;</span>
     <span class="n">doc_resolvers</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="n">src_gallery_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span> <span class="n">gallery_dir</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">this_module</span><span class="p">,</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;reference_url&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">for</span> <span class="n">this_module</span><span class="p">,</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;reference_url&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">url</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">doc_resolvers</span><span class="p">[</span><span class="n">this_module</span><span class="p">]</span> <span class="o">=</span> <span class="n">SphinxDocLinkResolver</span><span class="p">(</span>
                     <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">,</span>
-                    <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">outdir</span><span class="p">,</span> <span class="n">src_gallery_dir</span><span class="p">,</span> <span class="n">relative</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="n">Path</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">outdir</span><span class="p">),</span>
+                    <span class="n">src_gallery_dir</span><span class="p">,</span>
+                    <span class="n">relative</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">doc_resolvers</span><span class="p">[</span><span class="n">this_module</span><span class="p">]</span> <span class="o">=</span> <span class="n">SphinxDocLinkResolver</span><span class="p">(</span>
-                    <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">,</span>
-                    <span class="n">url</span><span class="p">,</span> <span class="n">src_gallery_dir</span><span class="p">)</span>
+                    <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">src_gallery_dir</span>
+                <span class="p">)</span>
 
         <span class="k">except</span> <span class="p">(</span><span class="n">URLError</span><span class="p">,</span> <span class="n">HTTPError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="n">_handle_http_url_error</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 
-    <span class="n">html_gallery_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">outdir</span><span class="p">,</span>
-                                                    <span class="n">gallery_dir</span><span class="p">))</span>
+    <span class="n">html_gallery_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">outdir</span><span class="p">,</span> <span class="n">gallery_dir</span><span class="p">))</span>
 
     <span class="c1"># patterns for replacement</span>
-    <span class="n">link_pattern</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="s1">&#39;&lt;a href=&quot;</span><span class="si">{link}</span><span class="s1">&quot; title=&quot;</span><span class="si">{title}</span><span class="s1">&quot; class=&quot;</span><span class="si">{css_class}</span><span class="s1">&quot;&gt;</span><span class="si">{text}</span><span class="s1">&lt;/a&gt;&#39;</span><span class="p">)</span>
+    <span class="n">link_pattern</span> <span class="o">=</span> <span class="s1">&#39;&lt;a href=&quot;</span><span class="si">{link}</span><span class="s1">&quot; title=&quot;</span><span class="si">{title}</span><span class="s1">&quot; class=&quot;</span><span class="si">{css_class}</span><span class="s1">&quot;&gt;</span><span class="si">{text}</span><span class="s1">&lt;/a&gt;&#39;</span>
     <span class="n">orig_pattern</span> <span class="o">=</span> <span class="s1">&#39;&lt;span class=&quot;n&quot;&gt;</span><span class="si">%s</span><span class="s1">&lt;/span&gt;&#39;</span>
     <span class="n">period</span> <span class="o">=</span> <span class="s1">&#39;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&#39;</span>
 
     <span class="c1"># This could be turned into a generator if necessary, but should be okay</span>
-    <span class="n">flat</span> <span class="o">=</span> <span class="p">[[</span><span class="n">dirpath</span><span class="p">,</span> <span class="n">filename</span><span class="p">]</span>
-            <span class="k">for</span> <span class="n">dirpath</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">filenames</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">html_gallery_dir</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">]</span>
+    <span class="n">flat</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">[</span><span class="n">dirpath</span><span class="p">,</span> <span class="n">filename</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">dirpath</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">filenames</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">html_gallery_dir</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">filenames</span>
+    <span class="p">]</span>
     <span class="n">iterator</span> <span class="o">=</span> <span class="n">status_iterator</span><span class="p">(</span>
-        <span class="n">flat</span><span class="p">,</span> <span class="s1">&#39;embedding documentation hyperlinks for </span><span class="si">%s</span><span class="s1">... &#39;</span> <span class="o">%</span> <span class="n">gallery_dir</span><span class="p">,</span>
-        <span class="n">color</span><span class="o">=</span><span class="s1">&#39;fuchsia&#39;</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">flat</span><span class="p">),</span>
-        <span class="n">stringify_func</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
-    <span class="n">intersphinx_inv</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">env</span><span class="p">,</span> <span class="s1">&#39;intersphinx_named_inventory&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
-    <span class="n">builtin_modules</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">intersphinx_inv</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-        <span class="s1">&#39;python&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;py:module&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="n">flat</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">&quot;embedding documentation hyperlinks for </span><span class="si">{</span><span class="n">gallery_dir</span><span class="si">}</span><span class="s2">... &quot;</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="s2">&quot;fuchsia&quot;</span><span class="p">,</span>
+        <span class="n">length</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">flat</span><span class="p">),</span>
+        <span class="n">stringify_func</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+    <span class="p">)</span>
+    <span class="n">intersphinx_inv</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">env</span><span class="p">,</span> <span class="s2">&quot;intersphinx_named_inventory&quot;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
+    <span class="n">builtin_modules</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span>
+        <span class="n">intersphinx_inv</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;python&quot;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;py:module&quot;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+    <span class="p">)</span>
     <span class="k">for</span> <span class="n">dirpath</span><span class="p">,</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">iterator</span><span class="p">:</span>
         <span class="n">full_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">html_gallery_dir</span><span class="p">,</span> <span class="n">dirpath</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
-        <span class="n">subpath</span> <span class="o">=</span> <span class="n">dirpath</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">html_gallery_dir</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]</span>
-        <span class="n">pickle_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">src_gallery_dir</span><span class="p">,</span> <span class="n">subpath</span><span class="p">,</span>
-                                    <span class="n">fname</span><span class="p">[:</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_codeobj.pickle&#39;</span><span class="p">)</span>
+        <span class="n">subpath</span> <span class="o">=</span> <span class="n">dirpath</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">html_gallery_dir</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:]</span>
+        <span class="n">pickle_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">src_gallery_dir</span><span class="p">,</span> <span class="n">subpath</span><span class="p">,</span> <span class="n">fname</span><span class="p">[:</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;_codeobj.pickle&quot;</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">pickle_fname</span><span class="p">):</span>
             <span class="k">continue</span>
 
         <span class="c1"># we have a pickle file with the objects to embed links for</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">pickle_fname</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">pickle_fname</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
             <span class="n">example_code_obj</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fid</span><span class="p">)</span>
         <span class="c1"># generate replacement strings with the links</span>
         <span class="n">str_repl</span> <span class="o">=</span> <span class="p">{}</span>
@@ -797,57 +815,67 @@ document.write(`
             <span class="c1"># possibilities from NameFinder.get_mapping</span>
             <span class="n">link</span> <span class="o">=</span> <span class="n">type_</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="k">for</span> <span class="n">cobj</span> <span class="ow">in</span> <span class="n">cobjs</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">modname</span> <span class="ow">in</span> <span class="p">(</span><span class="n">cobj</span><span class="p">[</span><span class="s1">&#39;module_short&#39;</span><span class="p">],</span> <span class="n">cobj</span><span class="p">[</span><span class="s1">&#39;module&#39;</span><span class="p">]):</span>
-                    <span class="n">this_module</span> <span class="o">=</span> <span class="n">modname</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-                    <span class="n">cname</span> <span class="o">=</span> <span class="n">cobj</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">modname</span> <span class="ow">in</span> <span class="p">(</span><span class="n">cobj</span><span class="p">[</span><span class="s2">&quot;module_short&quot;</span><span class="p">],</span> <span class="n">cobj</span><span class="p">[</span><span class="s2">&quot;module&quot;</span><span class="p">]):</span>
+                    <span class="n">this_module</span> <span class="o">=</span> <span class="n">modname</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">cname</span> <span class="o">=</span> <span class="n">cobj</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
 
                     <span class="c1"># Try doc resolvers first</span>
                     <span class="k">if</span> <span class="n">this_module</span> <span class="ow">in</span> <span class="n">doc_resolvers</span><span class="p">:</span>
                         <span class="k">try</span><span class="p">:</span>
                             <span class="n">link</span><span class="p">,</span> <span class="n">type_</span> <span class="o">=</span> <span class="n">doc_resolvers</span><span class="p">[</span><span class="n">this_module</span><span class="p">]</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span>
-                                <span class="n">cobj</span><span class="p">,</span> <span class="n">full_fname</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                                <span class="n">cobj</span><span class="p">,</span> <span class="n">full_fname</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="kc">True</span>
+                            <span class="p">)</span>
                         <span class="k">except</span> <span class="p">(</span><span class="n">HTTPError</span><span class="p">,</span> <span class="n">URLError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                             <span class="n">_handle_http_url_error</span><span class="p">(</span>
-                                <span class="n">e</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;resolving </span><span class="si">{</span><span class="n">modname</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">cname</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                                <span class="n">e</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;resolving </span><span class="si">{</span><span class="n">modname</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">cname</span><span class="si">}</span><span class="s2">&quot;</span>
+                            <span class="p">)</span>
 
                     <span class="c1"># next try intersphinx</span>
-                    <span class="k">if</span> <span class="n">this_module</span> <span class="o">==</span> <span class="n">modname</span> <span class="o">==</span> <span class="s1">&#39;builtins&#39;</span><span class="p">:</span>
-                        <span class="n">this_module</span> <span class="o">=</span> <span class="s1">&#39;python&#39;</span>
+                    <span class="k">if</span> <span class="n">this_module</span> <span class="o">==</span> <span class="n">modname</span> <span class="o">==</span> <span class="s2">&quot;builtins&quot;</span><span class="p">:</span>
+                        <span class="n">this_module</span> <span class="o">=</span> <span class="s2">&quot;python&quot;</span>
                     <span class="k">elif</span> <span class="n">modname</span> <span class="ow">in</span> <span class="n">builtin_modules</span><span class="p">:</span>
-                        <span class="n">this_module</span> <span class="o">=</span> <span class="s1">&#39;python&#39;</span>
+                        <span class="n">this_module</span> <span class="o">=</span> <span class="s2">&quot;python&quot;</span>
                     <span class="k">if</span> <span class="n">link</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">this_module</span> <span class="ow">in</span> <span class="n">intersphinx_inv</span><span class="p">:</span>
                         <span class="n">inv</span> <span class="o">=</span> <span class="n">intersphinx_inv</span><span class="p">[</span><span class="n">this_module</span><span class="p">]</span>
-                        <span class="k">if</span> <span class="n">modname</span> <span class="o">==</span> <span class="s1">&#39;builtins&#39;</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">modname</span> <span class="o">==</span> <span class="s2">&quot;builtins&quot;</span><span class="p">:</span>
                             <span class="n">want</span> <span class="o">=</span> <span class="n">cname</span>
                         <span class="k">else</span><span class="p">:</span>
-                            <span class="n">want</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">modname</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">cname</span><span class="si">}</span><span class="s1">&#39;</span>
+                            <span class="n">want</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">modname</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">cname</span><span class="si">}</span><span class="s2">&quot;</span>
                         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">inv</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                             <span class="c1"># only python domain</span>
-                            <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;py&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">want</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;py&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">want</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
                                 <span class="n">link</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="n">want</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
                                 <span class="n">type_</span> <span class="o">=</span> <span class="n">key</span>
                                 <span class="k">break</span>
 
                     <span class="c1"># differentiate classes from instances</span>
-                    <span class="n">is_instance</span> <span class="o">=</span> <span class="p">(</span><span class="n">type_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span>
-                                   <span class="s1">&#39;py:class&#39;</span> <span class="ow">in</span> <span class="n">type_</span> <span class="ow">and</span>
-                                   <span class="ow">not</span> <span class="n">cobj</span><span class="p">[</span><span class="s1">&#39;is_class&#39;</span><span class="p">])</span>
+                    <span class="n">is_instance</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="n">type_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                        <span class="ow">and</span> <span class="s2">&quot;py:class&quot;</span> <span class="ow">in</span> <span class="n">type_</span>
+                        <span class="ow">and</span> <span class="ow">not</span> <span class="n">cobj</span><span class="p">[</span><span class="s2">&quot;is_class&quot;</span><span class="p">]</span>
+                    <span class="p">)</span>
 
                     <span class="k">if</span> <span class="n">link</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                         <span class="c1"># Add CSS classes</span>
-                        <span class="n">name_html</span> <span class="o">=</span> <span class="n">period</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">orig_pattern</span> <span class="o">%</span> <span class="n">part</span>
-                                                <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">))</span>
-                        <span class="n">full_function_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">modname</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">cname</span><span class="si">}</span><span class="s1">&#39;</span>
-                        <span class="n">css_class</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;sphx-glr-backref-module-&quot;</span> <span class="o">+</span>
-                                     <span class="n">_sanitize_css_class</span><span class="p">(</span><span class="n">modname</span><span class="p">))</span>
+                        <span class="n">name_html</span> <span class="o">=</span> <span class="n">period</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                            <span class="n">orig_pattern</span> <span class="o">%</span> <span class="n">part</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+                        <span class="p">)</span>
+                        <span class="n">full_function_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">modname</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">cname</span><span class="si">}</span><span class="s2">&quot;</span>
+                        <span class="n">css_class</span> <span class="o">=</span> <span class="s2">&quot;sphx-glr-backref-module-&quot;</span> <span class="o">+</span> <span class="n">_sanitize_css_class</span><span class="p">(</span>
+                            <span class="n">modname</span>
+                        <span class="p">)</span>
                         <span class="k">if</span> <span class="n">type_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                            <span class="n">css_class</span> <span class="o">+=</span> <span class="p">(</span><span class="s2">&quot; sphx-glr-backref-type-&quot;</span> <span class="o">+</span>
-                                          <span class="n">_sanitize_css_class</span><span class="p">(</span><span class="n">type_</span><span class="p">))</span>
+                            <span class="n">css_class</span> <span class="o">+=</span> <span class="p">(</span>
+                                <span class="s2">&quot; sphx-glr-backref-type-&quot;</span> <span class="o">+</span> <span class="n">_sanitize_css_class</span><span class="p">(</span><span class="n">type_</span><span class="p">)</span>
+                            <span class="p">)</span>
                         <span class="k">if</span> <span class="n">is_instance</span><span class="p">:</span>
                             <span class="n">css_class</span> <span class="o">+=</span> <span class="s2">&quot; sphx-glr-backref-instance&quot;</span>
                         <span class="n">str_repl</span><span class="p">[</span><span class="n">name_html</span><span class="p">]</span> <span class="o">=</span> <span class="n">link_pattern</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                            <span class="n">link</span><span class="o">=</span><span class="n">link</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">full_function_name</span><span class="p">,</span>
-                            <span class="n">css_class</span><span class="o">=</span><span class="n">css_class</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">name_html</span><span class="p">)</span>
+                            <span class="n">link</span><span class="o">=</span><span class="n">link</span><span class="p">,</span>
+                            <span class="n">title</span><span class="o">=</span><span class="n">full_function_name</span><span class="p">,</span>
+                            <span class="n">css_class</span><span class="o">=</span><span class="n">css_class</span><span class="p">,</span>
+                            <span class="n">text</span><span class="o">=</span><span class="n">name_html</span><span class="p">,</span>
+                        <span class="p">)</span>
                         <span class="k">break</span>  <span class="c1"># loop over possible module names</span>
 
                 <span class="k">if</span> <span class="n">link</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -857,44 +885,47 @@ document.write(`
 
         <span class="c1"># ensure greediness</span>
         <span class="n">names</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">str_repl</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="nb">len</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">regex_str</span> <span class="o">=</span> <span class="s1">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">)</span>
+        <span class="n">regex_str</span> <span class="o">=</span> <span class="s2">&quot;|&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">)</span>
         <span class="n">regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">regex_str</span><span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">substitute_link</span><span class="p">(</span><span class="n">match</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">str_repl</span><span class="p">[</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">()]</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">str_repl</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">with</span> <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">full_fname</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">full_fname</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
                 <span class="n">lines_in</span> <span class="o">=</span> <span class="n">fid</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
-            <span class="k">with</span> <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">full_fname</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">full_fname</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines_in</span><span class="p">:</span>
                     <span class="n">line_out</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">substitute_link</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
                     <span class="n">fid</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line_out</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="embed_code_links"><a class="viewcode-back" href="../../gen_modules/sphinx_gallery.docs_resolv.html#sphinx_gallery.docs_resolv.embed_code_links">[docs]</a><span class="k">def</span> <span class="nf">embed_code_links</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">exception</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Embed hyperlinks to documentation into example code&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="embed_code_links">
+<a class="viewcode-back" href="../../gen_modules/sphinx_gallery.docs_resolv.html#sphinx_gallery.docs_resolv.embed_code_links">[docs]</a>
+<span class="k">def</span> <span class="nf">embed_code_links</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Embed hyperlinks to documentation into example code.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">exception</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span>
 
     <span class="n">gallery_conf</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span>
 
-    <span class="c1"># XXX: Whitelist of builders for which it makes sense to embed</span>
+    <span class="c1"># XXX: Allowlist of builders for which it makes sense to embed</span>
     <span class="c1"># hyperlinks inside the example html. Note that the link embedding</span>
     <span class="c1"># require searchindex.js to exist for the links to the local doc</span>
     <span class="c1"># and there does not seem to be a good way of knowing which</span>
     <span class="c1"># builders creates a searchindex.js.</span>
-    <span class="k">if</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;html&#39;</span><span class="p">,</span> <span class="s1">&#39;readthedocs&#39;</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;html&quot;</span><span class="p">,</span> <span class="s2">&quot;readthedocs&quot;</span><span class="p">]:</span>
         <span class="k">return</span>
 
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;embedding documentation hyperlinks...&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;embedding documentation hyperlinks...&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">)</span>
 
-    <span class="n">gallery_dirs</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;gallery_dirs&#39;</span><span class="p">]</span>
+    <span class="n">gallery_dirs</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;gallery_dirs&quot;</span><span class="p">]</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gallery_dirs</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
         <span class="n">gallery_dirs</span> <span class="o">=</span> <span class="p">[</span><span class="n">gallery_dirs</span><span class="p">]</span>
 
     <span class="k">for</span> <span class="n">gallery_dir</span> <span class="ow">in</span> <span class="n">gallery_dirs</span><span class="p">:</span>
         <span class="n">_embed_code_links</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">gallery_dir</span><span class="p">)</span></div>
+
 </pre></div>
 
                 </article>
@@ -947,7 +978,7 @@ document.write(`
       
         <div class="footer-item">
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.2.
     <br/>
   </p>
 </div>
