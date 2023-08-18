@@ -510,8 +510,9 @@ document.write(`
 <span class="sd">        ``filename`` content without the docstring</span>
 <span class="sd">    lineno : int</span>
 <span class="sd">        The line number.</span>
-<span class="sd">    node : ast Node</span>
-<span class="sd">        The node.</span>
+<span class="sd">    node : ast.Module</span>
+<span class="sd">        The ast node. When `filename` parsed with `mode=&#39;exec&#39; node should be</span>
+<span class="sd">        of type `ast.Module`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">node</span><span class="p">,</span> <span class="n">content</span> <span class="o">=</span> <span class="n">parse_source_file</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
 
@@ -600,8 +601,8 @@ document.write(`
 <span class="sd">        (label, content, line_number)</span>
 <span class="sd">        List where each element is a tuple with the label (&#39;text&#39; or &#39;code&#39;),</span>
 <span class="sd">        the corresponding content string of block and the leading line number.</span>
-<span class="sd">    node : ast Node</span>
-<span class="sd">        The parsed node.</span>
+<span class="sd">    node : ast.Module</span>
+<span class="sd">        The parsed ast node.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">docstring</span><span class="p">,</span> <span class="n">rest_of_content</span><span class="p">,</span> <span class="n">lineno</span><span class="p">,</span> <span class="n">node</span> <span class="o">=</span> <span class="n">_get_docstring_and_rest</span><span class="p">(</span><span class="n">source_file</span><span class="p">)</span>
     <span class="n">blocks</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="n">docstring</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]</span>
