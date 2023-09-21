@@ -897,9 +897,9 @@ document.write(`
 <span class="sd">    index_content: str,</span>
 <span class="sd">        Content which will be written to the index rst file</span>
 <span class="sd">        presenting the current example gallery</span>
-<span class="sd">    costs: list,</span>
-<span class="sd">        List of costs (time_elapsed, memory_used) for building each element of the</span>
-<span class="sd">        gallery and absolute path to the example file</span>
+<span class="sd">    costs: List[Dict]</span>
+<span class="sd">        List of dicts of costs for building each element of the gallery</span>
+<span class="sd">         with keys &quot;t&quot;, &quot;mem&quot;, &quot;src_file&quot;, and &quot;target_dir&quot;.</span>
 <span class="sd">    toctree_items: list,</span>
 <span class="sd">        List of files included in toctree</span>
 <span class="sd">        (independent of include_toctree&#39;s value)</span>
@@ -952,11 +952,11 @@ document.write(`
         <span class="n">length</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">sorted_listdir</span><span class="p">),</span>
     <span class="p">)</span>
     <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">iterator</span><span class="p">:</span>
-        <span class="n">intro</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">cost</span> <span class="o">=</span> <span class="n">generate_file_rst</span><span class="p">(</span>
+        <span class="n">intro</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">mem</span><span class="p">)</span> <span class="o">=</span> <span class="n">generate_file_rst</span><span class="p">(</span>
             <span class="n">fname</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">seen_backrefs</span>
         <span class="p">)</span>
         <span class="n">src_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">))</span>
-        <span class="n">costs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">cost</span><span class="p">,</span> <span class="n">src_file</span><span class="p">))</span>
+        <span class="n">costs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">,</span> <span class="n">mem</span><span class="o">=</span><span class="n">mem</span><span class="p">,</span> <span class="n">src_file</span><span class="o">=</span><span class="n">src_file</span><span class="p">,</span> <span class="n">target_dir</span><span class="o">=</span><span class="n">target_dir</span><span class="p">))</span>
         <span class="n">gallery_item_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">build_target_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">])</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
             <span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span>
         <span class="p">)</span>
