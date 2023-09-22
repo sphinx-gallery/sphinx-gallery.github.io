@@ -453,6 +453,7 @@ document.write(`
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span><span class="p">,</span> <span class="n">datetime</span>
 <span class="kn">from</span> <span class="nn">difflib</span> <span class="kn">import</span> <span class="n">get_close_matches</span>
 <span class="kn">from</span> <span class="nn">importlib</span> <span class="kn">import</span> <span class="n">import_module</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">pathlib</span>
@@ -1257,8 +1258,6 @@ document.write(`
 <span class="sd">        List of dicts of computation costs and paths, see gen_rst.py for details.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">total_time</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">cost</span><span class="p">[</span><span class="s2">&quot;t&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">cost</span> <span class="ow">in</span> <span class="n">costs</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">total_time</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">return</span>
     <span class="k">if</span> <span class="n">target_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># all galleries together</span>
         <span class="n">out_dir</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">]</span>
         <span class="n">where</span> <span class="o">=</span> <span class="s2">&quot;all galleries&quot;</span>
@@ -1270,9 +1269,10 @@ document.write(`
         <span class="n">kind</span> <span class="o">=</span> <span class="s2">&quot;rst&quot;</span>
         <span class="n">ref_extra</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">where</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;_&quot;</span><span class="p">)</span><span class="si">}</span><span class="s1">_&#39;</span>
     <span class="n">new_ref</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;sphx_glr_</span><span class="si">{</span><span class="n">ref_extra</span><span class="si">}</span><span class="s2">sg_execution_times&quot;</span>
-    <span class="k">with</span> <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="s2">&quot;sg_execution_times.rst&quot;</span><span class="p">),</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span>
-    <span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
+    <span class="n">out_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">out_dir</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;sg_execution_times.rst&quot;</span>
+    <span class="k">if</span> <span class="n">out_file</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="ow">and</span> <span class="n">total_time</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># a re-run</span>
+        <span class="k">return</span>
+    <span class="k">with</span> <span class="n">out_file</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
         <span class="n">fid</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">SPHX_GLR_COMP_TIMES</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">new_ref</span><span class="p">))</span>
         <span class="n">fid</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;**</span><span class="si">{</span><span class="n">_sec_to_readable</span><span class="p">(</span><span class="n">total_time</span><span class="p">)</span><span class="si">}</span><span class="s2">** total execution time for &quot;</span>
@@ -1284,15 +1284,44 @@ document.write(`
             <span class="n">kind</span><span class="o">=</span><span class="n">kind</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">del</span> <span class="n">costs</span>
-        <span class="n">hline</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="s2">&quot;+&quot;</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="p">(</span><span class="n">length</span> <span class="o">+</span> <span class="mi">2</span><span class="p">))</span> <span class="k">for</span> <span class="n">length</span> <span class="ow">in</span> <span class="n">lens</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;+</span><span class="se">\n</span><span class="s2">&quot;</span>
-        <span class="n">fid</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">hline</span><span class="p">)</span>
-        <span class="n">format_str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;| </span><span class="se">{{</span><span class="si">{</span><span class="n">ii</span><span class="si">}</span><span class="se">}}</span><span class="s2"> &quot;</span> <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span> <span class="o">+</span> <span class="s2">&quot;|</span><span class="se">\n</span><span class="s2">&quot;</span>
-        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
-            <span class="n">line</span> <span class="o">=</span> <span class="p">[</span><span class="n">ll</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="n">len_</span><span class="p">)</span> <span class="k">for</span> <span class="n">ll</span><span class="p">,</span> <span class="n">len_</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">lens</span><span class="p">)]</span>
-            <span class="n">text</span> <span class="o">=</span> <span class="n">format_str</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">line</span><span class="p">)</span>
-            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">hline</span><span class="p">)</span>
-            <span class="n">fid</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-            <span class="n">fid</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">hline</span><span class="p">)</span></div>
+        <span class="c1"># https://datatables.net/examples/styling/bootstrap5.html</span>
+        <span class="n">fid</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>  <span class="c1"># put it in a container to make the scoped style work</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;\</span>
+<span class="sd">.. container::</span>
+
+<span class="sd">  .. raw:: html</span>
+
+<span class="sd">    &lt;style scoped&gt;</span>
+<span class="sd">    &lt;link href=&quot;https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css&quot; rel=&quot;stylesheet&quot; /&gt;</span>
+<span class="sd">    &lt;link href=&quot;https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css&quot; rel=&quot;stylesheet&quot; /&gt;</span>
+<span class="sd">    &lt;/style&gt;</span>
+<span class="sd">    &lt;script src=&quot;https://code.jquery.com/jquery-3.7.0.js&quot;&gt;&lt;/script&gt;</span>
+<span class="sd">    &lt;script src=&quot;https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js&quot;&gt;&lt;/script&gt;</span>
+<span class="sd">    &lt;script src=&quot;https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js&quot;&gt;&lt;/script&gt;</span>
+<span class="sd">    &lt;script type=&quot;text/javascript&quot; class=&quot;init&quot;&gt;</span>
+<span class="sd">    $(document).ready( function () {</span>
+<span class="sd">        $(&#39;table.sg-datatable&#39;).DataTable({order: [[1, &#39;desc&#39;]]});</span>
+<span class="sd">    } );</span>
+<span class="sd">    &lt;/script&gt;</span>
+
+<span class="sd">  .. list-table::</span>
+<span class="sd">   :header-rows: 1</span>
+<span class="sd">   :class: table table-striped sg-datatable</span>
+
+<span class="sd">   * - Example</span>
+<span class="sd">     - Time</span>
+<span class="sd">     - Mem (MB)</span>
+<span class="sd">&quot;&quot;&quot;</span>  <span class="c1"># noqa: E501</span>
+        <span class="p">)</span>
+        <span class="c1"># Need at least one entry or Sphinx complains</span>
+        <span class="k">for</span> <span class="n">ex</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">mb</span> <span class="ow">in</span> <span class="n">lines</span> <span class="ow">or</span> <span class="p">[[</span><span class="s2">&quot;N/A&quot;</span><span class="p">,</span> <span class="s2">&quot;N/A&quot;</span><span class="p">,</span> <span class="s2">&quot;N/A&quot;</span><span class="p">]]:</span>
+            <span class="n">fid</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">   * - </span><span class="si">{</span><span class="n">ex</span><span class="si">}</span>
+<span class="s2">     - </span><span class="si">{</span><span class="n">t</span><span class="si">}</span>
+<span class="s2">     - </span><span class="si">{</span><span class="n">mb</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="n">maxsplit</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span>
+<span class="s2">&quot;&quot;&quot;</span>
+            <span class="p">)</span>  <span class="c1"># remove the &quot;MB&quot; from the right</span></div>
 
 
 
