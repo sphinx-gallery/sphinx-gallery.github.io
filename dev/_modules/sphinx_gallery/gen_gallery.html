@@ -1367,6 +1367,17 @@ document.write(`
         <span class="k">pass</span>
 
 
+<span class="c1"># Colors from https://personal.sron.nl/~pault/data/colourschemes.pdf</span>
+<span class="c1"># 3 Diverging Colour Schemes, Figure 12, plus alpha=AA</span>
+<span class="n">API_COLORS</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="n">edge</span><span class="o">=</span><span class="s2">&quot;#00000080&quot;</span><span class="p">,</span>  <span class="c1"># gray (by alpha)</span>
+    <span class="n">okay</span><span class="o">=</span><span class="s2">&quot;#98CAE180&quot;</span><span class="p">,</span>  <span class="c1"># blue</span>
+    <span class="n">bad_1</span><span class="o">=</span><span class="s2">&quot;#FEDA8B80&quot;</span><span class="p">,</span>  <span class="c1"># yellow</span>
+    <span class="n">bad_2</span><span class="o">=</span><span class="s2">&quot;#F67E4B80&quot;</span><span class="p">,</span>  <span class="c1"># orange</span>
+    <span class="n">bad_3</span><span class="o">=</span><span class="s2">&quot;#A5002680&quot;</span><span class="p">,</span>  <span class="c1"># red</span>
+<span class="p">)</span>
+
+
 <span class="k">def</span> <span class="nf">_make_graph</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">entries</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Make a graph of unused and used API entries.</span>
 
@@ -1395,7 +1406,17 @@ document.write(`
 
     <span class="n">dg</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Digraph</span><span class="p">(</span>
         <span class="n">filename</span><span class="o">=</span><span class="n">fname</span><span class="p">,</span>
-        <span class="n">node_attr</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;lightblue2&quot;</span><span class="p">,</span> <span class="s2">&quot;style&quot;</span><span class="p">:</span> <span class="s2">&quot;filled&quot;</span><span class="p">,</span> <span class="s2">&quot;fontsize&quot;</span><span class="p">:</span> <span class="s2">&quot;40&quot;</span><span class="p">},</span>
+        <span class="n">graph_attr</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;overlap&quot;</span><span class="p">:</span> <span class="s2">&quot;scale&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;pad&quot;</span><span class="p">:</span> <span class="s2">&quot;0.5&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="n">node_attr</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="n">API_COLORS</span><span class="p">[</span><span class="s2">&quot;okay&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;style&quot;</span><span class="p">:</span> <span class="s2">&quot;filled&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;fontsize&quot;</span><span class="p">:</span> <span class="s2">&quot;20&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;shape&quot;</span><span class="p">:</span> <span class="s2">&quot;box&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;fontname&quot;</span><span class="p">:</span> <span class="s2">&quot;Open Sans,Arial&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
     <span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">entries</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
@@ -1410,9 +1431,9 @@ document.write(`
                 <span class="n">node_from</span> <span class="o">=</span> <span class="p">(</span>
                     <span class="n">lut</span><span class="p">[</span><span class="n">struct</span><span class="p">[</span><span class="n">level</span><span class="p">]]</span> <span class="k">if</span> <span class="n">struct</span><span class="p">[</span><span class="n">level</span><span class="p">]</span> <span class="ow">in</span> <span class="n">lut</span> <span class="k">else</span> <span class="n">struct</span><span class="p">[</span><span class="n">level</span><span class="p">]</span>
                 <span class="p">)</span>
-                <span class="n">dg</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="s2">&quot;node&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;lightblue2&quot;</span><span class="p">)</span>
                 <span class="n">dg</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="n">node_from</span><span class="p">)</span>
                 <span class="n">node_to</span> <span class="o">=</span> <span class="n">struct</span><span class="p">[</span><span class="n">level</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+                <span class="n">node_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
                 <span class="c1"># count, don&#39;t show leaves</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">struct</span><span class="p">)</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">==</span> <span class="n">level</span><span class="p">:</span>
                     <span class="n">leaf_count</span> <span class="o">=</span> <span class="mi">0</span>
@@ -1429,21 +1450,18 @@ document.write(`
                             <span class="p">]</span>
                         <span class="p">):</span>
                             <span class="n">leaf_count</span> <span class="o">+=</span> <span class="mi">1</span>
-                    <span class="n">node_to</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">(</span><span class="si">{</span><span class="n">leaf_count</span><span class="si">}</span><span class="s2">)&quot;</span>
+                    <span class="n">node_to</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; (</span><span class="si">{</span><span class="n">leaf_count</span><span class="si">}</span><span class="s2">)&quot;</span>
                     <span class="n">lut</span><span class="p">[</span><span class="n">struct</span><span class="p">[</span><span class="n">level</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">node_to</span>
                     <span class="k">if</span> <span class="n">leaf_count</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">:</span>
-                        <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;red&quot;</span>
+                        <span class="n">color_key</span> <span class="o">=</span> <span class="s2">&quot;bad_3&quot;</span>
                     <span class="k">elif</span> <span class="n">leaf_count</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">:</span>
-                        <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;orange&quot;</span>
+                        <span class="n">color_key</span> <span class="o">=</span> <span class="s2">&quot;bad_2&quot;</span>
                     <span class="k">else</span><span class="p">:</span>
-                        <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;yellow&quot;</span>
-                    <span class="n">dg</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="s2">&quot;node&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">dg</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="s2">&quot;node&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;lightblue2&quot;</span><span class="p">)</span>
-                <span class="n">dg</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="n">node_to</span><span class="p">)</span>
-                <span class="n">dg</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="n">node_from</span><span class="p">,</span> <span class="n">node_to</span><span class="p">)</span>
+                        <span class="n">color_key</span> <span class="o">=</span> <span class="s2">&quot;bad_1&quot;</span>
+                    <span class="n">node_kwargs</span><span class="p">[</span><span class="s2">&quot;color&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">API_COLORS</span><span class="p">[</span><span class="n">color_key</span><span class="p">]</span>
+                <span class="n">dg</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="n">node_to</span><span class="p">,</span> <span class="o">**</span><span class="n">node_kwargs</span><span class="p">)</span>
+                <span class="n">dg</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="n">node_from</span><span class="p">,</span> <span class="n">node_to</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">API_COLORS</span><span class="p">[</span><span class="s2">&quot;edge&quot;</span><span class="p">])</span>
         <span class="c1"># add modules with all API entries</span>
-        <span class="n">dg</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="s2">&quot;node&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;lightblue2&quot;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;_sg_api_entries&quot;</span><span class="p">][</span><span class="s2">&quot;module&quot;</span><span class="p">]:</span>
             <span class="n">struct</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">struct</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
@@ -1452,15 +1470,11 @@ document.write(`
     <span class="k">else</span><span class="p">:</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">entries</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">entry</span><span class="p">,</span> <span class="n">refs</span> <span class="ow">in</span> <span class="n">entries</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">dg</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="s2">&quot;node&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;lightblue2&quot;</span><span class="p">)</span>
             <span class="n">dg</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
-            <span class="n">dg</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="s2">&quot;node&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;yellow&quot;</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">ref</span> <span class="ow">in</span> <span class="n">refs</span><span class="p">:</span>
-                <span class="n">dg</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span>
-                <span class="n">dg</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">ref</span><span class="p">)</span>
-
-    <span class="n">dg</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="n">overlap</span><span class="o">=</span><span class="s2">&quot;scale&quot;</span><span class="p">)</span>
-    <span class="n">dg</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+                <span class="n">dg</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">API_COLORS</span><span class="p">[</span><span class="s2">&quot;bad_1&quot;</span><span class="p">])</span>
+                <span class="n">dg</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">API_COLORS</span><span class="p">[</span><span class="s2">&quot;edge&quot;</span><span class="p">])</span>
+    <span class="n">dg</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
 
 
 <div class="viewcode-block" id="write_api_entry_usage">
