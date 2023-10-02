@@ -474,9 +474,8 @@ document.write(`
 <span class="c1">#</span>
 <span class="c1">#     b = 2</span>
 <span class="n">FLAG_START</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;^[\ \t]*#\s*&quot;</span>
-<span class="n">INFILE_CONFIG_PATTERN</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
-    <span class="n">FLAG_START</span> <span class="o">+</span> <span class="sa">r</span><span class="s2">&quot;sphinx_gallery_([A-Za-z0-9_]+)(\s*=\s*(.+))?[\ \t]*\n?&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span>
-<span class="p">)</span>
+<span class="n">FLAG_BODY</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;sphinx_gallery_([A-Za-z0-9_]+)(\s*=\s*(.+))?[\ \t]*\n?&quot;</span>
+<span class="n">INFILE_CONFIG_PATTERN</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">FLAG_START</span> <span class="o">+</span> <span class="n">FLAG_BODY</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span><span class="p">)</span>
 
 <span class="n">START_IGNORE_FLAG</span> <span class="o">=</span> <span class="n">FLAG_START</span> <span class="o">+</span> <span class="s2">&quot;sphinx_gallery_start_ignore&quot;</span>
 <span class="n">END_IGNORE_FLAG</span> <span class="o">=</span> <span class="n">FLAG_START</span> <span class="o">+</span> <span class="s2">&quot;sphinx_gallery_end_ignore&quot;</span>

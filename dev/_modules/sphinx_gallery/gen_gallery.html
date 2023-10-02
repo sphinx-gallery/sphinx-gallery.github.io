@@ -506,6 +506,9 @@ document.write(`
     <span class="s2">&quot;filename_pattern&quot;</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;plot&quot;</span><span class="p">,</span>
     <span class="s2">&quot;ignore_pattern&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;__init__\.py&quot;</span><span class="p">,</span>
     <span class="s2">&quot;examples_dirs&quot;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">,</span> <span class="s2">&quot;examples&quot;</span><span class="p">),</span>
+    <span class="s2">&quot;example_extensions&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;.py&quot;</span><span class="p">},</span>
+    <span class="s2">&quot;filetype_parsers&quot;</span><span class="p">:</span> <span class="p">{},</span>
+    <span class="s2">&quot;notebook_extensions&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;.py&quot;</span><span class="p">},</span>
     <span class="s2">&quot;reset_argv&quot;</span><span class="p">:</span> <span class="n">DefaultResetArgv</span><span class="p">(),</span>
     <span class="s2">&quot;subsection_order&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
     <span class="s2">&quot;within_subsection_order&quot;</span><span class="p">:</span> <span class="n">NumberOfCodeLinesSortKey</span><span class="p">,</span>
@@ -593,14 +596,11 @@ document.write(`
     <span class="n">src_dir</span><span class="p">,</span>
     <span class="n">plot_gallery</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">abort_on_example_error</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;python&quot;</span><span class="p">,</span>
     <span class="n">builder_name</span><span class="o">=</span><span class="s2">&quot;html&quot;</span><span class="p">,</span>
 <span class="p">):</span>
     <span class="n">sphinx_gallery_conf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">plot_gallery</span><span class="o">=</span><span class="n">plot_gallery</span><span class="p">)</span>
     <span class="n">sphinx_gallery_conf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">abort_on_example_error</span><span class="o">=</span><span class="n">abort_on_example_error</span><span class="p">)</span>
     <span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">src_dir</span>
-    <span class="n">lang</span> <span class="o">=</span> <span class="n">lang</span> <span class="k">if</span> <span class="n">lang</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;python&quot;</span><span class="p">,</span> <span class="s2">&quot;python3&quot;</span><span class="p">,</span> <span class="s2">&quot;default&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;python&quot;</span>
-    <span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;lang&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lang</span>
     <span class="c1"># Make it easy to know which builder we&#39;re in</span>
     <span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;builder_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">builder_name</span>
 
@@ -1123,7 +1123,7 @@ document.write(`
 
         <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;download_all_examples&quot;</span><span class="p">]:</span>
             <span class="n">download_fhindex</span> <span class="o">=</span> <span class="n">generate_zipfiles</span><span class="p">(</span>
-                <span class="n">gallery_dir_abs_path</span><span class="p">,</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span>
+                <span class="n">gallery_dir_abs_path</span><span class="p">,</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span> <span class="n">gallery_conf</span>
             <span class="p">)</span>
             <span class="n">indexst</span> <span class="o">+=</span> <span class="n">download_fhindex</span>
 
@@ -1949,13 +1949,11 @@ document.write(`
     <span class="n">plot_gallery</span> <span class="o">=</span> <span class="n">_bool_eval</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">plot_gallery</span><span class="p">)</span>
     <span class="n">src_dir</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span>
     <span class="n">abort_on_example_error</span> <span class="o">=</span> <span class="n">_bool_eval</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">abort_on_example_error</span><span class="p">)</span>
-    <span class="n">lang</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">highlight_language</span>
     <span class="n">_update_gallery_conf_builder_inited</span><span class="p">(</span>
         <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">,</span>
         <span class="n">src_dir</span><span class="p">,</span>
         <span class="n">plot_gallery</span><span class="o">=</span><span class="n">plot_gallery</span><span class="p">,</span>
         <span class="n">abort_on_example_error</span><span class="o">=</span><span class="n">abort_on_example_error</span><span class="p">,</span>
-        <span class="n">lang</span><span class="o">=</span><span class="n">lang</span><span class="p">,</span>
         <span class="n">builder_name</span><span class="o">=</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
     <span class="p">)</span></div>
 

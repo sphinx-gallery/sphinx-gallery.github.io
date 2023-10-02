@@ -583,6 +583,76 @@ functionality:</p>
 <a class="reference internal" href="tutorials/plot_parse.html#sphx-glr-tutorials-plot-parse-py"><span class="std std-ref">Alternating text and code</span></a> and compare it to the generated
 <a class="reference download internal" download="" href="_downloads/1159cf66576090dda850c8b297cae11c/plot_parse.py"><code class="xref download docutils literal notranslate"><span class="pre">original</span> <span class="pre">python</span> <span class="pre">script</span></code></a></p>
 </section>
+<section id="examples-in-other-programming-languages">
+<span id="non-python-source"></span><h2>Examples in other programming languages<a class="headerlink" href="#examples-in-other-programming-languages" title="Link to this heading">#</a></h2>
+<p>Sphinx-Gallery also supports rendering HTML pages for examples written in programming
+languages other than Python, although these examples are not currently executed or
+scanned for output. See <a class="reference internal" href="configuration.html#build-pattern"><span class="std std-ref">filename/ignore patterns</span></a> for
+configuration settings.</p>
+<p>For such examples, the header for the example is defined by the first comment block in
+the file, which must contain a reST title, and may contain any additional reST content
+that should appear above the first code block. For example, a C++ example could start
+with:</p>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// My Awesome Example</span>
+<span class="c1">// ==================</span>
+<span class="c1">//</span>
+<span class="c1">// The description continues as long as there are lines</span>
+<span class="c1">// that start with a comment character.</span>
+</pre></div>
+</div>
+<p>reST content can likewise be embedded in comments that are marked with a special
+delimiter, where that delimiter depends on the comment characters used by the language
+of the example. Valid special delimiters are:</p>
+<ol class="arabic simple">
+<li><p>The comment character followed by <code class="docutils literal notranslate"><span class="pre">%%</span></code>. For example <code class="docutils literal notranslate"><span class="pre">//%%</span></code> for C++.</p></li>
+<li><p>The comment character followed by a space, followed by <code class="docutils literal notranslate"><span class="pre">%%</span></code>. For example, <code class="docutils literal notranslate"><span class="pre">//</span> <span class="pre">%%</span></code>
+for C++.</p></li>
+<li><p>A line of at least 20 comment characters. For example, <code class="docutils literal notranslate"><span class="pre">////////////////////</span></code> for
+C++.</p></li>
+</ol>
+<p>Any text following the special delimiter on the same line will be converted into a reST
+heading (underlined with <code class="docutils literal notranslate"><span class="pre">-</span></code>). The reST block continues until a line that does not
+start with a comment character is encountered. Some examples:</p>
+<div class="highlight-C++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// %% Important Heading</span>
+<span class="c1">// This is some text in a reST block in C++, appearing underneath a heading.</span>
+<span class="c1">//</span>
+<span class="c1">// * Start a list</span>
+<span class="c1">// * Check it twice</span>
+</pre></div>
+</div>
+<div class="highlight-Fortran notranslate"><div class="highlight"><pre><span></span><span class="c">!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</span>
+<span class="c">! This is the start of a reST block in Fortran 90.</span>
+<span class="c">!</span>
+<span class="c">! It can contain multiple paragraphs.</span>
+</pre></div>
+</div>
+<p>For languages that use C-style multiline comments, the following styles are supported:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="cm">/* %%</span>
+<span class="cm"> * Subheading</span>
+<span class="cm"> * ----------</span>
+<span class="cm"> *</span>
+<span class="cm"> * Description</span>
+<span class="cm"> */</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
+
+<span class="cm">/**************************/</span>
+<span class="cm">/* Another subheading     */</span>
+<span class="cm">/* ------------------     */</span>
+<span class="cm">/*                        */</span>
+<span class="cm">/* Description            */</span>
+<span class="cm">/**************************/</span>
+<span class="kt">double</span><span class="w"> </span><span class="n">z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.5</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Finally, for compatibility with Matlab’s use of a simple <code class="docutils literal notranslate"><span class="pre">%%</span></code> delimiter to mark code
+sections, this is allowed as a special delimiter in Matlab source files, in addition to
+the multi-language syntax described above:</p>
+<div class="highlight-Matlab notranslate"><div class="highlight"><pre><span></span><span class="c">%% Heading</span>
+<span class="c">% some text below the heading</span>
+</pre></div>
+</div>
+</section>
 <section id="plain-rest-examples">
 <span id="plain-rst"></span><h2>Plain reST examples<a class="headerlink" href="#plain-rest-examples" title="Link to this heading">#</a></h2>
 <p>Sphinx-Gallery generates examples from Python scripts,
@@ -639,6 +709,7 @@ documentation, you might find
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-simple-example">A simple example</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#embed-rest-in-your-example-python-files">Embed reST in your example Python files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examples-in-other-programming-languages">Examples in other programming languages</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plain-rest-examples">Plain reST examples</a></li>
 </ul>
   </nav></div>

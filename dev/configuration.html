@@ -475,7 +475,8 @@ necessary, and on a case-by-case basis.</p>
 file:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">examples_dirs</span></code> and <code class="docutils literal notranslate"><span class="pre">gallery_dirs</span></code> (<a class="reference internal" href="#multiple-galleries-config"><span class="std std-ref">Manage multiple galleries</span></a>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">filename_pattern</span></code> and <code class="docutils literal notranslate"><span class="pre">ignore_pattern</span></code> (<a class="reference internal" href="#build-pattern"><span class="std std-ref">Parsing and executing examples via matching patterns</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">filename_pattern</span></code>, <code class="docutils literal notranslate"><span class="pre">ignore_pattern</span></code>, <code class="docutils literal notranslate"><span class="pre">example_extensions</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">filetype_parsers</span></code> (<a class="reference internal" href="#build-pattern"><span class="std std-ref">Parsing and executing examples via matching patterns</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">run_stale_examples</span></code> (<a class="reference internal" href="#run-stale-examples"><span class="std std-ref">Rerunning stale examples</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">reset_argv</span></code> (<a class="reference internal" href="#reset-argv"><span class="std std-ref">Passing command line arguments to example scripts</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">subsection_order</span></code> (<a class="reference internal" href="#sub-gallery-order"><span class="std std-ref">Sorting gallery subsections</span></a>)</p></li>
@@ -502,6 +503,7 @@ and <code class="docutils literal notranslate"><span class="pre">inspect_global_
 <li><p><code class="docutils literal notranslate"><span class="pre">show_signature</span></code> (<a class="reference internal" href="#show-signature"><span class="std std-ref">Show signature</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">binder</span></code> (<a class="reference internal" href="#binder-links"><span class="std std-ref">Generate Binder links for gallery notebooks (experimental)</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">jupyterlite</span></code> (<a class="reference internal" href="#jupyterlite"><span class="std std-ref">Generate JupyterLite links for gallery notebooks (experimental)</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">notebook_extensions</span></code> (<a class="reference internal" href="#notebook-extensions"><span class="std std-ref">Controlling notebook download links</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">promote_jupyter_magic</span></code> (<a class="reference internal" href="#promote-jupyter-magic"><span class="std std-ref">Making cell magic executable in notebooks</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">first_notebook_cell</span></code> and <code class="docutils literal notranslate"><span class="pre">last_notebook_cell</span></code> (<a class="reference internal" href="#own-notebook-cell"><span class="std std-ref">Add your own first and last notebook cell</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">notebook_images</span></code> (<a class="reference internal" href="#notebook-images"><span class="std std-ref">Adding images to notebooks</span></a>)</p></li>
@@ -583,12 +585,13 @@ were actually executed in that directory during the build).</p>
 <span id="build-pattern"></span><h2>Parsing and executing examples via matching patterns<a class="headerlink" href="#parsing-and-executing-examples-via-matching-patterns" title="Link to this heading">#</a></h2>
 <p>By default, Sphinx-Gallery will <strong>parse and add</strong> all files with a <code class="docutils literal notranslate"><span class="pre">.py</span></code>
 extension to the gallery, but only <strong>execute</strong> files beginning with <code class="docutils literal notranslate"><span class="pre">plot_</span></code>.
-These behaviors are controlled by the <code class="docutils literal notranslate"><span class="pre">ignore_pattern</span></code> and <code class="docutils literal notranslate"><span class="pre">filename_pattern</span></code>
-entries, which have the default values:</p>
+These behaviors are controlled by the <code class="docutils literal notranslate"><span class="pre">ignore_pattern</span></code>, <code class="docutils literal notranslate"><span class="pre">filename_pattern</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">example_extensions</span></code> entries, which have the default values:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
     <span class="s1">&#39;filename_pattern&#39;</span><span class="p">:</span> <span class="s1">&#39;/plot_&#39;</span><span class="p">,</span>
     <span class="s1">&#39;ignore_pattern&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;__init__\.py&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;example_extensions&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;.py&#39;</span><span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -651,6 +654,25 @@ like:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>sphinx-build<span class="w"> </span>-D<span class="w"> </span>sphinx_gallery_conf.filename_pattern<span class="o">=</span>plot_specific_example<span class="se">\.</span>py<span class="w"> </span>...
 </pre></div>
 </div>
+</div>
+<p>You can also parse and highlight syntax examples in other languages by adding their
+extensions to <code class="docutils literal notranslate"><span class="pre">example_extensions</span></code>, though they will not be executed. For example, to
+include examples in Python, Julia, and C++:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">...</span>
+    <span class="s1">&#39;example_extensions&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;.py&#39;</span><span class="p">,</span> <span class="s1">&#39;.jl&#39;</span><span class="p">,</span> <span class="s1">&#39;.cpp&#39;</span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Parsing and syntax highlighting is supported by the Pygments library, with the language
+determined by the file extension. To override Pygments’ default file associations, the
+<code class="docutils literal notranslate"><span class="pre">filetype_parsers</span></code> option can be used to specify a <code class="docutils literal notranslate"><span class="pre">dict</span></code> mapping any of the file
+extensions in <code class="docutils literal notranslate"><span class="pre">example_extensions</span></code> to any of the <a class="reference external" href="https://pygments.org/languages/">pygments language names</a>. For example:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">...</span>
+    <span class="s1">&#39;filetype_parsers&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;.m&#39;</span><span class="p">:</span> <span class="s1">&#39;Matlab&#39;</span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 </div>
 </section>
 <section id="rerunning-stale-examples">
@@ -1002,6 +1024,7 @@ documentation is done at the module level. We first start with the
    gen_rst
    scrapers
    py_source_parser
+   block_parser
    docs_resolv
    notebook
    downloads
@@ -1676,6 +1699,24 @@ but not use sphinx-gallery Jupyterlite integration you can do:</p>
 </div>
 <p>See the Sphinx-Gallery <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/blob/master/doc/conf.py">Sphinx configuration file</a>
 for an example that uses the JupyterLite integration.</p>
+</section>
+<section id="controlling-notebook-download-links">
+<span id="notebook-extensions"></span><h2>Controlling notebook download links<a class="headerlink" href="#controlling-notebook-download-links" title="Link to this heading">#</a></h2>
+<p>By default, links to download Jupyter noteooks and launch Binder or JupyterLite (if
+enabled) are shown only for Python examples. If parsing other file extensions has been
+enabled (using the <code class="docutils literal notranslate"><span class="pre">example_extensions</span></code> option; see <a class="reference internal" href="#build-pattern"><span class="std std-ref">Parsing and executing examples via matching patterns</span></a>), notebook
+downloads can be enabled using the <code class="docutils literal notranslate"><span class="pre">notebook_extensions</span></code> option. For example:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;notebook_extensions&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;.py&quot;</span><span class="p">,</span> <span class="s2">&quot;.jl&quot;</span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>where the listed extensions are compared to file names in the gallery directory.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Currently, all generated notebooks specify Python as the kernel. After downloading,
+the user will need to manually change to the correct kernel.</p>
+</div>
 </section>
 <section id="making-cell-magic-executable-in-notebooks">
 <span id="promote-jupyter-magic"></span><h2>Making cell magic executable in notebooks<a class="headerlink" href="#making-cell-magic-executable-in-notebooks" title="Link to this heading">#</a></h2>
@@ -2496,6 +2537,7 @@ desirable to document if they are used in examples.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#providing-an-image-for-the-thumbnail-image">Providing an image for the thumbnail image</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-binder-links-for-gallery-notebooks-experimental">Generate Binder links for gallery notebooks (experimental)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-jupyterlite-links-for-gallery-notebooks-experimental">Generate JupyterLite links for gallery notebooks (experimental)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#controlling-notebook-download-links">Controlling notebook download links</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#making-cell-magic-executable-in-notebooks">Making cell magic executable in notebooks</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-without-executing-examples">Building without executing examples</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#compressing-images">Compressing images</a></li>

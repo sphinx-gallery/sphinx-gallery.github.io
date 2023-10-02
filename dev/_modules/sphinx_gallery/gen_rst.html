@@ -460,6 +460,7 @@ document.write(`
 <span class="kn">import</span> <span class="nn">importlib</span>
 <span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">stat</span>
 <span class="kn">from</span> <span class="nn">textwrap</span> <span class="kn">import</span> <span class="n">indent</span>
@@ -475,7 +476,6 @@ document.write(`
 
 <span class="kn">from</span> <span class="nn">.scrapers</span> <span class="kn">import</span> <span class="n">save_figures</span><span class="p">,</span> <span class="n">ImagePathIterator</span><span class="p">,</span> <span class="n">clean_modules</span><span class="p">,</span> <span class="n">_find_image_ext</span>
 <span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">replace_py_ipynb</span><span class="p">,</span>
     <span class="n">scale_image</span><span class="p">,</span>
     <span class="n">get_md5sum</span><span class="p">,</span>
     <span class="n">_replace_md5</span><span class="p">,</span>
@@ -491,12 +491,8 @@ document.write(`
     <span class="n">THUMBNAIL_PARENT_DIV</span><span class="p">,</span>
     <span class="n">THUMBNAIL_PARENT_DIV_CLOSE</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">.downloads</span> <span class="kn">import</span> <span class="n">CODE_DOWNLOAD</span>
-<span class="kn">from</span> <span class="nn">.py_source_parser</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">split_code_and_text_blocks</span><span class="p">,</span>
-    <span class="n">remove_config_comments</span><span class="p">,</span>
-    <span class="n">remove_ignore_blocks</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">py_source_parser</span>
+<span class="kn">from</span> <span class="nn">.block_parser</span> <span class="kn">import</span> <span class="n">BlockParser</span>
 
 <span class="kn">from</span> <span class="nn">.notebook</span> <span class="kn">import</span> <span class="n">jupyter_notebook</span><span class="p">,</span> <span class="n">save_notebook</span>
 <span class="kn">from</span> <span class="nn">.interactive_example</span> <span class="kn">import</span> <span class="n">gen_binder_rst</span>
@@ -650,6 +646,26 @@ document.write(`
 <span class="s2">    &lt;br /&gt;</span>
 <span class="s2">    &lt;br /&gt;&quot;&quot;&quot;</span>
 
+<span class="n">DOWNLOAD_LINKS_HEADER</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">.. _sphx_glr_download_</span><span class="si">{0}</span><span class="s2">:</span>
+
+<span class="s2">.. only:: html</span>
+
+<span class="s2">  .. container:: sphx-glr-footer sphx-glr-footer-example</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">CODE_DOWNLOAD</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    .. container:: sphx-glr-download sphx-glr-download-python</span>
+
+<span class="s2">      :download:`Download </span><span class="si">{1}</span><span class="s2"> source code: </span><span class="si">{0}</span><span class="s2"> &lt;</span><span class="si">{0}</span><span class="s2">&gt;`</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">NOTEBOOK_DOWNLOAD</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    .. container:: sphx-glr-download sphx-glr-download-jupyter</span>
+
+<span class="s2">      :download:`Download Jupyter notebook: </span><span class="si">{0}</span><span class="s2"> &lt;</span><span class="si">{0}</span><span class="s2">&gt;`</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
 
 <div class="viewcode-block" id="codestr2rst">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.codestr2rst">[docs]</a>
@@ -661,7 +677,13 @@ document.write(`
         <span class="n">lineno</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;   :lineno-start: </span><span class="si">{</span><span class="n">lineno</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">blank_lines</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">lineno</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="n">code_directive</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;.. code-block:: </span><span class="si">{</span><span class="n">lang</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">lineno</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="c1"># If the whole block is indented, prevent Sphinx from removing too much whitespace</span>
+    <span class="n">dedent</span> <span class="o">=</span> <span class="s2">&quot;   :dedent: 1</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">codestr</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">line</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">((</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)):</span>
+            <span class="n">dedent</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="k">break</span>
+    <span class="n">code_directive</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;.. code-block:: </span><span class="si">{</span><span class="n">lang</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">dedent</span><span class="si">}{</span><span class="n">lineno</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="n">indented_block</span> <span class="o">=</span> <span class="n">indent</span><span class="p">(</span><span class="n">codestr</span><span class="p">,</span> <span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="mi">4</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">code_directive</span> <span class="o">+</span> <span class="n">indented_block</span></div>
 
@@ -749,7 +771,7 @@ document.write(`
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Checks whether src_file has the same md5 hash as the one on disk.&quot;&quot;&quot;</span>
     <span class="n">src_md5</span> <span class="o">=</span> <span class="n">get_md5sum</span><span class="p">(</span><span class="n">src_file</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
 
-    <span class="n">src_md5_file</span> <span class="o">=</span> <span class="n">src_file</span> <span class="o">+</span> <span class="s2">&quot;.md5&quot;</span>
+    <span class="n">src_md5_file</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">src_file</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.md5&quot;</span>
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">src_md5_file</span><span class="p">):</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">src_md5_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_checksum</span><span class="p">:</span>
             <span class="n">ref_md5</span> <span class="o">=</span> <span class="n">file_checksum</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
@@ -922,7 +944,11 @@ document.write(`
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">target_dir</span><span class="p">):</span>
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">target_dir</span><span class="p">)</span>
     <span class="c1"># get filenames</span>
-    <span class="n">listdir</span> <span class="o">=</span> <span class="p">[</span><span class="n">fname</span> <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">src_dir</span><span class="p">)</span> <span class="k">if</span> <span class="n">fname</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.py&quot;</span><span class="p">)]</span>
+    <span class="n">listdir</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">fname</span>
+        <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">src_dir</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">s</span> <span class="o">:=</span> <span class="n">Path</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span><span class="o">.</span><span class="n">suffix</span><span class="p">)</span> <span class="ow">and</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;example_extensions&quot;</span><span class="p">]</span>
+    <span class="p">]</span>
     <span class="c1"># limit which to look at based on regex (similar to filename_pattern)</span>
     <span class="n">listdir</span> <span class="o">=</span> <span class="p">[</span>
         <span class="n">fname</span>
@@ -957,8 +983,8 @@ document.write(`
         <span class="p">)</span>
         <span class="n">src_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">))</span>
         <span class="n">costs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">,</span> <span class="n">mem</span><span class="o">=</span><span class="n">mem</span><span class="p">,</span> <span class="n">src_file</span><span class="o">=</span><span class="n">src_file</span><span class="p">,</span> <span class="n">target_dir</span><span class="o">=</span><span class="n">target_dir</span><span class="p">))</span>
-        <span class="n">gallery_item_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">build_target_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">])</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span>
+        <span class="n">gallery_item_filename</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">build_target_dir</span><span class="p">)</span> <span class="o">/</span> <span class="n">fname</span><span class="p">)</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
         <span class="p">)</span>
         <span class="n">this_entry</span> <span class="o">=</span> <span class="n">_thumbnail_div</span><span class="p">(</span>
             <span class="n">target_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">],</span> <span class="n">fname</span><span class="p">,</span> <span class="n">intro</span><span class="p">,</span> <span class="n">title</span>
@@ -1596,12 +1622,20 @@ document.write(`
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">seen_backrefs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span> <span class="k">if</span> <span class="n">seen_backrefs</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">seen_backrefs</span>
     <span class="n">src_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">))</span>
-    <span class="n">target_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
+    <span class="n">target_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">target_dir</span><span class="p">)</span> <span class="o">/</span> <span class="n">fname</span>
     <span class="n">_replace_md5</span><span class="p">(</span><span class="n">src_file</span><span class="p">,</span> <span class="n">target_file</span><span class="p">,</span> <span class="s2">&quot;copy&quot;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;t&quot;</span><span class="p">)</span>
 
-    <span class="n">file_conf</span><span class="p">,</span> <span class="n">script_blocks</span><span class="p">,</span> <span class="n">node</span> <span class="o">=</span> <span class="n">split_code_and_text_blocks</span><span class="p">(</span>
+    <span class="k">if</span> <span class="n">fname</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.py&quot;</span><span class="p">):</span>
+        <span class="n">parser</span> <span class="o">=</span> <span class="n">py_source_parser</span>
+        <span class="n">language</span> <span class="o">=</span> <span class="s2">&quot;Python&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">parser</span> <span class="o">=</span> <span class="n">BlockParser</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
+        <span class="n">language</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">language</span>
+
+    <span class="n">file_conf</span><span class="p">,</span> <span class="n">script_blocks</span><span class="p">,</span> <span class="n">node</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">split_code_and_text_blocks</span><span class="p">(</span>
         <span class="n">src_file</span><span class="p">,</span> <span class="n">return_node</span><span class="o">=</span><span class="kc">True</span>
     <span class="p">)</span>
+
     <span class="n">intro</span><span class="p">,</span> <span class="n">title</span> <span class="o">=</span> <span class="n">extract_intro_and_title</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">script_blocks</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;titles&quot;</span><span class="p">][</span><span class="n">src_file</span><span class="p">]</span> <span class="o">=</span> <span class="n">title</span>
 
@@ -1613,7 +1647,7 @@ document.write(`
             <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;run_stale_examples&quot;</span><span class="p">]:</span>
                 <span class="n">do_return</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;stale_examples&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">target_file</span><span class="p">)</span>
+                <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;stale_examples&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">target_file</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">do_return</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">intro</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 
@@ -1629,7 +1663,7 @@ document.write(`
         <span class="s2">&quot;execute_script&quot;</span><span class="p">:</span> <span class="n">executable</span><span class="p">,</span>
         <span class="s2">&quot;image_path_iterator&quot;</span><span class="p">:</span> <span class="n">ImagePathIterator</span><span class="p">(</span><span class="n">image_path_template</span><span class="p">),</span>
         <span class="s2">&quot;src_file&quot;</span><span class="p">:</span> <span class="n">src_file</span><span class="p">,</span>
-        <span class="s2">&quot;target_file&quot;</span><span class="p">:</span> <span class="n">target_file</span><span class="p">,</span>
+        <span class="s2">&quot;target_file&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">target_file</span><span class="p">),</span>
     <span class="p">}</span>
 
     <span class="k">if</span> <span class="n">executable</span> <span class="ow">and</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;reset_modules_order&quot;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;before&quot;</span><span class="p">,</span> <span class="s2">&quot;both&quot;</span><span class="p">]:</span>
@@ -1659,13 +1693,13 @@ document.write(`
     <span class="c1"># Ignore blocks must be processed before the</span>
     <span class="c1"># remaining config comments are removed.</span>
     <span class="n">script_blocks</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">remove_ignore_blocks</span><span class="p">(</span><span class="n">content</span><span class="p">),</span> <span class="n">line_number</span><span class="p">)</span>
+        <span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">parser</span><span class="o">.</span><span class="n">remove_ignore_blocks</span><span class="p">(</span><span class="n">content</span><span class="p">),</span> <span class="n">line_number</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">line_number</span> <span class="ow">in</span> <span class="n">script_blocks</span>
     <span class="p">]</span>
 
     <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;remove_config_comments&quot;</span><span class="p">]:</span>
         <span class="n">script_blocks</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">remove_config_comments</span><span class="p">(</span><span class="n">content</span><span class="p">),</span> <span class="n">line_number</span><span class="p">)</span>
+            <span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">parser</span><span class="o">.</span><span class="n">remove_config_comments</span><span class="p">(</span><span class="n">content</span><span class="p">),</span> <span class="n">line_number</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">line_number</span> <span class="ow">in</span> <span class="n">script_blocks</span>
         <span class="p">]</span>
 
@@ -1675,18 +1709,28 @@ document.write(`
         <span class="n">script_blocks</span> <span class="o">=</span> <span class="n">script_blocks</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">output_blocks</span> <span class="o">=</span> <span class="n">output_blocks</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
-    <span class="n">example_rst</span> <span class="o">=</span> <span class="n">rst_blocks</span><span class="p">(</span><span class="n">script_blocks</span><span class="p">,</span> <span class="n">output_blocks</span><span class="p">,</span> <span class="n">file_conf</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
+    <span class="n">example_rst</span> <span class="o">=</span> <span class="n">rst_blocks</span><span class="p">(</span>
+        <span class="n">script_blocks</span><span class="p">,</span> <span class="n">output_blocks</span><span class="p">,</span> <span class="n">file_conf</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="n">language</span>
+    <span class="p">)</span>
     <span class="n">memory_used</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;memory_base&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">script_vars</span><span class="p">[</span><span class="s2">&quot;memory_delta&quot;</span><span class="p">]</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">executable</span><span class="p">:</span>
         <span class="n">time_elapsed</span> <span class="o">=</span> <span class="n">memory_used</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># don&#39;t let the output change</span>
-    <span class="n">save_rst_example</span><span class="p">(</span><span class="n">example_rst</span><span class="p">,</span> <span class="n">target_file</span><span class="p">,</span> <span class="n">time_elapsed</span><span class="p">,</span> <span class="n">memory_used</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
+    <span class="n">save_rst_example</span><span class="p">(</span>
+        <span class="n">example_rst</span><span class="p">,</span>
+        <span class="n">target_file</span><span class="p">,</span>
+        <span class="n">time_elapsed</span><span class="p">,</span>
+        <span class="n">memory_used</span><span class="p">,</span>
+        <span class="n">gallery_conf</span><span class="p">,</span>
+        <span class="n">language</span><span class="o">=</span><span class="n">language</span><span class="p">,</span>
+    <span class="p">)</span>
 
     <span class="n">save_thumbnail</span><span class="p">(</span><span class="n">image_path_template</span><span class="p">,</span> <span class="n">src_file</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">,</span> <span class="n">file_conf</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
 
-    <span class="n">example_nb</span> <span class="o">=</span> <span class="n">jupyter_notebook</span><span class="p">(</span><span class="n">script_blocks</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">)</span>
-    <span class="n">ipy_fname</span> <span class="o">=</span> <span class="n">replace_py_ipynb</span><span class="p">(</span><span class="n">target_file</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.new&quot;</span>
-    <span class="n">save_notebook</span><span class="p">(</span><span class="n">example_nb</span><span class="p">,</span> <span class="n">ipy_fname</span><span class="p">)</span>
-    <span class="n">_replace_md5</span><span class="p">(</span><span class="n">ipy_fname</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;t&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">target_file</span><span class="o">.</span><span class="n">suffix</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;notebook_extensions&quot;</span><span class="p">]:</span>
+        <span class="n">example_nb</span> <span class="o">=</span> <span class="n">jupyter_notebook</span><span class="p">(</span><span class="n">script_blocks</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">)</span>
+        <span class="n">ipy_fname</span> <span class="o">=</span> <span class="n">target_file</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">&quot;.ipynb.new&quot;</span><span class="p">)</span>
+        <span class="n">save_notebook</span><span class="p">(</span><span class="n">example_nb</span><span class="p">,</span> <span class="n">ipy_fname</span><span class="p">)</span>
+        <span class="n">_replace_md5</span><span class="p">(</span><span class="n">ipy_fname</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;t&quot;</span><span class="p">)</span>
 
     <span class="c1"># Write names</span>
     <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;inspect_global_variables&quot;</span><span class="p">]:</span>
@@ -1696,7 +1740,7 @@ document.write(`
     <span class="n">ref_regex</span> <span class="o">=</span> <span class="n">_make_ref_regex</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;app&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
     <span class="n">example_code_obj</span> <span class="o">=</span> <span class="n">identify_names</span><span class="p">(</span><span class="n">script_blocks</span><span class="p">,</span> <span class="n">ref_regex</span><span class="p">,</span> <span class="n">global_variables</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">example_code_obj</span><span class="p">:</span>
-        <span class="n">codeobj_fname</span> <span class="o">=</span> <span class="n">target_file</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;_codeobj.pickle.new&quot;</span>
+        <span class="n">codeobj_fname</span> <span class="o">=</span> <span class="n">target_file</span><span class="o">.</span><span class="n">with_name</span><span class="p">(</span><span class="n">target_file</span><span class="o">.</span><span class="n">stem</span> <span class="o">+</span> <span class="s2">&quot;_codeobj.pickle.new&quot;</span><span class="p">)</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">codeobj_fname</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
             <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">example_code_obj</span><span class="p">,</span> <span class="n">fid</span><span class="p">,</span> <span class="n">pickle</span><span class="o">.</span><span class="n">HIGHEST_PROTOCOL</span><span class="p">)</span>
         <span class="n">_replace_md5</span><span class="p">(</span><span class="n">codeobj_fname</span><span class="p">)</span>
@@ -1757,7 +1801,9 @@ document.write(`
 
 <div class="viewcode-block" id="rst_blocks">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.rst_blocks">[docs]</a>
-<span class="k">def</span> <span class="nf">rst_blocks</span><span class="p">(</span><span class="n">script_blocks</span><span class="p">,</span> <span class="n">output_blocks</span><span class="p">,</span> <span class="n">file_conf</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">rst_blocks</span><span class="p">(</span>
+    <span class="n">script_blocks</span><span class="p">,</span> <span class="n">output_blocks</span><span class="p">,</span> <span class="n">file_conf</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;python&quot;</span>
+<span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate the rst string containing the script prose, code and output.</span>
 
 <span class="sd">    Parameters</span>
@@ -1772,6 +1818,9 @@ document.write(`
 <span class="sd">    file_conf : dict</span>
 <span class="sd">        File-specific settings given in source file comments as:</span>
 <span class="sd">        ``# sphinx_gallery_&lt;name&gt; = &lt;value&gt;``</span>
+<span class="sd">    language : str</span>
+<span class="sd">        The language to be used for syntax highlighting in code blocks. Must be a name</span>
+<span class="sd">        or alias recognized by Pygments.</span>
 <span class="sd">    gallery_conf : dict</span>
 <span class="sd">        Contains the configuration of Sphinx-Gallery</span>
 
@@ -1797,9 +1846,7 @@ document.write(`
             <span class="k">if</span> <span class="ow">not</span> <span class="n">file_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;line_numbers&quot;</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;line_numbers&quot;</span><span class="p">]):</span>
                 <span class="n">lineno</span> <span class="o">=</span> <span class="kc">None</span>
 
-            <span class="n">code_rst</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="n">codestr2rst</span><span class="p">(</span><span class="n">bcontent</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;lang&quot;</span><span class="p">],</span> <span class="n">lineno</span><span class="o">=</span><span class="n">lineno</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
-            <span class="p">)</span>
+            <span class="n">code_rst</span> <span class="o">=</span> <span class="n">codestr2rst</span><span class="p">(</span><span class="n">bcontent</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="n">language</span><span class="p">,</span> <span class="n">lineno</span><span class="o">=</span><span class="n">lineno</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="k">if</span> <span class="n">is_example_notebook_like</span><span class="p">:</span>
                 <span class="n">example_rst</span> <span class="o">+=</span> <span class="n">code_rst</span>
                 <span class="n">example_rst</span> <span class="o">+=</span> <span class="n">code_output</span>
@@ -1820,7 +1867,13 @@ document.write(`
 <div class="viewcode-block" id="save_rst_example">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.save_rst_example">[docs]</a>
 <span class="k">def</span> <span class="nf">save_rst_example</span><span class="p">(</span>
-    <span class="n">example_rst</span><span class="p">,</span> <span class="n">example_file</span><span class="p">,</span> <span class="n">time_elapsed</span><span class="p">,</span> <span class="n">memory_used</span><span class="p">,</span> <span class="n">gallery_conf</span>
+    <span class="n">example_rst</span><span class="p">,</span>
+    <span class="n">example_file</span><span class="p">,</span>
+    <span class="n">time_elapsed</span><span class="p">,</span>
+    <span class="n">memory_used</span><span class="p">,</span>
+    <span class="n">gallery_conf</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">language</span><span class="o">=</span><span class="s2">&quot;python&quot;</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Saves the rst notebook to example_file including header &amp; footer.</span>
 
@@ -1830,6 +1883,8 @@ document.write(`
 <span class="sd">        rst containing the executed file content</span>
 <span class="sd">    example_file : str</span>
 <span class="sd">        Filename with full path of python example file in documentation folder</span>
+<span class="sd">    language : str</span>
+<span class="sd">        Name of the programming language the example is in</span>
 <span class="sd">    time_elapsed : float</span>
 <span class="sd">        Time elapsed in seconds while executing file</span>
 <span class="sd">    memory_used : float</span>
@@ -1837,7 +1892,8 @@ document.write(`
 <span class="sd">    gallery_conf : dict</span>
 <span class="sd">        Sphinx-Gallery configuration dictionary</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">example_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">example_file</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">])</span>
+    <span class="n">example_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">example_file</span><span class="p">)</span>
+    <span class="n">example_fname</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">example_file</span><span class="o">.</span><span class="n">relative_to</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">]))</span>
     <span class="n">ref_fname</span> <span class="o">=</span> <span class="n">example_fname</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
 
     <span class="n">binder_conf</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;binder&quot;</span><span class="p">]</span>
@@ -1862,33 +1918,37 @@ document.write(`
         <span class="o">+</span> <span class="n">example_rst</span>
     <span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">time_elapsed</span> <span class="o">&gt;=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;min_reported_time&quot;</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="n">time_elapsed</span> <span class="o">&gt;</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;min_reported_time&quot;</span><span class="p">]:</span>
         <span class="n">time_m</span><span class="p">,</span> <span class="n">time_s</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="n">time_elapsed</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
         <span class="n">example_rst</span> <span class="o">+=</span> <span class="n">TIMING_CONTENT</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time_m</span><span class="p">,</span> <span class="n">time_s</span><span class="p">)</span>
-
-    <span class="n">fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">example_file</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;show_memory&quot;</span><span class="p">]:</span>
         <span class="n">example_rst</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;**Estimated memory usage:** </span><span class="si">{</span><span class="n">memory_used</span><span class="si">:</span><span class="s2"> .0f</span><span class="si">}</span><span class="s2"> MB</span><span class="se">\n\n</span><span class="s2">&quot;</span>
 
-    <span class="c1"># Generate a binder URL if specified</span>
-    <span class="n">binder_badge_rst</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">is_binder_enabled</span><span class="p">:</span>
-        <span class="n">binder_badge_rst</span> <span class="o">+=</span> <span class="n">gen_binder_rst</span><span class="p">(</span><span class="n">example_file</span><span class="p">,</span> <span class="n">binder_conf</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
-        <span class="n">binder_badge_rst</span> <span class="o">=</span> <span class="n">indent</span><span class="p">(</span><span class="n">binder_badge_rst</span><span class="p">,</span> <span class="s2">&quot;  &quot;</span><span class="p">)</span>  <span class="c1"># need an extra two</span>
+    <span class="n">example_rst</span> <span class="o">+=</span> <span class="n">DOWNLOAD_LINKS_HEADER</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ref_fname</span><span class="p">)</span>
 
-    <span class="n">jupyterlite_rst</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">is_jupyterlite_enabled</span><span class="p">:</span>
+    <span class="n">save_notebook</span> <span class="o">=</span> <span class="n">example_file</span><span class="o">.</span><span class="n">suffix</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;notebook_extensions&quot;</span><span class="p">]</span>
+
+    <span class="c1"># Generate a binder URL if specified</span>
+    <span class="k">if</span> <span class="n">is_binder_enabled</span> <span class="ow">and</span> <span class="n">save_notebook</span><span class="p">:</span>
+        <span class="n">binder_badge_rst</span> <span class="o">=</span> <span class="n">gen_binder_rst</span><span class="p">(</span><span class="n">example_file</span><span class="p">,</span> <span class="n">binder_conf</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
+        <span class="n">binder_badge_rst</span> <span class="o">=</span> <span class="n">indent</span><span class="p">(</span><span class="n">binder_badge_rst</span><span class="p">,</span> <span class="s2">&quot;  &quot;</span><span class="p">)</span>  <span class="c1"># need an extra two</span>
+        <span class="n">example_rst</span> <span class="o">+=</span> <span class="n">binder_badge_rst</span>
+
+    <span class="k">if</span> <span class="n">is_jupyterlite_enabled</span> <span class="ow">and</span> <span class="n">save_notebook</span><span class="p">:</span>
         <span class="n">jupyterlite_rst</span> <span class="o">=</span> <span class="n">gen_jupyterlite_rst</span><span class="p">(</span><span class="n">example_file</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
         <span class="n">jupyterlite_rst</span> <span class="o">=</span> <span class="n">indent</span><span class="p">(</span><span class="n">jupyterlite_rst</span><span class="p">,</span> <span class="s2">&quot;  &quot;</span><span class="p">)</span>  <span class="c1"># need an extra two</span>
+        <span class="n">example_rst</span> <span class="o">+=</span> <span class="n">jupyterlite_rst</span>
 
-    <span class="n">example_rst</span> <span class="o">+=</span> <span class="n">CODE_DOWNLOAD</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-        <span class="n">fname</span><span class="p">,</span> <span class="n">replace_py_ipynb</span><span class="p">(</span><span class="n">fname</span><span class="p">),</span> <span class="n">binder_badge_rst</span><span class="p">,</span> <span class="n">ref_fname</span><span class="p">,</span> <span class="n">jupyterlite_rst</span>
-    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">save_notebook</span><span class="p">:</span>
+        <span class="n">example_rst</span> <span class="o">+=</span> <span class="n">NOTEBOOK_DOWNLOAD</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">example_file</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">&quot;.ipynb&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="n">example_rst</span> <span class="o">+=</span> <span class="n">CODE_DOWNLOAD</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">example_file</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">language</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;show_signature&quot;</span><span class="p">]:</span>
         <span class="n">example_rst</span> <span class="o">+=</span> <span class="n">SPHX_GLR_SIG</span>
 
-    <span class="n">write_file_new</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\.py$&quot;</span><span class="p">,</span> <span class="s2">&quot;.rst.new&quot;</span><span class="p">,</span> <span class="n">example_file</span><span class="p">)</span>
+    <span class="n">write_file_new</span> <span class="o">=</span> <span class="n">example_file</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">&quot;.rst.new&quot;</span><span class="p">)</span>
     <span class="k">with</span> <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">write_file_new</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">example_rst</span><span class="p">)</span>
     <span class="c1"># make it read-only so that people don&#39;t try to edit it</span>
