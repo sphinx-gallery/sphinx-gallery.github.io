@@ -1503,17 +1503,24 @@ document.write(`
 <span class="sd">        List whose single element is the contents of the source file</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">docname</span> <span class="o">=</span> <span class="n">docname</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>  <span class="c1"># can be None on Sphinx 7.2</span>
+    <span class="k">if</span> <span class="n">docname</span> <span class="o">!=</span> <span class="s2">&quot;sg_api_usage&quot;</span><span class="p">:</span>
+        <span class="k">return</span>
     <span class="n">gallery_conf</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span>
     <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;show_api_usage&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
         <span class="k">return</span>
     <span class="c1"># since this is done at the gallery directory level (as opposed</span>
     <span class="c1"># to in a gallery directory, e.g. auto_examples), it runs last</span>
     <span class="c1"># which means that all the api entries will be in gallery_conf</span>
+
+    <span class="c1"># Always write at least the title</span>
+    <span class="n">source</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">SPHX_GLR_ORPHAN</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;sphx_glr_sg_api_usage&quot;</span><span class="p">)</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Unused API Entries&quot;</span>
+    <span class="n">source</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">title</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;^&quot;</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">title</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
     <span class="k">if</span> <span class="p">(</span>
-        <span class="s2">&quot;sg_api_usage&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">docname</span>
-        <span class="ow">or</span> <span class="s2">&quot;_sg_api_entries&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">gallery_conf</span>
+        <span class="s2">&quot;_sg_api_entries&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">gallery_conf</span>
         <span class="ow">or</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;backreferences_dir&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span>
     <span class="p">):</span>
+        <span class="n">source</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="s2">&quot;No API entries found, not computed.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
         <span class="k">return</span>
     <span class="n">backreferences_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
         <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">],</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;backreferences_dir&quot;</span><span class="p">]</span>
@@ -1528,6 +1535,7 @@ document.write(`
     <span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">example_files</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">source</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="s2">&quot;No examples run, not computed.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
         <span class="k">return</span>
 
     <span class="k">def</span> <span class="nf">get_entry_type</span><span class="p">(</span><span class="n">entry</span><span class="p">):</span>
@@ -1561,10 +1569,6 @@ document.write(`
                         <span class="n">example_name</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;`&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
                         <span class="n">used_api_entries</span><span class="p">[</span><span class="n">entry</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">example_name</span><span class="p">)</span>
 
-    <span class="n">source</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">SPHX_GLR_ORPHAN</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;sphx_glr_sg_api_usage&quot;</span><span class="p">)</span>
-
-    <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Unused API Entries&quot;</span>
-    <span class="n">source</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">title</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;^&quot;</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">title</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
     <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">unused_api_entries</span><span class="p">):</span>
         <span class="n">source</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;- :</span><span class="si">{</span><span class="n">get_entry_type</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span><span class="si">}</span><span class="s2">:`</span><span class="si">{</span><span class="n">entry</span><span class="si">}</span><span class="s2">`</span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="n">source</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
