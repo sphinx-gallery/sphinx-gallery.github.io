@@ -1973,11 +1973,13 @@ document.write(`
 
     <span class="c1"># Early filling of sphinx_gallery_conf defaults at config-inited</span>
     <span class="n">app</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;config-inited&quot;</span><span class="p">,</span> <span class="n">fill_gallery_conf_defaults</span><span class="p">,</span> <span class="n">priority</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-    <span class="c1"># set small priority value, so that pre_configure_jupyterlite_sphinx is</span>
-    <span class="c1"># called before jupyterlite_sphinx config-inited</span>
+    <span class="c1"># Set priority to a small number (higher priority than the default</span>
+    <span class="c1"># priority=500), so that pre_configure_jupyterlite_sphinx is called before</span>
+    <span class="c1"># jupyterlite_sphinx config-inited</span>
     <span class="n">app</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;config-inited&quot;</span><span class="p">,</span> <span class="n">pre_configure_jupyterlite_sphinx</span><span class="p">,</span> <span class="n">priority</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
-    <span class="c1"># set high priority value, so that post_configure_jupyterlite_sphinx is</span>
-    <span class="c1"># called after jupyterlite_sphinx config-inited</span>
+    <span class="c1"># Set priority to a big number (lower priority than the default</span>
+    <span class="c1"># priority=500), so that post_configure_jupyterlite_sphinx is called after</span>
+    <span class="c1"># jupyterlite_sphinx config-inited</span>
     <span class="n">app</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;config-inited&quot;</span><span class="p">,</span> <span class="n">post_configure_jupyterlite_sphinx</span><span class="p">,</span> <span class="n">priority</span><span class="o">=</span><span class="mi">900</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="s2">&quot;sphinx.ext.autodoc&quot;</span> <span class="ow">in</span> <span class="n">app</span><span class="o">.</span><span class="n">extensions</span><span class="p">:</span>
@@ -1994,12 +1996,16 @@ document.write(`
     <span class="c1"># Early update of sphinx_gallery_conf at builder-inited</span>
     <span class="n">app</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;builder-inited&quot;</span><span class="p">,</span> <span class="n">update_gallery_conf_builder_inited</span><span class="p">,</span> <span class="n">priority</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
     <span class="n">app</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;builder-inited&quot;</span><span class="p">,</span> <span class="n">generate_gallery_rst</span><span class="p">)</span>
-    <span class="n">app</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;build-finished&quot;</span><span class="p">,</span> <span class="n">copy_binder_files</span><span class="p">)</span>
-    <span class="n">app</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;build-finished&quot;</span><span class="p">,</span> <span class="n">create_jupyterlite_contents</span><span class="p">)</span>
 
+    <span class="n">app</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;build-finished&quot;</span><span class="p">,</span> <span class="n">copy_binder_files</span><span class="p">)</span>
+    <span class="c1"># Set priority to a small number (higher priority than the default</span>
+    <span class="c1"># priority=500) so that create_jupyterlite_contents runs before</span>
+    <span class="c1"># jupyterlite_sphinx build-finished</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;build-finished&quot;</span><span class="p">,</span> <span class="n">create_jupyterlite_contents</span><span class="p">,</span> <span class="n">priority</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
     <span class="n">app</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;build-finished&quot;</span><span class="p">,</span> <span class="n">summarize_failing_examples</span><span class="p">)</span>
     <span class="n">app</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;build-finished&quot;</span><span class="p">,</span> <span class="n">embed_code_links</span><span class="p">)</span>
     <span class="n">app</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;build-finished&quot;</span><span class="p">,</span> <span class="n">clean_api_usage_files</span><span class="p">)</span>
+
     <span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;parallel_read_safe&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
         <span class="s2">&quot;parallel_write_safe&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
