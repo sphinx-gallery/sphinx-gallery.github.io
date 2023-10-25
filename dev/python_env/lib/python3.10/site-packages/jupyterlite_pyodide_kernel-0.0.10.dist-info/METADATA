@@ -1,0 +1,162 @@
+Metadata-Version: 2.1
+Name: jupyterlite-pyodide-kernel
+Version: 0.0.10
+Summary: Python kernel for JupyterLite powered by Pyodide
+Project-URL: Homepage, https://jupyterlite-pyodide-kernel.readthedocs.io
+Project-URL: Documentation, https://jupyterlite-pyodide-kernel.readthedocs.io
+Project-URL: Source, https://github.com/jupyterlite/pyodide-kernel
+Project-URL: Issues, https://github.com/jupyterlite/pyodide-kernel/issues
+Project-URL: PyPI, https://pypi.org/project/jupyterlite-pyodide-kernel
+Author: JupyterLite Contributors
+License: BSD 3-Clause License
+        
+        Copyright (c) 2022, JupyterLite Contributors
+        All rights reserved.
+        
+        Redistribution and use in source and binary forms, with or without
+        modification, are permitted provided that the following conditions are met:
+        
+        1. Redistributions of source code must retain the above copyright notice, this
+           list of conditions and the following disclaimer.
+        
+        2. Redistributions in binary form must reproduce the above copyright notice,
+           this list of conditions and the following disclaimer in the documentation
+           and/or other materials provided with the distribution.
+        
+        3. Neither the name of the copyright holder nor the names of its
+           contributors may be used to endorse or promote products derived from
+           this software without specific prior written permission.
+        
+        THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+        AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+        IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+        DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+        FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+        DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+        SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+        CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+        OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+        OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+License-File: LICENSE
+Keywords: browser,jupyter,jupyterlab,jupyterlite,notebook,pyodide
+Classifier: Framework :: Jupyter
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Requires-Python: >=3.8
+Requires-Dist: jupyterlite-core<0.2.0,>=0.1.0b22
+Requires-Dist: pkginfo
+Provides-Extra: dev
+Requires-Dist: build; extra == 'dev'
+Requires-Dist: hatch; extra == 'dev'
+Requires-Dist: jupyterlab<3.6,>=3.5.3; extra == 'dev'
+Provides-Extra: docs
+Requires-Dist: ipywidgets<9,>=8.0; extra == 'docs'
+Requires-Dist: jupyter-server-mathjax; extra == 'docs'
+Requires-Dist: jupyterlab-language-pack-fr-fr; extra == 'docs'
+Requires-Dist: jupyterlab-language-pack-zh-cn; extra == 'docs'
+Requires-Dist: libarchive-c; extra == 'docs'
+Requires-Dist: myst-parser; extra == 'docs'
+Requires-Dist: pydata-sphinx-theme; extra == 'docs'
+Requires-Dist: sphinx-copybutton; extra == 'docs'
+Provides-Extra: lint
+Requires-Dist: black; extra == 'lint'
+Requires-Dist: ruff; extra == 'lint'
+Provides-Extra: test
+Requires-Dist: pytest; extra == 'test'
+Requires-Dist: pytest-console-scripts; extra == 'test'
+Requires-Dist: pytest-cov; extra == 'test'
+Requires-Dist: pytest-html; extra == 'test'
+Description-Content-Type: text/markdown
+
+# jupyterlite-pyodide-kernel
+
+> A Python kernel for [JupyterLite](https://jupyterlite.rtfd.io) powered by
+> [Pyodide](https://pyodide.org),
+
+[![ci-badge]][ci] [![lite-badge]][lite] [![docs-badge]][docs]
+
+[ci-badge]: https://github.com/jupyterlite/pyodide-kernel/workflows/Build/badge.svg
+[lite-badge]: https://jupyterlite.rtfd.io/en/latest/_static/badge.svg
+[lite]: https://jupyterlite-pyodide-kernel.rtfd.io/en/latest/_static
+[ci]: https://github.com/jupyterlite/pyodide-kernel/actions?query=branch%3Amain
+[docs-badge]:
+  https://readthedocs.org/projects/jupyterlite-pyodide-kernel/badge/?version=latest
+[docs]: https://jupyterlite-pyodide-kernel.readthedocs.io/en/latest/?badge=latest
+
+## Requirements
+
+- `python >=3.8`
+- `jupyterlite >=0.1.0b19`
+
+## Install
+
+To install the Pyodide kernel labextension and the CLI addons for `jupyter lite`, run:
+
+```bash
+pip install jupyterlite-pyodide-kernel
+```
+
+Then build your JupyterLite site:
+
+```bash
+jupyter lite build
+```
+
+⚠️ The documentation for advanced configuration is available from the main JupyterLite
+documentation site:
+
+- [configuring]
+- [command line interface][cli]
+
+[configuring]:
+  https://jupyterlite.readthedocs.io/en/latest/howto/index.html#configuring-the-python-environment
+[cli]: https://jupyterlite.readthedocs.io/en/latest/reference/cli.html
+
+## Uninstall
+
+To remove the extension, run:
+
+```bash
+pip uninstall jupyterlite-pyodide-kernel
+```
+
+## Development Install
+
+Below is an short overview of getting up and running quickly. Please see the
+[contributing guide][contrib] for full details.
+
+### Development Requirements
+
+**Recommended** a Python virtual environment provided by a tool of choice, e.g.
+
+- `virtualenv`
+- `mamba`
+- `conda`
+
+Ensure the local development environment has:
+
+- `git`
+- `nodejs 18`
+- `python >=3.8`
+
+### Development Quick Start
+
+```bash
+git clone https://github.com/jupyterlite/pyodide-kernel
+cd pyodide-kernel
+npm run quickstart
+```
+
+Then, serve the built demo site, documentation, and test reports with Python's built-in
+http server:
+
+```bash
+jlpm serve
+```
+
+[contrib]: https://github.com/jupyterlite/pyodide-kernel/blob/main/CONTRIBUTING.md
