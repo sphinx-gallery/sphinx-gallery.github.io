@@ -14,7 +14,7 @@ try:
     import sqlite3
 except ImportError:
     # fallback on pysqlite2 if Python was build without sqlite
-    from pysqlite2 import dbapi2 as sqlite3  # type:ignore[import-not-found,no-redef]
+    from pysqlite2 import dbapi2 as sqlite3  # type:ignore[no-redef]
 
 from dataclasses import dataclass, fields
 
@@ -460,6 +460,13 @@ class SessionManager(LoggingConfigurable):
             sets.append("%s=?" % column)
         query = "UPDATE session SET %s WHERE session_id=?" % (", ".join(sets))  # noqa
         self.cursor.execute(query, [*list(kwargs.values()), session_id])
+
+        if hasattr(self.kernel_manager, "update_env"):
+            self.cursor.execute(
+                "SELECT path, name, kernel_id FROM session WHERE session_id=?", [session_id]
+            )
+            path, name, kernel_id = self.cursor.fetchone()
+            self.kernel_manager.update_env(kernel_id=kernel_id, env=self.get_kernel_env(path, name))
 
     async def kernel_culled(self, kernel_id: str) -> bool:
         """Checks if the kernel is still considered alive and returns true if its not found."""
