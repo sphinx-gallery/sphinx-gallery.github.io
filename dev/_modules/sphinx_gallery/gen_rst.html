@@ -506,6 +506,7 @@ document.write(`
 
 <span class="kn">from</span> <span class="nn">sphinx.errors</span> <span class="kn">import</span> <span class="n">ExtensionError</span>
 <span class="kn">import</span> <span class="nn">sphinx.util</span>
+<span class="kn">from</span> <span class="nn">sphinx.util.console</span> <span class="kn">import</span> <span class="n">blue</span><span class="p">,</span> <span class="n">red</span><span class="p">,</span> <span class="n">bold</span>
 
 <span class="kn">from</span> <span class="nn">.scrapers</span> <span class="kn">import</span> <span class="n">save_figures</span><span class="p">,</span> <span class="n">ImagePathIterator</span><span class="p">,</span> <span class="n">clean_modules</span><span class="p">,</span> <span class="n">_find_image_ext</span>
 <span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="p">(</span>
@@ -1136,15 +1137,15 @@ document.write(`
     <span class="p">)</span>
 
     <span class="n">expected</span> <span class="o">=</span> <span class="n">src_file</span> <span class="ow">in</span> <span class="n">_expected_failing_examples</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">)</span>
+    <span class="n">src_file_rel</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">src_file</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">])</span>
     <span class="k">if</span> <span class="n">expected</span><span class="p">:</span>
-        <span class="n">func</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">,</span>
-            <span class="s2">&quot;blue&quot;</span><span class="p">,</span>
-        <span class="p">)</span>
+        <span class="n">func</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">kind</span> <span class="o">=</span> <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">,</span> <span class="n">blue</span><span class="p">,</span> <span class="s2">&quot;expectedly&quot;</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">func</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span>
-    <span class="n">func</span><span class="p">(</span>
-        <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> failed to execute correctly: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">src_file</span><span class="p">,</span> <span class="n">formatted_exception</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span>
+        <span class="n">func</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">kind</span> <span class="o">=</span> <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">,</span> <span class="n">red</span><span class="p">,</span> <span class="s2">&quot;unexpectedly&quot;</span>
+    <span class="n">func</span><span class="p">(</span>  <span class="c1"># needs leading newline to get away from iterator</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">bold</span><span class="p">(</span><span class="n">color</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">))</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">kind</span><span class="si">}</span><span class="s2"> failed to execute correctly:</span><span class="se">\n\n</span><span class="s2">%s&quot;</span><span class="p">,</span>
+        <span class="n">src_file_rel</span><span class="p">,</span>
+        <span class="n">color</span><span class="p">(</span><span class="n">indent</span><span class="p">(</span><span class="n">formatted_exception</span><span class="p">,</span> <span class="s2">&quot;    &quot;</span><span class="p">)),</span>
     <span class="p">)</span>
 
     <span class="n">except_rst</span> <span class="o">=</span> <span class="n">codestr2rst</span><span class="p">(</span><span class="n">formatted_exception</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;pytb&quot;</span><span class="p">)</span>
