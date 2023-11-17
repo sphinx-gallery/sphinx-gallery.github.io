@@ -76,11 +76,6 @@ from ..vtkCommonDataModel import vtkDataObject
 from ..vtkCommonCore import vtkWeakReference
 import weakref
 
-if sys.hexversion < 0x03000000:
-    izip = itertools.izip
-else:
-    izip = zip
-
 def reshape_append_ones (a1, a2):
     """Returns a list with the two arguments, any of them may be
     processed.  If the arguments are numpy.ndarrays, append 1s to the
@@ -220,8 +215,6 @@ class VTKArrayMetaClass(type):
         add_default_numeric_ops("add")
         add_default_numeric_ops("sub")
         add_default_numeric_ops("mul")
-        if sys.hexversion < 0x03000000:
-            add_default_numeric_ops("div")
         add_default_numeric_ops("truediv")
         add_default_numeric_ops("floordiv")
         add_default_numeric_ops("mod")
@@ -362,8 +355,6 @@ class VTKNoneArrayMetaClass(type):
         _add_default_ops("add")
         _add_default_ops("sub")
         _add_default_ops("mul")
-        if sys.hexversion < 0x03000000:
-            _add_default_ops("div")
         _add_default_ops("truediv")
         _add_default_ops("floordiv")
         _add_default_ops("mod")
@@ -447,8 +438,6 @@ class VTKCompositeDataArrayMetaClass(type):
         add_default_numeric_ops("add")
         add_default_numeric_ops("sub")
         add_default_numeric_ops("mul")
-        if sys.hexversion < 0x03000000:
-            add_default_numeric_ops("div")
         add_default_numeric_ops("truediv")
         add_default_numeric_ops("floordiv")
         add_default_numeric_ops("mod")
@@ -554,7 +543,7 @@ class VTKCompositeDataArray(object):
         self.__init_from_composite()
         res = []
         if type(index) == VTKCompositeDataArray:
-            for a, idx in izip(self._Arrays, index.Arrays):
+            for a, idx in zip(self._Arrays, index.Arrays):
                 if a is not NoneArray:
                     res.append(a.__getitem__(idx))
                 else:
@@ -573,7 +562,7 @@ class VTKCompositeDataArray(object):
         self.__init_from_composite()
         res = []
         if type(other) == VTKCompositeDataArray:
-            for a1, a2 in izip(self._Arrays, other.Arrays):
+            for a1, a2 in zip(self._Arrays, other.Arrays):
                 if a1 is not NoneArray and a2 is not NoneArray:
                     l = reshape_append_ones(a1, a2)
                     res.append(op(l[0],l[1]))
@@ -595,7 +584,7 @@ class VTKCompositeDataArray(object):
         self.__init_from_composite()
         res = []
         if type(other) == VTKCompositeDataArray:
-            for a1, a2 in izip(self._Arrays, other.Arrays):
+            for a1, a2 in zip(self._Arrays, other.Arrays):
                 if a1 is not NoneArray and a2 is notNoneArray:
                     l = reshape_append_ones(a2,a1)
                     res.append(op(l[0],l[1]))
@@ -629,7 +618,10 @@ class VTKCompositeDataArray(object):
 
 class DataSetAttributes(VTKObjectWrapper):
     """This is a python friendly wrapper of vtkDataSetAttributes. It
-    returns VTKArrays. It also provides the dictionary interface."""
+    returns VTKArrays. It also provides the dictionary interface.
+    Note that the stored array should have a shape that matches the number
+    of elements. E.g. for a PointData, narray.shape[0] should be equal
+    to dataset.GetNumberOfPoints()"""
 
     def __init__(self, vtkobject, dataset, association):
         super(DataSetAttributes, self).__init__(vtkobject)
@@ -684,7 +676,14 @@ class DataSetAttributes(VTKObjectWrapper):
             self.VTKObject.PassData(other.VTKObject)
 
     def append(self, narray, name):
-        """Appends a new array to the dataset attributes."""
+        """Appends narray to the dataset attributes.
+
+        If narray is a scalar, create an array with this scalar for each element.
+        If narray is an array with a size not matching the array association
+        (e.g. size should be equal to GetNumberOfPoints() for PointData),
+        copy the input narray for each element. This is intended to ease
+        initialization, typically using same 3d vector for each element.
+        In any case, be careful about memory explosion."""
         if narray is NoneArray:
             # if NoneArray, nothing to do.
             return
@@ -702,7 +701,8 @@ class DataSetAttributes(VTKObjectWrapper):
             else:
                 arrLength = narray.shape[0]
 
-        # Fixup input array length:
+        # if input is not a valid array (i.e. unexpected shape[0]),
+        # create a new array and copy input for each element
         if not isinstance(narray, numpy.ndarray) or numpy.ndim(narray) == 0: # Scalar input
             dtype = narray.dtype if isinstance(narray, numpy.ndarray) else type(narray)
             tmparray = numpy.empty(arrLength, dtype=dtype)
@@ -712,7 +712,19 @@ class DataSetAttributes(VTKObjectWrapper):
             components = 1
             for l in narray.shape:
                 components *= l
-            tmparray = numpy.empty((arrLength, components), dtype=narray.dtype)
+            try:
+                tmparray = numpy.empty((arrLength, components), dtype=narray.dtype)
+            except numpy.core._exceptions._ArrayMemoryError as npErr:
+                sys.stderr.write("Fail to copy input array for each dataset element: array is too big to be duplicated.\n"
+                "Input should either be small enough to be duplicated for each element, or shape[0] should "
+                "match number of element.\n"
+                "Example of correct usage: to add a point PointData array, it is common to have\n"
+                "array.shape[0] == 3 or array.shape[0] == dataset.GetNumberOfPoints()\n"
+                )
+                sys.stderr.write(str(type(npErr)) + "\n")
+                sys.stderr.write(str(npErr))
+                return
+
             tmparray[:] = narray.flatten()
             narray = tmparray
 
@@ -751,8 +763,8 @@ class DataSetAttributes(VTKObjectWrapper):
 
 class CompositeDataSetAttributes():
     """This is a python friendly wrapper for vtkDataSetAttributes for composite
-    datsets. Since composite datasets themselves don't have attribute data, but
-    the attribute data is associated with the leaf nodes in the composite
+    datasets. Since composite datasets themselves don't have attribute data,
+    but the attribute data is associated with the leaf nodes in the composite
     dataset, this class simulates a DataSetAttributes interface by taking a
     union of DataSetAttributes associated with all leaf nodes."""
 
@@ -804,7 +816,7 @@ class CompositeDataSetAttributes():
                 # don't add the narray since it's a scalar. GetArray() will create a
                 # VTKCompositeArray on-demand.
         else:
-            for ds, array in izip(self.DataSet, narray.Arrays):
+            for ds, array in zip(self.DataSet, narray.Arrays):
                 if array is not None:
                     ds.GetAttributes(self.Association).append(array, name)
                     added = True

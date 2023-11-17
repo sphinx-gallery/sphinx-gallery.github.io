@@ -700,6 +700,10 @@ document.write(`
 <span class="s2">      :download:`Download Jupyter notebook: </span><span class="si">{0}</span><span class="s2"> &lt;</span><span class="si">{0}</span><span class="s2">&gt;`</span>
 <span class="s2">&quot;&quot;&quot;</span>
 
+<span class="n">RECOMMENDATIONS_INCLUDE</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span><span class="se">\n</span>
+<span class="s2">.. include:: </span><span class="si">{0}</span><span class="s2">.recommendations</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
 
 <div class="viewcode-block" id="codestr2rst">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.codestr2rst">[docs]</a>
@@ -1978,6 +1982,11 @@ document.write(`
         <span class="n">example_rst</span> <span class="o">+=</span> <span class="n">NOTEBOOK_DOWNLOAD</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">example_file</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">&quot;.ipynb&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
     <span class="n">example_rst</span> <span class="o">+=</span> <span class="n">CODE_DOWNLOAD</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">example_file</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">language</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;recommender&quot;</span><span class="p">][</span><span class="s2">&quot;enable&quot;</span><span class="p">]:</span>
+        <span class="c1"># extract the filename without the extension</span>
+        <span class="n">recommend_fname</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">example_fname</span><span class="p">)</span><span class="o">.</span><span class="n">stem</span>
+        <span class="n">example_rst</span> <span class="o">+=</span> <span class="n">RECOMMENDATIONS_INCLUDE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">recommend_fname</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;show_signature&quot;</span><span class="p">]:</span>
         <span class="n">example_rst</span> <span class="o">+=</span> <span class="n">SPHX_GLR_SIG</span>

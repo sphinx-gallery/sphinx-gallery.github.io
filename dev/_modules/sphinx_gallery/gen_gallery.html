@@ -492,6 +492,7 @@ document.write(`
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">pathlib</span>
 <span class="kn">from</span> <span class="nn">xml.sax.saxutils</span> <span class="kn">import</span> <span class="n">quoteattr</span><span class="p">,</span> <span class="n">escape</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span>
 
 <span class="kn">from</span> <span class="nn">sphinx.errors</span> <span class="kn">import</span> <span class="n">ConfigError</span><span class="p">,</span> <span class="n">ExtensionError</span>
 <span class="kn">import</span> <span class="nn">sphinx.util</span>
@@ -513,6 +514,7 @@ document.write(`
 <span class="kn">from</span> <span class="nn">.interactive_example</span> <span class="kn">import</span> <span class="n">post_configure_jupyterlite_sphinx</span>
 <span class="kn">from</span> <span class="nn">.interactive_example</span> <span class="kn">import</span> <span class="n">create_jupyterlite_contents</span>
 <span class="kn">from</span> <span class="nn">.directives</span> <span class="kn">import</span> <span class="n">MiniGallery</span><span class="p">,</span> <span class="n">ImageSg</span><span class="p">,</span> <span class="n">imagesg_addnode</span>
+<span class="kn">from</span> <span class="nn">.recommender</span> <span class="kn">import</span> <span class="n">ExampleRecommender</span><span class="p">,</span> <span class="n">_write_recommendations</span>
 
 <span class="n">_KNOWN_CSS</span> <span class="o">=</span> <span class="p">(</span>
     <span class="s2">&quot;sg_gallery&quot;</span><span class="p">,</span>
@@ -562,6 +564,7 @@ document.write(`
     <span class="s2">&quot;download_all_examples&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
     <span class="s2">&quot;abort_on_example_error&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
     <span class="s2">&quot;only_warn_on_example_error&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s2">&quot;recommender&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;enable&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
     <span class="s2">&quot;failing_examples&quot;</span><span class="p">:</span> <span class="p">{},</span>
     <span class="s2">&quot;passing_examples&quot;</span><span class="p">:</span> <span class="p">[],</span>
     <span class="s2">&quot;stale_examples&quot;</span><span class="p">:</span> <span class="p">[],</span>  <span class="c1"># ones that did not need to be run due to md5sum</span>
@@ -1144,6 +1147,42 @@ document.write(`
 
             <span class="n">costs</span> <span class="o">+=</span> <span class="n">subsection_costs</span>
             <span class="n">write_computation_times</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">subsection_costs</span><span class="p">)</span>
+
+        <span class="c1"># Build recommendation system</span>
+        <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;recommender&quot;</span><span class="p">][</span><span class="s2">&quot;enable&quot;</span><span class="p">]:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>  <span class="c1"># noqa: F401</span>
+            <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s2">&quot;gallery_conf[&#39;recommender&#39;] requires numpy&quot;</span><span class="p">)</span>
+
+            <span class="n">recommender_params</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;recommender&quot;</span><span class="p">])</span>
+            <span class="n">recommender_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;enable&quot;</span><span class="p">)</span>
+            <span class="n">recommender_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;rubric_header&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">recommender</span> <span class="o">=</span> <span class="n">ExampleRecommender</span><span class="p">(</span><span class="o">**</span><span class="n">recommender_params</span><span class="p">)</span>
+
+            <span class="n">gallery_py_files</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="c1"># root and subsection directories containing python examples</span>
+            <span class="n">gallery_directories</span> <span class="o">=</span> <span class="p">[</span><span class="n">gallery_dir_abs_path</span><span class="p">]</span> <span class="o">+</span> <span class="n">subsecs</span>
+            <span class="k">for</span> <span class="n">current_dir</span> <span class="ow">in</span> <span class="n">gallery_directories</span><span class="p">:</span>
+                <span class="n">src_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gallery_dir_abs_path</span><span class="p">,</span> <span class="n">current_dir</span><span class="p">)</span>
+                <span class="c1"># sort python files to have a deterministic input across call</span>
+                <span class="n">py_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+                    <span class="p">[</span>
+                        <span class="n">fname</span>
+                        <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">Path</span><span class="p">(</span><span class="n">src_dir</span><span class="p">)</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()</span>
+                        <span class="k">if</span> <span class="n">fname</span><span class="o">.</span><span class="n">suffix</span> <span class="o">==</span> <span class="s2">&quot;.py&quot;</span>
+                    <span class="p">],</span>
+                    <span class="n">key</span><span class="o">=</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;within_subsection_order&quot;</span><span class="p">](</span><span class="n">src_dir</span><span class="p">),</span>
+                <span class="p">)</span>
+                <span class="n">gallery_py_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span> <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">py_files</span><span class="p">]</span>
+                <span class="p">)</span>
+            <span class="c1"># flatten the list of list</span>
+            <span class="n">gallery_py_files</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span><span class="n">gallery_py_files</span><span class="p">))</span>
+
+            <span class="n">recommender</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">gallery_py_files</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">gallery_py_files</span><span class="p">:</span>
+                <span class="n">_write_recommendations</span><span class="p">(</span><span class="n">recommender</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
 
         <span class="c1"># generate toctree with subsections</span>
         <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;nested_sections&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>

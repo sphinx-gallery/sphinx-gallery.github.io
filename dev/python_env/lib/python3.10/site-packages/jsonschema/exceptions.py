@@ -4,6 +4,7 @@ Validation errors, and some surrounding helpers.
 from __future__ import annotations
 
 from collections import defaultdict, deque
+from collections.abc import Iterable, Mapping, MutableMapping
 from pprint import pformat
 from textwrap import dedent, indent
 from typing import ClassVar
@@ -209,14 +210,14 @@ class _RefResolutionError(Exception):
 
     def __eq__(self, other):
         if self.__class__ is not other.__class__:
-            return NotImplemented
+            return NotImplemented  # pragma: no cover -- uncovered but deprecated  # noqa: E501
         return self._cause == other._cause
 
     def __str__(self):
         return str(self._cause)
 
 
-class _WrappedReferencingError(_RefResolutionError, _Unresolvable):
+class _WrappedReferencingError(_RefResolutionError, _Unresolvable):  # pragma: no cover -- partially uncovered but to be removed  # noqa: E501
     def __init__(self, cause: _Unresolvable):
         object.__setattr__(self, "_wrapped", cause)
 
@@ -297,9 +298,9 @@ class ErrorTree:
 
     _instance = _unset
 
-    def __init__(self, errors=()):
-        self.errors = {}
-        self._contents = defaultdict(self.__class__)
+    def __init__(self, errors: Iterable[ValidationError] = ()):
+        self.errors: MutableMapping[str, ValidationError] = {}
+        self._contents: Mapping[str, ErrorTree] = defaultdict(self.__class__)
 
         for error in errors:
             container = self
@@ -309,7 +310,7 @@ class ErrorTree:
 
             container._instance = error.instance
 
-    def __contains__(self, index):
+    def __contains__(self, index: str | int):
         """
         Check whether ``instance[index]`` has any errors.
         """
@@ -328,11 +329,22 @@ class ErrorTree:
             self._instance[index]
         return self._contents[index]
 
-    def __setitem__(self, index, value):
+    def __setitem__(self, index: str | int, value: ErrorTree):
         """
         Add an error to the tree at the given ``index``.
+
+        .. deprecated:: v4.20.0
+
+            Setting items on an `ErrorTree` is deprecated without replacement.
+            To populate a tree, provide all of its sub-errors when you
+            construct the tree.
         """
-        self._contents[index] = value
+        warnings.warn(
+            "ErrorTree.__setitem__ is deprecated without replacement.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        self._contents[index] = value  # type: ignore[index]
 
     def __iter__(self):
         """

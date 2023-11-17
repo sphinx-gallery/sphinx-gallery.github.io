@@ -202,15 +202,21 @@ else:
 
 if PyQtImpl == 'PyQt6':
     CursorShape = Qt.CursorShape
-    MouseButton = Qt.MouseButton
-    WindowType = Qt.WindowType
     WidgetAttribute = Qt.WidgetAttribute
-    KeyboardModifier = Qt.KeyboardModifier
     FocusPolicy = Qt.FocusPolicy
     ConnectionType = Qt.ConnectionType
     Key = Qt.Key
     SizePolicy = QSizePolicy.Policy
     EventType = QEvent.Type
+    try:
+        MouseButton = Qt.MouseButton
+        WindowType = Qt.WindowType
+        KeyboardModifier = Qt.KeyboardModifier
+    except AttributeError:
+        # Fallback solution for PyQt6 versions < 6.1.0
+        MouseButton = Qt.MouseButtons
+        WindowType = Qt.WindowFlags
+        KeyboardModifier = Qt.KeyboardModifiers
 else:
     CursorShape = MouseButton = WindowType = WidgetAttribute = \
         KeyboardModifier = FocusPolicy = ConnectionType = Key = Qt
@@ -357,17 +363,7 @@ class QVTKRenderWindowInteractor(QVTKRWIBaseClass):
 
         WId = self.winId()
 
-        # Python2
-        if type(WId).__name__ == 'PyCObject':
-            from ctypes import pythonapi, c_void_p, py_object
-
-            pythonapi.PyCObject_AsVoidPtr.restype  = c_void_p
-            pythonapi.PyCObject_AsVoidPtr.argtypes = [py_object]
-
-            WId = pythonapi.PyCObject_AsVoidPtr(WId)
-
-        # Python3
-        elif type(WId).__name__ == 'PyCapsule':
+        if type(WId).__name__ == 'PyCapsule':
             from ctypes import pythonapi, c_void_p, py_object, c_char_p
 
             pythonapi.PyCapsule_GetName.restype = c_char_p
