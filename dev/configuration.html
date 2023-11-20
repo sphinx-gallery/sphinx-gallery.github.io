@@ -502,54 +502,79 @@ greater detail in subsequent sections.</p>
 are equivalent to the generated HTML and iPython notebooks (i.e. make sure
 <code class="docutils literal notranslate"><span class="pre">.py</span> <span class="pre">==</span> <span class="pre">.html</span> <span class="pre">==</span> <span class="pre">.ipynb</span></code>). This principle should be violated only when
 necessary, and on a case-by-case basis.</p>
-<section id="list-of-config-options">
-<span id="list-of-options"></span><h2>List of config options<a class="headerlink" href="#list-of-config-options" title="Link to this heading">#</a></h2>
-<p>Most Sphinx-Gallery configuration options are set in the Sphinx <code class="docutils literal notranslate"><span class="pre">conf.py</span></code>
-file:</p>
+<section id="configuration-options">
+<span id="list-of-options"></span><h2>Configuration options<a class="headerlink" href="#configuration-options" title="Link to this heading">#</a></h2>
+<section id="conf-py-configurations">
+<h3><cite>conf.py</cite> configurations<a class="headerlink" href="#conf-py-configurations" title="Link to this heading">#</a></h3>
+<p>Sphinx-Gallery configuration options that can be set in the Sphinx <code class="docutils literal notranslate"><span class="pre">conf.py</span></code>
+file, inside a <cite>sphinx_gallery_conf</cite> dictionary.</p>
+<p><strong>Gallery files and ordering</strong></p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">examples_dirs</span></code> and <code class="docutils literal notranslate"><span class="pre">gallery_dirs</span></code> (<a class="reference internal" href="#multiple-galleries-config"><span class="std std-ref">Manage multiple galleries</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">filename_pattern</span></code>, <code class="docutils literal notranslate"><span class="pre">ignore_pattern</span></code>, <code class="docutils literal notranslate"><span class="pre">example_extensions</span></code>, and
 <code class="docutils literal notranslate"><span class="pre">filetype_parsers</span></code> (<a class="reference internal" href="#build-pattern"><span class="std std-ref">Parsing and executing examples via matching patterns</span></a>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">run_stale_examples</span></code> (<a class="reference internal" href="#run-stale-examples"><span class="std std-ref">Rerunning stale examples</span></a>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">reset_argv</span></code> (<a class="reference internal" href="#reset-argv"><span class="std std-ref">Passing command line arguments to example scripts</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">copyfile_regex</span></code> (<a class="reference internal" href="#manual-passthrough"><span class="std std-ref">Manually passing files</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">subsection_order</span></code> (<a class="reference internal" href="#sub-gallery-order"><span class="std std-ref">Sorting gallery subsections</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">within_subsection_order</span></code> (<a class="reference internal" href="#within-gallery-order"><span class="std std-ref">Sorting gallery examples</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nested_sections</span></code> (<a class="reference internal" href="#nested-sections"><span class="std std-ref">Nesting gallery sections</span></a>)</p></li>
+</ul>
+<p><strong>Example execution</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">reset_argv</span></code> (<a class="reference internal" href="#reset-argv"><span class="std std-ref">Passing command line arguments to example scripts</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">capture_repr</span></code> and <code class="docutils literal notranslate"><span class="pre">ignore_repr_types</span></code> (<a class="reference internal" href="#capture-repr"><span class="std std-ref">Controlling what output is captured</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">plot_gallery</span></code> (<a class="reference internal" href="#without-execution"><span class="std std-ref">Building without executing examples</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">run_stale_examples</span></code> (<a class="reference internal" href="#run-stale-examples"><span class="std std-ref">Rerunning stale examples</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">abort_on_example_error</span></code> (<a class="reference internal" href="#abort-on-first"><span class="std std-ref">Abort build on first fail</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">expected_failing_examples</span></code> (<a class="reference internal" href="#dont-fail-exit"><span class="std std-ref">Don’t fail the build if specific examples error</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">only_warn_on_example_error</span></code> (<a class="reference internal" href="#warning-on-error"><span class="std std-ref">Never fail the build on error</span></a>)</p></li>
+</ul>
+<p><strong>Cross-referencing</strong></p>
+<ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">reference_url</span></code>, <code class="docutils literal notranslate"><span class="pre">prefer_full_module</span></code> (<a class="reference internal" href="#link-to-documentation"><span class="std std-ref">Add intersphinx links to your examples</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">backreferences_dir</span></code>, <code class="docutils literal notranslate"><span class="pre">doc_module</span></code>, <code class="docutils literal notranslate"><span class="pre">exclude_implicit_doc</span></code>,
 and <code class="docutils literal notranslate"><span class="pre">inspect_global_variables</span></code> (<a class="reference internal" href="#references-to-examples"><span class="std std-ref">Add mini-galleries for API documentation</span></a>)</p></li>
+</ul>
+<p><strong>Images and thumbnails</strong></p>
+<ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">default_thumb_file</span></code> (<a class="reference internal" href="#custom-default-thumb"><span class="std std-ref">Using a custom default thumbnail</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">thumbnail_size</span></code> (<a class="reference internal" href="#setting-thumbnail-size"><span class="std std-ref">Setting gallery thumbnail size</span></a>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">line_numbers</span></code> (<a class="reference internal" href="#adding-line-numbers"><span class="std std-ref">Adding line numbers to examples</span></a>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">remove_config_comments</span></code> (<a class="reference internal" href="#removing-config-comments"><span class="std std-ref">Removing config comments</span></a>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">download_all_examples</span></code> (<a class="reference internal" href="#disable-all-scripts-download"><span class="std std-ref">Disabling download button of all scripts</span></a>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">plot_gallery</span></code> (<a class="reference internal" href="#without-execution"><span class="std std-ref">Building without executing examples</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">image_srcset</span></code> (<a class="reference internal" href="#image-srcset"><span class="std std-ref">Multi-resolution images</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">image_scrapers</span></code> (<a class="reference internal" href="#image-scrapers"><span class="std std-ref">Image scrapers</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">compress_images</span></code> (<a class="reference internal" href="#compress-images"><span class="std std-ref">Compressing images</span></a>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">image_srcset</span></code> (<a class="reference internal" href="#image-srcset"><span class="std std-ref">Multi-resolution images</span></a>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">reset_modules</span></code> (<a class="reference internal" href="#reset-modules"><span class="std std-ref">Resetting modules</span></a>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">reset_modules_order</span></code> (<a class="reference internal" href="#reset-modules-order"><span class="std std-ref">Order of resetting modules</span></a>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">abort_on_example_error</span></code> (<a class="reference internal" href="#abort-on-first"><span class="std std-ref">Abort build on first fail</span></a>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">only_warn_on_example_error</span></code> (<a class="reference internal" href="#warning-on-error"><span class="std std-ref">Never fail the build on error</span></a>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">recommender</span></code> (<a class="reference internal" href="#recommend-examples"><span class="std std-ref">Enabling the example recommender system</span></a>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">expected_failing_examples</span></code> (<a class="reference internal" href="#dont-fail-exit"><span class="std std-ref">Don’t fail the build if specific examples error</span></a>)</p></li>
+</ul>
+<p><strong>Compute costs</strong></p>
+<ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">min_reported_time</span></code> (<a class="reference internal" href="#min-reported-time"><span class="std std-ref">Minimal reported time</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">show_memory</span></code> (<a class="reference internal" href="#show-memory"><span class="std std-ref">Showing memory consumption</span></a>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">show_signature</span></code> (<a class="reference internal" href="#show-signature"><span class="std std-ref">Show signature</span></a>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">binder</span></code> (<a class="reference internal" href="#binder-links"><span class="std std-ref">Generate Binder links for gallery notebooks (experimental)</span></a>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">jupyterlite</span></code> (<a class="reference internal" href="#jupyterlite"><span class="std std-ref">Generate JupyterLite links for gallery notebooks (experimental)</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">junit</span></code> (<a class="reference internal" href="#junit-xml"><span class="std std-ref">Using JUnit XML files</span></a>)</p></li>
+</ul>
+<p><strong>Jupyter notebooks and interactivity</strong></p>
+<ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">notebook_extensions</span></code> (<a class="reference internal" href="#notebook-extensions"><span class="std std-ref">Controlling notebook download links</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">promote_jupyter_magic</span></code> (<a class="reference internal" href="#promote-jupyter-magic"><span class="std std-ref">Making cell magic executable in notebooks</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">first_notebook_cell</span></code> and <code class="docutils literal notranslate"><span class="pre">last_notebook_cell</span></code> (<a class="reference internal" href="#own-notebook-cell"><span class="std std-ref">Add your own first and last notebook cell</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">notebook_images</span></code> (<a class="reference internal" href="#notebook-images"><span class="std std-ref">Adding images to notebooks</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">pypandoc</span></code> (<a class="reference internal" href="#use-pypandoc"><span class="std std-ref">Using pypandoc to convert reST to markdown</span></a>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">junit</span></code> (<a class="reference internal" href="#junit-xml"><span class="std std-ref">Using JUnit XML files</span></a>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">log_level</span></code> (<a class="reference internal" href="#log-level"><span class="std std-ref">Setting log level</span></a>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">capture_repr</span></code> and <code class="docutils literal notranslate"><span class="pre">ignore_repr_types</span></code> (<a class="reference internal" href="#capture-repr"><span class="std std-ref">Controlling what output is captured</span></a>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">nested_sections</span></code> (<a class="reference internal" href="#nested-sections"><span class="std std-ref">Nesting gallery sections</span></a>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">api_usage_ignore</span></code> (<a class="reference internal" href="#api-usage-ignore"><span class="std std-ref">Ignoring API entries</span></a>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">show_api_usage</span></code> (<a class="reference internal" href="#show-api-usage"><span class="std std-ref">Showing API Usage</span></a>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">copyfile_regex</span></code> (<a class="reference internal" href="#manual-passthrough"><span class="std std-ref">Manually passing files</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">binder</span></code> (<a class="reference internal" href="#binder-links"><span class="std std-ref">Generate Binder links for gallery notebooks (experimental)</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">jupyterlite</span></code> (<a class="reference internal" href="#jupyterlite"><span class="std std-ref">Generate JupyterLite links for gallery notebooks (experimental)</span></a>)</p></li>
 </ul>
+<p><strong>Appearance</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">line_numbers</span></code> (<a class="reference internal" href="#adding-line-numbers"><span class="std std-ref">Adding line numbers to examples</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">remove_config_comments</span></code> (<a class="reference internal" href="#removing-config-comments"><span class="std std-ref">Removing config comments</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">show_signature</span></code> (<a class="reference internal" href="#show-signature"><span class="std std-ref">Show signature</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">download_all_examples</span></code> (<a class="reference internal" href="#disable-all-scripts-download"><span class="std std-ref">Disabling download button of all scripts</span></a>)</p></li>
+</ul>
+<p><strong>Miscellaneous</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">reset_modules</span></code> and <code class="docutils literal notranslate"><span class="pre">reset_modules_order</span></code> (<a class="reference internal" href="#reset-modules"><span class="std std-ref">Resetting modules</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">recommender</span></code> (<a class="reference internal" href="#recommend-examples"><span class="std std-ref">Enabling the example recommender system</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">log_level</span></code> (<a class="reference internal" href="#log-level"><span class="std std-ref">Setting log level</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">show_api_usage</span></code> and <code class="docutils literal notranslate"><span class="pre">api_usage_ignore</span></code> (<a class="reference internal" href="#show-api-usage"><span class="std std-ref">Showing API Usage</span></a>)</p></li>
+</ul>
+</section>
+<section id="configurations-inside-examples">
+<h3>Configurations inside examples<a class="headerlink" href="#configurations-inside-examples" title="Link to this heading">#</a></h3>
 <p>Some options can also be set or overridden on a file-by-file basis:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">sphinx_gallery_line_numbers</span></code> (<a class="reference internal" href="#adding-line-numbers"><span class="std std-ref">Adding line numbers to examples</span></a>)</p></li>
@@ -562,19 +587,26 @@ and <code class="docutils literal notranslate"><span class="pre">inspect_global_
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">sphinx_gallery_defer_figures</span></code> (<a class="reference internal" href="#defer-figures"><span class="std std-ref">Using multiple code blocks to create a single figure</span></a>)</p></li>
 </ul>
-<p>See also <a class="reference internal" href="#removing-config-comments"><span class="std std-ref">Removing config comments</span></a> to hide config comments in files from
-the rendered examples.</p>
 <p>Some options can be set on a per-line basis in a file:
 - <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">sphinx_gallery_start_ignore</span></code> and <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">sphinx_gallery_end_ignore</span></code> (<a class="reference internal" href="#hiding-code-blocks"><span class="std std-ref">Hiding lines of code</span></a>)</p>
+<p>See also <a class="reference internal" href="#removing-config-comments"><span class="std std-ref">Removing config comments</span></a> to hide config comments in files from
+the rendered examples.</p>
+</section>
+<section id="build-options">
+<h3>Build options<a class="headerlink" href="#build-options" title="Link to this heading">#</a></h3>
 <p>Some options can be set during the build execution step, e.g. using a Makefile:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">html-noplot</span></code> (<a class="reference internal" href="#without-execution"><span class="std std-ref">Building without executing examples</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">html_abort_on_example_error</span></code> (<a class="reference internal" href="#abort-on-first"><span class="std std-ref">Abort build on first fail</span></a>)</p></li>
 </ul>
-<p>And some things can be tweaked directly in CSS:</p>
+</section>
+<section id="css-changes">
+<h3>CSS changes<a class="headerlink" href="#css-changes" title="Link to this heading">#</a></h3>
+<p>Some things can be tweaked directly in CSS:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">.sphx-glr-thumbcontainer</span></code> (<a class="reference internal" href="#setting-thumbnail-size"><span class="std std-ref">Setting gallery thumbnail size</span></a>)</p></li>
 </ul>
+</section>
 </section>
 <section id="removing-warnings">
 <span id="id2"></span><h2>Removing warnings<a class="headerlink" href="#removing-warnings" title="Link to this heading">#</a></h2>
@@ -929,7 +961,7 @@ backreferences</em>).</p></li>
 that are used and classes that are explicitly instantiated. The generated links
 are called implicit backreferences. The latter is useful for classes that are
 typically implicitly returned rather than explicitly instantiated (e.g.,
-<a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="(in Matplotlib v3.8.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a> which is most often instantiated only indirectly
+<a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="(in Matplotlib v3.8.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a> which is most often instantiated only indirectly
 within function calls). Such links are called explicit backreferences.</p>
 <p>For example, we can embed a small gallery of all examples that use or
 refer to <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.exp.html#numpy.exp" title="(in NumPy v1.26)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.exp</span></code></a>, which looks like this:</p>
@@ -1175,10 +1207,10 @@ For example, this code:</p>
 properly):</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">lst</span></code></a></p></li>
-<li><p><a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="(in Matplotlib v3.8.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">plt.subplots</span></code></a></p></li>
-<li><p><a class="reference external" href="https://matplotlib.org/stable/api/figure_api.html#matplotlib.figure.Figure" title="(in Matplotlib v3.8.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">fig</span></code></a></p></li>
-<li><p><a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="(in Matplotlib v3.8.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ax</span></code></a></p></li>
-<li><p><a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="(in Matplotlib v3.8.1)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ax.plot</span></code></a></p></li>
+<li><p><a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="(in Matplotlib v3.8.2)"><code class="xref py py-func docutils literal notranslate"><span class="pre">plt.subplots</span></code></a></p></li>
+<li><p><a class="reference external" href="https://matplotlib.org/stable/api/figure_api.html#matplotlib.figure.Figure" title="(in Matplotlib v3.8.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">fig</span></code></a></p></li>
+<li><p><a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="(in Matplotlib v3.8.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ax</span></code></a></p></li>
+<li><p><a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="(in Matplotlib v3.8.2)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ax.plot</span></code></a></p></li>
 </ul>
 <p>However, this feature might not work properly in all instances.
 Moreover, if variable names get reused in the same script to refer to
@@ -1913,7 +1945,7 @@ to scrape matplotlib images you can do:</p>
 <p>The default value is <code class="docutils literal notranslate"><span class="pre">'image_scrapers':</span> <span class="pre">('matplotlib',)</span></code> which only scrapes
 Matplotlib images. Note that this includes any images produced by packages that
 are based on Matplotlib, for example Seaborn or Yellowbrick. If you want
-to embed <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.animation.Animation.html#matplotlib.animation.Animation" title="(in Matplotlib v3.8.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.animation.Animation</span></code></a>s as animations rather
+to embed <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.animation.Animation.html#matplotlib.animation.Animation" title="(in Matplotlib v3.8.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.animation.Animation</span></code></a>s as animations rather
 than a single static image of the animation figure, you should add:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
@@ -1926,14 +1958,14 @@ and related options in your
 <a class="reference external" href="https://matplotlib.org/stable/tutorials/introductory/customizing.html">matplotlib rcParams</a>.
 It’s also recommended to ensure that “imagemagick” is available as a
 <code class="docutils literal notranslate"><span class="pre">writer</span></code>, which you can check with
-<a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.animation.ImageMagickWriter.html#matplotlib.animation.ImageMagickWriter" title="(in Matplotlib v3.8.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.animation.ImageMagickWriter.isAvailable()</span></code></a>.
+<a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.animation.ImageMagickWriter.html#matplotlib.animation.ImageMagickWriter" title="(in Matplotlib v3.8.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.animation.ImageMagickWriter.isAvailable()</span></code></a>.
 The FFmpeg writer in some light testing did not work as well for
 creating GIF thumbnails for the gallery pages.</p>
 <p>The following scrapers are supported:</p>
 <ul class="simple">
 <li><dl class="simple">
 <dt>matplotlib</dt><dd><p>Sphinx-Gallery maintains a scraper for
-<a class="reference external" href="https://matplotlib.org/stable/api/pyplot_summary.html#module-matplotlib.pyplot" title="(in Matplotlib v3.8.1)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib</span></code></a> figures via the string
+<a class="reference external" href="https://matplotlib.org/stable/api/pyplot_summary.html#module-matplotlib.pyplot" title="(in Matplotlib v3.8.2)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib</span></code></a> figures via the string
 <code class="docutils literal notranslate"><span class="pre">'matplotlib'</span></code>.</p>
 </dd>
 </dl>
@@ -2088,7 +2120,7 @@ examples when you switch to building your gallery with execution.</p>
 to ensure that any changes made to plotting behavior in one example do not
 propagate to the other examples.</p>
 <p>By default, before each example file executes, Sphinx-Gallery will
-reset <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> (by using <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.rcdefaults.html#matplotlib.pyplot.rcdefaults" title="(in Matplotlib v3.8.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.rcdefaults()</span></code></a> and
+reset <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> (by using <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.rcdefaults.html#matplotlib.pyplot.rcdefaults" title="(in Matplotlib v3.8.2)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.rcdefaults()</span></code></a> and
 reloading submodules that populate the units registry) and <code class="docutils literal notranslate"><span class="pre">seaborn</span></code>
 (by trying to unload the module from <code class="docutils literal notranslate"><span class="pre">sys.modules</span></code>). This is equivalent to the
 following configuration:</p>
@@ -2102,9 +2134,8 @@ following configuration:</p>
 <code class="docutils literal notranslate"><span class="pre">seaborn</span></code>. However, you can also add your own custom function to
 this tuple in order to define resetting behavior for other visualization libraries.</p>
 <p>To do so, follow the instructions in <a class="reference internal" href="advanced.html#custom-reset"><span class="std std-ref">Resetting before each example</span></a>.</p>
-</section>
 <section id="order-of-resetting-modules">
-<span id="reset-modules-order"></span><h2>Order of resetting modules<a class="headerlink" href="#order-of-resetting-modules" title="Link to this heading">#</a></h2>
+<span id="reset-modules-order"></span><h3>Order of resetting modules<a class="headerlink" href="#order-of-resetting-modules" title="Link to this heading">#</a></h3>
 <p>By default, Sphinx-Gallery will reset modules before each example is run.
 The choices for <code class="docutils literal notranslate"><span class="pre">reset_modules_order</span></code> are <code class="docutils literal notranslate"><span class="pre">before</span></code> (default), <code class="docutils literal notranslate"><span class="pre">after</span></code>, and
 <code class="docutils literal notranslate"><span class="pre">both</span></code>. If the last example run in Sphinx-Gallery modifies a module, it is
@@ -2120,6 +2151,7 @@ to <code class="docutils literal notranslate"><span class="pre">both</span></cod
 <p>Custom functions can be constructed to have custom functionality depending on
 whether they are called before or after the examples. See <a class="reference internal" href="advanced.html#custom-reset"><span class="std std-ref">Resetting before each example</span></a>
 for more information.</p>
+</section>
 </section>
 <section id="dealing-with-failing-gallery-example-scripts">
 <h2>Dealing with failing Gallery example scripts<a class="headerlink" href="#dealing-with-failing-gallery-example-scripts" title="Link to this heading">#</a></h2>
@@ -2529,15 +2561,15 @@ look at if you want to learn about a particular module. Setting
 <code class="docutils literal notranslate"><span class="pre">show_api_usage</span></code> to <code class="docutils literal notranslate"><span class="pre">False</span></code> will not make any graphs or documentation
 about API usage. Note, <code class="docutils literal notranslate"><span class="pre">graphviz</span></code> is required for making the unused and
 used API entry graphs.</p>
-</section>
 <section id="ignoring-api-entries">
-<span id="api-usage-ignore"></span><h2>Ignoring API entries<a class="headerlink" href="#ignoring-api-entries" title="Link to this heading">#</a></h2>
+<span id="api-usage-ignore"></span><h3>Ignoring API entries<a class="headerlink" href="#ignoring-api-entries" title="Link to this heading">#</a></h3>
 <p>By default, <code class="docutils literal notranslate"><span class="pre">api_usage_ignore='.*__.*__'</span></code> ignores files that match this
 regular expression in documenting and graphing the usage of API entries
 within the example gallery. This regular expression can be modified to
 ignore any kind of file that should not be considered. The default regular
 expression ignores functions like <code class="docutils literal notranslate"><span class="pre">__len__()</span></code> for which it may not be
 desirable to document if they are used in examples.</p>
+</section>
 </section>
 </section>
 
@@ -2584,7 +2616,13 @@ desirable to document if they are used in examples.</p>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#list-of-config-options">List of config options</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#configuration-options">Configuration options</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conf-py-configurations"><cite>conf.py</cite> configurations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#configurations-inside-examples">Configurations inside examples</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build-options">Build options</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#css-changes">CSS changes</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#removing-warnings">Removing warnings</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#manage-multiple-galleries">Manage multiple galleries</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parsing-and-executing-examples-via-matching-patterns">Parsing and executing examples via matching patterns</a></li>
@@ -2625,8 +2663,10 @@ desirable to document if they are used in examples.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-multiple-code-blocks-to-create-a-single-figure">Using multiple code blocks to create a single figure</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hiding-lines-of-code">Hiding lines of code</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generating-dummy-images">Generating dummy images</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resetting-modules">Resetting modules</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#order-of-resetting-modules">Order of resetting modules</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#resetting-modules">Resetting modules</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#order-of-resetting-modules">Order of resetting modules</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dealing-with-failing-gallery-example-scripts">Dealing with failing Gallery example scripts</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#abort-build-on-first-fail">Abort build on first fail</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#don-t-fail-the-build-if-specific-examples-error">Don’t fail the build if specific examples error</a></li>
@@ -2647,8 +2687,10 @@ desirable to document if they are used in examples.</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#manually-passing-index-rst">Manually passing <code class="docutils literal notranslate"><span class="pre">index.rst</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#showing-api-usage">Showing API Usage</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ignoring-api-entries">Ignoring API entries</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#showing-api-usage">Showing API Usage</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ignoring-api-entries">Ignoring API entries</a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 
