@@ -16,51 +16,81 @@ necessary, and on a case-by-case basis.
 
 .. _list_of_options:
 
-List of config options
+Configuration options
 ======================
 
-Most Sphinx-Gallery configuration options are set in the Sphinx ``conf.py``
-file:
+``conf.py`` configurations
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Sphinx-Gallery configuration options that can be set in the Sphinx ``conf.py``
+file, inside a ``sphinx_gallery_conf`` dictionary.
+
+**Gallery files and ordering**
 
 - ``examples_dirs`` and ``gallery_dirs`` (:ref:`multiple_galleries_config`)
-- ``filename_pattern`` and ``ignore_pattern`` (:ref:`build_pattern`)
-- ``run_stale_examples`` (:ref:`run_stale_examples`)
-- ``reset_argv`` (:ref:`reset_argv`)
+- ``filename_pattern``, ``ignore_pattern``, ``example_extensions``, and
+  ``filetype_parsers`` (:ref:`build_pattern`)
+- ``copyfile_regex`` (:ref:`manual_passthrough`)
 - ``subsection_order`` (:ref:`sub_gallery_order`)
 - ``within_subsection_order`` (:ref:`within_gallery_order`)
+- ``nested_sections`` (:ref:`nested_sections`)
+
+**Example execution**
+
+- ``reset_argv`` (:ref:`reset_argv`)
+- ``capture_repr`` and ``ignore_repr_types`` (:ref:`capture_repr`)
+- ``plot_gallery`` (:ref:`without_execution`)
+- ``run_stale_examples`` (:ref:`run_stale_examples`)
+- ``abort_on_example_error`` (:ref:`abort_on_first`)
+- ``expected_failing_examples`` (:ref:`dont_fail_exit`)
+- ``only_warn_on_example_error`` (:ref:`warning_on_error`)
+
+**Cross-referencing**
+
 - ``reference_url``, ``prefer_full_module`` (:ref:`link_to_documentation`)
 - ``backreferences_dir``, ``doc_module``, ``exclude_implicit_doc``,
   and ``inspect_global_variables`` (:ref:`references_to_examples`)
+
+**Images and thumbnails**
+
 - ``default_thumb_file`` (:ref:`custom_default_thumb`)
 - ``thumbnail_size`` (:ref:`setting_thumbnail_size`)
-- ``line_numbers`` (:ref:`adding_line_numbers`)
-- ``remove_config_comments`` (:ref:`removing_config_comments`)
-- ``download_all_examples`` (:ref:`disable_all_scripts_download`)
-- ``plot_gallery`` (:ref:`without_execution`)
+- ``image_srcset`` (:ref:`image_srcset`)
 - ``image_scrapers`` (:ref:`image_scrapers`)
 - ``compress_images`` (:ref:`compress_images`)
-- ``image_srcset`` (:ref:`image_srcset`)
-- ``reset_modules`` (:ref:`reset_modules`)
-- ``reset_modules_order`` (:ref:`reset_modules_order`)
-- ``abort_on_example_error`` (:ref:`abort_on_first`)
-- ``only_warn_on_example_error`` (:ref:`warning_on_error`)
-- ``expected_failing_examples`` (:ref:`dont_fail_exit`)
+
+**Compute costs**
+
 - ``min_reported_time`` (:ref:`min_reported_time`)
 - ``show_memory`` (:ref:`show_memory`)
-- ``show_signature`` (:ref:`show_signature`)
-- ``binder`` (:ref:`binder_links`)
-- ``jupyterlite`` (:ref:`jupyterlite`)
+- ``junit`` (:ref:`junit_xml`)
+
+**Jupyter notebooks and interactivity**
+
+- ``notebook_extensions`` (:ref:`notebook_extensions`)
 - ``promote_jupyter_magic`` (:ref:`promote_jupyter_magic`)
 - ``first_notebook_cell`` and ``last_notebook_cell`` (:ref:`own_notebook_cell`)
 - ``notebook_images`` (:ref:`notebook_images`)
 - ``pypandoc`` (:ref:`use_pypandoc`)
-- ``junit`` (:ref:`junit_xml`)
+- ``binder`` (:ref:`binder_links`)
+- ``jupyterlite`` (:ref:`jupyterlite`)
+
+**Appearance**
+
+- ``line_numbers`` (:ref:`adding_line_numbers`)
+- ``remove_config_comments`` (:ref:`removing_config_comments`)
+- ``show_signature`` (:ref:`show_signature`)
+- ``download_all_examples`` (:ref:`disable_all_scripts_download`)
+
+**Miscellaneous**
+
+- ``reset_modules`` and ``reset_modules_order`` (:ref:`reset_modules`)
+- ``recommender`` (:ref:`recommend_examples`)
 - ``log_level`` (:ref:`log_level`)
-- ``capture_repr`` and ``ignore_repr_types`` (:ref:`capture_repr`)
-- ``nested_sections`` (:ref:`nested_sections`)
-- ``api_usage_ignore`` (:ref:`api_usage_ignore`)
-- ``show_api_usage`` (:ref:`show_api_usage`)
-- ``copyfile_regex`` (:ref:`manual_passthrough`)
+- ``show_api_usage`` and ``api_usage_ignore`` (:ref:`show_api_usage`)
+
+Configurations inside examples
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Some options can also be set or overridden on a file-by-file basis:
 
@@ -74,18 +104,24 @@ Some options can be set on a per-code-block basis in a file:
 
 - ``# sphinx_gallery_defer_figures`` (:ref:`defer_figures`)
 
+Some options can be set on a per-line basis in a file:
+- ``# sphinx_gallery_start_ignore`` and ``# sphinx_gallery_end_ignore`` (:ref:`hiding_code_blocks`)
+
 See also :ref:`removing_config_comments` to hide config comments in files from
 the rendered examples.
 
-Some options can be set on a per-line basis in a file:
-- ``# sphinx_gallery_start_ignore`` and ``# sphinx_gallery_end_ignore`` (:ref:`hiding_code_blocks`)
+Build options
+^^^^^^^^^^^^^
 
 Some options can be set during the build execution step, e.g. using a Makefile:
 
 - ``make html-noplot`` (:ref:`without_execution`)
 - ``make html_abort_on_example_error`` (:ref:`abort_on_first`)
 
-And some things can be tweaked directly in CSS:
+CSS changes
+^^^^^^^^^^^
+
+Some things can be tweaked directly in CSS:
 
 - ``.sphx-glr-thumbcontainer`` (:ref:`setting_thumbnail_size`)
 
@@ -140,13 +176,14 @@ Parsing and executing examples via matching patterns
 
 By default, Sphinx-Gallery will **parse and add** all files with a ``.py``
 extension to the gallery, but only **execute** files beginning with ``plot_``.
-These behaviors are controlled by the ``ignore_pattern`` and ``filename_pattern``
-entries, which have the default values::
+These behaviors are controlled by the ``ignore_pattern``, ``filename_pattern``,
+and ``example_extensions`` entries, which have the default values::
 
     sphinx_gallery_conf = {
         ...
         'filename_pattern': '/plot_',
         'ignore_pattern': r'__init__\.py',
+        'example_extensions': {'.py'}
     }
 
 To omit some files from the gallery entirely (i.e., not execute, parse, or
@@ -210,6 +247,26 @@ consult the `regular expressions`_ module for more details.
     .. code-block:: console
 
         $ sphinx-build -D sphinx_gallery_conf.filename_pattern=plot_specific_example\.py ...
+
+You can also parse and highlight syntax examples in other languages by adding their
+extensions to ``example_extensions``, though they will not be executed. For example, to
+include examples in Python, Julia, and C++::
+
+    sphinx_gallery_conf = {
+        ...
+        'example_extensions': {'.py', '.jl', '.cpp'}
+    }
+
+Parsing and syntax highlighting is supported by the Pygments library, with the language
+determined by the file extension. To override Pygments' default file associations, the
+``filetype_parsers`` option can be used to specify a ``dict`` mapping any of the file
+extensions in ``example_extensions`` to any of the `pygments language names
+<https://pygments.org/languages/>`__. For example::
+
+    sphinx_gallery_conf = {
+        ...
+        'filetype_parsers': {'.m': 'Matlab'}
+    }
 
 .. _run_stale_examples:
 
@@ -1248,6 +1305,27 @@ See the Sphinx-Gallery `Sphinx configuration file
 <https://github.com/sphinx-gallery/sphinx-gallery/blob/master/doc/conf.py>`_
 for an example that uses the JupyterLite integration.
 
+.. _notebook_extensions:
+
+Controlling notebook download links
+===================================
+
+By default, links to download Jupyter noteooks and launch Binder or JupyterLite (if
+enabled) are shown only for Python examples. If parsing other file extensions has been
+enabled (using the ``example_extensions`` option; see :ref:`build_pattern`), notebook
+downloads can be enabled using the ``notebook_extensions`` option. For example::
+
+    sphinx_gallery_conf = {
+        "notebook_extensions": {".py", ".jl"}
+    }
+
+where the listed extensions are compared to file names in the gallery directory.
+
+.. note::
+
+    Currently, all generated notebooks specify Python as the kernel. After downloading,
+    the user will need to manually change to the correct kernel.
+
 .. _promote_jupyter_magic:
 
 Making cell magic executable in notebooks
@@ -1630,7 +1708,7 @@ To do so, follow the instructions in :ref:`custom_reset`.
 .. _reset_modules_order:
 
 Order of resetting modules
-==========================
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 By default, Sphinx-Gallery will reset modules before each example is run.
 The choices for ``reset_modules_order`` are ``before`` (default), ``after``, and
@@ -1740,6 +1818,57 @@ flag is passed to ``sphinx-build``. This can be enabled by setting::
         'only_warn_on_example_error': True
     }
 
+
+.. _recommend_examples:
+
+Enabling the example recommender system
+=======================================
+
+Sphinx-Gallery can be configured to generate content-based recommendations for
+an example gallery. A list of related examples is automatically generated by
+computing the closest examples in the `TF-IDF
+<https://en.wikipedia.org/wiki/Tf%E2%80%93idf>`_ space of their text contents.
+Only examples within a single gallery (including it's sub-galleries) are used to
+compute the closest examples. The most similar content is then displayed at the bottom
+of each example as a set of thumbnails.
+
+The recommender system can be enabled by setting ``enable`` to ``True``. To
+configure it, pass a dictionary to the ``sphinx_gallery_conf``, e.g.::
+
+    sphinx_gallery_conf = {
+        ...
+        "recommender": {"enable": True, "n_examples": 5, "min_df": 3, "max_df": 0.9},
+    }
+
+The only necessary parameter is ``enable``. If any other parameters is not
+specified, the default value is used. Below is a more complete explanation of
+each field:
+
+enable (type: bool, default: False)
+  Whether to generate recommendations inside the example gallery. Enabling this
+  feature requires adding `numpy` to the dependencies.
+n_examples (type: int, default: 5)
+  Number of most relevant examples to display.
+min_df (type: float in range [0.0, 1.0] | int, default: 3)
+  When building the vocabulary ignore terms that have a document frequency
+  strictly lower than the given threshold. If float, the parameter represents a
+  proportion of documents, integer represents absolute counts. This value is
+  also called cut-off in the literature.
+max_df (type: float in range [0.0, 1.0] | int, default: 0.9)
+  When building the vocabulary ignore terms that have a document frequency
+  strictly higher than the given threshold. If float, the parameter represents a
+  proportion of documents, integer represents absolute counts.
+rubric_header (type: str, default: "Related examples")
+  Customizable rubric header. It can be edited to more descriptive text or to
+  add external links, e.g. to the API doc of the recommender system on the
+  sphinx-gallery documentation.
+
+The parameters ``min_df`` and ``max_df`` can be customized by the user to trim
+the very rare/very common words. This may improve the recommendations quality,
+but more importantly, it spares some computation resources that would be wasted
+on non-informative tokens.
+
+Currently example recommendations are only computed for ``.py`` files.
 
 .. _setting_thumbnail_size:
 
@@ -2067,7 +2196,7 @@ used API entry graphs.
 .. _api_usage_ignore:
 
 Ignoring API entries
-====================
+^^^^^^^^^^^^^^^^^^^^
 
 By default, ``api_usage_ignore='.*__.*__'`` ignores files that match this
 regular expression in documenting and graphing the usage of API entries
