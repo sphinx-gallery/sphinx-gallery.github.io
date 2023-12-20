@@ -768,6 +768,30 @@ document.write(`
     <span class="k">except</span> <span class="p">(</span><span class="ne">ImportError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
         <span class="k">pass</span>
 
+    <span class="c1"># Check for srcset hidpi images</span>
+    <span class="n">srcset</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;image_srcset&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">srcset</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
+            <span class="s2">&quot;image_srcset must be a list of strings with the &quot;</span>
+            <span class="s1">&#39;multiplicative factor followed by an &quot;x&quot;, &#39;</span>
+            <span class="s1">&#39;e.g. [&quot;2.0x&quot;, &quot;1.5x&quot;]&#39;</span>
+        <span class="p">)</span>
+    <span class="n">srcset_mult_facs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">st</span> <span class="ow">in</span> <span class="n">srcset</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">st</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="n">st</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">:]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Invalid value for image_srcset parameter: </span><span class="si">{</span><span class="n">st</span><span class="si">!r}</span><span class="s2">. &quot;</span>
+                <span class="s2">&quot;Must be a list of strings with the multiplicative &quot;</span>
+                <span class="s1">&#39;factor followed by an &quot;x&quot;.  e.g. [&quot;2.0x&quot;, &quot;1.5x&quot;]&#39;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">st</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="c1"># &quot;2x&quot; = &quot;2.0&quot;</span>
+        <span class="n">srcset_mult_facs</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">st</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="n">srcset_mult_facs</span> <span class="o">-=</span> <span class="p">{</span><span class="mi">1</span><span class="p">}</span>  <span class="c1"># 1x is always saved.</span>
+    <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;image_srcset&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="nb">sorted</span><span class="p">(</span><span class="n">srcset_mult_facs</span><span class="p">)]</span>
+    <span class="k">del</span> <span class="n">srcset</span><span class="p">,</span> <span class="n">srcset_mult_facs</span>
+
     <span class="c1"># compress_images</span>
     <span class="n">compress_images</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;compress_images&quot;</span><span class="p">]</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">compress_images</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
