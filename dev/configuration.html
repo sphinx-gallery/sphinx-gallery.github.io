@@ -872,7 +872,7 @@ the number of code lines.</p></li>
 <li><p><a class="reference internal" href="#sub-gallery-order"><span class="std std-ref">subsection_order</span></a></p></li>
 <li><p><a class="reference internal" href="#minigallery-order"><span class="std std-ref">minigallery_sort_order</span></a></p></li>
 </ul>
-<p>When creating a custom sort key callable, you must ensure that the <code class="docutils literal notranslate"><span class="pre">__repr__</span></code> of
+<p>When creating a custom sort key callable, you must ensure that the <code class="docutils literal notranslate"><span class="pre">__repr__</span></code>
 is stable across runs. Sphinx determines if the build environment has
 changed, and thus if <em>all</em> documents should be rewritten, by examining the
 config values using <code class="docutils literal notranslate"><span class="pre">md5(str(obj).encode()).hexdigest()</span></code> in
@@ -892,7 +892,7 @@ because it will ensure that the <code class="docutils literal notranslate"><span
 <p>Create your sort key callable by instantiating a
 <a class="reference internal" href="gen_modules/sphinx_gallery.sorting.html#sphinx_gallery.sorting.FunctionSortKey" title="sphinx_gallery.sorting.FunctionSortKey"><code class="xref py py-class docutils literal notranslate"><span class="pre">FunctionSortKey</span></code></a> instance with your sort key
 function. For example, the following <code class="docutils literal notranslate"><span class="pre">minigallery_sort_order</span></code> configuration
-(which sorts on filenames) will sort using the first 10 letters of each filename:</p>
+(which sorts on paths) will sort using the first 10 letters of each filename:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
 <span class="c1">#...,</span>
 <span class="s2">&quot;minigallery_sort_order&quot;</span><span class="p">:</span> <span class="n">FunctionSortKey</span><span class="p">(</span>
@@ -1125,9 +1125,9 @@ thumbnails corresponding to the input file strings or object names.
 You can specify minigallery thumbnails order via the <code class="docutils literal notranslate"><span class="pre">minigallery_sort_order</span></code>
 configuration, which gets passed to the <a class="reference external" href="https://docs.python.org/3/library/functions.html#sorted" title="(in Python v3.12)"><code class="xref py py-func docutils literal notranslate"><span class="pre">sorted()</span></code></a> <code class="docutils literal notranslate"><span class="pre">key</span></code> parameter when
 sorting all minigalleries.
-Sorting uses the gallery example filenames (e.g., <code class="docutils literal notranslate"><span class="pre">plot_example.py</span></code>) and
-backreference filenames (e.g., <code class="docutils literal notranslate"><span class="pre">numpy.exp.examples</span></code>)
-corresponding to all inputs.</p>
+Sorting uses the paths to the gallery examples (e.g., <code class="docutils literal notranslate"><span class="pre">path/to/plot_example.py</span></code>)
+and backreferences (e.g., <code class="docutils literal notranslate"><span class="pre">path/to/numpy.exp.examples</span></code>) corresponding to the
+inputs.</p>
 <p>See <a class="reference internal" href="#own-sort-keys"><span class="std std-ref">Custom sort keys</span></a> for details on writing a custom sort key. Below is an
 example of using <a class="reference internal" href="gen_modules/sphinx_gallery.sorting.html#sphinx_gallery.sorting.FunctionSortKey" title="sphinx_gallery.sorting.FunctionSortKey"><code class="xref py py-class docutils literal notranslate"><span class="pre">sphinx_gallery.sorting.FunctionSortKey</span></code></a> to put
 backreference thumbnails at the end. Note that
@@ -1136,7 +1136,7 @@ of <code class="docutils literal notranslate"><span class="pre">True</span></cod
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
 <span class="c1">#...,</span>
 <span class="s2">&quot;minigallery_sort_order&quot;</span><span class="p">:</span> <span class="n">FunctionSortKey</span><span class="p">(</span>
-    <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="ow">not</span> <span class="n">x</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;plot_&quot;</span><span class="p">),</span> <span class="n">x</span><span class="p">)),</span>
+    <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;plot_&quot;</span><span class="p">),</span> <span class="n">x</span><span class="p">)),</span>
 <span class="c1">#...</span>
 <span class="p">}</span>
 </pre></div>
