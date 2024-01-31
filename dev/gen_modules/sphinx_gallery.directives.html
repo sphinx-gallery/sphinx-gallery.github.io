@@ -611,9 +611,15 @@ and add to HTML <cite>body</cite>. If ‘srcset’ is <cite>None</cite> run <cit
 <dt class="sig sig-object py" id="sphinx_gallery.directives.MiniGallery">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sphinx_gallery.directives.</span></span><span class="sig-name descname"><span class="pre">MiniGallery</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lineno</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content_offset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_machine</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sphinx_gallery/directives.html#MiniGallery"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sphinx_gallery.directives.MiniGallery" title="Link to this definition">#</a></dt>
 <dd><p>Custom directive to insert a mini-gallery.</p>
-<p>The required argument is one or more fully qualified names of objects,
-separated by spaces.  The mini-gallery will be the subset of gallery
-examples that make use of that object (from that specific namespace).</p>
+<p>The required argument is one or more of the following:</p>
+<ul class="simple">
+<li><p>fully qualified names of objects</p></li>
+<li><p>pathlike strings to example Python files</p></li>
+<li><p>glob-style pathlike strings to example Python files</p></li>
+</ul>
+<p>The string list of arguments is separated by spaces.</p>
+<p>The mini-gallery will be the subset of gallery
+examples that make use of that object from that specific namespace</p>
 <p>Options:</p>
 <ul class="simple">
 <li><p><cite>add-heading</cite> adds a heading to the mini-gallery.  If an argument is
@@ -629,6 +635,12 @@ character.  If omitted, the default heading level is <cite>‘^’</cite>.</p></
 </dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="sphinx_gallery.directives.MiniGallery.has_content">
+<span class="sig-name descname"><span class="pre">has_content</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#sphinx_gallery.directives.MiniGallery.has_content" title="Link to this definition">#</a></dt>
+<dd><p>May the directive have content?</p>
+</dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="sphinx_gallery.directives.MiniGallery.option_spec">
 <span class="sig-name descname"><span class="pre">option_spec</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'add-heading':</span> <span class="pre">&lt;function</span> <span class="pre">unchanged&gt;,</span> <span class="pre">'heading-level':</span> <span class="pre">&lt;function</span> <span class="pre">single_char_or_unicode&gt;}</span></em><a class="headerlink" href="#sphinx_gallery.directives.MiniGallery.option_spec" title="Link to this definition">#</a></dt>
 <dd><p>Mapping of option names to validator functions.</p>
@@ -636,20 +648,20 @@ character.  If omitted, the default heading level is <cite>‘^’</cite>.</p></
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="sphinx_gallery.directives.MiniGallery.optional_arguments">
-<span class="sig-name descname"><span class="pre">optional_arguments</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#sphinx_gallery.directives.MiniGallery.optional_arguments" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">optional_arguments</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#sphinx_gallery.directives.MiniGallery.optional_arguments" title="Link to this definition">#</a></dt>
 <dd><p>Number of optional arguments after the required arguments.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="sphinx_gallery.directives.MiniGallery.required_arguments">
-<span class="sig-name descname"><span class="pre">required_arguments</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#sphinx_gallery.directives.MiniGallery.required_arguments" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">required_arguments</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#sphinx_gallery.directives.MiniGallery.required_arguments" title="Link to this definition">#</a></dt>
 <dd><p>Number of required directive arguments.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="sphinx_gallery.directives.MiniGallery.run">
 <span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sphinx_gallery/directives.html#MiniGallery.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sphinx_gallery.directives.MiniGallery.run" title="Link to this definition">#</a></dt>
-<dd><p>Insert backreferences file with appropriate heading.</p>
+<dd><p>Generate mini-gallery from backreference and example files.</p>
 </dd></dl>
 
 </dd></dl>
@@ -729,6 +741,7 @@ character.  If omitted, the default heading level is <cite>‘^’</cite>.</p></
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sphinx_gallery.directives.MiniGallery"><code class="docutils literal notranslate"><span class="pre">MiniGallery</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#sphinx_gallery.directives.MiniGallery.final_argument_whitespace"><code class="docutils literal notranslate"><span class="pre">MiniGallery.final_argument_whitespace</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#sphinx_gallery.directives.MiniGallery.has_content"><code class="docutils literal notranslate"><span class="pre">MiniGallery.has_content</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#sphinx_gallery.directives.MiniGallery.option_spec"><code class="docutils literal notranslate"><span class="pre">MiniGallery.option_spec</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#sphinx_gallery.directives.MiniGallery.optional_arguments"><code class="docutils literal notranslate"><span class="pre">MiniGallery.optional_arguments</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#sphinx_gallery.directives.MiniGallery.required_arguments"><code class="docutils literal notranslate"><span class="pre">MiniGallery.required_arguments</span></code></a></li>
