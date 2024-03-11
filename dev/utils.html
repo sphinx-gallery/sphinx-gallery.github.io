@@ -512,7 +512,7 @@ document.write(`
 <p>Sphinx Gallery exposes its python source to Jupyter notebook converter
 as a executable script too. To use this utility just call the script
 and give the Python source file as argument:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>sphx_glr_python_to_jupyter.py<span class="w"> </span>python_script.py
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>python<span class="w"> </span>-m<span class="w"> </span>sphinx_gallery_py2jupyter<span class="w"> </span>python_script.py
 </pre></div>
 </div>
 </section>
@@ -521,7 +521,16 @@ and give the Python source file as argument:</p>
 <p>If you want to embed Sphinx-Gallery in your project instead of putting
 it as a dependency you can call our embedding script inside your
 Sphinx extensions folder:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>copy_sphinxgallery.sh
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>Script<span class="w"> </span>to<span class="w"> </span><span class="k">do</span><span class="w"> </span>a<span class="w"> </span><span class="nb">local</span><span class="w"> </span>install<span class="w"> </span>of<span class="w"> </span>sphinx-gallery
+<span class="go">rm -rf tmp sphinx_gallery</span>
+
+<span class="go">easy_install -Zeab tmp sphinx-gallery</span>
+
+<span class="go">cp -vru tmp/sphinx-gallery/sphinx_gallery/ .</span>
+
+<span class="go">echo &quot;Remember to add sphinx_gallery to your version control&quot;</span>
+<span class="go">echo &quot;Use in case of git:&quot;</span>
+<span class="go">echo &quot;$ git add sphinx_gallery&quot;</span>
 </pre></div>
 </div>
 <p>This will download directly from PyPI our latest released code and
