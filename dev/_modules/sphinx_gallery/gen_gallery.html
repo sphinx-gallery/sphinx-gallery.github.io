@@ -28,7 +28,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=fd3f3429" />
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
     <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=13b285a0" />
     <link rel="stylesheet" type="text/css" href="../../_static/theme_override.css?v=6ecc848e" />
@@ -43,7 +43,7 @@
   <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
     <script src="../../_static/documentation_options.js?v=e6280f99"></script>
-    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/jupyterlite_sphinx.js?v=0b35d31f"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/sphinx_gallery/gen_gallery';</script>
@@ -483,7 +483,6 @@ document.write(`
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span><span class="p">,</span> <span class="n">datetime</span>
 <span class="kn">from</span> <span class="nn">difflib</span> <span class="kn">import</span> <span class="n">get_close_matches</span>
-<span class="kn">from</span> <span class="nn">importlib</span> <span class="kn">import</span> <span class="n">import_module</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">textwrap</span> <span class="kn">import</span> <span class="n">indent</span>
 <span class="kn">import</span> <span class="nn">re</span>
@@ -498,11 +497,17 @@ document.write(`
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">glr_path_static</span><span class="p">,</span> <span class="n">__version__</span> <span class="k">as</span> <span class="n">_sg_version</span>
 <span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">_replace_md5</span><span class="p">,</span> <span class="n">_has_optipng</span><span class="p">,</span> <span class="n">_has_pypandoc</span><span class="p">,</span> <span class="n">_has_graphviz</span>
 <span class="kn">from</span> <span class="nn">.backreferences</span> <span class="kn">import</span> <span class="n">_finalize_backreferences</span>
-<span class="kn">from</span> <span class="nn">.gen_rst</span> <span class="kn">import</span> <span class="n">generate_dir_rst</span><span class="p">,</span> <span class="n">SPHX_GLR_SIG</span><span class="p">,</span> <span class="n">_get_memory_base</span><span class="p">,</span> <span class="n">_get_readme</span>
-<span class="kn">from</span> <span class="nn">.scrapers</span> <span class="kn">import</span> <span class="n">_scraper_dict</span><span class="p">,</span> <span class="n">_reset_dict</span><span class="p">,</span> <span class="n">_import_matplotlib</span>
+<span class="kn">from</span> <span class="nn">.gen_rst</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">generate_dir_rst</span><span class="p">,</span>
+    <span class="n">SPHX_GLR_SIG</span><span class="p">,</span>
+    <span class="n">_get_readme</span><span class="p">,</span>
+    <span class="n">_get_class</span><span class="p">,</span>
+    <span class="n">_get_callables</span><span class="p">,</span>
+    <span class="n">_get_call_memory_and_base</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.scrapers</span> <span class="kn">import</span> <span class="n">_import_matplotlib</span>
 <span class="kn">from</span> <span class="nn">.docs_resolv</span> <span class="kn">import</span> <span class="n">embed_code_links</span>
 <span class="kn">from</span> <span class="nn">.downloads</span> <span class="kn">import</span> <span class="n">generate_zipfiles</span>
-<span class="kn">from</span> <span class="nn">.sorting</span> <span class="kn">import</span> <span class="n">NumberOfCodeLinesSortKey</span>
 <span class="kn">from</span> <span class="nn">.interactive_example</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">copy_binder_files</span><span class="p">,</span>
     <span class="n">check_binder_conf</span><span class="p">,</span>
@@ -545,7 +550,7 @@ document.write(`
     <span class="s2">&quot;notebook_extensions&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;.py&quot;</span><span class="p">},</span>
     <span class="s2">&quot;reset_argv&quot;</span><span class="p">:</span> <span class="n">DefaultResetArgv</span><span class="p">(),</span>
     <span class="s2">&quot;subsection_order&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="s2">&quot;within_subsection_order&quot;</span><span class="p">:</span> <span class="n">NumberOfCodeLinesSortKey</span><span class="p">,</span>
+    <span class="s2">&quot;within_subsection_order&quot;</span><span class="p">:</span> <span class="s2">&quot;NumberOfCodeLinesSortKey&quot;</span><span class="p">,</span>
     <span class="s2">&quot;minigallery_sort_order&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
     <span class="s2">&quot;gallery_dirs&quot;</span><span class="p">:</span> <span class="s2">&quot;auto_examples&quot;</span><span class="p">,</span>
     <span class="s2">&quot;backreferences_dir&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
@@ -665,7 +670,14 @@ document.write(`
         <span class="s2">&quot;run_stale_examples&quot;</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="n">gallery_conf</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">_bool_eval</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
-    <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;app&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">app</span>
+    <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;default_role&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;source_suffix&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;.rst&quot;</span><span class="p">:</span> <span class="s2">&quot;restructuredtext&quot;</span><span class="p">}</span>
+    <span class="k">if</span> <span class="n">app</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;default_role&quot;</span><span class="p">]:</span>
+            <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;default_role&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;default_role&quot;</span><span class="p">]</span>
+        <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;source_suffix&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;source_suffix&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;source_suffix&quot;</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;source_suffix&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;source_suffix&quot;</span><span class="p">]:</span> <span class="kc">None</span><span class="p">}</span>
 
     <span class="c1"># Check capture_repr</span>
     <span class="n">capture_repr</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;capture_repr&quot;</span><span class="p">]</span>
@@ -687,65 +699,19 @@ document.write(`
         <span class="p">)</span>
 
     <span class="c1"># deal with show_memory</span>
-    <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;memory_base&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
-    <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;show_memory&quot;</span><span class="p">]:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;show_memory&quot;</span><span class="p">]):</span>  <span class="c1"># True-like</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="kn">from</span> <span class="nn">memory_profiler</span> <span class="kn">import</span> <span class="n">memory_usage</span>  <span class="c1"># noqa</span>
-            <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                    <span class="s2">&quot;Please install &#39;memory_profiler&#39; to enable &quot;</span>
-                    <span class="s2">&quot;peak memory measurements.&quot;</span>
-                <span class="p">)</span>
-                <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;show_memory&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="k">else</span><span class="p">:</span>
+    <span class="n">_get_call_memory_and_base</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">)</span>
 
-                <span class="k">def</span> <span class="nf">call_memory</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-                    <span class="n">mem</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="n">memory_usage</span><span class="p">(</span>
-                        <span class="n">func</span><span class="p">,</span> <span class="n">max_usage</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">retval</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">multiprocess</span><span class="o">=</span><span class="kc">True</span>
-                    <span class="p">)</span>
-                    <span class="k">try</span><span class="p">:</span>
-                        <span class="n">mem</span> <span class="o">=</span> <span class="n">mem</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># old MP always returned a list</span>
-                    <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>  <span class="c1"># &#39;float&#39; object is not subscriptable</span>
-                        <span class="k">pass</span>
-                    <span class="k">return</span> <span class="n">mem</span><span class="p">,</span> <span class="n">out</span>
+    <span class="c1"># check callables</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span>
+        <span class="s2">&quot;image_scrapers&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;reset_argv&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;minigallery_sort_order&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;reset_modules&quot;</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;minigallery_sort_order&quot;</span> <span class="ow">and</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">_get_callables</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
 
-                <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;call_memory&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">call_memory</span>
-                <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;memory_base&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_get_memory_base</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;call_memory&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;show_memory&quot;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;show_memory&quot;</span><span class="p">]:</span>  <span class="c1"># can be set to False above</span>
-
-        <span class="k">def</span> <span class="nf">call_memory</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-            <span class="k">return</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">func</span><span class="p">()</span>
-
-        <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;call_memory&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">call_memory</span>
-    <span class="k">assert</span> <span class="nb">callable</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;call_memory&quot;</span><span class="p">])</span>
-
-    <span class="c1"># deal with scrapers</span>
-    <span class="n">scrapers</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;image_scrapers&quot;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">scrapers</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
-        <span class="n">scrapers</span> <span class="o">=</span> <span class="p">[</span><span class="n">scrapers</span><span class="p">]</span>
-    <span class="n">scrapers</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">scrapers</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">si</span><span class="p">,</span> <span class="n">scraper</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">scrapers</span><span class="p">):</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">scraper</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">scraper</span> <span class="ow">in</span> <span class="n">_scraper_dict</span><span class="p">:</span>
-                <span class="n">scraper</span> <span class="o">=</span> <span class="n">_scraper_dict</span><span class="p">[</span><span class="n">scraper</span><span class="p">]</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">orig_scraper</span> <span class="o">=</span> <span class="n">scraper</span>
-                <span class="k">try</span><span class="p">:</span>
-                    <span class="n">scraper</span> <span class="o">=</span> <span class="n">import_module</span><span class="p">(</span><span class="n">scraper</span><span class="p">)</span>
-                    <span class="n">scraper</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">scraper</span><span class="p">,</span> <span class="s2">&quot;_get_sg_image_scraper&quot;</span><span class="p">)</span>
-                    <span class="n">scraper</span> <span class="o">=</span> <span class="n">scraper</span><span class="p">()</span>
-                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exp</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
-                        <span class="sa">f</span><span class="s2">&quot;Unknown image scraper </span><span class="si">{</span><span class="n">orig_scraper</span><span class="si">!r}</span><span class="s2">, got:</span><span class="se">\n</span><span class="si">{</span><span class="n">exp</span><span class="si">}</span><span class="s2">&quot;</span>
-                    <span class="p">)</span>
-            <span class="n">scrapers</span><span class="p">[</span><span class="n">si</span><span class="p">]</span> <span class="o">=</span> <span class="n">scraper</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="n">scraper</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Scraper </span><span class="si">{</span><span class="n">scraper</span><span class="si">!r}</span><span class="s2"> was not callable&quot;</span><span class="p">)</span>
-    <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;image_scrapers&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">scrapers</span><span class="p">)</span>
-    <span class="k">del</span> <span class="n">scrapers</span>
     <span class="c1"># Here we try to set up matplotlib but don&#39;t raise an error,</span>
     <span class="c1"># we will raise an error later when we actually try to use it</span>
     <span class="c1"># (if we do so) in scrapers.py.</span>
@@ -814,19 +780,8 @@ document.write(`
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;compress_images&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">compress_images</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;compress_images_args&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">compress_images_args</span>
 
-    <span class="c1"># deal with resetters</span>
-    <span class="n">resetters</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;reset_modules&quot;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">resetters</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
-        <span class="n">resetters</span> <span class="o">=</span> <span class="p">[</span><span class="n">resetters</span><span class="p">]</span>
-    <span class="n">resetters</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">resetters</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">ri</span><span class="p">,</span> <span class="n">resetter</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">resetters</span><span class="p">):</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">resetter</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">resetter</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_reset_dict</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown module resetter named </span><span class="si">{</span><span class="n">resetter</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="n">resetters</span><span class="p">[</span><span class="n">ri</span><span class="p">]</span> <span class="o">=</span> <span class="n">_reset_dict</span><span class="p">[</span><span class="n">resetter</span><span class="p">]</span>
-        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="n">resetter</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Module resetter </span><span class="si">{</span><span class="n">resetter</span><span class="si">!r}</span><span class="s2"> was not callable&quot;</span><span class="p">)</span>
-    <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;reset_modules&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">resetters</span><span class="p">)</span>
+    <span class="c1"># check resetters</span>
+    <span class="n">_get_callables</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="s2">&quot;reset_modules&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;reset_modules_order&quot;</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
@@ -839,8 +794,6 @@ document.write(`
             <span class="s2">&quot;[&#39;before&#39;, &#39;after&#39;, &#39;both&#39;], &quot;</span>
             <span class="sa">f</span><span class="s2">&quot;got </span><span class="si">{</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;reset_modules_order&#39;</span><span class="p">]</span><span class="si">!r}</span><span class="s2">&quot;</span>
         <span class="p">)</span>
-
-    <span class="k">del</span> <span class="n">resetters</span>
 
     <span class="c1"># Ensure the first cell text is a string if we have it</span>
     <span class="n">first_cell</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;first_notebook_cell&quot;</span><span class="p">)</span>
@@ -910,7 +863,8 @@ document.write(`
 
     <span class="c1"># jupyterlite</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;jupyterlite&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">check_jupyterlite_conf</span><span class="p">(</span>
-        <span class="n">gallery_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;jupyterlite&quot;</span><span class="p">,</span> <span class="p">{}),</span> <span class="n">app</span>
+        <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;jupyterlite&quot;</span><span class="p">],</span>
+        <span class="n">app</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;css&quot;</span><span class="p">],</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
@@ -920,8 +874,8 @@ document.write(`
     <span class="k">for</span> <span class="n">css</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;css&quot;</span><span class="p">]:</span>
         <span class="k">if</span> <span class="n">css</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_KNOWN_CSS</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown css </span><span class="si">{</span><span class="n">css</span><span class="si">!r}</span><span class="s2">, must be one of </span><span class="si">{</span><span class="n">_KNOWN_CSS</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;app&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># can be None in testing</span>
-            <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;app&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">add_css_file</span><span class="p">(</span><span class="n">css</span> <span class="o">+</span> <span class="s2">&quot;.css&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">app</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># can be None in testing</span>
+            <span class="n">app</span><span class="o">.</span><span class="n">add_css_file</span><span class="p">(</span><span class="n">css</span> <span class="o">+</span> <span class="s2">&quot;.css&quot;</span><span class="p">)</span>
 
     <span class="c1"># check API usage</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;api_usage_ignore&quot;</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
@@ -938,6 +892,9 @@ document.write(`
             <span class="s1">&#39;gallery_conf[&quot;show_api_usage&quot;] must be True, False or &quot;unused&quot;, &#39;</span>
             <span class="sa">f</span><span class="s1">&#39;got </span><span class="si">{</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;show_api_usage&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span>
         <span class="p">)</span>
+
+    <span class="c1"># classes (not pickleable so need to resolve using fully qualified name)</span>
+    <span class="n">_get_class</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="s2">&quot;within_subsection_order&quot;</span><span class="p">)</span>  <span class="c1"># make sure it works</span>
 
     <span class="n">_update_gallery_conf_exclude_implicit_doc</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">)</span>
 
@@ -965,7 +922,10 @@ document.write(`
 <span class="sd">    out : list</span>
 <span class="sd">        sorted list of gallery subsection folder names</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">sortkey</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;subsection_order&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;subsection_order&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">sortkey</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="p">(</span><span class="n">sortkey</span><span class="p">,)</span> <span class="o">=</span> <span class="n">_get_callables</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="s2">&quot;subsection_order&quot;</span><span class="p">)</span>
     <span class="n">subfolders</span> <span class="o">=</span> <span class="p">[</span><span class="n">subfolder</span> <span class="k">for</span> <span class="n">subfolder</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">examples_dir</span><span class="p">)]</span>
     <span class="k">if</span> <span class="n">check_for_index</span><span class="p">:</span>
         <span class="n">subfolders</span> <span class="o">=</span> <span class="p">[</span>
@@ -1191,7 +1151,7 @@ document.write(`
                         <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">Path</span><span class="p">(</span><span class="n">src_dir</span><span class="p">)</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()</span>
                         <span class="k">if</span> <span class="n">fname</span><span class="o">.</span><span class="n">suffix</span> <span class="o">==</span> <span class="s2">&quot;.py&quot;</span>
                     <span class="p">],</span>
-                    <span class="n">key</span><span class="o">=</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;within_subsection_order&quot;</span><span class="p">](</span><span class="n">src_dir</span><span class="p">),</span>
+                    <span class="n">key</span><span class="o">=</span><span class="n">_get_class</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="s2">&quot;within_subsection_order&quot;</span><span class="p">)(</span><span class="n">src_dir</span><span class="p">),</span>
                 <span class="p">)</span>
                 <span class="n">gallery_py_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                     <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span> <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">py_files</span><span class="p">]</span>
@@ -2170,7 +2130,7 @@ document.write(`
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
     <br/>
   </p>
 </div>

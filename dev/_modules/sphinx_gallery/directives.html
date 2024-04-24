@@ -28,7 +28,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=fd3f3429" />
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
     <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=13b285a0" />
     <link rel="stylesheet" type="text/css" href="../../_static/theme_override.css?v=6ecc848e" />
@@ -43,7 +43,7 @@
   <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
     <script src="../../_static/documentation_options.js?v=e6280f99"></script>
-    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/jupyterlite_sphinx.js?v=0b35d31f"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/sphinx_gallery/directives';</script>
@@ -532,6 +532,8 @@ document.write(`
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.directives.html#sphinx_gallery.directives.MiniGallery.run">[docs]</a>
     <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate mini-gallery from backreference and example files.&quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">.gen_rst</span> <span class="kn">import</span> <span class="n">_get_callables</span>
+
         <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arguments</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">content</span><span class="p">):</span>
             <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span><span class="s2">&quot;No arguments passed to &#39;minigallery&#39;&quot;</span><span class="p">)</span>
 
@@ -589,7 +591,12 @@ document.write(`
         <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">THUMBNAIL_PARENT_DIV</span><span class="p">)</span>
 
         <span class="c1"># sort on the str(file_path) but keep (obj, path) pair</span>
-        <span class="n">sortkey</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;minigallery_sort_order&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;minigallery_sort_order&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">sortkey</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="p">(</span><span class="n">sortkey</span><span class="p">,)</span> <span class="o">=</span> <span class="n">_get_callables</span><span class="p">(</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">,</span> <span class="s2">&quot;minigallery_sort_order&quot;</span>
+            <span class="p">)</span>
         <span class="k">for</span> <span class="n">obj</span><span class="p">,</span> <span class="n">path</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span>
             <span class="nb">set</span><span class="p">(</span><span class="n">file_paths</span><span class="p">),</span>
             <span class="n">key</span><span class="o">=</span><span class="p">((</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">sortkey</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])))</span> <span class="k">if</span> <span class="n">sortkey</span> <span class="k">else</span> <span class="kc">None</span><span class="p">),</span>
@@ -907,7 +914,7 @@ document.write(`
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
     <br/>
   </p>
 </div>

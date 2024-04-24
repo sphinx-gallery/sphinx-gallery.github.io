@@ -29,7 +29,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=eafc0fe6" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=fd3f3429" />
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
     <link rel="stylesheet" type="text/css" href="_static/jupyterlite_sphinx.css?v=13b285a0" />
     <link rel="stylesheet" type="text/css" href="_static/theme_override.css?v=6ecc848e" />
@@ -44,7 +44,7 @@
   <script src="_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
     <script src="_static/documentation_options.js?v=e6280f99"></script>
-    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/jupyterlite_sphinx.js?v=0b35d31f"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'configuration';</script>
@@ -623,6 +623,80 @@ For example, to remove the specific Matplotlib agg warning, you can add:</p>
 <p>to your <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file.</p>
 <p>Note that the above Matplotlib warning is removed by default.</p>
 </section>
+<section id="importing-callables">
+<span id="id3"></span><h2>Importing callables<a class="headerlink" href="#importing-callables" title="Link to this heading">#</a></h2>
+<p>Sphinx-Gallery configuration values that are instantiated classes, classes
+or functions should be passed as fully qualified name strings to the objects.
+The object needs to be importable by Sphinx-Gallery.</p>
+<p>Two common ways to achieve this are:</p>
+<ol class="arabic">
+<li><p>Define your object with your package. For example, you could write a function
+<code class="docutils literal notranslate"><span class="pre">def</span> <span class="pre">my_sorter</span></code> and put it in <code class="docutils literal notranslate"><span class="pre">mymod/utils.py</span></code>, then use:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+<span class="c1">#...,</span>
+<span class="s2">&quot;minigallery_sort_order&quot;</span><span class="p">:</span> <span class="s2">&quot;mymod.utils.my_sorter&quot;</span><span class="p">,</span>
+<span class="c1">#...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p>Define your object with your documentation. For example,
+you can add documentation-specific stuff in a different path and ensure
+that it can be resolved at build time. For example, you could create a file
+<code class="docutils literal notranslate"><span class="pre">doc/sphinxext.py</span></code> and define your function:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">plotted_sorter</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
+    <span class="k">return</span> <span class="ow">not</span> <span class="n">fname</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;plot_&quot;</span><span class="p">),</span> <span class="n">fname</span>
+</pre></div>
+</div>
+<p>And set in your configuration:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
+
+<span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+<span class="c1">#...,</span>
+<span class="s2">&quot;minigallery_sort_order&quot;</span><span class="p">:</span> <span class="s2">&quot;sphinxext.plotted_sorter&quot;</span><span class="p">,</span>
+<span class="c1">#...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>And Sphinx-Gallery would resolve <code class="docutils literal notranslate"><span class="pre">&quot;sphinxext.plotted_sorter&quot;</span></code> to the
+<code class="docutils literal notranslate"><span class="pre">plotted_sorter</span></code> object because the <code class="docutils literal notranslate"><span class="pre">doc/</span></code> directory is first on the path.</p>
+</li>
+</ol>
+<p>Built in classes like <a class="reference internal" href="gen_modules/sphinx_gallery.sorting.html#sphinx_gallery.sorting.FileNameSortKey" title="sphinx_gallery.sorting.FileNameSortKey"><code class="xref py py-class docutils literal notranslate"><span class="pre">sphinx_gallery.sorting.FileNameSortKey</span></code></a> and similar can
+be used with shorter direct alias strings like <code class="docutils literal notranslate"><span class="pre">&quot;FileNameSortKey&quot;</span></code> (see
+<a class="reference internal" href="#within-gallery-order"><span class="std std-ref">Sorting gallery examples</span></a> for details).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Sphinx-Gallery &gt;0.16.0 supports use of fully qualified name strings as a response
+to the Sphinx &gt;7.3.0 changes to caching and serialization checks of the
+<code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file.</p>
+<p>This means that the previous use of class instances as configuration values to
+ensure the <code class="docutils literal notranslate"><span class="pre">__repr__</span></code> was stable across builds is redundant <em>if</em> you are passing
+configuration values via name strings. When using name strings, the configuration
+object can just be a function.</p>
+</div>
+</section>
+<section id="ensuring-a-stable-repr">
+<span id="stable-repr"></span><h2>Ensuring a stable <code class="docutils literal notranslate"><span class="pre">__repr__</span></code><a class="headerlink" href="#ensuring-a-stable-repr" title="Link to this heading">#</a></h2>
+<p>For backwards compatibility Sphinx-Gallery allows certain configuration values to be
+a callable object instead of a <a class="reference internal" href="#importing-callables"><span class="std std-ref">importable name string</span></a>.</p>
+<p>If you wish to use a callable object you will have to ensure that the <code class="docutils literal notranslate"><span class="pre">__repr__</span></code>
+is stable across runs. Sphinx determines if the build environment has
+changed, and thus if <em>all</em> documents should be rewritten, by examining the
+config values using <code class="docutils literal notranslate"><span class="pre">md5(str(obj).encode()).hexdigest()</span></code> in
+<code class="docutils literal notranslate"><span class="pre">sphinx/builders/html.py</span></code>. Default class instances in Python have their
+memory address in their <code class="docutils literal notranslate"><span class="pre">__repr__</span></code> which is why generally the <code class="docutils literal notranslate"><span class="pre">__repr__</span></code>
+changes in each build.</p>
+<p>Your callable should be a class that defines a stable <code class="docutils literal notranslate"><span class="pre">__repr__</span></code> method.
+For example, <a class="reference internal" href="gen_modules/sphinx_gallery.sorting.html#sphinx_gallery.sorting.ExplicitOrder" title="sphinx_gallery.sorting.ExplicitOrder"><code class="xref py py-class docutils literal notranslate"><span class="pre">sphinx_gallery.sorting.ExplicitOrder</span></code></a> stability is
+ensured via the custom <code class="docutils literal notranslate"><span class="pre">__repr__</span></code>:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s1">&#39;&lt;</span><span class="si">%s</span><span class="s1">: </span><span class="si">%s</span><span class="s1">&gt;&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ordered_list</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Therefore, the files are only all rebuilt when the specified ordered list
+is changed.</p>
+</section>
 <section id="manage-multiple-galleries">
 <span id="multiple-galleries-config"></span><h2>Manage multiple galleries<a class="headerlink" href="#manage-multiple-galleries" title="Link to this heading">#</a></h2>
 <p>Sphinx-Gallery only supports one level of subfolder nesting in its gallery directories.
@@ -784,38 +858,42 @@ This could be done from the command line, for example:</p>
 <p>By default, Sphinx-Gallery will not pass any command line arguments to example
 scripts. By setting the <code class="docutils literal notranslate"><span class="pre">reset_argv</span></code> option, it is possible to change this
 behavior and pass command line arguments to example scripts. <code class="docutils literal notranslate"><span class="pre">reset_argv</span></code>
-needs to be a Callable that accepts the <code class="docutils literal notranslate"><span class="pre">gallery_conf</span></code> and <code class="docutils literal notranslate"><span class="pre">script_vars</span></code>
+needs to be a <code class="docutils literal notranslate"><span class="pre">Callable</span></code> that accepts the <code class="docutils literal notranslate"><span class="pre">gallery_conf</span></code> and <code class="docutils literal notranslate"><span class="pre">script_vars</span></code>
 dictionaries as input and returns a list of strings that are passed as
 additional command line arguments to the interpreter.</p>
-<p>An example could be:</p>
+<p>A <code class="docutils literal notranslate"><span class="pre">reset_argv</span></code> example could be:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 
-<span class="k">class</span> <span class="nc">ResetArgv</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s1">&#39;ResetArgv&#39;</span>
-
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sphinx_gallery_conf</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">):</span>
-        <span class="n">src_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;src_file&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">name</span>
-        <span class="k">if</span> <span class="n">src_file</span> <span class="o">==</span> <span class="s1">&#39;example1.py&#39;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">[</span><span class="s1">&#39;-a&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">]</span>
-        <span class="k">elif</span> <span class="n">src_file</span> <span class="o">==</span> <span class="s1">&#39;example2.py&#39;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">[</span><span class="s1">&#39;-a&#39;</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">[]</span>
+<span class="k">def</span> <span class="nf">reset_argv</span><span class="p">(</span><span class="n">sphinx_gallery_conf</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">):</span>
+    <span class="n">src_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;src_file&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">name</span>
+    <span class="k">if</span> <span class="n">src_file</span> <span class="o">==</span> <span class="s1">&#39;example1.py&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s1">&#39;-a&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">src_file</span> <span class="o">==</span> <span class="s1">&#39;example2.py&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s1">&#39;-a&#39;</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[]</span>
 </pre></div>
 </div>
-<p>which is included in the configuration dictionary as:</p>
+<p>This function is defined in <code class="docutils literal notranslate"><span class="pre">doc/sphinxext.py</span></code> and we ensured that it is importable
+(see <a class="reference internal" href="#importing-callables"><span class="std std-ref">Importing callables</span></a>).</p>
+<p>This can be included in the configuration dictionary as:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;reset_argv&#39;</span><span class="p">:</span> <span class="n">ResetArgv</span><span class="p">(),</span>
+    <span class="s1">&#39;reset_argv&#39;</span><span class="p">:</span> <span class="s2">&quot;sphinxext.reset_argv&quot;</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>which is then used by Sphinx-Gallery as:</p>
+<p>which is then resolved by Sphinx-Gallery to the callable <code class="docutils literal notranslate"><span class="pre">reset_argv</span></code> and used as:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;src_file&#39;</span><span class="p">]</span>
-<span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;reset_argv&#39;</span><span class="p">](</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">)</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="n">reset_argv</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">)</span>
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For backwards compatibility you can also set your configuration to be a callable
+object but you will have to ensure that the <code class="docutils literal notranslate"><span class="pre">__repr__</span></code> is stable across runs.
+See <a class="reference internal" href="#stable-repr"><span class="std std-ref">Ensuring a stable __repr__</span></a>.</p>
 </div>
 </section>
 <section id="sorting-gallery-subsections">
@@ -855,15 +933,13 @@ using the standard <a class="reference external" href="https://docs.python.org/3
 set to
 <a class="reference internal" href="gen_modules/sphinx_gallery.sorting.html#sphinx_gallery.sorting.NumberOfCodeLinesSortKey" title="sphinx_gallery.sorting.NumberOfCodeLinesSortKey"><code class="xref py py-class docutils literal notranslate"><span class="pre">NumberOfCodeLinesSortKey(src_dir)</span></code></a>,
 which sorts the files based on the number of code lines:</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sphinx_gallery.sorting</span> <span class="kn">import</span> <span class="n">NumberOfCodeLinesSortKey</span>
-<span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;within_subsection_order&#39;</span><span class="p">:</span> <span class="n">NumberOfCodeLinesSortKey</span><span class="p">,</span>
+    <span class="s1">&#39;within_subsection_order&#39;</span><span class="p">:</span> <span class="s2">&quot;NumberOfCodeLinesSortKey&quot;</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>In addition, multiple convenience classes are provided for use with
-<code class="docutils literal notranslate"><span class="pre">within_subsection_order</span></code>:</p>
+<p>Built in convenience classes supported by <code class="docutils literal notranslate"><span class="pre">within_subsection_order</span></code>:</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="gen_modules/sphinx_gallery.sorting.html#sphinx_gallery.sorting.NumberOfCodeLinesSortKey" title="sphinx_gallery.sorting.NumberOfCodeLinesSortKey"><code class="xref py py-class docutils literal notranslate"><span class="pre">sphinx_gallery.sorting.NumberOfCodeLinesSortKey</span></code></a> (default) to sort by
 the number of code lines.</p></li>
@@ -871,6 +947,14 @@ the number of code lines.</p></li>
 <li><p><a class="reference internal" href="gen_modules/sphinx_gallery.sorting.html#sphinx_gallery.sorting.FileNameSortKey" title="sphinx_gallery.sorting.FileNameSortKey"><code class="xref py py-class docutils literal notranslate"><span class="pre">sphinx_gallery.sorting.FileNameSortKey</span></code></a> to sort by file name.</p></li>
 <li><p><a class="reference internal" href="gen_modules/sphinx_gallery.sorting.html#sphinx_gallery.sorting.ExampleTitleSortKey" title="sphinx_gallery.sorting.ExampleTitleSortKey"><code class="xref py py-class docutils literal notranslate"><span class="pre">sphinx_gallery.sorting.ExampleTitleSortKey</span></code></a> to sort by example title.</p></li>
 </ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>These built in Sphinx-Gallery classes can be
+specified using just the stem, e.g., <code class="docutils literal notranslate"><span class="pre">&quot;NumberOfLinesSortKey&quot;</span></code>. It is
+functionally equivalent to providing the fully qualified name
+<code class="docutils literal notranslate"><span class="pre">&quot;sphinx_gallery.sorting.NumberOfCodeLinesSortKey&quot;</span></code>. See
+<a class="reference internal" href="#importing-callables"><span class="std std-ref">Importing callables</span></a> for details.</p>
+</div>
 </section>
 <section id="custom-sort-keys">
 <span id="own-sort-keys"></span><h2>Custom sort keys<a class="headerlink" href="#custom-sort-keys" title="Link to this heading">#</a></h2>
@@ -879,24 +963,27 @@ the number of code lines.</p></li>
 <li><p><a class="reference internal" href="#sub-gallery-order"><span class="std std-ref">subsection_order</span></a></p></li>
 <li><p><a class="reference internal" href="#minigallery-order"><span class="std std-ref">minigallery_sort_order</span></a></p></li>
 </ul>
-<p>When creating a custom sort key callable, you must ensure that the <code class="docutils literal notranslate"><span class="pre">__repr__</span></code>
-is stable across runs. Sphinx determines if the build environment has
-changed, and thus if <em>all</em> documents should be rewritten, by examining the
-config values using <code class="docutils literal notranslate"><span class="pre">md5(str(obj).encode()).hexdigest()</span></code> in
-<code class="docutils literal notranslate"><span class="pre">sphinx/builders/html.py</span></code>. Default class instances in Python have their
-memory address in their <code class="docutils literal notranslate"><span class="pre">__repr__</span></code> which is why generally the <code class="docutils literal notranslate"><span class="pre">__repr__</span></code>
-changes in each build.</p>
-<p>For example, in <a class="reference internal" href="gen_modules/sphinx_gallery.sorting.html#sphinx_gallery.sorting.ExplicitOrder" title="sphinx_gallery.sorting.ExplicitOrder"><code class="xref py py-class docutils literal notranslate"><span class="pre">sphinx_gallery.sorting.ExplicitOrder</span></code></a> stability is
-ensured via the custom <code class="docutils literal notranslate"><span class="pre">__repr__</span></code>:</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="k">return</span> <span class="s1">&#39;&lt;</span><span class="si">%s</span><span class="s1">: </span><span class="si">%s</span><span class="s1">&gt;&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ordered_list</span><span class="p">)</span>
+<p>The best way to do this is to define a sort function, that takes the passed path
+string:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">plotted_sorter</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
+    <span class="k">return</span> <span class="ow">not</span> <span class="n">fname</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;plot_&quot;</span><span class="p">),</span> <span class="n">fname</span>
 </pre></div>
 </div>
-<p>Therefore, the files are only all rebuilt when the specified ordered list
-is changed.</p>
+<p>ensure it is importable (see <a class="reference internal" href="#importing-callables"><span class="std std-ref">Importing callables</span></a>) and set your configuration:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+<span class="c1">#...,</span>
+<span class="s2">&quot;minigallery_sort_order&quot;</span><span class="p">:</span> <span class="s2">&quot;sphinxext.plotted_sorter&quot;</span><span class="p">,</span>
+<span class="c1">#...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>For backwards compatibility you can also set your configuration to be a callable
+object but you will have to ensure that the <code class="docutils literal notranslate"><span class="pre">__repr__</span></code> is stable across runs.
+See <a class="reference internal" href="#stable-repr"><span class="std std-ref">Ensuring a stable __repr__</span></a> for details.</p>
 <p>We recommend that you use the <a class="reference internal" href="gen_modules/sphinx_gallery.sorting.html#sphinx_gallery.sorting.FunctionSortKey" title="sphinx_gallery.sorting.FunctionSortKey"><code class="xref py py-class docutils literal notranslate"><span class="pre">sphinx_gallery.sorting.FunctionSortKey</span></code></a>
 because it will ensure that the <code class="docutils literal notranslate"><span class="pre">__repr__</span></code> is stable across runs.</p>
-<p>Create your sort key callable by instantiating a
+<p><a class="reference internal" href="gen_modules/sphinx_gallery.sorting.html#sphinx_gallery.sorting.FunctionSortKey" title="sphinx_gallery.sorting.FunctionSortKey"><code class="xref py py-class docutils literal notranslate"><span class="pre">sphinx_gallery.sorting.FunctionSortKey</span></code></a> takes a function on init.
+You can create your sort key callable by instantiating a
 <a class="reference internal" href="gen_modules/sphinx_gallery.sorting.html#sphinx_gallery.sorting.FunctionSortKey" title="sphinx_gallery.sorting.FunctionSortKey"><code class="xref py py-class docutils literal notranslate"><span class="pre">FunctionSortKey</span></code></a> instance with your sort key
 function. For example, the following <code class="docutils literal notranslate"><span class="pre">minigallery_sort_order</span></code> configuration
 (which sorts on paths) will sort using the first 10 letters of each filename:</p>
@@ -931,7 +1018,7 @@ dictionary within your Sphinx <code class="docutils literal notranslate"><span c
 </pre></div>
 </div>
 <p>To link to external modules, if you use the Sphinx extension
-<a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html#module-sphinx.ext.intersphinx" title="(in Sphinx v7.3.0)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sphinx.ext.intersphinx</span></code></a>, no additional changes are necessary,
+<a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html#module-sphinx.ext.intersphinx" title="(in Sphinx v7.4.0)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sphinx.ext.intersphinx</span></code></a>, no additional changes are necessary,
 as the <code class="docutils literal notranslate"><span class="pre">intersphinx</span></code> inventory will automatically be used.
 If you do not use <code class="docutils literal notranslate"><span class="pre">intersphinx</span></code>, then you should add entries that
 point to the directory containing <code class="docutils literal notranslate"><span class="pre">searchindex.js</span></code>, such as
@@ -1058,7 +1145,7 @@ do not have functions in common, for example a set of tutorials. The
 mini-gallery directive therefore also supports passing in:</p>
 <ul class="simple">
 <li><p>pathlike strings to sphinx gallery example files (relative to <code class="docutils literal notranslate"><span class="pre">conf.py</span></code>)</p></li>
-<li><p>glob-style pathlike strings to sphinx-gallery example files (relative to <code class="docutils literal notranslate"><span class="pre">conf.py</span></code>)</p></li>
+<li><p>glob-style pathlike strings to Sphinx-Gallery example files (relative to <code class="docutils literal notranslate"><span class="pre">conf.py</span></code>)</p></li>
 </ul>
 <p>For example, the rst below adds the reduced version of the Gallery for all
 examples that use the specific function <code class="docutils literal notranslate"><span class="pre">numpy.exp</span></code>, the example
@@ -1135,19 +1222,25 @@ sorting all minigalleries.
 Sorting uses the paths to the gallery examples (e.g., <code class="docutils literal notranslate"><span class="pre">path/to/plot_example.py</span></code>)
 and backreferences (e.g., <code class="docutils literal notranslate"><span class="pre">path/to/numpy.exp.examples</span></code>) corresponding to the
 inputs.</p>
-<p>See <a class="reference internal" href="#own-sort-keys"><span class="std std-ref">Custom sort keys</span></a> for details on writing a custom sort key. Below is an
-example of using <a class="reference internal" href="gen_modules/sphinx_gallery.sorting.html#sphinx_gallery.sorting.FunctionSortKey" title="sphinx_gallery.sorting.FunctionSortKey"><code class="xref py py-class docutils literal notranslate"><span class="pre">sphinx_gallery.sorting.FunctionSortKey</span></code></a> to put
-backreference thumbnails at the end. Note that
-backreference filenames do not start with “plot_” and <code class="docutils literal notranslate"><span class="pre">False</span></code> gets sorted ahead
-of <code class="docutils literal notranslate"><span class="pre">True</span></code> (as 0 is less than 1).</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+<p>See <a class="reference internal" href="#own-sort-keys"><span class="std std-ref">Custom sort keys</span></a> for details on writing a custom sort key.</p>
+<p>As an example, to put backreference thumbnails at the end, we could define the function
+below in <code class="docutils literal notranslate"><span class="pre">doc/sphinxext.py</span></code> (note that backreference filenames do not start with
+“plot_” and <code class="docutils literal notranslate"><span class="pre">False</span></code> gets sorted ahead of <code class="docutils literal notranslate"><span class="pre">True</span></code> as 0 is less than 1):</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">function_sorter</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;plot_&quot;</span><span class="p">),</span> <span class="n">x</span><span class="p">)::</span>
+</pre></div>
+</div>
+<p>We can then set the configuration to be (ensuring the function is
+<a class="reference internal" href="#importing-callables"><span class="std std-ref">importable</span></a>):</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
 <span class="c1">#...,</span>
-<span class="s2">&quot;minigallery_sort_order&quot;</span><span class="p">:</span> <span class="n">FunctionSortKey</span><span class="p">(</span>
-    <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;plot_&quot;</span><span class="p">),</span> <span class="n">x</span><span class="p">)),</span>
+<span class="s2">&quot;minigallery_sort_order&quot;</span><span class="p">:</span> <span class="s2">&quot;sphinxext.function_sorter&quot;</span><span class="p">,</span>
 <span class="c1">#...</span>
 <span class="p">}</span>
 </pre></div>
 </div>
+<p>Sphinx-Gallery would resolve <code class="docutils literal notranslate"><span class="pre">&quot;sphinxext.function_sorter&quot;</span></code> to the
+<code class="docutils literal notranslate"><span class="pre">function_sorter</span></code> object.</p>
 <p>Sorting the set of thumbnails generated from
 <a class="reference internal" href="#references-to-examples"><span class="std std-ref">API backreferences</span></a> (i.e. the thumbnails linked
 to a qualified object name input) is not supported, but the sorting function can
@@ -1402,7 +1495,7 @@ following css prevents any module except for matplotlib from being decorated:</p
 <p>There are likely elements other than <code class="docutils literal notranslate"><span class="pre">text-decoration</span></code> that might be worth
 setting, as well.</p>
 <p>You can add these CSS classes by including your own CSS file via the Sphinx
-configuration <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-html_static_path" title="(in Sphinx v7.3.0)"><code class="docutils literal notranslate"><span class="pre">html_static_path</span></code></a>, which will override the
+configuration <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-html_static_path" title="(in Sphinx v7.4.0)"><code class="docutils literal notranslate"><span class="pre">html_static_path</span></code></a>, which will override the
 default CSS classes in <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/tree/master/sphinx_gallery/_static">Sphinx-Gallery CSS files</a>.</p>
 </section>
 </section>
@@ -1436,7 +1529,7 @@ setting:</p>
 </div>
 </section>
 <section id="removing-config-comments">
-<span id="id5"></span><h2>Removing config comments<a class="headerlink" href="#removing-config-comments" title="Link to this heading">#</a></h2>
+<span id="id6"></span><h2>Removing config comments<a class="headerlink" href="#removing-config-comments" title="Link to this heading">#</a></h2>
 <p>Some configurations can be specified within a file by adding a special
 comment with the pattern <code class="samp docutils literal notranslate"><span class="pre">#</span> <span class="pre">sphinx_gallery_</span><em><span class="pre">config</span></em> <span class="pre">[=</span> <em><span class="pre">value</span></em><span class="pre">]</span></code> to the
 example source files. By default, the source files are parsed as is and thus
@@ -1463,14 +1556,14 @@ reporting on the user’s environment. By default no last cell is added.</p>
 <p>You can choose whatever text you like by modifying the <code class="docutils literal notranslate"><span class="pre">first_notebook_cell</span></code>
 and <code class="docutils literal notranslate"><span class="pre">last_notebook_cell</span></code> configuration parameters. For example, you can add
 the following first cell:</p>
-<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="c1"># This cell is added by sphinx-gallery</span>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="c1"># This cell is added by Sphinx-Gallery</span>
 <span class="c1"># It can be customized to whatever you like</span>
 </pre></div>
 </div>
 <p>Which is achieved by the following configuration:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;first_notebook_cell&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;# This cell is added by sphinx-gallery</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="s1">&#39;first_notebook_cell&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;# This cell is added by Sphinx-Gallery</span><span class="se">\n</span><span class="s2">&quot;</span>
                             <span class="s2">&quot;# It can be customized to whatever you like</span><span class="se">\n</span><span class="s2">&quot;</span>
                             <span class="p">)</span>
 <span class="p">}</span>
@@ -1480,7 +1573,7 @@ the following first cell:</p>
 parameter:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;first_notebook_cell&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;# This cell is added by sphinx-gallery</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="s1">&#39;first_notebook_cell&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;# This cell is added by Sphinx-Gallery</span><span class="se">\n</span><span class="s2">&quot;</span>
                             <span class="s2">&quot;# It can be customized to whatever you like</span><span class="se">\n</span><span class="s2">&quot;</span>
                             <span class="p">),</span>
     <span class="s1">&#39;last_notebook_cell&#39;</span><span class="p">:</span> <span class="s2">&quot;# This is the last cell&quot;</span><span class="p">,</span>
@@ -1822,7 +1915,7 @@ For <cite>jupyterlite-sphinx&gt;=0.8</cite> (released 15 March 2023) you also ne
   <span class="o">...</span>
   <span class="s1">&#39;jupyterlite&#39;</span><span class="p">:</span> <span class="p">{</span>
      <span class="s1">&#39;use_jupyter_lab&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">bool</span><span class="o">&gt;</span><span class="p">,</span> <span class="c1"># Whether JupyterLite links should start Jupyter Lab instead of the Retrolab Notebook interface.</span>
-     <span class="s1">&#39;notebook_modification_function&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">function</span><span class="o">&gt;</span><span class="p">,</span> <span class="c1"># function that implements JupyterLite-specific modifications of notebooks</span>
+     <span class="s1">&#39;notebook_modification_function&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">str</span><span class="o">&gt;</span><span class="p">,</span> <span class="c1"># fully qualified name of a function that implements JupyterLite-specific modifications of notebooks</span>
      <span class="s1">&#39;jupyterlite_contents&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">str</span><span class="o">&gt;</span><span class="p">,</span> <span class="c1"># where to copy the example notebooks (relative to Sphinx source directory)</span>
      <span class="p">}</span>
 <span class="p">}</span>
@@ -1833,7 +1926,8 @@ For <cite>jupyterlite-sphinx&gt;=0.8</cite> (released 15 March 2023) you also ne
 <dt>use_jupyter_lab (type: bool, default: <code class="docutils literal notranslate"><span class="pre">True</span></code>)</dt><dd><p>Whether the default interface activated by the JupyterLite link will be for
 Jupyter Lab or the RetroLab Notebook interface.</p>
 </dd>
-<dt>notebook_modification_function (type: function, default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)</dt><dd><p>Function that implements JupyterLite-specific modifications of notebooks. By
+<dt>notebook_modification_function (type: str, default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)</dt><dd><p>Fully qualified name of a
+function that implements JupyterLite-specific modifications of notebooks. By
 default, it is <code class="docutils literal notranslate"><span class="pre">None</span></code> which means that notebooks are not going to be
 modified. Its signature should be <code class="docutils literal notranslate"><span class="pre">notebook_modification_function(json_dict:</span>
 <span class="pre">dict,</span> <span class="pre">notebook_filename:</span> <span class="pre">str)</span> <span class="pre">-&gt;</span> <span class="pre">None</span></code> where <code class="docutils literal notranslate"><span class="pre">json_dict</span></code> is what you get
@@ -1845,7 +1939,8 @@ modify the notebook based on its filename. Potential usages of this function
 are installing additional packages with a <code class="docutils literal notranslate"><span class="pre">%pip</span> <span class="pre">install</span> <span class="pre">seaborn</span></code> code cell,
 or adding a markdown cell to indicate that a notebook is not expected to work
 inside JupyterLite, for example because it is using packages that are not
-packaged inside Pyodide.</p>
+packaged inside Pyodide. For backward compatibility it can also be a callable
+but this will not be cached properly as part of the environment by Sphinx.</p>
 </dd>
 <dt>jupyterlite_contents (type: string, default: <code class="docutils literal notranslate"><span class="pre">jupyterlite_contents</span></code>)</dt><dd><p>The name of a folder where the built Jupyter notebooks will be copied,
 relative to the Sphinx source directory. This is used as Jupyterlite
@@ -1871,7 +1966,7 @@ going to add JupyterLite-specific modifications to notebooks</p></li>
 server in your browser with the current example as notebook</p></li>
 </ol>
 <p>If, for some reason, you want to enable the <code class="docutils literal notranslate"><span class="pre">jupyterlite-sphinx</span></code> extension
-but not use sphinx-gallery Jupyterlite integration you can do:</p>
+but not use Sphinx-Gallery Jupyterlite integration you can do:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">extensions</span> <span class="o">=</span> <span class="p">[</span>
     <span class="o">...</span><span class="p">,</span>
     <span class="n">jupyterlite_sphinx</span><span class="p">,</span>
@@ -2050,7 +2145,7 @@ directive tags like <code class="docutils literal notranslate"><span class="pre"
 with the <em>html</em> and <em>latex</em>  builders.</p>
 </section>
 <section id="image-scrapers">
-<span id="id7"></span><h2>Image scrapers<a class="headerlink" href="#image-scrapers" title="Link to this heading">#</a></h2>
+<span id="id8"></span><h2>Image scrapers<a class="headerlink" href="#image-scrapers" title="Link to this heading">#</a></h2>
 <p>Image scrapers are plugins that allow Sphinx-Gallery to detect images produced
 during execution of your examples, and then embed them into documentation.
 Scrapers can be activated by appending scraper names to the
@@ -2076,11 +2171,13 @@ than a single static image of the animation figure, you should add:</p>
 <p>HTML embedding options can be changed by setting <code class="docutils literal notranslate"><span class="pre">rcParams['animation.html']</span></code>
 and related options in your
 <a class="reference external" href="https://matplotlib.org/stable/tutorials/introductory/customizing.html">matplotlib rcParams</a>.
-It’s also recommended to ensure that “imagemagick” is available as a
-<code class="docutils literal notranslate"><span class="pre">writer</span></code>, which you can check with
-<a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.animation.ImageMagickWriter.html#matplotlib.animation.ImageMagickWriter" title="(in Matplotlib v3.8.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.animation.ImageMagickWriter.isAvailable()</span></code></a>.
-The FFmpeg writer in some light testing did not work as well for
-creating GIF thumbnails for the gallery pages.</p>
+It’s also recommended to ensure that “FFmpeg” or “imagemagick” is available as a
+<code class="docutils literal notranslate"><span class="pre">writer</span></code>. Use
+<a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.animation.ImageMagickWriter.html#matplotlib.animation.ImageMagickWriter" title="(in Matplotlib v3.8.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.animation.ImageMagickWriter.isAvailable()</span></code></a>
+or
+<a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.animation.FFMpegWriter.html#matplotlib.animation.FFMpegWriter" title="(in Matplotlib v3.8.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.animation.FFMpegWriter.isAvailable()</span></code></a>
+to check.
+We recommend FFMpeg writer, unless you are using Matplotlib &lt;3.3.1.</p>
 <p>The following scrapers are supported:</p>
 <ul class="simple">
 <li><dl class="simple">
@@ -2388,7 +2485,7 @@ proportion of documents, integer represents absolute counts.</p>
 </dd>
 <dt>rubric_header (type: str, default: “Related examples”)</dt><dd><p>Customizable rubric header. It can be edited to more descriptive text or to
 add external links, e.g. to the API doc of the recommender system on the
-sphinx-gallery documentation.</p>
+Sphinx-Gallery documentation.</p>
 </dd>
 </dl>
 <p>The parameters <code class="docutils literal notranslate"><span class="pre">min_df</span></code> and <code class="docutils literal notranslate"><span class="pre">max_df</span></code> can be customized by the user to trim
@@ -2414,7 +2511,7 @@ configuration, e.g.:</p>
 <p>The gallery uses various CSS classes to display these thumbnails, which
 default to maximum 160x112px. To change this you can modify the default CSS by
 including your own CSS file via the Sphinx configuration
-<a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-html_static_path" title="(in Sphinx v7.3.0)"><code class="docutils literal notranslate"><span class="pre">html_static_path</span></code></a> (which will override default CSS classes
+<a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-html_static_path" title="(in Sphinx v7.4.0)"><code class="docutils literal notranslate"><span class="pre">html_static_path</span></code></a> (which will override default CSS classes
 in <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/tree/master/sphinx_gallery/_static">Sphinx-Gallery CSS files</a>).
 The following CSS would display the images at 250x250px instead of the default
 160x112px:</p>
@@ -2480,7 +2577,7 @@ tuple containing:</p>
 </div>
 </section>
 <section id="show-signature">
-<span id="id9"></span><h2>Show signature<a class="headerlink" href="#show-signature" title="Link to this heading">#</a></h2>
+<span id="id10"></span><h2>Show signature<a class="headerlink" href="#show-signature" title="Link to this heading">#</a></h2>
 <p>By default, Sphinx-Gallery writes a <strong>Generated by …</strong> notice in the
 generated output.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">show_signature</span></code> parameter can be used to disable it.</p>
@@ -2593,7 +2690,7 @@ This would prevent capturing of all subclasses of ‘matplotlib.text’, e.g.
 expressions of type ‘matplotlib.text.Annotation’, ‘matplotlib.text.OffsetFrom’
 etc. Similarly subclasses of ‘matplotlib.axes’ (e.g. ‘matplotlib.axes.Axes’,
 ‘matplotlib.axes.Axes.plot’ etc.) will also not be captured.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
     <span class="s1">&#39;capture_repr&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;__repr__&#39;</span><span class="p">),</span>
     <span class="s1">&#39;ignore_repr_types&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;matplotlib\.(text|axes)&#39;</span><span class="p">,</span>
@@ -2642,7 +2739,7 @@ sphinx-build, because that material fits in thematically with your gallery,
 but is easier to write as rst.  To accommodate this, you may set
 <code class="docutils literal notranslate"><span class="pre">copyfile_regex</span></code> in <code class="docutils literal notranslate"><span class="pre">sphinx_gallery_conf</span></code>.  The following copies
 across rst files.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
    <span class="s1">&#39;copyfile_regex&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;.*\.rst&#39;</span><span class="p">,</span>
 <span class="p">}</span>
@@ -2747,6 +2844,8 @@ desirable to document if they are used in examples.</p>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#removing-warnings">Removing warnings</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#importing-callables">Importing callables</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ensuring-a-stable-repr">Ensuring a stable <code class="docutils literal notranslate"><span class="pre">__repr__</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#manage-multiple-galleries">Manage multiple galleries</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parsing-and-executing-examples-via-matching-patterns">Parsing and executing examples via matching patterns</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rerunning-stale-examples">Rerunning stale examples</a></li>
@@ -2858,7 +2957,7 @@ desirable to document if they are used in examples.</p>
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
     <br/>
   </p>
 </div>
