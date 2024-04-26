@@ -900,31 +900,47 @@ See <a class="reference internal" href="#stable-repr"><span class="std std-ref">
 <span id="sub-gallery-order"></span><h2>Sorting gallery subsections<a class="headerlink" href="#sorting-gallery-subsections" title="Link to this heading">#</a></h2>
 <p>Gallery subsections are sorted by default alphabetically by their folder
 name, and as such you can always organize them by changing your folder
-names. An alternative option is to use a sortkey to organize those
-subsections. We provide an explicit order sortkey where you have to define
-the order of all subfolders in your galleries:</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sphinx_gallery.sorting</span> <span class="kn">import</span> <span class="n">ExplicitOrder</span>
-<span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+names. Alternatively, you can specify the order via the config value
+‘subsection_order’ by providing a list of the subsections as paths
+relative to <code class="file docutils literal notranslate"><span class="pre">conf.py</span></code> in the desired order:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
     <span class="s1">&#39;examples_dirs&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;../examples&#39;</span><span class="p">,</span><span class="s1">&#39;../tutorials&#39;</span><span class="p">],</span>
-    <span class="s1">&#39;subsection_order&#39;</span><span class="p">:</span> <span class="n">ExplicitOrder</span><span class="p">([</span><span class="s1">&#39;../examples/sin_func&#39;</span><span class="p">,</span>
-                                       <span class="s1">&#39;../examples/no_output&#39;</span><span class="p">,</span>
-                                       <span class="s1">&#39;../tutorials/seaborn&#39;</span><span class="p">]),</span>
+    <span class="s1">&#39;subsection_order&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;../examples/sin_func&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;../examples/no_output&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;../tutorials/seaborn&#39;</span><span class="p">],</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <p>Here we build 2 main galleries <cite>examples</cite> and <cite>tutorials</cite>, each of them
-with subsections. To specify their order explicitly in the gallery we
-import <a class="reference internal" href="gen_modules/sphinx_gallery.sorting.html#sphinx_gallery.sorting.ExplicitOrder" title="sphinx_gallery.sorting.ExplicitOrder"><code class="xref py py-class docutils literal notranslate"><span class="pre">sphinx_gallery.sorting.ExplicitOrder</span></code></a> and initialize it with
-the list of all subfolders with their paths relative to <cite>conf.py</cite> in the
-order you prefer them to appear. Keep in mind that we use a single sort key
+with subsections. You must list all subsections. If that’s too cumbersome,
+one entry can be “*”, which will collect all not-listed subsections, e.g.
+<code class="docutils literal notranslate"><span class="pre">[&quot;first_subsection&quot;,</span> <span class="pre">&quot;*&quot;,</span> <span class="pre">&quot;last_subsection&quot;]</span></code>.</p>
+<p>Even more generally, you can set ‘subsection_order’ to any callable, which
+will be used as sorting key function on the subsection paths. See
+<a class="reference internal" href="#own-sort-keys"><span class="std std-ref">Custom sort keys</span></a> for more information.</p>
+<p>In fact, the
+above list is a convenience shortcut and it is internally wrapped in
+<a class="reference internal" href="gen_modules/sphinx_gallery.sorting.html#sphinx_gallery.sorting.ExplicitOrder" title="sphinx_gallery.sorting.ExplicitOrder"><code class="xref py py-class docutils literal notranslate"><span class="pre">sphinx_gallery.sorting.ExplicitOrder</span></code></a> as a sortkey.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Sphinx-Gallery &lt;0.16.0 required to wrap the list in
+<a class="reference internal" href="gen_modules/sphinx_gallery.sorting.html#sphinx_gallery.sorting.ExplicitOrder" title="sphinx_gallery.sorting.ExplicitOrder"><code class="xref py py-class docutils literal notranslate"><span class="pre">ExplicitOrder</span></code></a></p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sphinx_gallery.sorting</span> <span class="kn">import</span> <span class="n">ExplicitOrder</span>
+<span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">...</span>
+    <span class="s1">&#39;subsection_order&#39;</span><span class="p">:</span> <span class="n">ExplicitOrder</span><span class="p">([</span><span class="o">...</span><span class="p">])</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This pattern is discouraged in favor of passing the simple list.</p>
+</div>
+<p>Keep in mind that we use a single sort key
 for all the galleries that are built, thus we include the prefix of each
 gallery in the corresponding subsection folders. One does not define a
 sortkey per gallery. You can use Linux paths, and if your documentation is
 built in a Windows system, paths will be transformed to work accordingly,
 the converse does not hold.</p>
-<p>If you implement your own sort key, it will be passed the subfolder path,
-relative to the <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file. See <a class="reference internal" href="#own-sort-keys"><span class="std std-ref">Custom sort keys</span></a> for more information.</p>
 </section>
 <section id="sorting-gallery-examples">
 <span id="within-gallery-order"></span><h2>Sorting gallery examples<a class="headerlink" href="#sorting-gallery-examples" title="Link to this heading">#</a></h2>

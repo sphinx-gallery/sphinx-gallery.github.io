@@ -494,7 +494,10 @@ document.write(`
 <span class="k">class</span> <span class="nc">ExplicitOrder</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Sorting key for all gallery subsections.</span>
 
-<span class="sd">    This requires all folders to be listed otherwise an exception is raised.</span>
+<span class="sd">    All subsections folders must be listed, otherwise an exception is raised.</span>
+<span class="sd">    However, you can add &#39;*&#39; as a placeholder to the list. All not-listed</span>
+<span class="sd">    subsection folders will be inserted at the given position and no</span>
+<span class="sd">    exception is raised.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -515,18 +518,45 @@ document.write(`
                 <span class="s2">&quot;the paths of each gallery subfolder&quot;</span>
             <span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">ordered_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">ordered_list</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ordered_list</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;*&quot;</span> <span class="k">if</span> <span class="n">path</span> <span class="o">==</span> <span class="s2">&quot;*&quot;</span> <span class="k">else</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">ordered_list</span>
+        <span class="p">]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="n">ordered_list</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">has_wildcard</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ordered_list_start</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ordered_list</span><span class="p">[:</span><span class="n">i</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ordered_list_end</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ordered_list</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:]</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>  <span class="c1"># from index(&quot;*&quot;)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">has_wildcard</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ordered_list_start</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ordered_list_end</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ordered_list</span>
 
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return index of item in `ordered_list`, raising error if it is missing.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ordered_list</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ordered_list</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return an integer suited for ordering the items.</span>
+
+<span class="sd">        If the ordered_list contains a wildcard &quot;*&quot;, items before &quot;*&quot; will return</span>
+<span class="sd">        negative numbers, items after &quot;*&quot; will have positive numbers, and</span>
+<span class="sd">        not-listed items will return 0.</span>
+
+<span class="sd">        If there is no wildcard, all items with return positive numbers, and</span>
+<span class="sd">        not-listed items will raise a ConfigError.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ordered_list_start</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ordered_list_start</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ordered_list_start</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ordered_list_end</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ordered_list_end</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
-                <span class="s2">&quot;If you use an explicit folder ordering, you &quot;</span>
-                <span class="s2">&quot;must specify all folders. Explicit order not &quot;</span>
-                <span class="s2">&quot;found for </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
-            <span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_wildcard</span><span class="p">:</span>
+                <span class="k">return</span> <span class="mi">0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
+                    <span class="s2">&quot;The subsection folder </span><span class="si">{!r}</span><span class="s2"> was not found in the &quot;</span>
+                    <span class="s2">&quot;&#39;subsection_order&#39; config. If you use an explicit &quot;</span>
+                    <span class="s2">&quot;&#39;subsection_order&#39;, you must specify all subsection folders &quot;</span>
+                    <span class="s2">&quot;or add &#39;*&#39; as a wildcard to collect all not-listed subsection &quot;</span>
+                    <span class="s2">&quot;folders.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+                <span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> : </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ordered_list</span><span class="si">}</span><span class="s2">&gt;&quot;</span></div>
