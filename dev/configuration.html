@@ -2175,19 +2175,37 @@ to scrape matplotlib images you can do:</p>
 </div>
 <p>The default value is <code class="docutils literal notranslate"><span class="pre">'image_scrapers':</span> <span class="pre">('matplotlib',)</span></code> which only scrapes
 Matplotlib images. Note that this includes any images produced by packages that
-are based on Matplotlib, for example Seaborn or Yellowbrick. If you want
-to embed <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.animation.Animation.html#matplotlib.animation.Animation" title="(in Matplotlib v3.8.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.animation.Animation</span></code></a>s as animations rather
-than a single static image of the animation figure, you should add:</p>
+are based on Matplotlib, for example Seaborn or Yellowbrick.</p>
+<section id="matplotlib-animations">
+<h3>Matplotlib animations<a class="headerlink" href="#matplotlib-animations" title="Link to this heading">#</a></h3>
+<p>If you wish to embed <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.animation.Animation.html#matplotlib.animation.Animation" title="(in Matplotlib v3.8.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.animation.Animation</span></code></a>s as animations rather
+than a single static image of the animation figure, you should use the
+<cite>matplotlib_animations</cite> configuration. It accepts either a bool, indicating whether
+animations should be enabled, or a tuple of the format: (enabled: bool, format: str):</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;matplotlib_animations&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s1">&#39;matplotlib_animations&#39;</span><span class="p">:</span> <span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;mp4&#39;</span><span class="p">),</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>HTML embedding options can be changed by setting <code class="docutils literal notranslate"><span class="pre">rcParams['animation.html']</span></code>
-and related options in your
+<p><cite>matplotlib_animations</cite> is <cite>False</cite> by default.</p>
+<p>Any file format supported by Matplotlib for animations is allowed. If no format
+is specified (i.e., it is a single bool), or it is <em>None</em>, then the format is
+determined by <code class="docutils literal notranslate"><span class="pre">rcParams['animation.html']</span></code> and related options in your
 <a class="reference external" href="https://matplotlib.org/stable/tutorials/introductory/customizing.html">matplotlib rcParams</a>.
-It’s also recommended to ensure that “FFmpeg” or “imagemagick” is available as a
+This means that it can be set inside your code block, though note that Sphinx-Gallery
+will reset Matplotib defaults before each example file executes (see
+<a class="reference internal" href="#reset-modules"><span class="std std-ref">Resetting modules</span></a>).</p>
+<p>If the format is <code class="docutils literal notranslate"><span class="pre">'html5'</span></code> or <code class="docutils literal notranslate"><span class="pre">'jshtml'</span></code>, the animation will effectively
+be embedded in the resulting HTML file. Otherwise the animation will be saved
+in an external file, thus reducing the size of the ReST file generated.
+If you request a format that saves to an external file, you will need the
+<a class="reference external" href="https://pypi.org/project/sphinxcontrib-video/">sphinxcontrib-video extension</a>
+installed in your environment.</p>
+<p>Note that while <code class="docutils literal notranslate"><span class="pre">matplotlib_animations</span></code> allows you to set the
+<code class="docutils literal notranslate"><span class="pre">rcParams['animation.html']</span></code> globally, setting it inside a code block will
+override the global setting.</p>
+<p>It’s also recommended to ensure that “FFmpeg” or “imagemagick” is available as a
 <code class="docutils literal notranslate"><span class="pre">writer</span></code>. Use
 <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.animation.ImageMagickWriter.html#matplotlib.animation.ImageMagickWriter" title="(in Matplotlib v3.8.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.animation.ImageMagickWriter.isAvailable()</span></code></a>
 or
@@ -2230,6 +2248,7 @@ images produced by an arbitrary package. For instructions, see
 useful for general use (e.g., a custom scraper for a plotting library)
 feel free to add it to the list above (see discussion
 <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/issues/441#issuecomment-493782430">here</a>)!</p>
+</section>
 </section>
 <section id="using-multiple-code-blocks-to-create-a-single-figure">
 <span id="defer-figures"></span><h2>Using multiple code blocks to create a single figure<a class="headerlink" href="#using-multiple-code-blocks-to-create-a-single-figure" title="Link to this heading">#</a></h2>
@@ -2904,7 +2923,10 @@ desirable to document if they are used in examples.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-without-executing-examples">Building without executing examples</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#compressing-images">Compressing images</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-resolution-images">Multi-resolution images</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#image-scrapers">Image scrapers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#image-scrapers">Image scrapers</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#matplotlib-animations">Matplotlib animations</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-multiple-code-blocks-to-create-a-single-figure">Using multiple code blocks to create a single figure</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hiding-lines-of-code">Hiding lines of code</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generating-dummy-images">Generating dummy images</a></li>

@@ -782,6 +782,40 @@ document.write(`
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;compress_images&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">compress_images</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;compress_images_args&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">compress_images_args</span>
 
+    <span class="c1"># deal with matplotlib_animations</span>
+    <span class="n">animations</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;matplotlib_animations&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">animations</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
+        <span class="c1"># We allow single boolean for backwards compatibility reasons</span>
+        <span class="n">animations</span> <span class="o">=</span> <span class="p">(</span><span class="n">animations</span><span class="p">,)</span>
+        <span class="n">fmt</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">animations</span><span class="p">)</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">enabled</span> <span class="o">:=</span> <span class="n">animations</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">bool</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
+            <span class="s2">&quot;&#39;matplotlib_animations&#39; must be a single bool or &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;(enabled: bool, format: str), not </span><span class="si">{</span><span class="n">animations</span><span class="si">!r}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+    <span class="c1"># Handle file format</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">animations</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">fmt</span> <span class="o">=</span> <span class="n">animations</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">fmt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fmt</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
+                    <span class="s2">&quot;&#39;matplotlib_animations&#39; file format must be a string or None&quot;</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="n">fmt</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;html5&quot;</span><span class="p">,</span> <span class="s2">&quot;jshtml&quot;</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">app</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="c1"># Other formats mean animations saved externally and require</span>
+                    <span class="c1"># this `video` extension to embed them into the HTML</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">app</span><span class="o">.</span><span class="n">setup_extension</span><span class="p">(</span><span class="s2">&quot;sphinxcontrib.video&quot;</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="n">ExtensionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;&#39;matplotlib_animations&#39; specifies file format: </span><span class="si">{</span><span class="n">fmt</span><span class="si">}</span><span class="s2">; &quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot;this requires the sphinxcontrib.video package.&quot;</span>
+                        <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+
+    <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;matplotlib_animations&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">enabled</span><span class="p">,</span> <span class="n">fmt</span><span class="p">)</span>
+    <span class="k">del</span> <span class="n">animations</span><span class="p">,</span> <span class="n">enabled</span><span class="p">,</span> <span class="n">fmt</span>
+
     <span class="c1"># check resetters</span>
     <span class="n">_get_callables</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="s2">&quot;reset_modules&quot;</span><span class="p">)</span>
 
