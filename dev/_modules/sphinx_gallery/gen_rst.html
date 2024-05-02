@@ -486,7 +486,7 @@ document.write(`
 <span class="kn">import</span> <span class="nn">contextlib</span>
 <span class="kn">import</span> <span class="nn">ast</span>
 <span class="kn">import</span> <span class="nn">codecs</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span><span class="p">,</span> <span class="n">lru_cache</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">lru_cache</span>
 <span class="kn">import</span> <span class="nn">gc</span>
 <span class="kn">import</span> <span class="nn">pickle</span>
 <span class="kn">import</span> <span class="nn">importlib</span>
@@ -1239,21 +1239,11 @@ document.write(`
         <span class="n">close_fds</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">memories</span> <span class="o">=</span> <span class="n">memory_usage</span><span class="p">(</span><span class="n">proc</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
-    <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span> <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="k">else</span> <span class="p">{}</span>
-    <span class="n">proc</span><span class="o">.</span><span class="n">communicate</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">proc</span><span class="o">.</span><span class="n">communicate</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
     <span class="c1"># On OSX sometimes the last entry can be None</span>
     <span class="n">memories</span> <span class="o">=</span> <span class="p">[</span><span class="n">mem</span> <span class="k">for</span> <span class="n">mem</span> <span class="ow">in</span> <span class="n">memories</span> <span class="k">if</span> <span class="n">mem</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span>
     <span class="n">memory_base</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">memories</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">memory_base</span>
-
-
-<span class="k">def</span> <span class="nf">_ast_module</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get ast.Module function, dealing with: https://bugs.python.org/issue35894.&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">):</span>
-        <span class="n">ast_Module</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">type_ignores</span><span class="o">=</span><span class="p">[])</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">ast_Module</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">Module</span>
-    <span class="k">return</span> <span class="n">ast_Module</span>
 
 
 <span class="k">def</span> <span class="nf">_check_reset_logging_tee</span><span class="p">(</span><span class="n">src_file</span><span class="p">):</span>
@@ -1267,15 +1257,13 @@ document.write(`
     <span class="k">return</span> <span class="n">logging_tee</span>
 
 
-<span class="k">def</span> <span class="nf">_exec_and_get_memory</span><span class="p">(</span><span class="n">compiler</span><span class="p">,</span> <span class="n">ast_Module</span><span class="p">,</span> <span class="n">code_ast</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_exec_and_get_memory</span><span class="p">(</span><span class="n">compiler</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">code_ast</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Execute ast, capturing output if last line expression and get max mem usage.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    compiler : codeop.Compile</span>
 <span class="sd">        Compiler to compile AST of code block.</span>
-<span class="sd">    ast_Module : Callable</span>
-<span class="sd">        ast.Module function.</span>
 <span class="sd">    code_ast : ast.Module</span>
 <span class="sd">        AST parsed code to execute.</span>
 <span class="sd">    gallery_conf : Dict[str, Any]</span>
@@ -1305,7 +1293,8 @@ document.write(`
         <span class="n">body</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">ast</span><span class="o">.</span><span class="n">Assign</span><span class="p">(</span><span class="n">targets</span><span class="o">=</span><span class="p">[</span><span class="n">ast</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;___&quot;</span><span class="p">,</span> <span class="n">ctx</span><span class="o">=</span><span class="n">ast</span><span class="o">.</span><span class="n">Store</span><span class="p">())],</span> <span class="n">value</span><span class="o">=</span><span class="n">last_val</span><span class="p">)</span>
         <span class="p">]</span>
-        <span class="n">last_val_ast</span> <span class="o">=</span> <span class="n">ast_Module</span><span class="p">(</span><span class="n">body</span><span class="o">=</span><span class="n">body</span><span class="p">)</span>
+        <span class="c1"># `type_ignores` empty list deals with: https://bugs.python.org/issue3589</span>
+        <span class="n">last_val_ast</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">Module</span><span class="p">(</span><span class="n">body</span><span class="o">=</span><span class="n">body</span><span class="p">,</span> <span class="n">type_ignores</span><span class="o">=</span><span class="p">[])</span>
         <span class="n">ast</span><span class="o">.</span><span class="n">fix_missing_locations</span><span class="p">(</span><span class="n">last_val_ast</span><span class="p">)</span>
         <span class="n">mem_last</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">call_memory</span><span class="p">(</span>
             <span class="n">_exec_once</span><span class="p">(</span>
@@ -1462,14 +1451,20 @@ document.write(`
     <span class="n">need_save_figures</span> <span class="o">=</span> <span class="n">match</span> <span class="ow">is</span> <span class="kc">None</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">ast_Module</span> <span class="o">=</span> <span class="n">_ast_module</span><span class="p">()</span>
-        <span class="n">code_ast</span> <span class="o">=</span> <span class="n">ast_Module</span><span class="p">([</span><span class="n">bcontent</span><span class="p">])</span>
-        <span class="n">flags</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">PyCF_ONLY_AST</span> <span class="o">|</span> <span class="n">compiler</span><span class="o">.</span><span class="n">flags</span>
-        <span class="n">code_ast</span> <span class="o">=</span> <span class="nb">compile</span><span class="p">(</span><span class="n">bcontent</span><span class="p">,</span> <span class="n">src_file</span><span class="p">,</span> <span class="s2">&quot;exec&quot;</span><span class="p">,</span> <span class="n">flags</span><span class="p">,</span> <span class="n">dont_inherit</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">ast</span><span class="o">.</span><span class="n">increment_lineno</span><span class="p">(</span><span class="n">code_ast</span><span class="p">,</span> <span class="n">lineno</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
-
+        <span class="c1"># The &quot;compile&quot; step itself can fail on a SyntaxError, so just prepend</span>
+        <span class="c1"># newlines to get the correct failing line to show up in the traceback</span>
+        <span class="n">code_ast</span> <span class="o">=</span> <span class="nb">compile</span><span class="p">(</span>
+            <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">*</span> <span class="p">(</span><span class="n">lineno</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">bcontent</span><span class="p">,</span>
+            <span class="n">src_file</span><span class="p">,</span>
+            <span class="s2">&quot;exec&quot;</span><span class="p">,</span>
+            <span class="n">flags</span><span class="o">=</span><span class="n">ast</span><span class="o">.</span><span class="n">PyCF_ONLY_AST</span> <span class="o">|</span> <span class="n">compiler</span><span class="o">.</span><span class="n">flags</span><span class="p">,</span>
+            <span class="n">dont_inherit</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="n">is_last_expr</span><span class="p">,</span> <span class="n">mem_max</span> <span class="o">=</span> <span class="n">_exec_and_get_memory</span><span class="p">(</span>
-            <span class="n">compiler</span><span class="p">,</span> <span class="n">ast_Module</span><span class="p">,</span> <span class="n">code_ast</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">script_vars</span>
+            <span class="n">compiler</span><span class="p">,</span>
+            <span class="n">code_ast</span><span class="o">=</span><span class="n">code_ast</span><span class="p">,</span>
+            <span class="n">gallery_conf</span><span class="o">=</span><span class="n">gallery_conf</span><span class="p">,</span>
+            <span class="n">script_vars</span><span class="o">=</span><span class="n">script_vars</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">script_vars</span><span class="p">[</span><span class="s2">&quot;memory_delta&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mem_max</span><span class="p">)</span>
         <span class="c1"># This should be inside the try block, e.g., in case of a savefig error</span>
