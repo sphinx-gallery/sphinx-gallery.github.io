@@ -1406,9 +1406,8 @@ document.write(`
 <span class="sd">    ----------</span>
 <span class="sd">    compiler : codeop.Compile</span>
 <span class="sd">        Compiler to compile AST of code block.</span>
-<span class="sd">    block : List[Tuple[str, str, int]]</span>
-<span class="sd">        List of Tuples, each Tuple contains label (&#39;text&#39; or &#39;code&#39;),</span>
-<span class="sd">        the corresponding content string of block and the leading line number.</span>
+<span class="sd">    block : sphinx_gallery.py_source_parser.Block</span>
+<span class="sd">        The code block to be executed.</span>
 <span class="sd">    example_globals: Dict[str, Any]</span>
 <span class="sd">        Global variables for examples.</span>
 <span class="sd">    script_vars : Dict[str, Any]</span>
@@ -1426,9 +1425,8 @@ document.write(`
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">example_globals</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># testing shortcut</span>
         <span class="n">example_globals</span> <span class="o">=</span> <span class="n">script_vars</span><span class="p">[</span><span class="s2">&quot;fake_main&quot;</span><span class="p">]</span><span class="o">.</span><span class="vm">__dict__</span>
-    <span class="n">blabel</span><span class="p">,</span> <span class="n">bcontent</span><span class="p">,</span> <span class="n">lineno</span> <span class="o">=</span> <span class="n">block</span>
     <span class="c1"># If example is not suitable to run, skip executing its blocks</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">script_vars</span><span class="p">[</span><span class="s2">&quot;execute_script&quot;</span><span class="p">]</span> <span class="ow">or</span> <span class="n">blabel</span> <span class="o">==</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">script_vars</span><span class="p">[</span><span class="s2">&quot;execute_script&quot;</span><span class="p">]</span> <span class="ow">or</span> <span class="n">block</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="s2">&quot;&quot;</span>
 
     <span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
@@ -1446,7 +1444,9 @@ document.write(`
 
     <span class="c1"># Save figures unless there is a `sphinx_gallery_defer_figures` flag</span>
     <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
-        <span class="sa">r</span><span class="s2">&quot;^[\ \t]*#\s*sphinx_gallery_defer_figures[\ \t]*\n?&quot;</span><span class="p">,</span> <span class="n">bcontent</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span>
+        <span class="sa">r</span><span class="s2">&quot;^[\ \t]*#\s*sphinx_gallery_defer_figures[\ \t]*\n?&quot;</span><span class="p">,</span>
+        <span class="n">block</span><span class="o">.</span><span class="n">content</span><span class="p">,</span>
+        <span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">need_save_figures</span> <span class="o">=</span> <span class="n">match</span> <span class="ow">is</span> <span class="kc">None</span>
 
@@ -1454,7 +1454,7 @@ document.write(`
         <span class="c1"># The &quot;compile&quot; step itself can fail on a SyntaxError, so just prepend</span>
         <span class="c1"># newlines to get the correct failing line to show up in the traceback</span>
         <span class="n">code_ast</span> <span class="o">=</span> <span class="nb">compile</span><span class="p">(</span>
-            <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">*</span> <span class="p">(</span><span class="n">lineno</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">bcontent</span><span class="p">,</span>
+            <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">*</span> <span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">lineno</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">block</span><span class="o">.</span><span class="n">content</span><span class="p">,</span>
             <span class="n">src_file</span><span class="p">,</span>
             <span class="s2">&quot;exec&quot;</span><span class="p">,</span>
             <span class="n">flags</span><span class="o">=</span><span class="n">ast</span><span class="o">.</span><span class="n">PyCF_ONLY_AST</span> <span class="o">|</span> <span class="n">compiler</span><span class="o">.</span><span class="n">flags</span><span class="p">,</span>
@@ -1676,7 +1676,7 @@ document.write(`
         <span class="n">src_file</span><span class="p">,</span> <span class="n">return_node</span><span class="o">=</span><span class="kc">True</span>
     <span class="p">)</span>
 
-    <span class="n">intro</span><span class="p">,</span> <span class="n">title</span> <span class="o">=</span> <span class="n">extract_intro_and_title</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">script_blocks</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">intro</span><span class="p">,</span> <span class="n">title</span> <span class="o">=</span> <span class="n">extract_intro_and_title</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">script_blocks</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;titles&quot;</span><span class="p">][</span><span class="n">src_file</span><span class="p">]</span> <span class="o">=</span> <span class="n">title</span>
 
     <span class="n">executable</span> <span class="o">=</span> <span class="n">executable_script</span><span class="p">(</span><span class="n">src_file</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
@@ -1733,19 +1733,21 @@ document.write(`
     <span class="c1"># Ignore blocks must be processed before the</span>
     <span class="c1"># remaining config comments are removed.</span>
     <span class="n">script_blocks</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">parser</span><span class="o">.</span><span class="n">remove_ignore_blocks</span><span class="p">(</span><span class="n">content</span><span class="p">),</span> <span class="n">line_number</span><span class="p">)</span>
+        <span class="n">py_source_parser</span><span class="o">.</span><span class="n">Block</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">parser</span><span class="o">.</span><span class="n">remove_ignore_blocks</span><span class="p">(</span><span class="n">content</span><span class="p">),</span> <span class="n">line_number</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">line_number</span> <span class="ow">in</span> <span class="n">script_blocks</span>
     <span class="p">]</span>
 
     <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;remove_config_comments&quot;</span><span class="p">]:</span>
         <span class="n">script_blocks</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">parser</span><span class="o">.</span><span class="n">remove_config_comments</span><span class="p">(</span><span class="n">content</span><span class="p">),</span> <span class="n">line_number</span><span class="p">)</span>
+            <span class="n">py_source_parser</span><span class="o">.</span><span class="n">Block</span><span class="p">(</span>
+                <span class="n">label</span><span class="p">,</span> <span class="n">parser</span><span class="o">.</span><span class="n">remove_config_comments</span><span class="p">(</span><span class="n">content</span><span class="p">),</span> <span class="n">line_number</span>
+            <span class="p">)</span>
             <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">line_number</span> <span class="ow">in</span> <span class="n">script_blocks</span>
         <span class="p">]</span>
 
     <span class="c1"># Remove final empty block, which can occur after config comments</span>
     <span class="c1"># are removed</span>
-    <span class="k">if</span> <span class="n">script_blocks</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">isspace</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">script_blocks</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">isspace</span><span class="p">():</span>
         <span class="n">script_blocks</span> <span class="o">=</span> <span class="n">script_blocks</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">output_blocks</span> <span class="o">=</span> <span class="n">output_blocks</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
@@ -1874,20 +1876,24 @@ document.write(`
     <span class="c1"># example introduction/explanation and one for the code</span>
     <span class="n">is_example_notebook_like</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">script_blocks</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span>
     <span class="n">example_rst</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="k">for</span> <span class="n">bi</span><span class="p">,</span> <span class="p">((</span><span class="n">blabel</span><span class="p">,</span> <span class="n">bcontent</span><span class="p">,</span> <span class="n">lineno</span><span class="p">),</span> <span class="n">code_output</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span>
-        <span class="nb">zip</span><span class="p">(</span><span class="n">script_blocks</span><span class="p">,</span> <span class="n">output_blocks</span><span class="p">)</span>
-    <span class="p">):</span>
+    <span class="k">for</span> <span class="n">bi</span><span class="p">,</span> <span class="p">(</span><span class="n">script_block</span><span class="p">,</span> <span class="n">code_output</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">script_blocks</span><span class="p">,</span> <span class="n">output_blocks</span><span class="p">)):</span>
         <span class="c1"># do not add comment to the title block, otherwise the linking does</span>
         <span class="c1"># not work properly</span>
         <span class="k">if</span> <span class="n">bi</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">example_rst</span> <span class="o">+=</span> <span class="n">RST_BLOCK_HEADER</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">lineno</span><span class="p">,</span> <span class="n">lineno</span> <span class="o">+</span> <span class="n">bcontent</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">script_block</span><span class="o">.</span><span class="n">lineno</span><span class="p">,</span>
+                <span class="n">script_block</span><span class="o">.</span><span class="n">lineno</span> <span class="o">+</span> <span class="n">script_block</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">),</span>
             <span class="p">)</span>
-        <span class="k">if</span> <span class="n">blabel</span> <span class="o">==</span> <span class="s2">&quot;code&quot;</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">file_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;line_numbers&quot;</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;line_numbers&quot;</span><span class="p">]):</span>
-                <span class="n">lineno</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">script_block</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;code&quot;</span><span class="p">:</span>
+            <span class="n">lineno</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">script_block</span><span class="o">.</span><span class="n">lineno</span>
+                <span class="k">if</span> <span class="n">file_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;line_numbers&quot;</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;line_numbers&quot;</span><span class="p">])</span>
+                <span class="k">else</span> <span class="kc">None</span>
+            <span class="p">)</span>
 
-            <span class="n">code_rst</span> <span class="o">=</span> <span class="n">codestr2rst</span><span class="p">(</span><span class="n">bcontent</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="n">language</span><span class="p">,</span> <span class="n">lineno</span><span class="o">=</span><span class="n">lineno</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">code_rst</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">codestr2rst</span><span class="p">(</span><span class="n">script_block</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="n">language</span><span class="p">,</span> <span class="n">lineno</span><span class="o">=</span><span class="n">lineno</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
             <span class="k">if</span> <span class="n">is_example_notebook_like</span><span class="p">:</span>
                 <span class="n">example_rst</span> <span class="o">+=</span> <span class="n">code_rst</span>
                 <span class="n">example_rst</span> <span class="o">+=</span> <span class="n">code_output</span>
@@ -1898,8 +1904,10 @@ document.write(`
                     <span class="n">example_rst</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">|</span><span class="se">\n\n</span><span class="s2">&quot;</span>
                 <span class="n">example_rst</span> <span class="o">+=</span> <span class="n">code_rst</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">block_separator</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">bcontent</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
-            <span class="n">example_rst</span> <span class="o">+=</span> <span class="n">bcontent</span> <span class="o">+</span> <span class="n">block_separator</span>
+            <span class="n">block_separator</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">script_block</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+            <span class="n">example_rst</span> <span class="o">+=</span> <span class="n">script_block</span><span class="o">.</span><span class="n">content</span> <span class="o">+</span> <span class="n">block_separator</span>
 
     <span class="k">return</span> <span class="n">example_rst</span></div>
 

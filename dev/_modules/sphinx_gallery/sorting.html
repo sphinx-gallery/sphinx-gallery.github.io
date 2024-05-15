@@ -589,11 +589,7 @@ document.write(`
         <span class="n">src_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span>
         <span class="n">file_conf</span><span class="p">,</span> <span class="n">script_blocks</span> <span class="o">=</span> <span class="n">split_code_and_text_blocks</span><span class="p">(</span><span class="n">src_file</span><span class="p">)</span>
         <span class="n">amount_of_code</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span>
-            <span class="p">[</span>
-                <span class="nb">len</span><span class="p">(</span><span class="n">bcontent</span><span class="p">)</span>
-                <span class="k">for</span> <span class="n">blabel</span><span class="p">,</span> <span class="n">bcontent</span><span class="p">,</span> <span class="n">lineno</span> <span class="ow">in</span> <span class="n">script_blocks</span>
-                <span class="k">if</span> <span class="n">blabel</span> <span class="o">==</span> <span class="s2">&quot;code&quot;</span>
-            <span class="p">]</span>
+            <span class="nb">len</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">content</span><span class="p">)</span> <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">script_blocks</span> <span class="k">if</span> <span class="n">block</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;code&quot;</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">amount_of_code</span></div>
 
@@ -649,7 +645,7 @@ document.write(`
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return title of example.&quot;&quot;&quot;</span>
         <span class="n">src_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span>
         <span class="n">_</span><span class="p">,</span> <span class="n">script_blocks</span> <span class="o">=</span> <span class="n">split_code_and_text_blocks</span><span class="p">(</span><span class="n">src_file</span><span class="p">)</span>
-        <span class="n">_</span><span class="p">,</span> <span class="n">title</span> <span class="o">=</span> <span class="n">extract_intro_and_title</span><span class="p">(</span><span class="n">src_file</span><span class="p">,</span> <span class="n">script_blocks</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">title</span> <span class="o">=</span> <span class="n">extract_intro_and_title</span><span class="p">(</span><span class="n">src_file</span><span class="p">,</span> <span class="n">script_blocks</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">title</span></div>
 
 
