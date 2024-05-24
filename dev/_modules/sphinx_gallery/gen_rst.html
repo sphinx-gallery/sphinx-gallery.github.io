@@ -519,6 +519,7 @@ document.write(`
 <span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">scale_image</span><span class="p">,</span>
     <span class="n">get_md5sum</span><span class="p">,</span>
+    <span class="n">zip_files</span><span class="p">,</span>
     <span class="n">_replace_md5</span><span class="p">,</span>
     <span class="n">optipng</span><span class="p">,</span>
     <span class="n">status_iterator</span><span class="p">,</span>
@@ -705,6 +706,12 @@ document.write(`
 <span class="s2">    .. container:: sphx-glr-download sphx-glr-download-jupyter</span>
 
 <span class="s2">      :download:`Download Jupyter notebook: </span><span class="si">{0}</span><span class="s2"> &lt;</span><span class="si">{0}</span><span class="s2">&gt;`</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">ZIP_DOWNLOAD</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    .. container:: sphx-glr-download sphx-glr-download-zip</span>
+
+<span class="s2">      :download:`Download both (zipped): </span><span class="si">{0}</span><span class="s2"> &lt;</span><span class="si">{0}</span><span class="s2">&gt;`</span>
 <span class="s2">&quot;&quot;&quot;</span>
 
 <span class="n">RECOMMENDATIONS_INCLUDE</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span><span class="se">\n</span>
@@ -1768,12 +1775,17 @@ document.write(`
     <span class="p">)</span>
 
     <span class="n">save_thumbnail</span><span class="p">(</span><span class="n">image_path_template</span><span class="p">,</span> <span class="n">src_file</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">,</span> <span class="n">file_conf</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
+    <span class="n">files_to_zip</span> <span class="o">=</span> <span class="p">[</span><span class="n">target_file</span><span class="p">]</span>
 
     <span class="k">if</span> <span class="n">target_file</span><span class="o">.</span><span class="n">suffix</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;notebook_extensions&quot;</span><span class="p">]:</span>
         <span class="n">example_nb</span> <span class="o">=</span> <span class="n">jupyter_notebook</span><span class="p">(</span><span class="n">script_blocks</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">)</span>
         <span class="n">ipy_fname</span> <span class="o">=</span> <span class="n">target_file</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">&quot;.ipynb.new&quot;</span><span class="p">)</span>
         <span class="n">save_notebook</span><span class="p">(</span><span class="n">example_nb</span><span class="p">,</span> <span class="n">ipy_fname</span><span class="p">)</span>
         <span class="n">_replace_md5</span><span class="p">(</span><span class="n">ipy_fname</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;t&quot;</span><span class="p">)</span>
+        <span class="n">files_to_zip</span> <span class="o">+=</span> <span class="p">[</span><span class="n">target_file</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">&quot;.ipynb&quot;</span><span class="p">)]</span>
+
+    <span class="c1"># Produce the zip file of all sources</span>
+    <span class="n">zip_files</span><span class="p">(</span><span class="n">files_to_zip</span><span class="p">,</span> <span class="n">target_file</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">&quot;.zip&quot;</span><span class="p">),</span> <span class="n">target_dir</span><span class="p">)</span>
 
     <span class="c1"># Write names</span>
     <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;inspect_global_variables&quot;</span><span class="p">]:</span>
@@ -1990,9 +2002,11 @@ document.write(`
         <span class="n">example_rst</span> <span class="o">+=</span> <span class="n">jupyterlite_rst</span>
 
     <span class="k">if</span> <span class="n">save_notebook</span><span class="p">:</span>
-        <span class="n">example_rst</span> <span class="o">+=</span> <span class="n">NOTEBOOK_DOWNLOAD</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">example_file</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">&quot;.ipynb&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">ipynb_download_file</span> <span class="o">=</span> <span class="n">example_file</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">&quot;.ipynb&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">name</span>
+        <span class="n">example_rst</span> <span class="o">+=</span> <span class="n">NOTEBOOK_DOWNLOAD</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ipynb_download_file</span><span class="p">)</span>
 
     <span class="n">example_rst</span> <span class="o">+=</span> <span class="n">CODE_DOWNLOAD</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">example_file</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">language</span><span class="p">)</span>
+    <span class="n">example_rst</span> <span class="o">+=</span> <span class="n">ZIP_DOWNLOAD</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">example_file</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">&quot;.zip&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;recommender&quot;</span><span class="p">][</span><span class="s2">&quot;enable&quot;</span><span class="p">]:</span>
         <span class="c1"># extract the filename without the extension</span>
