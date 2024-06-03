@@ -797,6 +797,34 @@ document.write(`
     <span class="k">return</span> <span class="n">s</span>
 
 
+<span class="k">def</span> <span class="nf">_get_intersphinx_inventory</span><span class="p">(</span><span class="n">app</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the mapping between module names and intersphinx inventories.</span>
+
+<span class="sd">    In some cases, intersphinx inventories may provide documentation for modules _other_</span>
+<span class="sd">    than the one given by the intersphinx_mapping key (e.g., the Python inventory</span>
+<span class="sd">    contains documentation for all standard library modules, or Matplotlib contains</span>
+<span class="sd">    several `mpl_toolkits`` modules), so this checks py:module for all inventories and</span>
+<span class="sd">    adds that additional module mapping.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">inventory</span> <span class="o">:=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">env</span><span class="p">,</span> <span class="s2">&quot;sg_intersphinx_inventory&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">inventory</span>
+
+    <span class="c1"># Make a copy of the inventories, because this dict is created by intersphinx and we</span>
+    <span class="c1"># don&#39;t want to break whatever assumptions it has made about it.</span>
+    <span class="n">intersphinx_inv_orig</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">env</span><span class="p">,</span> <span class="s2">&quot;intersphinx_named_inventory&quot;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
+    <span class="n">intersphinx_inv</span> <span class="o">=</span> <span class="n">intersphinx_inv_orig</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">module_name</span><span class="p">,</span> <span class="n">inventory</span> <span class="ow">in</span> <span class="n">intersphinx_inv_orig</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">documented_modules</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">qualname</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">qualname</span> <span class="ow">in</span> <span class="n">inventory</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;py:module&quot;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
+        <span class="p">}</span>
+        <span class="k">for</span> <span class="n">other_module_name</span> <span class="ow">in</span> <span class="n">documented_modules</span> <span class="o">-</span> <span class="p">{</span><span class="n">module_name</span><span class="p">}:</span>
+            <span class="n">intersphinx_inv</span><span class="p">[</span><span class="n">other_module_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">inventory</span>
+
+    <span class="n">app</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">sg_intersphinx_inventory</span> <span class="o">=</span> <span class="n">intersphinx_inv</span>
+    <span class="k">return</span> <span class="n">intersphinx_inv</span>
+
+
 <span class="k">def</span> <span class="nf">_embed_code_links</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">gallery_dir</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Add resolvers for the packages for which we want to show links.&quot;&quot;&quot;</span>
     <span class="n">doc_resolvers</span> <span class="o">=</span> <span class="p">{}</span>
@@ -839,10 +867,7 @@ document.write(`
         <span class="n">length</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">flat</span><span class="p">),</span>
         <span class="n">stringify_func</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
     <span class="p">)</span>
-    <span class="n">intersphinx_inv</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">env</span><span class="p">,</span> <span class="s2">&quot;intersphinx_named_inventory&quot;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
-    <span class="n">builtin_modules</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span>
-        <span class="n">intersphinx_inv</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;python&quot;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;py:module&quot;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-    <span class="p">)</span>
+    <span class="n">intersphinx_inv</span> <span class="o">=</span> <span class="n">_get_intersphinx_inventory</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">dirpath</span><span class="p">,</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">iterator</span><span class="p">:</span>
         <span class="n">full_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">html_gallery_dir</span><span class="p">,</span> <span class="n">dirpath</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
         <span class="n">subpath</span> <span class="o">=</span> <span class="n">dirpath</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">html_gallery_dir</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:]</span>
@@ -880,8 +905,6 @@ document.write(`
 
                     <span class="c1"># next try intersphinx</span>
                     <span class="k">if</span> <span class="n">this_module</span> <span class="o">==</span> <span class="n">modname</span> <span class="o">==</span> <span class="s2">&quot;builtins&quot;</span><span class="p">:</span>
-                        <span class="n">this_module</span> <span class="o">=</span> <span class="s2">&quot;python&quot;</span>
-                    <span class="k">elif</span> <span class="n">modname</span> <span class="ow">in</span> <span class="n">builtin_modules</span><span class="p">:</span>
                         <span class="n">this_module</span> <span class="o">=</span> <span class="s2">&quot;python&quot;</span>
                     <span class="k">if</span> <span class="n">link</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">this_module</span> <span class="ow">in</span> <span class="n">intersphinx_inv</span><span class="p">:</span>
                         <span class="n">inv</span> <span class="o">=</span> <span class="n">intersphinx_inv</span><span class="p">[</span><span class="n">this_module</span><span class="p">]</span>
