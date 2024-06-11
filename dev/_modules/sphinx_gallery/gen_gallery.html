@@ -506,7 +506,7 @@ document.write(`
 <span class="kn">from</span> <span class="nn">.gen_rst</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">generate_dir_rst</span><span class="p">,</span>
     <span class="n">SPHX_GLR_SIG</span><span class="p">,</span>
-    <span class="n">_get_readme</span><span class="p">,</span>
+    <span class="n">_get_gallery_header</span><span class="p">,</span>
     <span class="n">_get_class</span><span class="p">,</span>
     <span class="n">_get_callables</span><span class="p">,</span>
     <span class="n">_get_call_memory_and_base</span><span class="p">,</span>
@@ -957,7 +957,7 @@ document.write(`
 <span class="sd">    gallery_conf : Dict[str, Any]</span>
 <span class="sd">        Sphinx-Gallery configuration dictionary.</span>
 <span class="sd">    check_for_index : bool</span>
-<span class="sd">        only return subfolders with a ReadMe, default True</span>
+<span class="sd">        only return subfolders contain a GALLERY_HEADER file, default True</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -975,7 +975,7 @@ document.write(`
         <span class="n">subfolders</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">subfolder</span>
             <span class="k">for</span> <span class="n">subfolder</span> <span class="ow">in</span> <span class="n">subfolders</span>
-            <span class="k">if</span> <span class="n">_get_readme</span><span class="p">(</span>
+            <span class="k">if</span> <span class="n">_get_gallery_header</span><span class="p">(</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">examples_dir</span><span class="p">,</span> <span class="n">subfolder</span><span class="p">),</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">raise_error</span><span class="o">=</span><span class="kc">False</span>
             <span class="p">)</span>
             <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
@@ -1091,7 +1091,7 @@ document.write(`
             <span class="n">include_toctree</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="p">)</span>
 
-        <span class="n">has_readme</span> <span class="o">=</span> <span class="n">this_content</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="n">has_gallery_header</span> <span class="o">=</span> <span class="n">this_content</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="n">costs</span> <span class="o">+=</span> <span class="n">this_costs</span>
         <span class="n">write_computation_times</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">gallery_dir_abs_path</span><span class="p">,</span> <span class="n">this_costs</span><span class="p">)</span>
 
@@ -1118,7 +1118,7 @@ document.write(`
             <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span>
             <span class="n">examples_dir_abs_path</span><span class="p">,</span>
             <span class="n">gallery_conf</span><span class="p">,</span>
-            <span class="n">check_for_index</span><span class="o">=</span><span class="n">has_readme</span><span class="p">,</span>
+            <span class="n">check_for_index</span><span class="o">=</span><span class="n">has_gallery_header</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">for</span> <span class="n">subsection</span> <span class="ow">in</span> <span class="n">subsecs</span><span class="p">:</span>
             <span class="n">src_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">examples_dir_abs_path</span><span class="p">,</span> <span class="n">subsection</span><span class="p">)</span>
@@ -1150,9 +1150,9 @@ document.write(`
                 <span class="p">)</span>
 
                 <span class="n">indexst</span> <span class="o">+=</span> <span class="n">subsection_index_content</span>
-                <span class="n">has_readme_subsection</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">has_subsection_header</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">has_readme_subsection</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">has_subsection_header</span> <span class="o">=</span> <span class="kc">False</span>
 
             <span class="c1"># Write subsection toctree in main file only if</span>
             <span class="c1"># nested_sections is False or None, and</span>
@@ -1165,7 +1165,7 @@ document.write(`
                     <span class="n">indexst</span> <span class="o">+=</span> <span class="n">subsection_index_toctree</span>
             <span class="c1"># Otherwise, a new index.rst.new file should</span>
             <span class="c1"># have been created and it needs to be parsed</span>
-            <span class="k">elif</span> <span class="n">has_readme_subsection</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">has_subsection_header</span><span class="p">:</span>
                 <span class="n">_replace_md5</span><span class="p">(</span><span class="n">subsection_index_path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;t&quot;</span><span class="p">)</span>
 
             <span class="n">costs</span> <span class="o">+=</span> <span class="n">subsection_costs</span>
@@ -1226,7 +1226,7 @@ document.write(`
         <span class="k">if</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;show_signature&quot;</span><span class="p">]:</span>
             <span class="n">indexst</span> <span class="o">+=</span> <span class="n">SPHX_GLR_SIG</span>
 
-        <span class="k">if</span> <span class="n">has_readme</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">has_gallery_header</span><span class="p">:</span>
             <span class="n">index_rst_new</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gallery_dir_abs_path</span><span class="p">,</span> <span class="s2">&quot;index.rst.new&quot;</span><span class="p">)</span>
             <span class="k">with</span> <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">index_rst_new</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fhindex</span><span class="p">:</span>
                 <span class="n">fhindex</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">indexst</span><span class="p">)</span>
