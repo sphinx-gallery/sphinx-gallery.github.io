@@ -1261,6 +1261,17 @@ document.write(`
     <span class="k">return</span> <span class="n">memory_base</span>
 
 
+<span class="k">def</span> <span class="nf">_get_parser</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get parser and language.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">fname</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.py&quot;</span><span class="p">):</span>
+        <span class="n">parser</span> <span class="o">=</span> <span class="n">py_source_parser</span>
+        <span class="n">language</span> <span class="o">=</span> <span class="s2">&quot;Python&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">parser</span> <span class="o">=</span> <span class="n">BlockParser</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
+        <span class="n">language</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">language</span>
+    <span class="k">return</span> <span class="n">parser</span><span class="p">,</span> <span class="n">language</span>
+
+
 <span class="k">def</span> <span class="nf">_check_reset_logging_tee</span><span class="p">(</span><span class="n">src_file</span><span class="p">):</span>
     <span class="c1"># Helper to deal with our tests not necessarily calling execute_script</span>
     <span class="c1"># but rather execute_code_block directly</span>
@@ -1649,6 +1660,83 @@ document.write(`
 
 
 
+<span class="k">def</span> <span class="nf">_make_dummy_images</span><span class="p">(</span><span class="n">executable</span><span class="p">,</span> <span class="n">file_conf</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Make dummy images when not executing the example.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">executable</span><span class="p">:</span>
+        <span class="n">dummy_image</span> <span class="o">=</span> <span class="n">file_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dummy_images&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">dummy_image</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dummy_image</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dummy_image</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
+                    <span class="s2">&quot;sphinx_gallery_dummy_images setting is not an integer, &quot;</span>
+                    <span class="s2">&quot;got </span><span class="si">{dummy_image!r}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+
+            <span class="n">image_path_iterator</span> <span class="o">=</span> <span class="n">script_vars</span><span class="p">[</span><span class="s2">&quot;image_path_iterator&quot;</span><span class="p">]</span>
+            <span class="n">stock_img</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">glr_path_static</span><span class="p">(),</span> <span class="s2">&quot;no_image.png&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">path</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">dummy_image</span><span class="p">),</span> <span class="n">image_path_iterator</span><span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+                    <span class="n">copyfile</span><span class="p">(</span><span class="n">stock_img</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_clean_script_blocks</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">parser</span><span class="p">,</span> <span class="n">script_blocks</span><span class="p">,</span> <span class="n">output_blocks</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove ignore blocks, config comments and final empty blocks.&quot;&quot;&quot;</span>
+    <span class="c1"># Ignore blocks must be processed before the</span>
+    <span class="c1"># remaining config comments are removed.</span>
+    <span class="n">script_blocks</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">py_source_parser</span><span class="o">.</span><span class="n">Block</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">parser</span><span class="o">.</span><span class="n">remove_ignore_blocks</span><span class="p">(</span><span class="n">content</span><span class="p">),</span> <span class="n">line_number</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">line_number</span> <span class="ow">in</span> <span class="n">script_blocks</span>
+    <span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;remove_config_comments&quot;</span><span class="p">]:</span>
+        <span class="n">script_blocks</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">py_source_parser</span><span class="o">.</span><span class="n">Block</span><span class="p">(</span>
+                <span class="n">label</span><span class="p">,</span> <span class="n">parser</span><span class="o">.</span><span class="n">remove_config_comments</span><span class="p">(</span><span class="n">content</span><span class="p">),</span> <span class="n">line_number</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">line_number</span> <span class="ow">in</span> <span class="n">script_blocks</span>
+        <span class="p">]</span>
+
+    <span class="c1"># Remove final empty block, (can occur after config comments removed)</span>
+    <span class="k">if</span> <span class="n">script_blocks</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">isspace</span><span class="p">():</span>
+        <span class="n">script_blocks</span> <span class="o">=</span> <span class="n">script_blocks</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">output_blocks</span> <span class="o">=</span> <span class="n">output_blocks</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">script_blocks</span><span class="p">,</span> <span class="n">output_blocks</span>
+
+
+<span class="k">def</span> <span class="nf">_get_backreferences</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">,</span> <span class="n">script_blocks</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">target_file</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get example backreferences for `script_blocks` and write _codeobj.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;inspect_global_variables&quot;</span><span class="p">]:</span>
+        <span class="n">global_variables</span> <span class="o">=</span> <span class="n">script_vars</span><span class="p">[</span><span class="s2">&quot;example_globals&quot;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">global_variables</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">ref_regex</span> <span class="o">=</span> <span class="n">_make_ref_regex</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;default_role&quot;</span><span class="p">])</span>
+    <span class="n">example_code_obj</span> <span class="o">=</span> <span class="n">identify_names</span><span class="p">(</span><span class="n">script_blocks</span><span class="p">,</span> <span class="n">ref_regex</span><span class="p">,</span> <span class="n">global_variables</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">example_code_obj</span><span class="p">:</span>
+        <span class="n">codeobj_fname</span> <span class="o">=</span> <span class="n">target_file</span><span class="o">.</span><span class="n">with_name</span><span class="p">(</span><span class="n">target_file</span><span class="o">.</span><span class="n">stem</span> <span class="o">+</span> <span class="s2">&quot;_codeobj.pickle.new&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">codeobj_fname</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
+            <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">example_code_obj</span><span class="p">,</span> <span class="n">fid</span><span class="p">,</span> <span class="n">pickle</span><span class="o">.</span><span class="n">HIGHEST_PROTOCOL</span><span class="p">)</span>
+        <span class="n">_replace_md5</span><span class="p">(</span><span class="n">codeobj_fname</span><span class="p">)</span>
+    <span class="n">exclude_regex</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;exclude_implicit_doc_regex&quot;</span><span class="p">]</span>
+    <span class="n">backrefs</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;</span><span class="si">{module_short}</span><span class="s2">.</span><span class="si">{name}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">cobj</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">cobjs</span> <span class="ow">in</span> <span class="n">example_code_obj</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">cobj</span> <span class="ow">in</span> <span class="n">cobjs</span>
+        <span class="k">if</span> <span class="n">cobj</span><span class="p">[</span><span class="s2">&quot;module&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;doc_module&quot;</span><span class="p">])</span>
+        <span class="ow">and</span> <span class="p">(</span>
+            <span class="n">cobj</span><span class="p">[</span><span class="s2">&quot;is_explicit&quot;</span><span class="p">]</span>
+            <span class="ow">or</span> <span class="p">(</span><span class="ow">not</span> <span class="n">exclude_regex</span><span class="p">)</span>
+            <span class="ow">or</span> <span class="p">(</span><span class="ow">not</span> <span class="n">exclude_regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{module}</span><span class="s2">.</span><span class="si">{name}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">cobj</span><span class="p">)))</span>
+        <span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="c1"># This can help with garbage collection in some instances</span>
+    <span class="k">if</span> <span class="n">global_variables</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s2">&quot;___&quot;</span> <span class="ow">in</span> <span class="n">global_variables</span><span class="p">:</span>
+        <span class="k">del</span> <span class="n">global_variables</span><span class="p">[</span><span class="s2">&quot;___&quot;</span><span class="p">]</span>
+    <span class="k">del</span> <span class="n">global_variables</span>
+
+    <span class="k">return</span> <span class="n">backrefs</span>
+
+
 <div class="viewcode-block" id="generate_file_rst">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.generate_file_rst">[docs]</a>
 <span class="k">def</span> <span class="nf">generate_file_rst</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">seen_backrefs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -1680,12 +1768,7 @@ document.write(`
     <span class="n">target_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">target_dir</span><span class="p">)</span> <span class="o">/</span> <span class="n">fname</span>
     <span class="n">_replace_md5</span><span class="p">(</span><span class="n">src_file</span><span class="p">,</span> <span class="n">target_file</span><span class="p">,</span> <span class="s2">&quot;copy&quot;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;t&quot;</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">fname</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.py&quot;</span><span class="p">):</span>
-        <span class="n">parser</span> <span class="o">=</span> <span class="n">py_source_parser</span>
-        <span class="n">language</span> <span class="o">=</span> <span class="s2">&quot;Python&quot;</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">parser</span> <span class="o">=</span> <span class="n">BlockParser</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
-        <span class="n">language</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">language</span>
+    <span class="n">parser</span><span class="p">,</span> <span class="n">language</span> <span class="o">=</span> <span class="n">_get_parser</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
 
     <span class="n">file_conf</span><span class="p">,</span> <span class="n">script_blocks</span><span class="p">,</span> <span class="n">node</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">split_code_and_text_blocks</span><span class="p">(</span>
         <span class="n">src_file</span><span class="p">,</span> <span class="n">return_node</span><span class="o">=</span><span class="kc">True</span>
@@ -1730,44 +1813,21 @@ document.write(`
     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> ran in : </span><span class="si">%.2g</span><span class="s2"> seconds</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">src_file</span><span class="p">,</span> <span class="n">time_elapsed</span><span class="p">)</span>
 
     <span class="c1"># Create dummy images</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">executable</span><span class="p">:</span>
-        <span class="n">dummy_image</span> <span class="o">=</span> <span class="n">file_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dummy_images&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">dummy_image</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dummy_image</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dummy_image</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
-                    <span class="s2">&quot;sphinx_gallery_dummy_images setting is not an integer, &quot;</span>
-                    <span class="s2">&quot;got </span><span class="si">{dummy_image!r}</span><span class="s2">&quot;</span>
-                <span class="p">)</span>
+    <span class="n">_make_dummy_images</span><span class="p">(</span><span class="n">executable</span><span class="p">,</span> <span class="n">file_conf</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">)</span>
 
-            <span class="n">image_path_iterator</span> <span class="o">=</span> <span class="n">script_vars</span><span class="p">[</span><span class="s2">&quot;image_path_iterator&quot;</span><span class="p">]</span>
-            <span class="n">stock_img</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">glr_path_static</span><span class="p">(),</span> <span class="s2">&quot;no_image.png&quot;</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">path</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">dummy_image</span><span class="p">),</span> <span class="n">image_path_iterator</span><span class="p">):</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
-                    <span class="n">copyfile</span><span class="p">(</span><span class="n">stock_img</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
-
-    <span class="c1"># Ignore blocks must be processed before the</span>
-    <span class="c1"># remaining config comments are removed.</span>
-    <span class="n">script_blocks</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">py_source_parser</span><span class="o">.</span><span class="n">Block</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">parser</span><span class="o">.</span><span class="n">remove_ignore_blocks</span><span class="p">(</span><span class="n">content</span><span class="p">),</span> <span class="n">line_number</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">line_number</span> <span class="ow">in</span> <span class="n">script_blocks</span>
-    <span class="p">]</span>
-
-    <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;remove_config_comments&quot;</span><span class="p">]:</span>
-        <span class="n">script_blocks</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">py_source_parser</span><span class="o">.</span><span class="n">Block</span><span class="p">(</span>
-                <span class="n">label</span><span class="p">,</span> <span class="n">parser</span><span class="o">.</span><span class="n">remove_config_comments</span><span class="p">(</span><span class="n">content</span><span class="p">),</span> <span class="n">line_number</span>
-            <span class="p">)</span>
-            <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">line_number</span> <span class="ow">in</span> <span class="n">script_blocks</span>
-        <span class="p">]</span>
-
-    <span class="c1"># Remove final empty block, which can occur after config comments</span>
-    <span class="c1"># are removed</span>
-    <span class="k">if</span> <span class="n">script_blocks</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">isspace</span><span class="p">():</span>
-        <span class="n">script_blocks</span> <span class="o">=</span> <span class="n">script_blocks</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">output_blocks</span> <span class="o">=</span> <span class="n">output_blocks</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">script_blocks</span><span class="p">,</span> <span class="n">output_blocks</span> <span class="o">=</span> <span class="n">_clean_script_blocks</span><span class="p">(</span>
+        <span class="n">gallery_conf</span><span class="p">,</span>
+        <span class="n">parser</span><span class="p">,</span>
+        <span class="n">script_blocks</span><span class="p">,</span>
+        <span class="n">output_blocks</span><span class="p">,</span>
+    <span class="p">)</span>
 
     <span class="n">example_rst</span> <span class="o">=</span> <span class="n">rst_blocks</span><span class="p">(</span>
-        <span class="n">script_blocks</span><span class="p">,</span> <span class="n">output_blocks</span><span class="p">,</span> <span class="n">file_conf</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="n">language</span>
+        <span class="n">script_blocks</span><span class="p">,</span>
+        <span class="n">output_blocks</span><span class="p">,</span>
+        <span class="n">file_conf</span><span class="p">,</span>
+        <span class="n">gallery_conf</span><span class="p">,</span>
+        <span class="n">language</span><span class="o">=</span><span class="n">language</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">_</span><span class="p">,</span> <span class="n">memory_base</span> <span class="o">=</span> <span class="n">_get_call_memory_and_base</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">)</span>
     <span class="n">memory_used</span> <span class="o">=</span> <span class="n">memory_base</span> <span class="o">+</span> <span class="n">script_vars</span><span class="p">[</span><span class="s2">&quot;memory_delta&quot;</span><span class="p">]</span>
@@ -1796,39 +1856,21 @@ document.write(`
     <span class="n">zip_files</span><span class="p">(</span><span class="n">files_to_zip</span><span class="p">,</span> <span class="n">target_file</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">&quot;.zip&quot;</span><span class="p">),</span> <span class="n">target_dir</span><span class="p">)</span>
 
     <span class="c1"># Write names</span>
-    <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;inspect_global_variables&quot;</span><span class="p">]:</span>
-        <span class="n">global_variables</span> <span class="o">=</span> <span class="n">script_vars</span><span class="p">[</span><span class="s2">&quot;example_globals&quot;</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">global_variables</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">ref_regex</span> <span class="o">=</span> <span class="n">_make_ref_regex</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;default_role&quot;</span><span class="p">])</span>
-    <span class="n">example_code_obj</span> <span class="o">=</span> <span class="n">identify_names</span><span class="p">(</span><span class="n">script_blocks</span><span class="p">,</span> <span class="n">ref_regex</span><span class="p">,</span> <span class="n">global_variables</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">example_code_obj</span><span class="p">:</span>
-        <span class="n">codeobj_fname</span> <span class="o">=</span> <span class="n">target_file</span><span class="o">.</span><span class="n">with_name</span><span class="p">(</span><span class="n">target_file</span><span class="o">.</span><span class="n">stem</span> <span class="o">+</span> <span class="s2">&quot;_codeobj.pickle.new&quot;</span><span class="p">)</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">codeobj_fname</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
-            <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">example_code_obj</span><span class="p">,</span> <span class="n">fid</span><span class="p">,</span> <span class="n">pickle</span><span class="o">.</span><span class="n">HIGHEST_PROTOCOL</span><span class="p">)</span>
-        <span class="n">_replace_md5</span><span class="p">(</span><span class="n">codeobj_fname</span><span class="p">)</span>
-    <span class="n">exclude_regex</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;exclude_implicit_doc_regex&quot;</span><span class="p">]</span>
-    <span class="n">backrefs</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;</span><span class="si">{module_short}</span><span class="s2">.</span><span class="si">{name}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">cobj</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">cobjs</span> <span class="ow">in</span> <span class="n">example_code_obj</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">cobj</span> <span class="ow">in</span> <span class="n">cobjs</span>
-        <span class="k">if</span> <span class="n">cobj</span><span class="p">[</span><span class="s2">&quot;module&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;doc_module&quot;</span><span class="p">])</span>
-        <span class="ow">and</span> <span class="p">(</span>
-            <span class="n">cobj</span><span class="p">[</span><span class="s2">&quot;is_explicit&quot;</span><span class="p">]</span>
-            <span class="ow">or</span> <span class="p">(</span><span class="ow">not</span> <span class="n">exclude_regex</span><span class="p">)</span>
-            <span class="ow">or</span> <span class="p">(</span><span class="ow">not</span> <span class="n">exclude_regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{module}</span><span class="s2">.</span><span class="si">{name}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">cobj</span><span class="p">)))</span>
-        <span class="p">)</span>
-    <span class="p">}</span>
+    <span class="n">backrefs</span> <span class="o">=</span> <span class="n">_get_backreferences</span><span class="p">(</span>
+        <span class="n">gallery_conf</span><span class="p">,</span>
+        <span class="n">script_vars</span><span class="p">,</span>
+        <span class="n">script_blocks</span><span class="p">,</span>
+        <span class="n">node</span><span class="p">,</span>
+        <span class="n">target_file</span><span class="p">,</span>
+    <span class="p">)</span>
 
     <span class="c1"># Write backreferences</span>
     <span class="n">_write_backreferences</span><span class="p">(</span>
         <span class="n">backrefs</span><span class="p">,</span> <span class="n">seen_backrefs</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">intro</span><span class="p">,</span> <span class="n">title</span>
     <span class="p">)</span>
 
-    <span class="c1"># This can help with garbage collection in some instances</span>
-    <span class="k">if</span> <span class="n">global_variables</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s2">&quot;___&quot;</span> <span class="ow">in</span> <span class="n">global_variables</span><span class="p">:</span>
-        <span class="k">del</span> <span class="n">global_variables</span><span class="p">[</span><span class="s2">&quot;___&quot;</span><span class="p">]</span>
-    <span class="k">del</span> <span class="n">script_vars</span><span class="p">,</span> <span class="n">global_variables</span>  <span class="c1"># don&#39;t keep these during reset</span>
+    <span class="c1"># Don&#39;t keep this during reset</span>
+    <span class="k">del</span> <span class="n">script_vars</span>
     <span class="k">if</span> <span class="n">executable</span> <span class="ow">and</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;reset_modules_order&quot;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;after&quot;</span><span class="p">,</span> <span class="s2">&quot;both&quot;</span><span class="p">]:</span>
         <span class="n">clean_modules</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="s2">&quot;after&quot;</span><span class="p">)</span>
 
