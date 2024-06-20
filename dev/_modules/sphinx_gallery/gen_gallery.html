@@ -501,7 +501,6 @@ document.write(`
 <span class="kn">import</span> <span class="nn">sphinx.util</span>
 <span class="kn">from</span> <span class="nn">sphinx.util.console</span> <span class="kn">import</span> <span class="n">blue</span><span class="p">,</span> <span class="n">red</span><span class="p">,</span> <span class="n">purple</span><span class="p">,</span> <span class="n">bold</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">glr_path_static</span><span class="p">,</span> <span class="n">__version__</span> <span class="k">as</span> <span class="n">_sg_version</span>
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">_replace_md5</span><span class="p">,</span> <span class="n">_has_optipng</span><span class="p">,</span> <span class="n">_has_pypandoc</span><span class="p">,</span> <span class="n">_has_graphviz</span>
 <span class="kn">from</span> <span class="nn">.backreferences</span> <span class="kn">import</span> <span class="n">_finalize_backreferences</span>
 <span class="kn">from</span> <span class="nn">.gen_rst</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">generate_dir_rst</span><span class="p">,</span>
@@ -525,6 +524,14 @@ document.write(`
 <span class="kn">from</span> <span class="nn">.directives</span> <span class="kn">import</span> <span class="n">MiniGallery</span><span class="p">,</span> <span class="n">ImageSg</span><span class="p">,</span> <span class="n">imagesg_addnode</span>
 <span class="kn">from</span> <span class="nn">.recommender</span> <span class="kn">import</span> <span class="n">ExampleRecommender</span><span class="p">,</span> <span class="n">_write_recommendations</span>
 <span class="kn">from</span> <span class="nn">.sorting</span> <span class="kn">import</span> <span class="n">ExplicitOrder</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">_collect_gallery_files</span><span class="p">,</span>
+    <span class="n">_format_toctree</span><span class="p">,</span>
+    <span class="n">_has_optipng</span><span class="p">,</span>
+    <span class="n">_has_pypandoc</span><span class="p">,</span>
+    <span class="n">_has_graphviz</span><span class="p">,</span>
+    <span class="n">_replace_md5</span><span class="p">,</span>
+<span class="p">)</span>
 
 
 <span class="n">_KNOWN_CSS</span> <span class="o">=</span> <span class="p">(</span>
@@ -1060,22 +1067,109 @@ document.write(`
     <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">examples_dirs</span><span class="p">,</span> <span class="n">gallery_dirs</span><span class="p">))</span>
 
 
-<span class="k">def</span> <span class="nf">_format_toctree</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">includehidden</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Format a toc tree.&quot;&quot;&quot;</span>
-    <span class="n">st</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">.. toctree::</span>
-<span class="s2">   :hidden:&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">includehidden</span><span class="p">:</span>
-        <span class="n">st</span> <span class="o">+=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">   :includehidden:</span>
-<span class="s2">&quot;&quot;&quot;</span>
-    <span class="n">st</span> <span class="o">+=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">_filter_tags</span><span class="p">(</span><span class="n">subsection_index_content</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Filter out tags from `subsection_index_content`.&quot;&quot;&quot;</span>
+    <span class="n">tag_regex</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;^\.\.(\s+)\_(.+)\:(\s*)$&quot;</span>
+    <span class="n">subsection_index_content</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="n">line</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">subsection_index_content</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">tag_regex</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span>
+        <span class="p">]</span>
+        <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">subsection_index_content</span>
 
-<span class="s2">   </span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">   &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">items</span><span class="p">))</span>
 
-    <span class="n">st</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+<span class="k">def</span> <span class="nf">_finish_index_rst</span><span class="p">(</span>
+    <span class="n">app</span><span class="p">,</span>
+    <span class="n">gallery_conf</span><span class="p">,</span>
+    <span class="n">indexst</span><span class="p">,</span>
+    <span class="n">sg_root_index</span><span class="p">,</span>
+    <span class="n">subsection_index_files</span><span class="p">,</span>
+    <span class="n">gallery_dir_abs_path</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add toctree, download and signature, if req, to index and write file.&quot;&quot;&quot;</span>
+    <span class="c1"># Generate toctree containing subsection index files</span>
+    <span class="k">if</span> <span class="p">(</span>
+        <span class="n">sg_root_index</span>
+        <span class="ow">and</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;nested_sections&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">True</span>
+        <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">subsection_index_files</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+    <span class="p">):</span>
+        <span class="n">subsections_toctree</span> <span class="o">=</span> <span class="n">_format_toctree</span><span class="p">(</span>
+            <span class="n">subsection_index_files</span><span class="p">,</span> <span class="n">includehidden</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+        <span class="n">indexst</span> <span class="o">+=</span> <span class="n">subsections_toctree</span>
 
-    <span class="k">return</span> <span class="n">st</span>
+    <span class="k">if</span> <span class="n">sg_root_index</span><span class="p">:</span>
+        <span class="c1"># Download examples</span>
+        <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;download_all_examples&quot;</span><span class="p">]:</span>
+            <span class="n">download_fhindex</span> <span class="o">=</span> <span class="n">generate_zipfiles</span><span class="p">(</span>
+                <span class="n">gallery_dir_abs_path</span><span class="p">,</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span> <span class="n">gallery_conf</span>
+            <span class="p">)</span>
+            <span class="n">indexst</span> <span class="o">+=</span> <span class="n">download_fhindex</span>
+        <span class="c1"># Signature</span>
+        <span class="k">if</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;show_signature&quot;</span><span class="p">]:</span>
+            <span class="n">indexst</span> <span class="o">+=</span> <span class="n">SPHX_GLR_SIG</span>
+        <span class="c1"># Write index to file</span>
+        <span class="n">index_rst_new</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gallery_dir_abs_path</span><span class="p">,</span> <span class="s2">&quot;index.rst.new&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">index_rst_new</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fhindex</span><span class="p">:</span>
+            <span class="n">fhindex</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">indexst</span><span class="p">)</span>
+        <span class="n">_replace_md5</span><span class="p">(</span><span class="n">index_rst_new</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;t&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_build_recommender</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">gallery_dir_abs_path</span><span class="p">,</span> <span class="n">subsecs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build recommender and write recommendations.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;recommender&quot;</span><span class="p">][</span><span class="s2">&quot;enable&quot;</span><span class="p">]:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>  <span class="c1"># noqa: F401</span>
+        <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s2">&quot;gallery_conf[&#39;recommender&#39;] requires numpy&quot;</span><span class="p">)</span>
+
+        <span class="n">recommender_params</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;recommender&quot;</span><span class="p">])</span>
+        <span class="n">recommender_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;enable&quot;</span><span class="p">)</span>
+        <span class="n">recommender_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;rubric_header&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">recommender</span> <span class="o">=</span> <span class="n">ExampleRecommender</span><span class="p">(</span><span class="o">**</span><span class="n">recommender_params</span><span class="p">)</span>
+
+        <span class="n">gallery_py_files</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># root and subsection directories containing python examples</span>
+        <span class="n">gallery_directories</span> <span class="o">=</span> <span class="p">[</span><span class="n">gallery_dir_abs_path</span><span class="p">]</span> <span class="o">+</span> <span class="n">subsecs</span>
+        <span class="k">for</span> <span class="n">current_dir</span> <span class="ow">in</span> <span class="n">gallery_directories</span><span class="p">:</span>
+            <span class="n">src_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gallery_dir_abs_path</span><span class="p">,</span> <span class="n">current_dir</span><span class="p">)</span>
+            <span class="c1"># sort python files to have a deterministic input across call</span>
+            <span class="n">py_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+                <span class="c1"># NOTE we don&#39;t take account of `ignore_pattern` and ignore</span>
+                <span class="c1"># ext in `example_extensions`</span>
+                <span class="p">[</span><span class="n">fname</span> <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">Path</span><span class="p">(</span><span class="n">src_dir</span><span class="p">)</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()</span> <span class="k">if</span> <span class="n">fname</span><span class="o">.</span><span class="n">suffix</span> <span class="o">==</span> <span class="s2">&quot;.py&quot;</span><span class="p">],</span>
+                <span class="n">key</span><span class="o">=</span><span class="n">_get_class</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="s2">&quot;within_subsection_order&quot;</span><span class="p">)(</span><span class="n">src_dir</span><span class="p">),</span>
+            <span class="p">)</span>
+            <span class="n">gallery_py_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span> <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">py_files</span><span class="p">]</span>
+            <span class="p">)</span>
+        <span class="c1"># flatten the list of list</span>
+        <span class="n">gallery_py_files</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span><span class="n">gallery_py_files</span><span class="p">))</span>
+
+        <span class="n">recommender</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">gallery_py_files</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">gallery_py_files</span><span class="p">:</span>
+            <span class="n">_write_recommendations</span><span class="p">(</span><span class="n">recommender</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_log_costs</span><span class="p">(</span><span class="n">costs</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Log computation time.&quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;computation time summary:&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">)</span>
+    <span class="n">lines</span><span class="p">,</span> <span class="n">lens</span> <span class="o">=</span> <span class="n">_format_for_writing</span><span class="p">(</span>
+        <span class="n">costs</span><span class="p">,</span> <span class="n">src_dir</span><span class="o">=</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">],</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;console&quot;</span>
+    <span class="p">)</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    - </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">:   &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="n">lens</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">t</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">text</span> <span class="o">+=</span> <span class="s2">&quot;(not run)&quot;</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">t_float</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">t_float</span> <span class="o">&gt;=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;min_reported_time&quot;</span><span class="p">]:</span>
+                <span class="n">text</span> <span class="o">+=</span> <span class="n">t</span><span class="o">.</span><span class="n">rjust</span><span class="p">(</span><span class="n">lens</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;   &quot;</span> <span class="o">+</span> <span class="n">m</span><span class="o">.</span><span class="n">rjust</span><span class="p">(</span><span class="n">lens</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="generate_gallery_rst">
@@ -1083,19 +1177,27 @@ document.write(`
 <span class="k">def</span> <span class="nf">generate_gallery_rst</span><span class="p">(</span><span class="n">app</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate the Main examples gallery reStructuredText.</span>
 
-<span class="sd">    Start the Sphinx-Gallery configuration and recursively scan the examples</span>
-<span class="sd">    directories in order to populate the examples gallery.</span>
+<span class="sd">    Fill Sphinx-Gallery configuration and scan example directories</span>
+<span class="sd">    (up to one level depth of sub-directory) to generate example reST files.</span>
 
-<span class="sd">    We create a 2-level nested structure by iterating through every</span>
-<span class="sd">    sibling folder of the current index file.</span>
-<span class="sd">    In each of these folders, we look for a section index file,</span>
-<span class="sd">    for which we generate a toctree pointing to sibling scripts.</span>
-<span class="sd">    Then, we append the content of this section index file</span>
-<span class="sd">    to the current index file,</span>
-<span class="sd">    after we remove toctree (to keep a clean nested structure)</span>
-<span class="sd">    and sphinx tags (to prevent tag duplication)</span>
-<span class="sd">    Eventually, we create a toctree in the current index file</span>
-<span class="sd">    which points to section index files.</span>
+<span class="sd">    Iterate through each example directory and any of its sub-directories</span>
+<span class="sd">    (creates sub-sections) that has a header/index file.</span>
+<span class="sd">    Generate gallery example ReST files and `index.rst` file(s).</span>
+
+<span class="sd">    If `nested_sections=True` we generate `index.rst` files for all</span>
+<span class="sd">    sub-directories, which includes toctree linking to all sub-dir examples.</span>
+<span class="sd">    The root example directory `index.rst` file will contain, in sequence,:</span>
+
+<span class="sd">    * root gallery header then thumbnails,</span>
+<span class="sd">    * toctree linking all examples in root gallery,</span>
+<span class="sd">    * sub-section header followed by sub-section thumbnails, for all subsections,</span>
+<span class="sd">    * a second final toctree, at the end of the file, linking to all sub-section</span>
+<span class="sd">      index files.</span>
+
+<span class="sd">    If `nested_sections=True` we generate a single `index.rst` file per</span>
+<span class="sd">    example directory. It will contain headers for the root gallery and</span>
+<span class="sd">    each sub-section, with each header followed by a toctree linking to</span>
+<span class="sd">    every example in the root gallery/sub-section.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;generating gallery...&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">)</span>
     <span class="n">gallery_conf</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span>
@@ -1107,18 +1209,14 @@ document.write(`
 
     <span class="c1"># Check for duplicate filenames to make sure linking works as expected</span>
     <span class="n">examples_dirs</span> <span class="o">=</span> <span class="p">[</span><span class="n">ex_dir</span> <span class="k">for</span> <span class="n">ex_dir</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">workdirs</span><span class="p">]</span>
-    <span class="n">files</span> <span class="o">=</span> <span class="n">collect_gallery_files</span><span class="p">(</span><span class="n">examples_dirs</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
-    <span class="n">check_duplicate_filenames</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
-    <span class="n">check_spaces_in_filenames</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
+    <span class="n">_collect_gallery_files</span><span class="p">(</span><span class="n">examples_dirs</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">check_filenames</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">examples_dir</span><span class="p">,</span> <span class="n">gallery_dir</span> <span class="ow">in</span> <span class="n">workdirs</span><span class="p">:</span>
         <span class="n">examples_dir_abs_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span> <span class="n">examples_dir</span><span class="p">)</span>
         <span class="n">gallery_dir_abs_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span> <span class="n">gallery_dir</span><span class="p">)</span>
 
-        <span class="c1"># Create section rst files and fetch content which will</span>
-        <span class="c1"># be added to current index file. This only includes content</span>
-        <span class="c1"># from files located in the root folder of the current gallery</span>
-        <span class="c1"># (ie not in subfolders)</span>
+        <span class="c1"># Create example rst files for root gallery directory examples</span>
+        <span class="c1"># (excl. sub-dir examples) and fetch gallery header for root index.rst</span>
         <span class="p">(</span>
             <span class="n">_</span><span class="p">,</span>
             <span class="n">this_content</span><span class="p">,</span>
@@ -1129,29 +1227,22 @@ document.write(`
             <span class="n">gallery_dir_abs_path</span><span class="p">,</span>
             <span class="n">gallery_conf</span><span class="p">,</span>
             <span class="n">seen_backrefs</span><span class="p">,</span>
-            <span class="n">include_toctree</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">is_subsection</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="p">)</span>
 
-        <span class="n">has_gallery_header</span> <span class="o">=</span> <span class="n">this_content</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="c1"># `this_context` is None when user provides own index.rst</span>
+        <span class="n">sg_root_index</span> <span class="o">=</span> <span class="n">this_content</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="n">costs</span> <span class="o">+=</span> <span class="n">this_costs</span>
         <span class="n">write_computation_times</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">gallery_dir_abs_path</span><span class="p">,</span> <span class="n">this_costs</span><span class="p">)</span>
 
-        <span class="c1"># We create an index.rst with all examples</span>
-        <span class="c1"># (this will overwrite the rst file generated by the previous call</span>
-        <span class="c1"># to generate_dir_rst)</span>
-
-        <span class="k">if</span> <span class="n">this_content</span><span class="p">:</span>
+        <span class="c1"># Create root gallery index.rst</span>
+        <span class="k">if</span> <span class="n">sg_root_index</span><span class="p">:</span>
             <span class="c1"># :orphan: to suppress &quot;not included in TOCTREE&quot; sphinx warnings</span>
             <span class="n">indexst</span> <span class="o">=</span> <span class="s2">&quot;:orphan:</span><span class="se">\n\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">this_content</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># we are not going to use the index.rst.new that gets made here,</span>
-            <span class="c1"># but go through the motions to run through all the subsections...</span>
-            <span class="n">indexst</span> <span class="o">=</span> <span class="s2">&quot;Never used!&quot;</span>
-
-        <span class="c1"># Write toctree with gallery items from gallery root folder</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">this_toctree_items</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">this_toctree</span> <span class="o">=</span> <span class="n">_format_toctree</span><span class="p">(</span><span class="n">this_toctree_items</span><span class="p">)</span>
-            <span class="n">indexst</span> <span class="o">+=</span> <span class="n">this_toctree</span>
+            <span class="c1"># Write toctree with gallery items from gallery root folder</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">this_toctree_items</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">this_toctree</span> <span class="o">=</span> <span class="n">_format_toctree</span><span class="p">(</span><span class="n">this_toctree_items</span><span class="p">)</span>
+                <span class="n">indexst</span> <span class="o">+=</span> <span class="n">this_toctree</span>
 
         <span class="c1"># list all paths to subsection index files in this array</span>
         <span class="n">subsection_index_files</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1159,7 +1250,7 @@ document.write(`
             <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span>
             <span class="n">examples_dir_abs_path</span><span class="p">,</span>
             <span class="n">gallery_conf</span><span class="p">,</span>
-            <span class="n">check_for_index</span><span class="o">=</span><span class="n">has_gallery_header</span><span class="p">,</span>
+            <span class="n">check_for_index</span><span class="o">=</span><span class="n">sg_root_index</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">for</span> <span class="n">subsection</span> <span class="ow">in</span> <span class="n">subsecs</span><span class="p">:</span>
             <span class="n">src_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">examples_dir_abs_path</span><span class="p">,</span> <span class="n">subsection</span><span class="p">)</span>
@@ -1177,34 +1268,21 @@ document.write(`
                 <span class="n">subsection_toctree_filenames</span><span class="p">,</span>
             <span class="p">)</span> <span class="o">=</span> <span class="n">generate_dir_rst</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">seen_backrefs</span><span class="p">)</span>
 
+            <span class="n">has_subsection_header</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="k">if</span> <span class="n">subsection_index_content</span><span class="p">:</span>
-                <span class="c1"># Filter out tags from subsection content</span>
-                <span class="c1"># to prevent tag duplication across the documentation</span>
-                <span class="n">tag_regex</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;^\.\.(\s+)\_(.+)\:(\s*)$&quot;</span>
-                <span class="n">subsection_index_content</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-                    <span class="p">[</span>
-                        <span class="n">line</span>
-                        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">subsection_index_content</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
-                        <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">tag_regex</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span>
-                    <span class="p">]</span>
-                    <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">]</span>
-                <span class="p">)</span>
-
-                <span class="n">indexst</span> <span class="o">+=</span> <span class="n">subsection_index_content</span>
+                <span class="c1"># Filter tags to prevent tag duplication across the documentation</span>
+                <span class="n">indexst</span> <span class="o">+=</span> <span class="n">_filter_tags</span><span class="p">(</span><span class="n">subsection_index_content</span><span class="p">)</span>
                 <span class="n">has_subsection_header</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">has_subsection_header</span> <span class="o">=</span> <span class="kc">False</span>
 
-            <span class="c1"># Write subsection toctree in main file only if</span>
-            <span class="c1"># nested_sections is False or None, and</span>
-            <span class="c1"># toctree filenames were generated for the subsection.</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;nested_sections&quot;</span><span class="p">]:</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">subsection_toctree_filenames</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="n">subsection_index_toctree</span> <span class="o">=</span> <span class="n">_format_toctree</span><span class="p">(</span>
-                        <span class="n">subsection_toctree_filenames</span>
-                    <span class="p">)</span>
-                    <span class="n">indexst</span> <span class="o">+=</span> <span class="n">subsection_index_toctree</span>
-            <span class="c1"># Otherwise, a new index.rst.new file should</span>
+            <span class="c1"># Write subsection toctree containing all filenames, if req.</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="n">sg_root_index</span>
+                <span class="ow">and</span> <span class="ow">not</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;nested_sections&quot;</span><span class="p">]</span>
+                <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">subsection_toctree_filenames</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+            <span class="p">):</span>
+                <span class="n">subsection_index_toctree</span> <span class="o">=</span> <span class="n">_format_toctree</span><span class="p">(</span><span class="n">subsection_toctree_filenames</span><span class="p">)</span>
+                <span class="n">indexst</span> <span class="o">+=</span> <span class="n">subsection_index_toctree</span>
+            <span class="c1"># Otherwise, a new subsection index.rst.new file should</span>
             <span class="c1"># have been created and it needs to be parsed</span>
             <span class="k">elif</span> <span class="n">has_subsection_header</span><span class="p">:</span>
                 <span class="n">_replace_md5</span><span class="p">(</span><span class="n">subsection_index_path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;t&quot;</span><span class="p">)</span>
@@ -1212,67 +1290,20 @@ document.write(`
             <span class="n">costs</span> <span class="o">+=</span> <span class="n">subsection_costs</span>
             <span class="n">write_computation_times</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">subsection_costs</span><span class="p">)</span>
 
+        <span class="c1"># Per gallery - items below run once per gallery</span>
+        <span class="c1"># Finish index.rst and write to file</span>
+        <span class="n">_finish_index_rst</span><span class="p">(</span>
+            <span class="n">app</span><span class="p">,</span>
+            <span class="n">gallery_conf</span><span class="p">,</span>
+            <span class="n">indexst</span><span class="p">,</span>
+            <span class="n">sg_root_index</span><span class="p">,</span>
+            <span class="n">subsection_index_files</span><span class="p">,</span>
+            <span class="n">gallery_dir_abs_path</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="c1"># Build recommendation system</span>
-        <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;recommender&quot;</span><span class="p">][</span><span class="s2">&quot;enable&quot;</span><span class="p">]:</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>  <span class="c1"># noqa: F401</span>
-            <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s2">&quot;gallery_conf[&#39;recommender&#39;] requires numpy&quot;</span><span class="p">)</span>
+        <span class="n">_build_recommender</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">gallery_dir_abs_path</span><span class="p">,</span> <span class="n">subsecs</span><span class="p">)</span>
 
-            <span class="n">recommender_params</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;recommender&quot;</span><span class="p">])</span>
-            <span class="n">recommender_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;enable&quot;</span><span class="p">)</span>
-            <span class="n">recommender_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;rubric_header&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-            <span class="n">recommender</span> <span class="o">=</span> <span class="n">ExampleRecommender</span><span class="p">(</span><span class="o">**</span><span class="n">recommender_params</span><span class="p">)</span>
-
-            <span class="n">gallery_py_files</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="c1"># root and subsection directories containing python examples</span>
-            <span class="n">gallery_directories</span> <span class="o">=</span> <span class="p">[</span><span class="n">gallery_dir_abs_path</span><span class="p">]</span> <span class="o">+</span> <span class="n">subsecs</span>
-            <span class="k">for</span> <span class="n">current_dir</span> <span class="ow">in</span> <span class="n">gallery_directories</span><span class="p">:</span>
-                <span class="n">src_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gallery_dir_abs_path</span><span class="p">,</span> <span class="n">current_dir</span><span class="p">)</span>
-                <span class="c1"># sort python files to have a deterministic input across call</span>
-                <span class="n">py_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
-                    <span class="p">[</span>
-                        <span class="n">fname</span>
-                        <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">Path</span><span class="p">(</span><span class="n">src_dir</span><span class="p">)</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()</span>
-                        <span class="k">if</span> <span class="n">fname</span><span class="o">.</span><span class="n">suffix</span> <span class="o">==</span> <span class="s2">&quot;.py&quot;</span>
-                    <span class="p">],</span>
-                    <span class="n">key</span><span class="o">=</span><span class="n">_get_class</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="s2">&quot;within_subsection_order&quot;</span><span class="p">)(</span><span class="n">src_dir</span><span class="p">),</span>
-                <span class="p">)</span>
-                <span class="n">gallery_py_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                    <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span> <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">py_files</span><span class="p">]</span>
-                <span class="p">)</span>
-            <span class="c1"># flatten the list of list</span>
-            <span class="n">gallery_py_files</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span><span class="n">gallery_py_files</span><span class="p">))</span>
-
-            <span class="n">recommender</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">gallery_py_files</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">gallery_py_files</span><span class="p">:</span>
-                <span class="n">_write_recommendations</span><span class="p">(</span><span class="n">recommender</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
-
-        <span class="c1"># generate toctree with subsections</span>
-        <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;nested_sections&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">subsections_toctree</span> <span class="o">=</span> <span class="n">_format_toctree</span><span class="p">(</span>
-                <span class="n">subsection_index_files</span><span class="p">,</span> <span class="n">includehidden</span><span class="o">=</span><span class="kc">True</span>
-            <span class="p">)</span>
-
-            <span class="c1"># add toctree to file only if there are subsections</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">subsection_index_files</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">indexst</span> <span class="o">+=</span> <span class="n">subsections_toctree</span>
-
-        <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;download_all_examples&quot;</span><span class="p">]:</span>
-            <span class="n">download_fhindex</span> <span class="o">=</span> <span class="n">generate_zipfiles</span><span class="p">(</span>
-                <span class="n">gallery_dir_abs_path</span><span class="p">,</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span> <span class="n">gallery_conf</span>
-            <span class="p">)</span>
-            <span class="n">indexst</span> <span class="o">+=</span> <span class="n">download_fhindex</span>
-
-        <span class="k">if</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;show_signature&quot;</span><span class="p">]:</span>
-            <span class="n">indexst</span> <span class="o">+=</span> <span class="n">SPHX_GLR_SIG</span>
-
-        <span class="k">if</span> <span class="n">has_gallery_header</span><span class="p">:</span>
-            <span class="n">index_rst_new</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gallery_dir_abs_path</span><span class="p">,</span> <span class="s2">&quot;index.rst.new&quot;</span><span class="p">)</span>
-            <span class="k">with</span> <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">index_rst_new</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fhindex</span><span class="p">:</span>
-                <span class="n">fhindex</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">indexst</span><span class="p">)</span>
-            <span class="n">_replace_md5</span><span class="p">(</span><span class="n">index_rst_new</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;t&quot;</span><span class="p">)</span>
-
+    <span class="c1"># Per project - items below run once only (for all galleries)</span>
     <span class="c1"># Write a single global sg_execution_times</span>
     <span class="n">write_computation_times</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">costs</span><span class="p">)</span>
 
@@ -1281,20 +1312,7 @@ document.write(`
     <span class="n">_finalize_backreferences</span><span class="p">(</span><span class="n">seen_backrefs</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;plot_gallery&quot;</span><span class="p">]:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;computation time summary:&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">)</span>
-        <span class="n">lines</span><span class="p">,</span> <span class="n">lens</span> <span class="o">=</span> <span class="n">_format_for_writing</span><span class="p">(</span>
-            <span class="n">costs</span><span class="p">,</span> <span class="n">src_dir</span><span class="o">=</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">],</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;console&quot;</span>
-        <span class="p">)</span>
-        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
-            <span class="n">text</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    - </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">:   &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="n">lens</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">10</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">t</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">text</span> <span class="o">+=</span> <span class="s2">&quot;(not run)&quot;</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">t_float</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
-                <span class="k">if</span> <span class="n">t_float</span> <span class="o">&gt;=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;min_reported_time&quot;</span><span class="p">]:</span>
-                    <span class="n">text</span> <span class="o">+=</span> <span class="n">t</span><span class="o">.</span><span class="n">rjust</span><span class="p">(</span><span class="n">lens</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;   &quot;</span> <span class="o">+</span> <span class="n">m</span><span class="o">.</span><span class="n">rjust</span><span class="p">(</span><span class="n">lens</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+        <span class="n">_log_costs</span><span class="p">(</span><span class="n">costs</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
         <span class="c1"># Also create a junit.xml file, useful e.g. on CircleCI</span>
         <span class="n">write_junit_xml</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">outdir</span><span class="p">,</span> <span class="n">costs</span><span class="p">)</span></div>
 
@@ -2006,62 +2024,6 @@ document.write(`
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">fail_message</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span><span class="n">fail_message</span><span class="p">)</span></div>
-
-
-
-<div class="viewcode-block" id="collect_gallery_files">
-<a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.collect_gallery_files">[docs]</a>
-<span class="k">def</span> <span class="nf">collect_gallery_files</span><span class="p">(</span><span class="n">examples_dirs</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Collect python files from the gallery example directories.&quot;&quot;&quot;</span>
-    <span class="n">files</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">example_dir</span> <span class="ow">in</span> <span class="n">examples_dirs</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">dirnames</span><span class="p">,</span> <span class="n">filenames</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">example_dir</span><span class="p">):</span>
-            <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.py&quot;</span><span class="p">):</span>
-                    <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;ignore_pattern&quot;</span><span class="p">],</span> <span class="n">filename</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                        <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">files</span></div>
-
-
-
-<div class="viewcode-block" id="check_duplicate_filenames">
-<a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.check_duplicate_filenames">[docs]</a>
-<span class="k">def</span> <span class="nf">check_duplicate_filenames</span><span class="p">(</span><span class="n">files</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check for duplicate filenames across gallery directories.&quot;&quot;&quot;</span>
-    <span class="c1"># Check whether we&#39;ll have duplicates</span>
-    <span class="n">used_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-    <span class="n">dup_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
-
-    <span class="k">for</span> <span class="n">this_file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
-        <span class="n">this_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">this_file</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">this_fname</span> <span class="ow">in</span> <span class="n">used_names</span><span class="p">:</span>
-            <span class="n">dup_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">this_file</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">used_names</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">this_fname</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dup_names</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-            <span class="s2">&quot;Duplicate example file name(s) found. Having duplicate file &quot;</span>
-            <span class="s2">&quot;names will break some links. &quot;</span>
-            <span class="s2">&quot;List of files: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
-            <span class="nb">sorted</span><span class="p">(</span><span class="n">dup_names</span><span class="p">),</span>
-        <span class="p">)</span></div>
-
-
-
-<div class="viewcode-block" id="check_spaces_in_filenames">
-<a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.check_spaces_in_filenames">[docs]</a>
-<span class="k">def</span> <span class="nf">check_spaces_in_filenames</span><span class="p">(</span><span class="n">files</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check for spaces in filenames across example directories.&quot;&quot;&quot;</span>
-    <span class="n">regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[\s]&quot;</span><span class="p">)</span>
-    <span class="n">files_with_space</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="n">regex</span><span class="o">.</span><span class="n">search</span><span class="p">,</span> <span class="n">files</span><span class="p">))</span>
-    <span class="k">if</span> <span class="n">files_with_space</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-            <span class="s2">&quot;Example file name(s) with space(s) found. Having space(s) in &quot;</span>
-            <span class="s2">&quot;file names will break some links. &quot;</span>
-            <span class="s2">&quot;List of files: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
-            <span class="nb">sorted</span><span class="p">(</span><span class="n">files_with_space</span><span class="p">),</span>
-        <span class="p">)</span></div>
 
 
 

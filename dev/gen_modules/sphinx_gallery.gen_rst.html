@@ -607,36 +607,33 @@ representation of the output of each block</p></li>
 
 <dl class="py function" id="sphx-glr-backref-sphinx-gallery-gen-rst-extract-intro-and-title">
 <dt class="sig sig-object py" id="sphinx_gallery.gen_rst.generate_dir_rst">
-<span class="sig-prename descclassname"><span class="pre">sphinx_gallery.gen_rst.</span></span><span class="sig-name descname"><span class="pre">generate_dir_rst</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">src_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gallery_conf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seen_backrefs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_toctree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sphinx_gallery/gen_rst.html#generate_dir_rst"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sphinx_gallery.gen_rst.generate_dir_rst" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">sphinx_gallery.gen_rst.</span></span><span class="sig-name descname"><span class="pre">generate_dir_rst</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">src_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gallery_conf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seen_backrefs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_subsection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sphinx_gallery/gen_rst.html#generate_dir_rst"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sphinx_gallery.gen_rst.generate_dir_rst" title="Link to this definition">#</a></dt>
 <dd><p>Generate the gallery reStructuredText for an example directory.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>src_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>,</em>) – Path to example directory containing python files
-and possibly sub categories</p></li>
-<li><p><strong>target_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>,</em>) – Path where parsed examples (rst, python files, etc)
-will be outputted</p></li>
+<li><p><strong>src_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>,</em>) – Path to root or sub gallery directory containing example files</p></li>
+<li><p><strong>target_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>,</em>) – Path where parsed examples (rst, python files, etc) will be outputted</p></li>
 <li><p><strong>gallery_conf</strong> (<em>Dict</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>Any</em><em>]</em>) – Gallery configurations.</p></li>
 <li><p><strong>seen_backrefs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.12)"><em>set</em></a><em>,</em>) – Back references encountered when parsing this gallery
 will be stored in this set.</p></li>
-<li><p><strong>include_toctree</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – Whether or not toctree should be included
-in generated rst file.
-Default = True.</p></li>
+<li><p><strong>is_subsection</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>,</em>) – Weather <cite>src_dir</cite> is a subsection dir. If subsection dir, we write
+a <cite>index.rst</cite> file with toctree listing every example file.
+Default=True.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul>
-<li><p><strong>index_path</strong> (<em>str,</em>) – Path to index rst file presenting the current example gallery</p></li>
-<li><p><strong>index_content</strong> (<em>str,</em>) – Content which will be written to the index rst file
-presenting the current example gallery</p></li>
+<li><p><strong>index_path</strong> (<em>str or None</em>) – Path to index rst file for the <cite>src_dir</cite>. None if user provided
+own index.</p></li>
+<li><p><strong>index_content</strong> (<em>str or None</em>) – Gallery header content. <cite>None</cite> when user provided own index.rst.</p></li>
 <li><p><strong>costs</strong> (<em>List[Dict]</em>) –</p>
 <dl class="simple">
 <dt>List of dicts of costs for building each element of the gallery</dt><dd><p>with keys “t”, “mem”, “src_file”, and “target_dir”.</p>
 </dd>
 </dl>
 </li>
-<li><p><strong>toctree_items</strong> (<em>list,</em>) – List of files included in toctree
-(independent of include_toctree’s value)</p></li>
+<li><p><strong>toctree_items</strong> (<em>list,</em>) – List of example file names we generated ReST for.</p></li>
 </ul>
 </p>
 </dd>
