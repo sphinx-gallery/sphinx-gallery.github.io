@@ -536,7 +536,7 @@ to build your examples.</p>
 └── examples
     ├── plot_example.py
     ├── example.py
-    └── GALLERY_HEADER.rst (or README.rst/.txt)
+    └── GALLERY_HEADER.rst (or README.[rst/.txt])
 </pre></div>
 </div>
 <ul class="simple">
@@ -560,9 +560,11 @@ which we’ll cover next.</p>
 <p>In order for Sphinx-Gallery to build a gallery from your <code class="docutils literal notranslate"><span class="pre">examples</span></code> folder,
 this folder must have the following things:</p>
 <ul>
-<li><p><strong>The gallery header</strong>: A file named <code class="docutils literal notranslate"><span class="pre">GALLERY_HEADER.rst</span></code> (or for
-backward-compatibility <code class="docutils literal notranslate"><span class="pre">README.rst/.txt</span></code>) that
-contains reST to be used as a header for the gallery welcome page, which will
+<li><p><strong>The gallery header</strong>: A file named <code class="docutils literal notranslate"><span class="pre">GALLERY_HEADER.[ext]</span></code>,
+where <code class="docutils literal notranslate"><span class="pre">[ext]</span></code> is ‘txt’ or an entry in <code class="docutils literal notranslate"><span class="pre">sphinx_gallery_conf[&quot;source_suffix&quot;]</span></code> (or
+for backward-compatibility <code class="docutils literal notranslate"><span class="pre">README.[ext]</span></code>). Default recommendation is
+<code class="docutils literal notranslate"><span class="pre">GALLERY_HEADER.rst</span></code>. This file should contain reST to be used as a header for
+the gallery welcome page, which will
 also include thumbnails generated from this folder. It must have at least a
 title. For example:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">This</span> <span class="ow">is</span> <span class="n">my</span> <span class="n">gallery</span>
@@ -589,8 +591,9 @@ subsequently incorporated into the built documentation can be finely
 tuned. See <a class="reference internal" href="configuration.html#capture-repr"><span class="std std-ref">Controlling what output is captured</span></a>.</p></li>
 <li><p>You can have sub-directories in your <code class="docutils literal notranslate"><span class="pre">examples</span></code> directory. These will be
 included as sub-sections of your gallery. They <strong>must</strong> contain their own
-<code class="docutils literal notranslate"><span class="pre">GALLERY_HEADER.rst</span></code> (or for backward-compatibility <code class="docutils literal notranslate"><span class="pre">README.rst/.txt</span></code>)
-file as well.</p></li>
+<code class="docutils literal notranslate"><span class="pre">GALLERY_HEADER.[ext]</span></code> file as well. Note that <code class="docutils literal notranslate"><span class="pre">[ext]</span></code> can be ‘txt’ or an
+entry in <code class="docutils literal notranslate"><span class="pre">sphinx_gallery_conf[&quot;source_suffix&quot;]</span></code>. We also support
+<code class="docutils literal notranslate"><span class="pre">README.[ext]</span></code> for backward-compatibility.</p></li>
 </ul>
 </div></blockquote>
 </li>
@@ -641,7 +644,8 @@ summarised in table format (<a class="reference external" href="https://github.c
 example <code class="docutils literal notranslate"><span class="pre">.py</span></code> files (more details in <a class="reference internal" href="configuration.html#image-scrapers"><span class="std std-ref">Image scrapers</span></a>) and thumbnail
 images for the gallery.</p></li>
 <li><p>A directory for each sub-directory in <code class="docutils literal notranslate"><span class="pre">'example_dirs'</span></code>. Within each
-directory will be the above and below listed files for that ‘sub-gallery’.</p></li>
+directory will be the above and below listed files for that ‘sub-gallery’
+(aka subsection).</p></li>
 </ul>
 <p>Additionally for <strong>each</strong> <code class="docutils literal notranslate"><span class="pre">.py</span></code> file, a file with the following suffix is
 generated:</p>

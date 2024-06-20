@@ -706,8 +706,8 @@ is changed.</p>
 <span id="multiple-galleries-config"></span><h2>Manage multiple galleries<a class="headerlink" href="#manage-multiple-galleries" title="Link to this heading">#</a></h2>
 <p>Sphinx-Gallery only supports one level of subfolder nesting in its gallery directories.
 For example our <a class="reference internal" href="auto_examples/index.html#examples-index"><span class="std std-ref">Basics Gallery with Matplotlib</span></a>, has the parent gallery in <cite>examples/</cite> and
-the sub-gallery in <cite>examples/no_output/</cite>. Further sub-folders are not supported.
-This might be a limitation for you. Or you might want to have separate
+the subsection (aka sub-gallery) in <cite>examples/no_output/</cite>. Further sub-folders are
+not supported. This might be a limitation for you. Or you might want to have separate
 galleries for different purposes; an examples gallery and a tutorials gallery.
 To do this set the Sphinx-Gallery configuration dictionary keys <cite>examples_dirs</cite> and
 <cite>gallery_dirs</cite> in your Sphinx <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file to be a list of directories:</p>
@@ -724,7 +724,8 @@ To do this set the Sphinx-Gallery configuration dictionary keys <cite>examples_d
 <p>If your examples take a long time to run, consider looking at the
 <a class="reference internal" href="auto_examples/sg_execution_times.html#sphx-glr-auto-examples-sg-execution-times"><span class="std std-ref">execution times</span></a>
 file that is generated for each gallery dir (as long as any examples
-were actually executed in that directory during the build).</p>
+were actually executed in that directory during the build)
+and globally for all galleries.</p>
 </div>
 </section>
 <section id="parsing-and-executing-examples-via-matching-patterns">
@@ -903,8 +904,8 @@ See <a class="reference internal" href="#stable-repr"><span class="std std-ref">
 </section>
 <section id="sorting-gallery-subsections">
 <span id="sub-gallery-order"></span><h2>Sorting gallery subsections<a class="headerlink" href="#sorting-gallery-subsections" title="Link to this heading">#</a></h2>
-<p>Gallery subsections are sorted by default alphabetically by their folder
-name, and as such you can always organize them by changing your folder
+<p>Gallery subsections (aka sub-galleries) are sorted by default alphabetically by
+their folder name, and as such you can always organize them by changing your folder
 names. Alternatively, you can specify the order via the config value
 ‘subsection_order’ by providing a list of the subsections as paths
 relative to <code class="file docutils literal notranslate"><span class="pre">conf.py</span></code> in the desired order:</p>
@@ -2741,33 +2742,43 @@ etc. Similarly subclasses of ‘matplotlib.axes’ (e.g. ‘matplotlib.axes.Axes
 </section>
 <section id="nesting-gallery-sections">
 <span id="nested-sections"></span><h2>Nesting gallery sections<a class="headerlink" href="#nesting-gallery-sections" title="Link to this heading">#</a></h2>
-<p>By default, <code class="docutils literal notranslate"><span class="pre">nested_sections=True</span></code>.
-In this case, for each folder present in the gallery’s root folder,
-Sphinx-Gallery expects to find a file <code class="docutils literal notranslate"><span class="pre">GALLERY_HEADER.[ext]</span></code>, where
-<code class="docutils literal notranslate"><span class="pre">[ext]</span></code> is ‘txt’ or an entry in <code class="docutils literal notranslate"><span class="pre">sphinx_gallery_conf[&quot;source_suffix&quot;]</span></code>
-(or <code class="docutils literal notranslate"><span class="pre">README.[ext]</span></code> for backward-compatibility). Default recommendation
-is to use <code class="docutils literal notranslate"><span class="pre">GALLERY_HEADER.rst</span></code>. Sphinx-gallery uses that file
-to build a specific index file for this subsection.
-This index file will contain the section’s description and a toctree
-linking to each gallery item which belongs to this subsection.</p>
-<p>Eventually, the gallery’s main index files will contain the gallery’s
-description and a toctree linking to each subsections’s index file.</p>
-<p>With this behaviour, generated file structure and toctrees mimic that of
-the original gallery folder. This is useful to generate sidebars with
-nested sections representing the gallery’s file structure.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>When <code class="docutils literal notranslate"><span class="pre">nested_sections=True</span></code>, gallery items located in the gallery’s root folder
-should be move to a new subfolder, otherwise the sidebar
-might not behave as expected (due to the fuzzy toctree structure).</p>
-</div>
-<p>If <code class="docutils literal notranslate"><span class="pre">nested_sections=False</span></code>, Sphinx-Gallery will behave as it used to
-previous to version 0.10.2.
+<p><code class="docutils literal notranslate"><span class="pre">nested_sections</span></code> lets you control how gallery <code class="docutils literal notranslate"><span class="pre">index.rst</span></code> files are generated
+when your <a class="reference internal" href="#multiple-galleries-config"><span class="std std-ref">gallery</span></a> has subsections
+(sub-folders inside <cite>examples_dirs</cite>, aka sub-galleries). This can be useful for
+controlling sidebar appearance. The default is set to <code class="docutils literal notranslate"><span class="pre">nested_sections=True</span></code>
+because it generally works with the popular
+[<code class="docutils literal notranslate"><span class="pre">pydata-sphinx-theme</span></code>](<a class="reference external" href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html</a>)
+theme. It can however, cause undesirable duplication in the sidebar with other
+themes so users are advised to choose the most suitable <code class="docutils literal notranslate"><span class="pre">nested_sections</span></code> setting
+for their theme.</p>
+<p>With default <code class="docutils literal notranslate"><span class="pre">nested_sections=True</span></code>, Sphinx-Gallery will use the
+<code class="docutils literal notranslate"><span class="pre">GALLERY_HEADER.[ext]</span></code> (or <code class="docutils literal notranslate"><span class="pre">README.[ext]</span></code> for backward-compatibility) files
+for the parent gallery and each subsection to build separate index files for the
+parent gallery and each subsection.
+subsection index files will contain the subsection’s header (from the
+<code class="docutils literal notranslate"><span class="pre">GALLERY_HEADER.[ext]</span></code> file) and a toctree
+linking to each gallery example in the subsection.
+The parent gallery’s main <code class="docutils literal notranslate"><span class="pre">index.rst</span></code> file will contain, in sequence:</p>
+<ul class="simple">
+<li><p>parent gallery header followed by gallery thumbnails,</p></li>
+<li><p>a toctree linking to each gallery example in the parent gallery,</p></li>
+<li><p>subsection header followed by subsection thumbnails, for all subsections,</p></li>
+<li><p>a second toctree, at the end of the file, linking to all subsection index files.</p></li>
+</ul>
+<p>The generated file structure and toctrees mimic that of the parent gallery folder,
+which may be needed for generating sidebars with nested sections for some themes.</p>
+<p>For other themes, having two toctrees can cause undesirable duplication in the sidebar.
+In this case you can try moving all parent gallery examples to their own sub-folder,
+as this will result in a single toctree in the parent gallery <code class="docutils literal notranslate"><span class="pre">index.rst</span></code>, or
+using <code class="docutils literal notranslate"><span class="pre">nested_sections=False</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">nested_sections=False</span></code> makes Sphinx-Gallery behave as it used to
+prior to version 0.10.2.
 Specifically, it will generate a single index file for the whole gallery.
-This index file will contain descriptions for the whole gallery as well as for
-each subsection, and a specific toctree for each subsection.
-In particular, sidebars generated using these toctrees might not reflect the
-actual section / folder structure.</p>
+This index file will contain headers for the parent gallery and each subsection, with
+each header followed by a toctree that links to every example in the
+parent gallery/subsection.
+For some themes, sidebars generated using these toctrees would list all gallery items
+with a flat structure and not reflect the nested folder structure of sub-galleries.</p>
 </section>
 <section id="manually-passing-files">
 <span id="manual-passthrough"></span><h2>Manually passing files<a class="headerlink" href="#manually-passing-files" title="Link to this heading">#</a></h2>
@@ -2789,7 +2800,7 @@ across rst files.</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Note that if you copy across files rst files, for instance, it is your
+<p>Note that if you copy across rst files, for instance, it is your
 responsibility to ensure that they are in a sphinx <code class="docutils literal notranslate"><span class="pre">toctree</span></code> somewhere
 in your document.  You can, of course, add a <code class="docutils literal notranslate"><span class="pre">toctree</span></code> to your
 <code class="docutils literal notranslate"><span class="pre">GALLERY_HEADER.rst</span></code>.</p>
