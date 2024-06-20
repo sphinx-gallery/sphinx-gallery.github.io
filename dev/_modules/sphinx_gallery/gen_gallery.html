@@ -654,9 +654,8 @@ document.write(`
     <span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;builder_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">builder_name</span>
 
 
-<span class="k">def</span> <span class="nf">_fill_gallery_conf_defaults</span><span class="p">(</span><span class="n">sphinx_gallery_conf</span><span class="p">,</span> <span class="n">app</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">check_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Handle user configs and update default gallery configs.&quot;&quot;&quot;</span>
-    <span class="n">gallery_conf</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">DEFAULT_GALLERY_CONF</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">_check_extra_config_keys</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">sphinx_gallery_conf</span><span class="p">,</span> <span class="n">check_keys</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check SG config keys, optionally raising if any extra keys present.&quot;&quot;&quot;</span>
     <span class="n">options</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">)</span>
     <span class="n">extra_keys</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">sphinx_gallery_conf</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">options</span><span class="p">))</span>
     <span class="k">if</span> <span class="n">extra_keys</span> <span class="ow">and</span> <span class="n">check_keys</span><span class="p">:</span>
@@ -670,6 +669,175 @@ document.write(`
                 <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;, did you mean one of </span><span class="si">{</span><span class="n">options</span><span class="si">!r}</span><span class="s2">?&quot;</span>
             <span class="n">msg</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+
+
+<span class="k">def</span> <span class="nf">_check_config_type</span><span class="p">(</span>
+    <span class="n">gallery_conf</span><span class="p">,</span>
+    <span class="n">conf_key</span><span class="p">,</span>
+    <span class="n">types</span><span class="p">,</span>
+    <span class="n">str_to_list</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">allow_none</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check config type, optionally converting str to list or allowing None.&quot;&quot;&quot;</span>
+    <span class="n">conf_value</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="n">conf_key</span><span class="p">]</span>
+    <span class="c1"># Early exit if type correct</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conf_value</span><span class="p">,</span> <span class="n">types</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">allow_none</span> <span class="ow">and</span> <span class="n">conf_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">str_to_list</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conf_value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="n">gallery_conf</span><span class="p">[</span><span class="n">conf_key</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">conf_value</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">gallery_conf</span>
+        <span class="k">return</span>
+    <span class="c1"># Otherwise raise error</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;&#39;</span><span class="si">{conf_key}</span><span class="s2">&#39; config allowed types: </span><span class="si">{types}{or_none}</span><span class="s2">. Got </span><span class="si">{conf_type}</span><span class="s2">.&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">types</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
+        <span class="n">types</span> <span class="o">=</span> <span class="p">(</span><span class="n">types</span><span class="p">,)</span>
+    <span class="n">str_types</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="vm">__name__</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">types</span><span class="p">]</span>
+    <span class="n">or_none</span> <span class="o">=</span> <span class="s2">&quot; or None&quot;</span> <span class="k">if</span> <span class="n">allow_none</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">conf_type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">conf_value</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">conf_key</span><span class="o">=</span><span class="n">conf_key</span><span class="p">,</span>
+        <span class="n">types</span><span class="o">=</span><span class="n">str_types</span><span class="p">,</span>
+        <span class="n">or_none</span><span class="o">=</span><span class="n">or_none</span><span class="p">,</span>
+        <span class="n">conf_type</span><span class="o">=</span><span class="n">conf_type</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_check_image_srcset</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check `_check_image_srcset`, convert to float and removing &#39;1&#39;.&quot;&quot;&quot;</span>
+    <span class="n">gallery_conf</span> <span class="o">=</span> <span class="n">_check_config_type</span><span class="p">(</span>
+        <span class="n">gallery_conf</span><span class="p">,</span>
+        <span class="s2">&quot;image_srcset&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">),</span>
+        <span class="n">str_to_list</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">srcset_mult_facs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">st</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;image_srcset&quot;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">st</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">st</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">:]</span> <span class="o">==</span> <span class="s2">&quot;x&quot;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Invalid value for image_srcset parameter: </span><span class="si">{</span><span class="n">st</span><span class="si">!r}</span><span class="s2">. &quot;</span>
+                <span class="s2">&quot;Must be a list of strings with the multiplicative &quot;</span>
+                <span class="s1">&#39;factor followed by an &quot;x&quot;.  e.g. [&quot;2.0x&quot;, &quot;1.5x&quot;]&#39;</span>
+            <span class="p">)</span>
+        <span class="c1"># &quot;2x&quot; -&gt; &quot;2.0&quot;</span>
+        <span class="n">srcset_mult_facs</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">st</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="n">srcset_mult_facs</span> <span class="o">-=</span> <span class="p">{</span><span class="mi">1</span><span class="p">}</span>  <span class="c1"># 1x is always saved.</span>
+    <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;image_srcset&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="nb">sorted</span><span class="p">(</span><span class="n">srcset_mult_facs</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="n">gallery_conf</span>
+
+
+<span class="k">def</span> <span class="nf">_check_compress_images</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check `compress_images`, getting any command line args.&quot;&quot;&quot;</span>
+    <span class="n">gallery_conf</span> <span class="o">=</span> <span class="n">_check_config_type</span><span class="p">(</span>
+        <span class="n">gallery_conf</span><span class="p">,</span>
+        <span class="s2">&quot;compress_images&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">),</span>
+        <span class="n">str_to_list</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">compress_images</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;compress_images&quot;</span><span class="p">]</span>
+    <span class="n">compress_images</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">compress_images</span><span class="p">)</span>
+    <span class="n">allowed_values</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;images&quot;</span><span class="p">,</span> <span class="s2">&quot;thumbnails&quot;</span><span class="p">)</span>
+    <span class="n">pops</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="c1"># Get command-line switches</span>
+    <span class="k">for</span> <span class="n">ki</span><span class="p">,</span> <span class="n">kind</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">compress_images</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">kind</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">allowed_values</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">kind</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">):</span>
+                <span class="n">pops</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ki</span><span class="p">)</span>
+                <span class="k">continue</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
+                <span class="s2">&quot;All entries in compress_images must be one of &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">allowed_values</span><span class="si">}</span><span class="s2"> or a command-line switch &quot;</span>
+                <span class="sa">f</span><span class="s1">&#39;starting with &quot;-&quot;, got </span><span class="si">{</span><span class="n">kind</span><span class="si">!r}</span><span class="s1">&#39;</span>
+            <span class="p">)</span>
+    <span class="n">compress_images_args</span> <span class="o">=</span> <span class="p">[</span><span class="n">compress_images</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pops</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">compress_images</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">_has_optipng</span><span class="p">():</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="s2">&quot;optipng binaries not found, PNG </span><span class="si">%s</span><span class="s2"> will not be optimized&quot;</span><span class="p">,</span>
+            <span class="s2">&quot; and &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">compress_images</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">compress_images</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;compress_images&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">compress_images</span>
+    <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;compress_images_args&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">compress_images_args</span>
+
+    <span class="k">return</span> <span class="n">gallery_conf</span>
+
+
+<span class="k">def</span> <span class="nf">_check_matplotlib_animations</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">app</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check `matplotlib_animations` config.&quot;&quot;&quot;</span>
+    <span class="n">animations</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;matplotlib_animations&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">animations</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+        <span class="c1"># We allow single boolean for backwards compatibility reasons</span>
+        <span class="n">animations</span> <span class="o">=</span> <span class="p">(</span><span class="n">animations</span><span class="p">,)</span>
+        <span class="n">fmt</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">animations</span><span class="p">)</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">enabled</span> <span class="o">:=</span> <span class="n">animations</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">bool</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
+            <span class="s2">&quot;&#39;matplotlib_animations&#39; must be a single bool or &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;(enabled: bool, format: str), not </span><span class="si">{</span><span class="n">animations</span><span class="si">!r}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+    <span class="c1"># Handle file format</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">animations</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">fmt</span> <span class="o">=</span> <span class="n">animations</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">fmt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fmt</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
+                    <span class="s2">&quot;&#39;matplotlib_animations&#39; file format must be a string or None&quot;</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="n">fmt</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;html5&quot;</span><span class="p">,</span> <span class="s2">&quot;jshtml&quot;</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">app</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="c1"># Other formats mean animations saved externally and require</span>
+                    <span class="c1"># this `video` extension to embed them into the HTML</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">app</span><span class="o">.</span><span class="n">setup_extension</span><span class="p">(</span><span class="s2">&quot;sphinxcontrib.video&quot;</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="n">ExtensionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;&#39;matplotlib_animations&#39; specifies file format: </span><span class="si">{</span><span class="n">fmt</span><span class="si">}</span><span class="s2">; &quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot;this requires the sphinxcontrib.video package.&quot;</span>
+                        <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+
+    <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;matplotlib_animations&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">enabled</span><span class="p">,</span> <span class="n">fmt</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">gallery_conf</span>
+
+
+<span class="k">def</span> <span class="nf">_check_pypandoc_config</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check `pypandoc` config.&quot;&quot;&quot;</span>
+    <span class="n">pypandoc</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;pypandoc&quot;</span><span class="p">]</span>
+    <span class="n">_check_config_type</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="s2">&quot;pypandoc&quot;</span><span class="p">,</span> <span class="p">(</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">bool</span><span class="p">))</span>
+
+    <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;pypandoc&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span> <span class="k">if</span> <span class="n">pypandoc</span> <span class="ow">is</span> <span class="kc">True</span> <span class="k">else</span> <span class="n">pypandoc</span>
+    <span class="n">has_pypandoc</span><span class="p">,</span> <span class="n">version</span> <span class="o">=</span> <span class="n">_has_pypandoc</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;pypandoc&quot;</span><span class="p">],</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="n">has_pypandoc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="s2">&quot;&#39;pypandoc&#39; not available. Using Sphinx-Gallery to &quot;</span>
+            <span class="s2">&quot;convert rst text blocks to markdown for .ipynb files.&quot;</span>
+        <span class="p">)</span>
+        <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;pypandoc&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;pypandoc&quot;</span><span class="p">],</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="s2">&quot;Using pandoc version: </span><span class="si">%s</span><span class="s2"> to convert rst text blocks to &quot;</span>
+            <span class="s2">&quot;markdown for .ipynb files&quot;</span><span class="p">,</span>
+            <span class="n">version</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="s2">&quot;Using Sphinx-Gallery to convert rst text blocks to &quot;</span>
+            <span class="s2">&quot;markdown for .ipynb files.&quot;</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pypandoc</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">accepted_keys</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;extra_args&quot;</span><span class="p">,</span> <span class="s2">&quot;filters&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">pypandoc</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">accepted_keys</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
+                    <span class="s2">&quot;&#39;pypandoc&#39; only accepts the following key &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;values: </span><span class="si">{</span><span class="n">accepted_keys</span><span class="si">}</span><span class="s2">, got: </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">.&quot;</span>
+                <span class="p">)</span>
+    <span class="k">return</span> <span class="n">gallery_conf</span>
+
+
+<span class="k">def</span> <span class="nf">_fill_gallery_conf_defaults</span><span class="p">(</span><span class="n">sphinx_gallery_conf</span><span class="p">,</span> <span class="n">app</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">check_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Handle user configs, update default gallery configs and check values.&quot;&quot;&quot;</span>
+    <span class="n">gallery_conf</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">DEFAULT_GALLERY_CONF</span><span class="p">)</span>
+    <span class="n">_check_extra_config_keys</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">sphinx_gallery_conf</span><span class="p">,</span> <span class="n">check_keys</span><span class="p">)</span>
+
     <span class="n">gallery_conf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">sphinx_gallery_conf</span><span class="p">)</span>
     <span class="c1"># XXX anything that can only be a bool (rather than str) should probably be</span>
     <span class="c1"># evaluated this way as it allows setting via -D on the command line</span>
@@ -678,6 +846,7 @@ document.write(`
         <span class="s2">&quot;run_stale_examples&quot;</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="n">gallery_conf</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">_bool_eval</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;default_role&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;source_suffix&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;.rst&quot;</span><span class="p">:</span> <span class="s2">&quot;restructuredtext&quot;</span><span class="p">}</span>
     <span class="k">if</span> <span class="n">app</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -688,23 +857,21 @@ document.write(`
             <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;source_suffix&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;source_suffix&quot;</span><span class="p">]:</span> <span class="kc">None</span><span class="p">}</span>
 
     <span class="c1"># Check capture_repr</span>
-    <span class="n">capture_repr</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;capture_repr&quot;</span><span class="p">]</span>
+    <span class="n">gallery_conf</span> <span class="o">=</span> <span class="n">_check_config_type</span><span class="p">(</span>
+        <span class="n">gallery_conf</span><span class="p">,</span>
+        <span class="s2">&quot;capture_repr&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">),</span>
+        <span class="n">str_to_list</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
     <span class="n">supported_reprs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;__repr__&quot;</span><span class="p">,</span> <span class="s2">&quot;__str__&quot;</span><span class="p">,</span> <span class="s2">&quot;_repr_html_&quot;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">capture_repr</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">rep</span> <span class="ow">in</span> <span class="n">capture_repr</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">rep</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">supported_reprs</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
-                    <span class="s2">&quot;All entries in &#39;capture_repr&#39; must be one &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;of </span><span class="si">{</span><span class="n">supported_reprs</span><span class="si">}</span><span class="s2">, got: </span><span class="si">{</span><span class="n">rep</span><span class="si">}</span><span class="s2">&quot;</span>
-                <span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;capture_repr&#39; must be a tuple, got: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">capture_repr</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">rep</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;capture_repr&quot;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">rep</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">supported_reprs</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
+                <span class="s2">&quot;All entries in &#39;capture_repr&#39; must be one &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;of </span><span class="si">{</span><span class="n">supported_reprs</span><span class="si">}</span><span class="s2">, got: </span><span class="si">{</span><span class="n">rep</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
     <span class="c1"># Check ignore_repr_types</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;ignore_repr_types&quot;</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
-            <span class="s2">&quot;&#39;ignore_repr_types&#39; must be a string, got: &quot;</span>
-            <span class="o">+</span> <span class="nb">type</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;ignore_repr_types&quot;</span><span class="p">])</span>
-        <span class="p">)</span>
+    <span class="n">_check_config_type</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="s2">&quot;ignore_repr_types&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
 
     <span class="c1"># deal with show_memory</span>
     <span class="n">_get_call_memory_and_base</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">)</span>
@@ -735,101 +902,18 @@ document.write(`
         <span class="k">pass</span>
 
     <span class="c1"># Check for srcset hidpi images</span>
-    <span class="n">srcset</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;image_srcset&quot;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">srcset</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
-        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
-            <span class="s2">&quot;image_srcset must be a list of strings with the &quot;</span>
-            <span class="s1">&#39;multiplicative factor followed by an &quot;x&quot;, &#39;</span>
-            <span class="s1">&#39;e.g. [&quot;2.0x&quot;, &quot;1.5x&quot;]&#39;</span>
-        <span class="p">)</span>
-    <span class="n">srcset_mult_facs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-    <span class="k">for</span> <span class="n">st</span> <span class="ow">in</span> <span class="n">srcset</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">st</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">st</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">:]</span> <span class="o">==</span> <span class="s2">&quot;x&quot;</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Invalid value for image_srcset parameter: </span><span class="si">{</span><span class="n">st</span><span class="si">!r}</span><span class="s2">. &quot;</span>
-                <span class="s2">&quot;Must be a list of strings with the multiplicative &quot;</span>
-                <span class="s1">&#39;factor followed by an &quot;x&quot;.  e.g. [&quot;2.0x&quot;, &quot;1.5x&quot;]&#39;</span>
-            <span class="p">)</span>
-        <span class="c1"># &quot;2x&quot; -&gt; &quot;2.0&quot;</span>
-        <span class="n">srcset_mult_facs</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">st</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
-    <span class="n">srcset_mult_facs</span> <span class="o">-=</span> <span class="p">{</span><span class="mi">1</span><span class="p">}</span>  <span class="c1"># 1x is always saved.</span>
-    <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;image_srcset&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="nb">sorted</span><span class="p">(</span><span class="n">srcset_mult_facs</span><span class="p">)]</span>
-    <span class="k">del</span> <span class="n">srcset</span><span class="p">,</span> <span class="n">srcset_mult_facs</span>
+    <span class="n">gallery_conf</span> <span class="o">=</span> <span class="n">_check_image_srcset</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">)</span>
 
-    <span class="c1"># compress_images</span>
-    <span class="n">compress_images</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;compress_images&quot;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">compress_images</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="n">compress_images</span> <span class="o">=</span> <span class="p">[</span><span class="n">compress_images</span><span class="p">]</span>
-    <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">compress_images</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
-        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
-            <span class="s2">&quot;compress_images must be a tuple, list, or str, &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">compress_images</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="p">)</span>
-    <span class="n">compress_images</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">compress_images</span><span class="p">)</span>
-    <span class="n">allowed_values</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;images&quot;</span><span class="p">,</span> <span class="s2">&quot;thumbnails&quot;</span><span class="p">)</span>
-    <span class="n">pops</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
-    <span class="k">for</span> <span class="n">ki</span><span class="p">,</span> <span class="n">kind</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">compress_images</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">kind</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">allowed_values</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">kind</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">):</span>
-                <span class="n">pops</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ki</span><span class="p">)</span>
-                <span class="k">continue</span>
-            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
-                <span class="s2">&quot;All entries in compress_images must be one of &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">allowed_values</span><span class="si">}</span><span class="s2"> or a command-line switch &quot;</span>
-                <span class="sa">f</span><span class="s1">&#39;starting with &quot;-&quot;, got </span><span class="si">{</span><span class="n">kind</span><span class="si">!r}</span><span class="s1">&#39;</span>
-            <span class="p">)</span>
-    <span class="n">compress_images_args</span> <span class="o">=</span> <span class="p">[</span><span class="n">compress_images</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pops</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">compress_images</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">_has_optipng</span><span class="p">():</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-            <span class="s2">&quot;optipng binaries not found, PNG </span><span class="si">%s</span><span class="s2"> will not be optimized&quot;</span><span class="p">,</span>
-            <span class="s2">&quot; and &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">compress_images</span><span class="p">),</span>
-        <span class="p">)</span>
-        <span class="n">compress_images</span> <span class="o">=</span> <span class="p">()</span>
-    <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;compress_images&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">compress_images</span>
-    <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;compress_images_args&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">compress_images_args</span>
+    <span class="c1"># Check `compress_images`</span>
+    <span class="n">gallery_conf</span> <span class="o">=</span> <span class="n">_check_compress_images</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">)</span>
 
-    <span class="c1"># deal with matplotlib_animations</span>
-    <span class="n">animations</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;matplotlib_animations&quot;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">animations</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
-        <span class="c1"># We allow single boolean for backwards compatibility reasons</span>
-        <span class="n">animations</span> <span class="o">=</span> <span class="p">(</span><span class="n">animations</span><span class="p">,)</span>
-        <span class="n">fmt</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">animations</span><span class="p">)</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">enabled</span> <span class="o">:=</span> <span class="n">animations</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">bool</span><span class="p">)):</span>
-        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
-            <span class="s2">&quot;&#39;matplotlib_animations&#39; must be a single bool or &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;(enabled: bool, format: str), not </span><span class="si">{</span><span class="n">animations</span><span class="si">!r}</span><span class="s2">&quot;</span>
-        <span class="p">)</span>
-    <span class="c1"># Handle file format</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">animations</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">fmt</span> <span class="o">=</span> <span class="n">animations</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">fmt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fmt</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
-                    <span class="s2">&quot;&#39;matplotlib_animations&#39; file format must be a string or None&quot;</span>
-                <span class="p">)</span>
-            <span class="k">if</span> <span class="n">fmt</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;html5&quot;</span><span class="p">,</span> <span class="s2">&quot;jshtml&quot;</span><span class="p">):</span>
-                <span class="k">if</span> <span class="n">app</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="c1"># Other formats mean animations saved externally and require</span>
-                    <span class="c1"># this `video` extension to embed them into the HTML</span>
-                    <span class="k">try</span><span class="p">:</span>
-                        <span class="n">app</span><span class="o">.</span><span class="n">setup_extension</span><span class="p">(</span><span class="s2">&quot;sphinxcontrib.video&quot;</span><span class="p">)</span>
-                    <span class="k">except</span> <span class="n">ExtensionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
-                            <span class="sa">f</span><span class="s2">&quot;&#39;matplotlib_animations&#39; specifies file format: </span><span class="si">{</span><span class="n">fmt</span><span class="si">}</span><span class="s2">; &quot;</span>
-                            <span class="sa">f</span><span class="s2">&quot;this requires the sphinxcontrib.video package.&quot;</span>
-                        <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+    <span class="c1"># Check `matplotlib_animations`</span>
+    <span class="n">gallery_conf</span> <span class="o">=</span> <span class="n">_check_matplotlib_animations</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">app</span><span class="p">)</span>
 
-    <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;matplotlib_animations&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">enabled</span><span class="p">,</span> <span class="n">fmt</span><span class="p">)</span>
-    <span class="k">del</span> <span class="n">animations</span><span class="p">,</span> <span class="n">enabled</span><span class="p">,</span> <span class="n">fmt</span>
-
-    <span class="c1"># check resetters</span>
+    <span class="c1"># Check resetters</span>
     <span class="n">_get_callables</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="s2">&quot;reset_modules&quot;</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;reset_modules_order&quot;</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
-            <span class="s2">&quot;reset_modules_order must be a str, &quot;</span>
-            <span class="sa">f</span><span class="s1">&#39;got </span><span class="si">{</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;reset_modules_order&quot;</span><span class="p">]</span><span class="si">!r}</span><span class="s1">&#39;</span>
-        <span class="p">)</span>
+    <span class="n">_check_config_type</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="s2">&quot;reset_modules_order&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;reset_modules_order&quot;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;before&quot;</span><span class="p">,</span> <span class="s2">&quot;after&quot;</span><span class="p">,</span> <span class="s2">&quot;both&quot;</span><span class="p">]:</span>
         <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
             <span class="s2">&quot;reset_modules_order must be in&quot;</span>
@@ -837,66 +921,25 @@ document.write(`
             <span class="sa">f</span><span class="s2">&quot;got </span><span class="si">{</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;reset_modules_order&#39;</span><span class="p">]</span><span class="si">!r}</span><span class="s2">&quot;</span>
         <span class="p">)</span>
 
-    <span class="c1"># Ensure the first cell text is a string if we have it</span>
-    <span class="n">first_cell</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;first_notebook_cell&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">first_cell</span><span class="p">,</span> <span class="nb">str</span><span class="p">))</span> <span class="ow">and</span> <span class="p">(</span><span class="n">first_cell</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
-            <span class="s2">&quot;The &#39;first_notebook_cell&#39; parameter must be type &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;str or None, found type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">first_cell</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="p">)</span>
-    <span class="c1"># Ensure the last cell text is a string if we have it</span>
-    <span class="n">last_cell</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;last_notebook_cell&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">last_cell</span><span class="p">,</span> <span class="nb">str</span><span class="p">))</span> <span class="ow">and</span> <span class="p">(</span><span class="n">last_cell</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
-            <span class="s2">&quot;The &#39;last_notebook_cell&#39; parameter must be type str&quot;</span>
-            <span class="sa">f</span><span class="s2">&quot; or None, found type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">last_cell</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="p">)</span>
+    <span class="c1"># Ensure the first/last cell text is a string if we have it</span>
+    <span class="n">cell_config_keys</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;first_notebook_cell&quot;</span><span class="p">,</span> <span class="s2">&quot;last_notebook_cell&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">conf_key</span> <span class="ow">in</span> <span class="n">cell_config_keys</span><span class="p">:</span>
+        <span class="n">_check_config_type</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">conf_key</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">allow_none</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
     <span class="c1"># Check pypandoc</span>
-    <span class="n">pypandoc</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;pypandoc&quot;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pypandoc</span><span class="p">,</span> <span class="p">(</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)):</span>
-        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
-            <span class="s2">&quot;&#39;pypandoc&#39; parameter must be of type bool or dict,&quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;got: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">pypandoc</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span>
-        <span class="p">)</span>
-    <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;pypandoc&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span> <span class="k">if</span> <span class="n">pypandoc</span> <span class="ow">is</span> <span class="kc">True</span> <span class="k">else</span> <span class="n">pypandoc</span>
-    <span class="n">has_pypandoc</span><span class="p">,</span> <span class="n">version</span> <span class="o">=</span> <span class="n">_has_pypandoc</span><span class="p">()</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;pypandoc&quot;</span><span class="p">],</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="n">has_pypandoc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-            <span class="s2">&quot;&#39;pypandoc&#39; not available. Using Sphinx-Gallery to &quot;</span>
-            <span class="s2">&quot;convert rst text blocks to markdown for .ipynb files.&quot;</span>
-        <span class="p">)</span>
-        <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;pypandoc&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;pypandoc&quot;</span><span class="p">],</span> <span class="nb">dict</span><span class="p">):</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-            <span class="s2">&quot;Using pandoc version: </span><span class="si">%s</span><span class="s2"> to convert rst text blocks to &quot;</span>
-            <span class="s2">&quot;markdown for .ipynb files&quot;</span><span class="p">,</span>
-            <span class="n">version</span><span class="p">,</span>
-        <span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-            <span class="s2">&quot;Using Sphinx-Gallery to convert rst text blocks to &quot;</span>
-            <span class="s2">&quot;markdown for .ipynb files.&quot;</span>
-        <span class="p">)</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pypandoc</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-        <span class="n">accepted_keys</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;extra_args&quot;</span><span class="p">,</span> <span class="s2">&quot;filters&quot;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">pypandoc</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">accepted_keys</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
-                    <span class="s2">&quot;&#39;pypandoc&#39; only accepts the following key &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;values: </span><span class="si">{</span><span class="n">accepted_keys</span><span class="si">}</span><span class="s2">, got: </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">.&quot;</span>
-                <span class="p">)</span>
+    <span class="n">gallery_conf</span> <span class="o">=</span> <span class="n">_check_pypandoc_config</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">)</span>
 
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;titles&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="c1"># Ensure &#39;backreferences_dir&#39; is str, pathlib.Path or None</span>
-    <span class="n">backref</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;backreferences_dir&quot;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">backref</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">)))</span> <span class="ow">and</span> <span class="p">(</span><span class="n">backref</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
-            <span class="s2">&quot;The &#39;backreferences_dir&#39; parameter must be of type &quot;</span>
-            <span class="s2">&quot;str, pathlib.Path or None, &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;found type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">backref</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="p">)</span>
+    <span class="n">_check_config_type</span><span class="p">(</span>
+        <span class="n">gallery_conf</span><span class="p">,</span>
+        <span class="s2">&quot;backreferences_dir&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">),</span>
+        <span class="n">allow_none</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
     <span class="c1"># if &#39;backreferences_dir&#39; is pathlib.Path, make str for Python &lt;=3.5</span>
     <span class="c1"># compatibility</span>
+    <span class="n">backref</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;backreferences_dir&quot;</span><span class="p">]</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">backref</span><span class="p">,</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">):</span>
         <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;backreferences_dir&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">backref</span><span class="p">)</span>
 
@@ -909,10 +952,13 @@ document.write(`
         <span class="n">app</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;css&quot;</span><span class="p">],</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
-        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
-            <span class="s1">&#39;gallery_conf[&quot;css&quot;] must be list or tuple, got &#39;</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;css&quot;</span><span class="p">]</span><span class="si">!r}</span><span class="s1">&#39;</span>
-        <span class="p">)</span>
+    <span class="c1"># css</span>
+    <span class="n">gallery_conf</span> <span class="o">=</span> <span class="n">_check_config_type</span><span class="p">(</span>
+        <span class="n">gallery_conf</span><span class="p">,</span>
+        <span class="s2">&quot;css&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">),</span>
+        <span class="n">str_to_list</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
     <span class="k">for</span> <span class="n">css</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;css&quot;</span><span class="p">]:</span>
         <span class="k">if</span> <span class="n">css</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_KNOWN_CSS</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown css </span><span class="si">{</span><span class="n">css</span><span class="si">!r}</span><span class="s2">, must be one of </span><span class="si">{</span><span class="n">_KNOWN_CSS</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -920,12 +966,7 @@ document.write(`
             <span class="n">app</span><span class="o">.</span><span class="n">add_css_file</span><span class="p">(</span><span class="n">css</span> <span class="o">+</span> <span class="s2">&quot;.css&quot;</span><span class="p">)</span>
 
     <span class="c1"># check API usage</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;api_usage_ignore&quot;</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
-            <span class="s1">&#39;gallery_conf[&quot;api_usage_ignore&quot;] must be str, &#39;</span>
-            <span class="sa">f</span><span class="s1">&#39;got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;api_usage_ignore&quot;</span><span class="p">])</span><span class="si">}</span><span class="s1">&#39;</span>
-        <span class="p">)</span>
-
+    <span class="n">_check_config_type</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="s2">&quot;api_usage_ignore&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
     <span class="k">if</span> <span class="p">(</span>
         <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;show_api_usage&quot;</span><span class="p">],</span> <span class="nb">bool</span><span class="p">)</span>
         <span class="ow">and</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;show_api_usage&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;unused&quot;</span>
