@@ -656,8 +656,7 @@ document.write(`
             <span class="p">)</span>
 
     <span class="n">binder_folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">outdir</span><span class="p">,</span> <span class="s2">&quot;binder&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">binder_folder</span><span class="p">):</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">binder_folder</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">binder_folder</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="c1"># Copy over the requirements to the output directory</span>
     <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">path_reqs</span><span class="p">:</span>
@@ -695,7 +694,7 @@ document.write(`
     <span class="n">binder_conf</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;binder&quot;</span><span class="p">]</span>
     <span class="n">notebooks_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">outdir</span><span class="p">,</span> <span class="n">binder_conf</span><span class="p">[</span><span class="s2">&quot;notebooks_dir&quot;</span><span class="p">])</span>
     <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">notebooks_dir</span><span class="p">,</span> <span class="n">ignore_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">notebooks_dir</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">notebooks_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gallery_dirs</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
         <span class="n">gallery_dirs</span> <span class="o">=</span> <span class="p">[</span><span class="n">gallery_dirs</span><span class="p">]</span>
@@ -927,14 +926,8 @@ document.write(`
 
     <span class="c1"># Similar work-around for badge file as in</span>
     <span class="c1"># gen_binder_rst</span>
-    <span class="n">physical_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">fpath</span><span class="p">),</span> <span class="s2">&quot;images&quot;</span><span class="p">,</span> <span class="s2">&quot;jupyterlite_badge_logo.svg&quot;</span>
-    <span class="p">)</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">physical_path</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">physical_path</span><span class="p">):</span>
-        <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">glr_path_static</span><span class="p">(),</span> <span class="s2">&quot;jupyterlite_badge_logo.svg&quot;</span><span class="p">),</span> <span class="n">physical_path</span>
-        <span class="p">)</span>
+    <span class="n">image_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">fpath</span><span class="p">),</span> <span class="s2">&quot;images&quot;</span><span class="p">)</span>
+    <span class="n">_add_jupyterlite_badge_logo</span><span class="p">(</span><span class="n">image_dir</span><span class="p">)</span>
     <span class="n">rst</span> <span class="o">=</span> <span class="p">(</span>
         <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="s2">&quot;  .. container:: lite-badge</span><span class="se">\n\n</span><span class="s2">&quot;</span>
@@ -945,6 +938,15 @@ document.write(`
     <span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">lite_url</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">rst</span></div>
 
+
+
+<span class="k">def</span> <span class="nf">_add_jupyterlite_badge_logo</span><span class="p">(</span><span class="n">image_dir</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">image_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">physical_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">image_dir</span><span class="p">,</span> <span class="s2">&quot;jupyterlite_badge_logo.svg&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">physical_path</span><span class="p">):</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">glr_path_static</span><span class="p">(),</span> <span class="s2">&quot;jupyterlite_badge_logo.svg&quot;</span><span class="p">),</span> <span class="n">physical_path</span>
+        <span class="p">)</span>
 
 
 <div class="viewcode-block" id="check_jupyterlite_conf">

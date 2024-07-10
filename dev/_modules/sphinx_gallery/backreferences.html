@@ -486,8 +486,6 @@ document.write(`
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">ast</span>
-<span class="kn">import</span> <span class="nn">codecs</span>
-<span class="kn">import</span> <span class="nn">collections</span>
 <span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">re</span>
@@ -499,7 +497,7 @@ document.write(`
 <span class="kn">from</span> <span class="nn">sphinx.errors</span> <span class="kn">import</span> <span class="n">ExtensionError</span>
 
 <span class="kn">from</span> <span class="nn">.scrapers</span> <span class="kn">import</span> <span class="n">_find_image_ext</span>
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">_replace_md5</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">_W_KW</span><span class="p">,</span> <span class="n">_replace_md5</span>
 
 <span class="n">THUMBNAIL_PARENT_DIV</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">.. raw:: html</span>
@@ -755,9 +753,9 @@ document.write(`
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    example_code_obj : OrderedDict[str, Any]</span>
-<span class="sd">        OrderedDict with information about all code object references found in an</span>
-<span class="sd">        example. OrderedDict contains the following keys:</span>
+<span class="sd">    example_code_obj : Dict[str, Any]</span>
+<span class="sd">        Dict with information about all code object references found in an</span>
+<span class="sd">        example. Dict contains the following keys:</span>
 
 <span class="sd">            - example_code_obj[&#39;name&#39;] : function or class name (str)</span>
 <span class="sd">            - example_code_obj[&#39;module&#39;] : module name (str)</span>
@@ -777,7 +775,7 @@ document.write(`
     <span class="c1"># Get matches from docstring inspection (explicit matches)</span>
     <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">content</span> <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">script_blocks</span> <span class="k">if</span> <span class="n">block</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;text&quot;</span><span class="p">)</span>
     <span class="n">names</span><span class="o">.</span><span class="n">extend</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">ref_regex</span><span class="p">,</span> <span class="n">text</span><span class="p">))</span>
-    <span class="n">example_code_obj</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">()</span>  <span class="c1"># order is important</span>
+    <span class="n">example_code_obj</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>  <span class="c1"># native dict preserves order nowadays</span>
     <span class="c1"># Make a list of all guesses, in `_embed_code_links` we will break</span>
     <span class="c1"># when we find a match</span>
     <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">full_name</span><span class="p">,</span> <span class="n">class_like</span><span class="p">,</span> <span class="n">is_class</span><span class="p">,</span> <span class="n">is_explicit</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
@@ -798,13 +796,13 @@ document.write(`
 
         <span class="c1"># get shortened module name</span>
         <span class="n">module_short</span> <span class="o">=</span> <span class="n">_get_short_module_name</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">attribute</span><span class="p">)</span>
-        <span class="n">cobj</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">attribute</span><span class="p">,</span>
-            <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="n">module</span><span class="p">,</span>
-            <span class="s2">&quot;module_short&quot;</span><span class="p">:</span> <span class="n">module_short</span> <span class="ow">or</span> <span class="n">module</span><span class="p">,</span>
-            <span class="s2">&quot;is_class&quot;</span><span class="p">:</span> <span class="n">is_class</span><span class="p">,</span>
-            <span class="s2">&quot;is_explicit&quot;</span><span class="p">:</span> <span class="n">is_explicit</span><span class="p">,</span>
-        <span class="p">}</span>
+        <span class="n">cobj</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">attribute</span><span class="p">,</span>
+            <span class="n">module</span><span class="o">=</span><span class="n">module</span><span class="p">,</span>
+            <span class="n">module_short</span><span class="o">=</span><span class="n">module_short</span> <span class="ow">or</span> <span class="n">module</span><span class="p">,</span>
+            <span class="n">is_class</span><span class="o">=</span><span class="n">is_class</span><span class="p">,</span>
+            <span class="n">is_explicit</span><span class="o">=</span><span class="n">is_explicit</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="n">example_code_obj</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cobj</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">example_code_obj</span></div>
 
@@ -898,9 +896,8 @@ document.write(`
             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">backref</span><span class="si">}</span><span class="s2">.examples.new&quot;</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">seen</span> <span class="o">=</span> <span class="n">backref</span> <span class="ow">in</span> <span class="n">seen_backrefs</span>
-        <span class="k">with</span> <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span>
-            <span class="n">include_path</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span> <span class="k">if</span> <span class="n">seen</span> <span class="k">else</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span>
-        <span class="p">)</span> <span class="k">as</span> <span class="n">ex_file</span><span class="p">:</span>
+        <span class="n">mode</span> <span class="o">=</span> <span class="s2">&quot;a&quot;</span> <span class="k">if</span> <span class="n">seen</span> <span class="k">else</span> <span class="s2">&quot;w&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">include_path</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="o">**</span><span class="n">_W_KW</span><span class="p">)</span> <span class="k">as</span> <span class="n">ex_file</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">seen</span><span class="p">:</span>
                 <span class="c1"># Be aware that if the number of lines of this heading changes,</span>
                 <span class="c1">#   the minigallery directive should be modified accordingly</span>
@@ -939,7 +936,7 @@ document.write(`
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
             <span class="c1"># Close div containing all thumbnails</span>
             <span class="c1"># (it was open in _write_backreferences)</span>
-            <span class="k">with</span> <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ex_file</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">_W_KW</span><span class="p">)</span> <span class="k">as</span> <span class="n">ex_file</span><span class="p">:</span>
                 <span class="n">ex_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">THUMBNAIL_PARENT_DIV_CLOSE</span><span class="p">)</span>
             <span class="n">_replace_md5</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;t&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>

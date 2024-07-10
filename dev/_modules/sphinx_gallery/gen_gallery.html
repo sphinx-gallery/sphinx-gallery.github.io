@@ -621,6 +621,7 @@ document.write(`
     <span class="s2">&quot;api_usage_ignore&quot;</span><span class="p">:</span> <span class="s2">&quot;.*__.*__&quot;</span><span class="p">,</span>
     <span class="s2">&quot;show_api_usage&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>  <span class="c1"># if this changes, change write_api_entries, too</span>
     <span class="s2">&quot;copyfile_regex&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;parallel&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">}</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">sphinx</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;sphinx-gallery&quot;</span><span class="p">)</span>
@@ -883,8 +884,20 @@ document.write(`
     <span class="c1"># Check ignore_repr_types</span>
     <span class="n">_check_config_type</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="s2">&quot;ignore_repr_types&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
 
+    <span class="c1"># Check parallel</span>
+    <span class="n">_check_config_type</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="s2">&quot;parallel&quot;</span><span class="p">,</span> <span class="p">(</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">int</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;parallel&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;parallel&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">parallel</span>
+    <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;parallel&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;parallel&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;parallel&quot;</span><span class="p">]:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">joblib</span>  <span class="c1"># noqa</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;joblib must be importable when parallel mode is enabled&quot;</span><span class="p">)</span>
+
     <span class="c1"># deal with show_memory</span>
-    <span class="n">_get_call_memory_and_base</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">)</span>
+    <span class="n">_get_call_memory_and_base</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="c1"># check callables</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span>
@@ -1064,8 +1077,7 @@ document.write(`
 
     <span class="k">if</span> <span class="nb">bool</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;backreferences_dir&quot;</span><span class="p">]):</span>
         <span class="n">backreferences_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">srcdir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;backreferences_dir&quot;</span><span class="p">])</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">backreferences_dir</span><span class="p">):</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">backreferences_dir</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">backreferences_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">examples_dirs</span><span class="p">,</span> <span class="n">gallery_dirs</span><span class="p">))</span>
 
@@ -1202,8 +1214,11 @@ document.write(`
 <span class="sd">    each sub-section, with each header followed by a toctree linking to</span>
 <span class="sd">    every example in the root gallery/sub-section.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;generating gallery...&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">)</span>
     <span class="n">gallery_conf</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span>
+    <span class="n">extra</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;parallel&quot;</span><span class="p">]:</span>
+        <span class="n">extra</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot; (with parallel=</span><span class="si">{</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;parallel&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;generating gallery</span><span class="si">{</span><span class="n">extra</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">)</span>
 
     <span class="n">seen_backrefs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
 
@@ -1883,8 +1898,7 @@ document.write(`
     <span class="c1"># Actually write it</span>
     <span class="n">fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;junit&quot;</span><span class="p">]))</span>
     <span class="n">junit_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">junit_dir</span><span class="p">):</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">junit_dir</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">junit_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">with</span> <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
         <span class="n">fid</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">output</span><span class="p">)</span></div>
 
@@ -1922,17 +1936,17 @@ document.write(`
 
 <span class="k">def</span> <span class="nf">_parse_failures</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Split the failures.&quot;&quot;&quot;</span>
-    <span class="n">failing_examples</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;failing_examples&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="n">failing_examples</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;failing_examples&quot;</span><span class="p">])</span>
     <span class="n">expected_failing_examples</span> <span class="o">=</span> <span class="n">_expected_failing_examples</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">)</span>
     <span class="n">failing_as_expected</span> <span class="o">=</span> <span class="n">failing_examples</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">expected_failing_examples</span><span class="p">)</span>
     <span class="n">failing_unexpectedly</span> <span class="o">=</span> <span class="n">failing_examples</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">expected_failing_examples</span><span class="p">)</span>
     <span class="n">passing_unexpectedly</span> <span class="o">=</span> <span class="n">expected_failing_examples</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">failing_examples</span><span class="p">)</span>
     <span class="c1"># filter from examples actually run</span>
-    <span class="n">passing_unexpectedly</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">passing_unexpectedly</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span>
         <span class="n">src_file</span>
         <span class="k">for</span> <span class="n">src_file</span> <span class="ow">in</span> <span class="n">passing_unexpectedly</span>
         <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;filename_pattern&quot;</span><span class="p">],</span> <span class="n">src_file</span><span class="p">)</span>
-    <span class="p">]</span>
+    <span class="p">)</span>
     <span class="k">return</span> <span class="n">failing_as_expected</span><span class="p">,</span> <span class="n">failing_unexpectedly</span><span class="p">,</span> <span class="n">passing_unexpectedly</span>
 
 
@@ -1962,7 +1976,9 @@ document.write(`
 
     <span class="n">idt</span> <span class="o">=</span> <span class="s2">&quot;    &quot;</span>
     <span class="k">if</span> <span class="n">failing_as_expected</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">bold</span><span class="p">(</span><span class="s2">&quot;Examples failing as expected:&quot;</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="n">bold</span><span class="p">(</span><span class="n">blue</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Examples failing as expected (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">failing_as_expected</span><span class="p">)</span><span class="si">}</span><span class="s2">):&quot;</span><span class="p">))</span>
+        <span class="p">)</span>
         <span class="k">for</span> <span class="n">fail_example</span> <span class="ow">in</span> <span class="n">failing_as_expected</span><span class="p">:</span>
             <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">fail_example</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">])</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
@@ -1972,7 +1988,9 @@ document.write(`
 
     <span class="n">fail_msgs</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="n">failing_unexpectedly</span><span class="p">:</span>
-        <span class="n">fail_msgs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bold</span><span class="p">(</span><span class="n">red</span><span class="p">(</span><span class="s2">&quot;Unexpected failing examples:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)))</span>
+        <span class="n">fail_msgs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">bold</span><span class="p">(</span><span class="n">red</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unexpected failing examples (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">failing_unexpectedly</span><span class="p">)</span><span class="si">}</span><span class="s2">):</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">))</span>
+        <span class="p">)</span>
         <span class="k">for</span> <span class="n">fail_example</span> <span class="ow">in</span> <span class="n">failing_unexpectedly</span><span class="p">:</span>
             <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">fail_example</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">])</span>
             <span class="n">fail_msgs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
@@ -1985,7 +2003,7 @@ document.write(`
             <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">])</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">passing_unexpectedly</span>
         <span class="p">]</span>
         <span class="n">fail_msgs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="n">bold</span><span class="p">(</span><span class="n">red</span><span class="p">(</span><span class="s2">&quot;Examples expected to fail, but not failing:</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">))</span>
+            <span class="n">bold</span><span class="p">(</span><span class="n">red</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Examples expected to fail, but not failing (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">paths</span><span class="p">)</span><span class="si">}</span><span class="s2">):</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">))</span>
             <span class="o">+</span> <span class="n">red</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">indent</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">idt</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">))</span>
             <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">Please remove these examples from &quot;</span>
             <span class="o">+</span> <span class="s2">&quot;sphinx_gallery_conf[&#39;expected_failing_examples&#39;] &quot;</span>
