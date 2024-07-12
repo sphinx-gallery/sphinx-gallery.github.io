@@ -696,7 +696,7 @@ document.write(`
         <span class="k">if</span> <span class="n">str_to_list</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conf_value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
                 <span class="n">gallery_conf</span><span class="p">[</span><span class="n">conf_key</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">conf_value</span><span class="p">]</span>
-            <span class="k">return</span> <span class="n">gallery_conf</span>
+            <span class="k">return</span>
         <span class="k">return</span>
     <span class="c1"># Otherwise raise error</span>
     <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;&#39;</span><span class="si">{conf_key}</span><span class="s2">&#39; config allowed types: </span><span class="si">{types}{or_none}</span><span class="s2">. Got </span><span class="si">{conf_type}</span><span class="s2">.&quot;</span>
@@ -716,12 +716,7 @@ document.write(`
 
 <span class="k">def</span> <span class="nf">_check_image_srcset</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check `_check_image_srcset`, convert to float and removing &#39;1&#39;.&quot;&quot;&quot;</span>
-    <span class="n">gallery_conf</span> <span class="o">=</span> <span class="n">_check_config_type</span><span class="p">(</span>
-        <span class="n">gallery_conf</span><span class="p">,</span>
-        <span class="s2">&quot;image_srcset&quot;</span><span class="p">,</span>
-        <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">),</span>
-        <span class="n">str_to_list</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="p">)</span>
+    <span class="n">_check_config_type</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="s2">&quot;image_srcset&quot;</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">),</span> <span class="n">str_to_list</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">srcset_mult_facs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">st</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;image_srcset&quot;</span><span class="p">]:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">st</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">st</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">:]</span> <span class="o">==</span> <span class="s2">&quot;x&quot;</span><span class="p">):</span>
@@ -734,12 +729,11 @@ document.write(`
         <span class="n">srcset_mult_facs</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">st</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
     <span class="n">srcset_mult_facs</span> <span class="o">-=</span> <span class="p">{</span><span class="mi">1</span><span class="p">}</span>  <span class="c1"># 1x is always saved.</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;image_srcset&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="nb">sorted</span><span class="p">(</span><span class="n">srcset_mult_facs</span><span class="p">)]</span>
-    <span class="k">return</span> <span class="n">gallery_conf</span>
 
 
 <span class="k">def</span> <span class="nf">_check_compress_images</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check `compress_images`, getting any command line args.&quot;&quot;&quot;</span>
-    <span class="n">gallery_conf</span> <span class="o">=</span> <span class="n">_check_config_type</span><span class="p">(</span>
+    <span class="n">_check_config_type</span><span class="p">(</span>
         <span class="n">gallery_conf</span><span class="p">,</span>
         <span class="s2">&quot;compress_images&quot;</span><span class="p">,</span>
         <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">),</span>
@@ -769,8 +763,6 @@ document.write(`
         <span class="n">compress_images</span> <span class="o">=</span> <span class="p">()</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;compress_images&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">compress_images</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;compress_images_args&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">compress_images_args</span>
-
-    <span class="k">return</span> <span class="n">gallery_conf</span>
 
 
 <span class="k">def</span> <span class="nf">_check_matplotlib_animations</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">app</span><span class="p">):</span>
@@ -806,7 +798,6 @@ document.write(`
                         <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
 
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;matplotlib_animations&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">enabled</span><span class="p">,</span> <span class="n">fmt</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">gallery_conf</span>
 
 
 <span class="k">def</span> <span class="nf">_check_pypandoc_config</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">):</span>
@@ -841,7 +832,6 @@ document.write(`
                     <span class="s2">&quot;&#39;pypandoc&#39; only accepts the following key &quot;</span>
                     <span class="sa">f</span><span class="s2">&quot;values: </span><span class="si">{</span><span class="n">accepted_keys</span><span class="si">}</span><span class="s2">, got: </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">.&quot;</span>
                 <span class="p">)</span>
-    <span class="k">return</span> <span class="n">gallery_conf</span>
 
 
 <span class="k">def</span> <span class="nf">_fill_gallery_conf_defaults</span><span class="p">(</span><span class="n">sphinx_gallery_conf</span><span class="p">,</span> <span class="n">app</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">check_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
@@ -868,12 +858,7 @@ document.write(`
             <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;source_suffix&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;source_suffix&quot;</span><span class="p">]:</span> <span class="kc">None</span><span class="p">}</span>
 
     <span class="c1"># Check capture_repr</span>
-    <span class="n">gallery_conf</span> <span class="o">=</span> <span class="n">_check_config_type</span><span class="p">(</span>
-        <span class="n">gallery_conf</span><span class="p">,</span>
-        <span class="s2">&quot;capture_repr&quot;</span><span class="p">,</span>
-        <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">),</span>
-        <span class="n">str_to_list</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="p">)</span>
+    <span class="n">_check_config_type</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="s2">&quot;capture_repr&quot;</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">),</span> <span class="n">str_to_list</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">supported_reprs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;__repr__&quot;</span><span class="p">,</span> <span class="s2">&quot;__str__&quot;</span><span class="p">,</span> <span class="s2">&quot;_repr_html_&quot;</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">rep</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;capture_repr&quot;</span><span class="p">]:</span>
         <span class="k">if</span> <span class="n">rep</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">supported_reprs</span><span class="p">:</span>
@@ -925,13 +910,11 @@ document.write(`
         <span class="k">pass</span>
 
     <span class="c1"># Check for srcset hidpi images</span>
-    <span class="n">gallery_conf</span> <span class="o">=</span> <span class="n">_check_image_srcset</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">)</span>
-
+    <span class="n">_check_image_srcset</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">)</span>
     <span class="c1"># Check `compress_images`</span>
-    <span class="n">gallery_conf</span> <span class="o">=</span> <span class="n">_check_compress_images</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">)</span>
-
+    <span class="n">_check_compress_images</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">)</span>
     <span class="c1"># Check `matplotlib_animations`</span>
-    <span class="n">gallery_conf</span> <span class="o">=</span> <span class="n">_check_matplotlib_animations</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">app</span><span class="p">)</span>
+    <span class="n">_check_matplotlib_animations</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">app</span><span class="p">)</span>
 
     <span class="c1"># Check resetters</span>
     <span class="n">_get_callables</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="s2">&quot;reset_modules&quot;</span><span class="p">)</span>
@@ -950,7 +933,7 @@ document.write(`
         <span class="n">_check_config_type</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">conf_key</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">allow_none</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="c1"># Check pypandoc</span>
-    <span class="n">gallery_conf</span> <span class="o">=</span> <span class="n">_check_pypandoc_config</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">)</span>
+    <span class="n">_check_pypandoc_config</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">)</span>
 
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;titles&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="c1"># Ensure &#39;backreferences_dir&#39; is str, pathlib.Path or None</span>
@@ -976,12 +959,7 @@ document.write(`
     <span class="p">)</span>
 
     <span class="c1"># css</span>
-    <span class="n">gallery_conf</span> <span class="o">=</span> <span class="n">_check_config_type</span><span class="p">(</span>
-        <span class="n">gallery_conf</span><span class="p">,</span>
-        <span class="s2">&quot;css&quot;</span><span class="p">,</span>
-        <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">),</span>
-        <span class="n">str_to_list</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="p">)</span>
+    <span class="n">_check_config_type</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="s2">&quot;css&quot;</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">),</span> <span class="n">str_to_list</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">css</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;css&quot;</span><span class="p">]:</span>
         <span class="k">if</span> <span class="n">css</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_KNOWN_CSS</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown css </span><span class="si">{</span><span class="n">css</span><span class="si">!r}</span><span class="s2">, must be one of </span><span class="si">{</span><span class="n">_KNOWN_CSS</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
