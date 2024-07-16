@@ -587,6 +587,7 @@ and <code class="docutils literal notranslate"><span class="pre">inspect_global_
 <li><p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">sphinx_gallery_line_numbers</span></code> (<a class="reference internal" href="#adding-line-numbers"><span class="std std-ref">Adding line numbers to examples</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">sphinx_gallery_thumbnail_number</span></code> (<a class="reference internal" href="#choosing-thumbnail"><span class="std std-ref">Choosing the thumbnail image</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">sphinx_gallery_thumbnail_path</span></code> (<a class="reference internal" href="#providing-thumbnail"><span class="std std-ref">Providing an image for the thumbnail image</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">sphinx_gallery_failing_thumbnail</span></code> (<a class="reference internal" href="#failing-thumbnail"><span class="std std-ref">Controlling thumbnail behaviour in failing examples</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">sphinx_gallery_dummy_images</span></code> (<a class="reference internal" href="#dummy-images"><span class="std std-ref">Generating dummy images</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">sphinx_gallery_capture_repr</span></code> (<a class="reference internal" href="#capture-repr"><span class="std std-ref">Controlling what output is captured</span></a>)</p></li>
 </ul>
@@ -1791,6 +1792,25 @@ below the docstring (ideally in a code block, see
 <a class="reference internal" href="auto_examples/plot_4b_provide_thumbnail.html#sphx-glr-auto-examples-plot-4b-provide-thumbnail-py"><span class="std std-ref">Providing a figure for the thumbnail image</span></a> for an example of
 this functionality.</p>
 </section>
+<section id="controlling-thumbnail-behaviour-in-failing-examples">
+<span id="failing-thumbnail"></span><h2>Controlling thumbnail behaviour in failing examples<a class="headerlink" href="#controlling-thumbnail-behaviour-in-failing-examples" title="Link to this heading">#</a></h2>
+<p>By default, expected failing examples will have their thumbnail image as a
+stamp with the word “BROKEN”. This behaviour is controlled by
+<code class="docutils literal notranslate"><span class="pre">sphinx_gallery_failing_thumbnail</span></code>, which is by default <code class="docutils literal notranslate"><span class="pre">True</span></code>. In cases
+where control over the thumbnail image is desired, this should be set to
+<code class="docutils literal notranslate"><span class="pre">False</span></code>. This will return thumbnail behaviour to ‘normal’, whereby
+thumbnail will be either the first figure created (or the
+<a class="reference internal" href="#custom-default-thumb"><span class="std std-ref">default thumbnail</span></a> if no figure is created)
+or <a class="reference internal" href="#providing-thumbnail"><span class="std std-ref">provided thumbnail</span></a>:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># sphinx_gallery_failing_thumbnail = False</span>
+</pre></div>
+</div>
+<p>Compare the thumbnails of
+<a class="reference internal" href="auto_examples/no_output/plot_raise_thumbnail.html#sphx-glr-auto-examples-no-output-plot-raise-thumbnail-py"><span class="std std-ref">Example that fails to execute (with normal thumbnail behaviour)</span></a> (where the
+option is <code class="docutils literal notranslate"><span class="pre">False</span></code>) and <a class="reference internal" href="auto_examples/no_output/plot_raise.html#sphx-glr-auto-examples-no-output-plot-raise-py"><span class="std std-ref">Example that fails to execute</span></a>
+(where the option is the default <code class="docutils literal notranslate"><span class="pre">True</span></code>) for an example of this
+functionality.</p>
+</section>
 <section id="generate-binder-links-for-gallery-notebooks-experimental">
 <span id="binder-links"></span><h2>Generate Binder links for gallery notebooks (experimental)<a class="headerlink" href="#generate-binder-links-for-gallery-notebooks-experimental" title="Link to this heading">#</a></h2>
 <p>Sphinx-Gallery automatically generates Jupyter notebooks for any
@@ -2965,6 +2985,7 @@ desirable to document if they are used in examples.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#disabling-download-button-of-all-scripts">Disabling download button of all scripts</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#choosing-the-thumbnail-image">Choosing the thumbnail image</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#providing-an-image-for-the-thumbnail-image">Providing an image for the thumbnail image</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#controlling-thumbnail-behaviour-in-failing-examples">Controlling thumbnail behaviour in failing examples</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-binder-links-for-gallery-notebooks-experimental">Generate Binder links for gallery notebooks (experimental)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generate-jupyterlite-links-for-gallery-notebooks-experimental">Generate JupyterLite links for gallery notebooks (experimental)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#controlling-notebook-download-links">Controlling notebook download links</a></li>
