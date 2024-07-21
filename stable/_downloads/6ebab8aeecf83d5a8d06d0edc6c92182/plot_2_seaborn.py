@@ -6,13 +6,13 @@ This example demonstrates a Seaborn plot. Figures produced Matplotlib **and**
 by any package that is based on Matplotlib (e.g., Seaborn), will be
 captured by default. See :ref:`image_scrapers` for details.
 """
+
 # Author: Michael Waskom & Lucy Liu
 # License: BSD 3 clause
 
-
+import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
-import matplotlib.pyplot as plt
 
 # Enforce the use of default set style
 
