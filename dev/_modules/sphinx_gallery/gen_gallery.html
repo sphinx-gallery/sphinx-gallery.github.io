@@ -1094,13 +1094,15 @@ document.write(`
         <span class="p">)</span>
         <span class="n">indexst</span> <span class="o">+=</span> <span class="n">subsections_toctree</span>
 
-    <span class="k">if</span> <span class="n">sg_root_index</span><span class="p">:</span>
-        <span class="c1"># Download examples</span>
-        <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;download_all_examples&quot;</span><span class="p">]:</span>
-            <span class="n">download_fhindex</span> <span class="o">=</span> <span class="n">generate_zipfiles</span><span class="p">(</span>
-                <span class="n">gallery_dir_abs_path</span><span class="p">,</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span> <span class="n">gallery_conf</span>
-            <span class="p">)</span>
+    <span class="c1"># Always generate download zipfiles, only add to index.rst if required</span>
+    <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;download_all_examples&quot;</span><span class="p">]:</span>
+        <span class="n">download_fhindex</span> <span class="o">=</span> <span class="n">generate_zipfiles</span><span class="p">(</span>
+            <span class="n">gallery_dir_abs_path</span><span class="p">,</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span> <span class="n">gallery_conf</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">sg_root_index</span><span class="p">:</span>
             <span class="n">indexst</span> <span class="o">+=</span> <span class="n">download_fhindex</span>
+
+    <span class="k">if</span> <span class="n">sg_root_index</span><span class="p">:</span>
         <span class="c1"># Signature</span>
         <span class="k">if</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;show_signature&quot;</span><span class="p">]:</span>
             <span class="n">indexst</span> <span class="o">+=</span> <span class="n">SPHX_GLR_SIG</span>
