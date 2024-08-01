@@ -535,6 +535,52 @@ document.write(`
         <span class="s2">&quot;heading-level&quot;</span><span class="p">:</span> <span class="n">directives</span><span class="o">.</span><span class="n">single_char_or_unicode</span><span class="p">,</span>
     <span class="p">}</span>
 
+    <span class="k">def</span> <span class="nf">_get_target_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get thumbnail target directory, errors when ambiguous/not in example dir.&quot;&quot;&quot;</span>
+        <span class="n">examples_dirs</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;examples_dirs&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">examples_dirs</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">examples_dirs</span> <span class="o">=</span> <span class="p">[</span><span class="n">examples_dirs</span><span class="p">]</span>
+        <span class="n">gallery_dirs</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;gallery_dirs&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gallery_dirs</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">gallery_dirs</span> <span class="o">=</span> <span class="p">[</span><span class="n">gallery_dirs</span><span class="p">]</span>
+
+        <span class="n">gal_matches</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">e</span><span class="p">,</span> <span class="n">g</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">examples_dirs</span><span class="p">,</span> <span class="n">gallery_dirs</span><span class="p">):</span>
+            <span class="n">e</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">g</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">g</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">gal_matches</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">path</span><span class="o">.</span><span class="n">relative_to</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="n">g</span><span class="p">))</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+        <span class="c1"># `path` inside one `examples_dirs`</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">n_match</span> <span class="o">:=</span> <span class="nb">len</span><span class="p">(</span><span class="n">gal_matches</span><span class="p">))</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">ex_parents</span><span class="p">,</span> <span class="n">target_dir</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">gal_matches</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">parents</span><span class="p">,</span>
+                <span class="n">gal_matches</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
+            <span class="p">)</span>
+        <span class="c1"># `path` inside several `examples_dirs`, take the example dir with</span>
+        <span class="c1"># longest match (shortest parents after relative)</span>
+        <span class="k">elif</span> <span class="n">n_match</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">ex_parents</span><span class="p">,</span> <span class="n">target_dir</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span>
+                <span class="p">[(</span><span class="n">match</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">parents</span><span class="p">,</span> <span class="n">match</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">gal_matches</span><span class="p">],</span>
+                <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+            <span class="p">)</span>
+        <span class="c1"># `path` is not inside a `examples_dirs`</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;minigallery directive error: path input &#39;</span><span class="si">{</span><span class="n">obj</span><span class="si">}</span><span class="s2">&#39; found file:&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot; &#39;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&#39; but this does not live inside any examples_dirs: &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">examples_dirs</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Add subgallery path, if present</span>
+        <span class="n">subdir</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">ex_p</span> <span class="o">:=</span> <span class="n">ex_parents</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">!=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">):</span>
+            <span class="n">subdir</span> <span class="o">=</span> <span class="n">ex_p</span>
+        <span class="n">target_dir</span> <span class="o">=</span> <span class="n">target_dir</span> <span class="o">/</span> <span class="n">subdir</span>
+        <span class="k">return</span> <span class="n">target_dir</span>
+
 <div class="viewcode-block" id="MiniGallery.run">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.directives.html#sphinx_gallery.directives.MiniGallery.run">[docs]</a>
     <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -557,7 +603,7 @@ document.write(`
         <span class="k">if</span> <span class="n">backreferences_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
                 <span class="s2">&quot;&#39;backreferences_dir&#39; config is None, minigallery &quot;</span>
-                <span class="s2">&quot;directive will only add example file paths.&quot;</span>
+                <span class="s2">&quot;directive will resolve all inputs as file paths or globs.&quot;</span>
             <span class="p">)</span>
 
         <span class="c1"># Retrieve source directory</span>
@@ -592,9 +638,9 @@ document.write(`
         <span class="n">file_paths</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">obj_list</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">backreferences_dir</span> <span class="ow">and</span> <span class="p">(</span><span class="n">path</span> <span class="o">:=</span> <span class="n">has_backrefs</span><span class="p">(</span><span class="n">obj</span><span class="p">)):</span>
-                <span class="n">file_paths</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">obj</span><span class="p">,</span> <span class="n">path</span><span class="p">))</span>
+                <span class="n">file_paths</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">obj</span><span class="p">,</span> <span class="n">path</span><span class="o">.</span><span class="n">resolve</span><span class="p">()))</span>
             <span class="k">elif</span> <span class="n">paths</span> <span class="o">:=</span> <span class="n">Path</span><span class="p">(</span><span class="n">src_dir</span><span class="p">)</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
-                <span class="n">file_paths</span><span class="o">.</span><span class="n">extend</span><span class="p">([(</span><span class="n">obj</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">])</span>
+                <span class="n">file_paths</span><span class="o">.</span><span class="n">extend</span><span class="p">([(</span><span class="n">obj</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">resolve</span><span class="p">())</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">])</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">file_paths</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[]</span>
@@ -610,7 +656,7 @@ document.write(`
             <span class="p">)</span>
         <span class="k">for</span> <span class="n">obj</span><span class="p">,</span> <span class="n">path</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span>
             <span class="nb">set</span><span class="p">(</span><span class="n">file_paths</span><span class="p">),</span>
-            <span class="n">key</span><span class="o">=</span><span class="p">((</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">sortkey</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])))</span> <span class="k">if</span> <span class="n">sortkey</span> <span class="k">else</span> <span class="kc">None</span><span class="p">),</span>
+            <span class="n">key</span><span class="o">=</span><span class="p">((</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">sortkey</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])))</span> <span class="k">if</span> <span class="n">sortkey</span> <span class="k">else</span> <span class="kc">None</span><span class="p">),</span>
         <span class="p">):</span>
             <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">suffix</span> <span class="o">==</span> <span class="s2">&quot;.examples&quot;</span><span class="p">:</span>
                 <span class="c1"># Insert the backreferences file(s) using the `include` directive.</span>
@@ -622,27 +668,8 @@ document.write(`
 <span class="s2">    :end-before: thumbnail-parent-div-close&quot;&quot;&quot;</span>
                 <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">examples_dirs</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;examples_dirs&quot;</span><span class="p">]</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">examples_dirs</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-                    <span class="n">examples_dirs</span> <span class="o">=</span> <span class="p">[</span><span class="n">examples_dirs</span><span class="p">]</span>
-                <span class="n">gallery_dirs</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;gallery_dirs&quot;</span><span class="p">]</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gallery_dirs</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-                    <span class="n">gallery_dirs</span> <span class="o">=</span> <span class="p">[</span><span class="n">gallery_dirs</span><span class="p">]</span>
-                <span class="n">dirs</span> <span class="o">=</span> <span class="p">[</span>
-                    <span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">g</span><span class="p">)</span>
-                    <span class="k">for</span> <span class="n">e</span><span class="p">,</span> <span class="n">g</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">examples_dirs</span><span class="p">,</span> <span class="n">gallery_dirs</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-                <span class="p">]</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dirs</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
-                        <span class="sa">f</span><span class="s2">&quot;Error in minigallery file lookup: input=</span><span class="si">{</span><span class="n">obj</span><span class="si">}</span><span class="s2">, &quot;</span>
-                        <span class="sa">f</span><span class="s2">&quot;matches=</span><span class="si">{</span><span class="n">dirs</span><span class="si">}</span><span class="s2">, examples_dirs=</span><span class="si">{</span><span class="n">examples_dirs</span><span class="si">}</span><span class="s2">&quot;</span>
-                    <span class="p">)</span>
-
-                <span class="n">example_dir</span><span class="p">,</span> <span class="n">target_dir</span> <span class="o">=</span> <span class="p">[</span><span class="n">Path</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dirs</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
-
-                <span class="c1"># finds thumbnails in subdirs</span>
-                <span class="n">target_dir</span> <span class="o">=</span> <span class="n">target_dir</span> <span class="o">/</span> <span class="n">path</span><span class="o">.</span><span class="n">relative_to</span><span class="p">(</span><span class="n">example_dir</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span>
+                <span class="n">target_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_target_dir</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
+                <span class="c1"># Get thumbnail</span>
                 <span class="n">_</span><span class="p">,</span> <span class="n">script_blocks</span> <span class="o">=</span> <span class="n">split_code_and_text_blocks</span><span class="p">(</span>
                     <span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="n">return_node</span><span class="o">=</span><span class="kc">False</span>
                 <span class="p">)</span>
