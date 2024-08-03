@@ -2542,16 +2542,19 @@ flag is passed to <code class="docutils literal notranslate"><span class="pre">s
 <p>If an <code class="docutils literal notranslate"><span class="pre">int</span></code>, then that number of jobs will be passed to <a class="reference external" href="https://joblib.readthedocs.io/en/latest/generated/joblib.Parallel.html#joblib.Parallel" title="(in joblib v1.5.dev0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">joblib.Parallel</span></code></a>.
 If <code class="docutils literal notranslate"><span class="pre">True</span></code>, then the same number of jobs will be used as the <code class="docutils literal notranslate"><span class="pre">-j</span></code> flag for
 Sphinx.</p>
-<p>Warnings emitted by <a class="reference external" href="https://joblib.readthedocs.io/en/latest/index.html#module-joblib" title="(in joblib v1.5.dev0)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">joblib</span></code></a> during gallery generation (e.g., the <code class="docutils literal notranslate"><span class="pre">UserWarning</span></code>
-about a <a class="reference external" href="https://github.com/joblib/joblib/issues/883">worker restarting</a>),
-will be captured by Sphinx-Gallery in a similar way to warnings during example
-execution. This can be filtered out with <code class="docutils literal notranslate"><span class="pre">warnings.filterwarnings</span></code>
-(see <a class="reference internal" href="#removing-warnings"><span class="std std-ref">Removing warnings</span></a>). This can be particularly important
-to do if you have tweaked warning handling in your doc build
+<p>Warnings emitted by <a class="reference external" href="https://joblib.readthedocs.io/en/latest/index.html#module-joblib" title="(in joblib v1.5.dev0)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">joblib</span></code></a> during documentation building (e.g., the
+<code class="docutils literal notranslate"><span class="pre">UserWarning</span></code> about a
+<a class="reference external" href="https://github.com/joblib/joblib/issues/883">worker restarting</a>) are emitted
+during gallery generation at the same time as warnings from example
+code execution. These can be filtered out with
+<code class="docutils literal notranslate"><span class="pre">warnings.filterwarnings</span></code> (see <a class="reference internal" href="#removing-warnings"><span class="std std-ref">Removing warnings</span></a>). This is particularly
+important to do if you have tweaked warning handling in your documentation build
 to treat warnings as errors, e.g., with a line like
-<code class="docutils literal notranslate"><span class="pre">warnings.filterwarnings(&quot;error&quot;)</span></code>. Note that this
-differs from warnings affected by the <code class="docutils literal notranslate"><span class="pre">-</span> <span class="pre">W</span></code> / <code class="docutils literal notranslate"><span class="pre">--fail-on-warning</span></code> <code class="docutils literal notranslate"><span class="pre">sphinx-build</span></code>
-flag, which converts warnings during documentation building into errors.</p>
+<code class="docutils literal notranslate"><span class="pre">warnings.filterwarnings(&quot;error)</span></code> which converts all warnings into errors. In
+this case, if joblib emits a warning during build of an example, this example will fail
+unexpectedly unless they are filtered out. Note that this differs from the warnings
+affected by the <code class="docutils literal notranslate"><span class="pre">-</span> <span class="pre">W</span></code> / <code class="docutils literal notranslate"><span class="pre">--fail-on-warning</span></code> <code class="docutils literal notranslate"><span class="pre">sphinx-build</span></code> flag, which converts
+Sphinx warnings during documentation building into errors.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>Some packages might not play nicely with parallel processing, so this feature
