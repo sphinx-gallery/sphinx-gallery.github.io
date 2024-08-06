@@ -642,9 +642,11 @@ document.write(`
 
 <span class="sd">    This is separate function for better testability.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># prepare regex for exclusions from implicit documentation</span>
+    <span class="c1"># prepare regex for exclusions from implicit documentation, ensuring that what</span>
+    <span class="c1"># gets complied has a stable __repr__ (i.e., by sorting the exclude_implicit_doc</span>
+    <span class="c1"># set before joining)</span>
     <span class="n">exclude_regex</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;|&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;exclude_implicit_doc&quot;</span><span class="p">]))</span>
+        <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;|&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;exclude_implicit_doc&quot;</span><span class="p">])))</span>
         <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;exclude_implicit_doc&quot;</span><span class="p">]</span>
         <span class="k">else</span> <span class="kc">False</span>
     <span class="p">)</span>
