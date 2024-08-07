@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>sphinx_gallery.gen_gallery &#8212; Sphinx-Gallery 0.17.0-git documentation</title>
+    <title>sphinx_gallery.gen_gallery &#8212; Sphinx-Gallery 0.17.1-git documentation</title>
   
   
   
@@ -43,7 +43,7 @@
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../_static/documentation_options.js?v=c780ab9b"></script>
+    <script src="../../_static/documentation_options.js?v=3af094dd"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/jupyterlite_sphinx.js?v=0b35d31f"></script>
@@ -642,9 +642,11 @@ document.write(`
 
 <span class="sd">    This is separate function for better testability.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># prepare regex for exclusions from implicit documentation</span>
+    <span class="c1"># prepare regex for exclusions from implicit documentation, ensuring that what</span>
+    <span class="c1"># gets complied has a stable __repr__ (i.e., by sorting the exclude_implicit_doc</span>
+    <span class="c1"># set before joining)</span>
     <span class="n">exclude_regex</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;|&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;exclude_implicit_doc&quot;</span><span class="p">]))</span>
+        <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;|&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;exclude_implicit_doc&quot;</span><span class="p">])))</span>
         <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;exclude_implicit_doc&quot;</span><span class="p">]</span>
         <span class="k">else</span> <span class="kc">False</span>
     <span class="p">)</span>
@@ -1053,6 +1055,12 @@ document.write(`
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gallery_dirs</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
         <span class="n">gallery_dirs</span> <span class="o">=</span> <span class="p">[</span><span class="n">gallery_dirs</span><span class="p">]</span>
 
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">examples_dirs</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">gallery_dirs</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="s2">&quot;&#39;examples_dirs&#39; and &#39;gallery_dirs&#39; are of different lengths. &quot;</span>
+            <span class="s2">&quot;Surplus entries will be ignored.&quot;</span>
+        <span class="p">)</span>
+
     <span class="k">if</span> <span class="nb">bool</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;backreferences_dir&quot;</span><span class="p">]):</span>
         <span class="n">backreferences_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">srcdir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;backreferences_dir&quot;</span><span class="p">])</span>
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">backreferences_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -1094,13 +1102,15 @@ document.write(`
         <span class="p">)</span>
         <span class="n">indexst</span> <span class="o">+=</span> <span class="n">subsections_toctree</span>
 
-    <span class="k">if</span> <span class="n">sg_root_index</span><span class="p">:</span>
-        <span class="c1"># Download examples</span>
-        <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;download_all_examples&quot;</span><span class="p">]:</span>
-            <span class="n">download_fhindex</span> <span class="o">=</span> <span class="n">generate_zipfiles</span><span class="p">(</span>
-                <span class="n">gallery_dir_abs_path</span><span class="p">,</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span> <span class="n">gallery_conf</span>
-            <span class="p">)</span>
+    <span class="c1"># Always generate download zipfiles, only add to index.rst if required</span>
+    <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;download_all_examples&quot;</span><span class="p">]:</span>
+        <span class="n">download_fhindex</span> <span class="o">=</span> <span class="n">generate_zipfiles</span><span class="p">(</span>
+            <span class="n">gallery_dir_abs_path</span><span class="p">,</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span> <span class="n">gallery_conf</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">sg_root_index</span><span class="p">:</span>
             <span class="n">indexst</span> <span class="o">+=</span> <span class="n">download_fhindex</span>
+
+    <span class="k">if</span> <span class="n">sg_root_index</span><span class="p">:</span>
         <span class="c1"># Signature</span>
         <span class="k">if</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;show_signature&quot;</span><span class="p">]:</span>
             <span class="n">indexst</span> <span class="o">+=</span> <span class="n">SPHX_GLR_SIG</span>
@@ -2261,7 +2271,7 @@ document.write(`
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.0.2.
     <br/>
   </p>
 </div>

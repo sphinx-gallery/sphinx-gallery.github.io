@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Configuration &#8212; Sphinx-Gallery 0.17.0-git documentation</title>
+    <title>Configuration &#8212; Sphinx-Gallery 0.17.1-git documentation</title>
   
   
   
@@ -44,7 +44,7 @@
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="_static/documentation_options.js?v=c780ab9b"></script>
+    <script src="_static/documentation_options.js?v=3af094dd"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/jupyterlite_sphinx.js?v=0b35d31f"></script>
@@ -532,13 +532,14 @@ file, inside a <code class="docutils literal notranslate"><span class="pre">sphi
 <li><p><code class="docutils literal notranslate"><span class="pre">abort_on_example_error</span></code> (<a class="reference internal" href="#abort-on-first"><span class="std std-ref">Abort build on first fail</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">expected_failing_examples</span></code> (<a class="reference internal" href="#dont-fail-exit"><span class="std std-ref">Don’t fail the build if specific examples error</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">only_warn_on_example_error</span></code> (<a class="reference internal" href="#warning-on-error"><span class="std std-ref">Never fail the build on error</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">reset_modules</span></code> and <code class="docutils literal notranslate"><span class="pre">reset_modules_order</span></code> (<a class="reference internal" href="#reset-modules"><span class="std std-ref">Resetting modules</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">parallel</span></code> (<a class="reference internal" href="#parallel"><span class="std std-ref">Build examples in parallel</span></a>)</p></li>
 </ul>
 <p><strong>Cross-referencing</strong></p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">reference_url</span></code>, <code class="docutils literal notranslate"><span class="pre">prefer_full_module</span></code> (<a class="reference internal" href="#link-to-documentation"><span class="std std-ref">Add intersphinx links to your examples</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">backreferences_dir</span></code>, <code class="docutils literal notranslate"><span class="pre">doc_module</span></code>, <code class="docutils literal notranslate"><span class="pre">exclude_implicit_doc</span></code>,
-and <code class="docutils literal notranslate"><span class="pre">inspect_global_variables</span></code> (<a class="reference internal" href="#references-to-examples"><span class="std std-ref">Add mini-galleries for API documentation</span></a>)</p></li>
+and <code class="docutils literal notranslate"><span class="pre">inspect_global_variables</span></code> (<a class="reference internal" href="#minigalleries-to-examples"><span class="std std-ref">Add mini-galleries</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">minigallery_sort_order</span></code> (<a class="reference internal" href="#minigallery-order"><span class="std std-ref">Sort mini-gallery thumbnails from files</span></a>)</p></li>
 </ul>
 <p><strong>Images and thumbnails</strong></p>
@@ -574,7 +575,6 @@ and <code class="docutils literal notranslate"><span class="pre">inspect_global_
 </ul>
 <p><strong>Miscellaneous</strong></p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">reset_modules</span></code> and <code class="docutils literal notranslate"><span class="pre">reset_modules_order</span></code> (<a class="reference internal" href="#reset-modules"><span class="std std-ref">Resetting modules</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">recommender</span></code> (<a class="reference internal" href="#recommend-examples"><span class="std std-ref">Enabling the example recommender system</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">log_level</span></code> (<a class="reference internal" href="#log-level"><span class="std std-ref">Setting log level</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">show_api_usage</span></code> and <code class="docutils literal notranslate"><span class="pre">api_usage_ignore</span></code> (<a class="reference internal" href="#show-api-usage"><span class="std std-ref">Showing API Usage</span></a>)</p></li>
@@ -1044,7 +1044,7 @@ dictionary within your Sphinx <code class="docutils literal notranslate"><span c
 </pre></div>
 </div>
 <p>To link to external modules, if you use the Sphinx extension
-<a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html#module-sphinx.ext.intersphinx" title="(in Sphinx v8.0.0)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sphinx.ext.intersphinx</span></code></a>, no additional changes are necessary,
+<a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html#module-sphinx.ext.intersphinx" title="(in Sphinx v8.1.0)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sphinx.ext.intersphinx</span></code></a>, no additional changes are necessary,
 as the <code class="docutils literal notranslate"><span class="pre">intersphinx</span></code> inventory will automatically be used.
 If you do not use <code class="docutils literal notranslate"><span class="pre">intersphinx</span></code>, then you should add entries that
 point to the directory containing <code class="docutils literal notranslate"><span class="pre">searchindex.js</span></code>, such as
@@ -1085,32 +1085,45 @@ name (e.g., module.meth). All others will use the (default) way of linking.</p>
 <span id="minigalleries-to-examples"></span><h2>Add mini-galleries<a class="headerlink" href="#add-mini-galleries" title="Link to this heading">#</a></h2>
 <p>Sphinx-Gallery provides the <a class="reference internal" href="gen_modules/sphinx_gallery.directives.html#sphinx_gallery.directives.MiniGallery" title="sphinx_gallery.directives.MiniGallery"><code class="xref py py-class docutils literal notranslate"><span class="pre">sphinx_gallery.directives.MiniGallery</span></code></a>
 directive so that you can easily add a reduced version of the Gallery to
-your Sphinx documentation <code class="docutils literal notranslate"><span class="pre">.rst</span></code> files. The mini-gallery directive therefore
+your Sphinx documentation <code class="docutils literal notranslate"><span class="pre">.rst</span></code> files. The minigallery directive therefore
 supports passing a list (space separated) of any of the following:</p>
 <ul class="simple">
-<li><p>full qualified name of object (see <a class="reference internal" href="#references-to-examples"><span class="std std-ref">Add mini-galleries for API documentation</span></a>)</p></li>
+<li><p>fully qualified name of object (see <a class="reference internal" href="#references-to-examples"><span class="std std-ref">Add mini-galleries for API documentation</span></a>) - this
+adds all examples where the object was used in the code or referenced in
+the example text</p></li>
 <li><p>pathlike strings to example Python files, including glob-style
 (see <a class="reference internal" href="#file-based-minigalleries"><span class="std std-ref">Create mini-galleries using file paths</span></a>)</p></li>
 </ul>
+<p>To use object names, you must enable backreference generation, see
+<a class="reference internal" href="#references-to-examples"><span class="std std-ref">Add mini-galleries for API documentation</span></a> for details.
+If backreference generation is not enabled, object entries to the
+<a class="reference internal" href="gen_modules/sphinx_gallery.directives.html#sphinx_gallery.directives.MiniGallery" title="sphinx_gallery.directives.MiniGallery"><code class="xref py py-class docutils literal notranslate"><span class="pre">MiniGallery</span></code></a> directive will be ignored
+and all entries will be treated as pathlike strings or glob-style pathlike strings.
+See <a class="reference internal" href="#file-based-minigalleries"><span class="std std-ref">Create mini-galleries using file paths</span></a> for details.</p>
 <section id="add-mini-galleries-for-api-documentation">
 <span id="references-to-examples"></span><h3>Add mini-galleries for API documentation<a class="headerlink" href="#add-mini-galleries-for-api-documentation" title="Link to this heading">#</a></h3>
-<p>When documenting a given function/method/attribute/object/class, Sphinx-Gallery
-enables you to link to any examples that either:</p>
+<p>Sphinx-Gallery can generate minigalleries for objects from specified modules,
+consisting of all examples that either:</p>
 <ol class="arabic simple">
 <li><p>Use the function/method/attribute/object or instantiate the class in the
-code (generates <em>implicit backreferences</em>).</p></li>
+code (called <em>implicit backreferences</em>) or</p></li>
 <li><p>Refer to that function/method/attribute/object/class using sphinx markup
 <code class="docutils literal notranslate"><span class="pre">:func:</span></code> / <code class="docutils literal notranslate"><span class="pre">:meth:</span></code> / <code class="docutils literal notranslate"><span class="pre">:attr:</span></code> / <code class="docutils literal notranslate"><span class="pre">:obj:</span></code> / <code class="docutils literal notranslate"><span class="pre">:class:</span></code> in a text
 block. You can omit this role markup if you have set the <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-default_role">default_role</a>
-in your <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> to any of these roles (generates <em>explicit
+in your <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> to any of these roles (called <em>explicit
 backreferences</em>).</p></li>
 </ol>
-<p>The former is useful for auto-documenting functions/methods/attributes/objects
-that are used and classes that are explicitly instantiated. The generated links
-are called implicit backreferences. The latter is useful for classes that are
-typically implicitly returned rather than explicitly instantiated (e.g.,
+<p>This allows you to pass a fully qualified name of an object (e.g., function, method,
+attribute, class) to the minigallery directive to add a minigallery of all examples
+relevant to that object. This can be useful in API documentation.</p>
+<p><strong>Implicit backreferences</strong> are useful for auto-documenting objects
+that are used and classes that are explicitly instantiated, in the code. Any examples
+where an object is used in the code are added <em>implicitly</em> as backreferences.
+<strong>Explicit backreferences</strong> are for objects that are <em>explicitly</em> referred to
+in an example’s text. They are useful for classes that are
+typically implicitly returned in the code rather than explicitly instantiated (e.g.,
 <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="(in Matplotlib v3.9.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a> which is most often instantiated only indirectly
-within function calls). Such links are called explicit backreferences.</p>
+within function calls)..</p>
 <p>For example, we can embed a small gallery of all examples that use or
 refer to <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.exp.html#numpy.exp" title="(in NumPy v2.0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.exp</span></code></a>, which looks like this:</p>
 </section>
@@ -1145,10 +1158,14 @@ your Sphinx-Gallery configuration <code class="docutils literal notranslate"><sp
 </div>
 <p>The path you specify in <code class="docutils literal notranslate"><span class="pre">backreferences_dir</span></code> (here we choose
 <code class="docutils literal notranslate"><span class="pre">gen_modules/backreferences</span></code>) will be populated with
-ReStructuredText files. Each .rst file will contain a reduced version of the
+ReStructuredText files, with names ending with ‘.examples’.
+Each .rst file will contain a reduced version of the
 gallery specific to every function/class that is used across all the examples
 and belonging to the modules listed in <code class="docutils literal notranslate"><span class="pre">doc_module</span></code>.
-<code class="docutils literal notranslate"><span class="pre">backreferences_dir</span></code> should be a string or <code class="docutils literal notranslate"><span class="pre">pathlib.Path</span></code> object that is
+Note that backreference files will be generated for all objects. Objects that
+are not used in any example will have an empty file to prevent inclusion
+errors during autodoc parsing.</p>
+<p><code class="docutils literal notranslate"><span class="pre">backreferences_dir</span></code> should be a string or <code class="docutils literal notranslate"><span class="pre">pathlib.Path</span></code> object that is
 <strong>relative</strong> to the <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file, or <code class="docutils literal notranslate"><span class="pre">None</span></code>. It is <code class="docutils literal notranslate"><span class="pre">None</span></code> by default.</p>
 <p>Sometimes, there are functions that are being used in practically every example
 for the given module, for instance the <code class="docutils literal notranslate"><span class="pre">pyplot.show</span></code> or <code class="docutils literal notranslate"><span class="pre">pyplot.subplots</span></code>
@@ -1521,7 +1538,7 @@ following css prevents any module except for matplotlib from being decorated:</p
 <p>There are likely elements other than <code class="docutils literal notranslate"><span class="pre">text-decoration</span></code> that might be worth
 setting, as well.</p>
 <p>You can add these CSS classes by including your own CSS file via the Sphinx
-configuration <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-html_static_path" title="(in Sphinx v8.0.0)"><code class="docutils literal notranslate"><span class="pre">html_static_path</span></code></a>, which will override the
+configuration <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-html_static_path" title="(in Sphinx v8.1.0)"><code class="docutils literal notranslate"><span class="pre">html_static_path</span></code></a>, which will override the
 default CSS classes in <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/tree/master/sphinx_gallery/_static">Sphinx-Gallery CSS files</a>.</p>
 </section>
 </section>
@@ -2525,6 +2542,19 @@ flag is passed to <code class="docutils literal notranslate"><span class="pre">s
 <p>If an <code class="docutils literal notranslate"><span class="pre">int</span></code>, then that number of jobs will be passed to <a class="reference external" href="https://joblib.readthedocs.io/en/latest/generated/joblib.Parallel.html#joblib.Parallel" title="(in joblib v1.5.dev0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">joblib.Parallel</span></code></a>.
 If <code class="docutils literal notranslate"><span class="pre">True</span></code>, then the same number of jobs will be used as the <code class="docutils literal notranslate"><span class="pre">-j</span></code> flag for
 Sphinx.</p>
+<p>Warnings emitted by <a class="reference external" href="https://joblib.readthedocs.io/en/latest/index.html#module-joblib" title="(in joblib v1.5.dev0)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">joblib</span></code></a> during documentation building (e.g., the
+<code class="docutils literal notranslate"><span class="pre">UserWarning</span></code> about a
+<a class="reference external" href="https://github.com/joblib/joblib/issues/883">worker restarting</a>) are emitted
+during gallery generation at the same time as warnings from example
+code execution. These can be filtered out with
+<code class="docutils literal notranslate"><span class="pre">warnings.filterwarnings</span></code> (see <a class="reference internal" href="#removing-warnings"><span class="std std-ref">Removing warnings</span></a>). This is particularly
+important to do if you have tweaked warning handling in your documentation build
+to treat warnings as errors, e.g., with a line like
+<code class="docutils literal notranslate"><span class="pre">warnings.filterwarnings(&quot;error)</span></code> which converts all warnings into errors. In
+this case, if joblib emits a warning during build of an example, this example will fail
+unexpectedly unless they are filtered out. Note that this differs from the warnings
+affected by the <code class="docutils literal notranslate"><span class="pre">-</span> <span class="pre">W</span></code> / <code class="docutils literal notranslate"><span class="pre">--fail-on-warning</span></code> <code class="docutils literal notranslate"><span class="pre">sphinx-build</span></code> flag, which converts
+Sphinx warnings during documentation building into errors.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>Some packages might not play nicely with parallel processing, so this feature
@@ -2600,7 +2630,7 @@ configuration, e.g.:</p>
 <p>The gallery uses various CSS classes to display these thumbnails, which
 default to maximum 160x112px. To change this you can modify the default CSS by
 including your own CSS file via the Sphinx configuration
-<a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-html_static_path" title="(in Sphinx v8.0.0)"><code class="docutils literal notranslate"><span class="pre">html_static_path</span></code></a> (which will override default CSS classes
+<a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-html_static_path" title="(in Sphinx v8.1.0)"><code class="docutils literal notranslate"><span class="pre">html_static_path</span></code></a> (which will override default CSS classes
 in <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/tree/master/sphinx_gallery/_static">Sphinx-Gallery CSS files</a>).
 The following CSS would display the images at 250x250px instead of the default
 160x112px:</p>
@@ -3066,7 +3096,7 @@ desirable to document if they are used in examples.</p>
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.0.2.
     <br/>
   </p>
 </div>

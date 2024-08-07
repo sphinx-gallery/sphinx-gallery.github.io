@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>sphinx_gallery.docs_resolv &#8212; Sphinx-Gallery 0.17.0-git documentation</title>
+    <title>sphinx_gallery.docs_resolv &#8212; Sphinx-Gallery 0.17.1-git documentation</title>
   
   
   
@@ -43,7 +43,7 @@
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../_static/documentation_options.js?v=c780ab9b"></script>
+    <script src="../../_static/documentation_options.js?v=3af094dd"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/jupyterlite_sphinx.js?v=0b35d31f"></script>
@@ -687,14 +687,12 @@ document.write(`
 
     <span class="k">def</span> <span class="nf">_get_link_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cobj</span><span class="p">,</span> <span class="n">use_full_module</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a valid link and type_, False if not found.&quot;&quot;&quot;</span>
-        <span class="n">module_type</span> <span class="o">=</span> <span class="s2">&quot;module_short&quot;</span>
-        <span class="k">if</span> <span class="n">use_full_module</span><span class="p">:</span>
-            <span class="n">module_type</span> <span class="o">=</span> <span class="s2">&quot;module&quot;</span>
+        <span class="n">module_type</span> <span class="o">=</span> <span class="s2">&quot;module&quot;</span> <span class="k">if</span> <span class="n">use_full_module</span> <span class="k">else</span> <span class="s2">&quot;module_short&quot;</span>
         <span class="n">first</span><span class="p">,</span> <span class="n">second</span> <span class="o">=</span> <span class="n">cobj</span><span class="p">[</span><span class="n">module_type</span><span class="p">],</span> <span class="n">cobj</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
         <span class="n">match</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_index_match</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s2">&quot;.&quot;</span> <span class="ow">in</span> <span class="n">second</span><span class="p">:</span>  <span class="c1"># possible class attribute</span>
             <span class="n">first</span><span class="p">,</span> <span class="n">second</span> <span class="o">=</span> <span class="n">second</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="n">first</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">cobj</span><span class="p">[</span><span class="s2">&quot;module_short&quot;</span><span class="p">],</span> <span class="n">first</span><span class="p">])</span>
+            <span class="n">first</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">cobj</span><span class="p">[</span><span class="n">module_type</span><span class="p">],</span> <span class="n">first</span><span class="p">])</span>
             <span class="n">match</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_index_match</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">link</span> <span class="o">=</span> <span class="n">type_</span> <span class="o">=</span> <span class="kc">None</span>
@@ -1063,7 +1061,7 @@ document.write(`
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.0.2.
     <br/>
   </p>
 </div>
