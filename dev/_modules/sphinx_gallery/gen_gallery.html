@@ -594,6 +594,7 @@ document.write(`
     <span class="s2">&quot;expected_failing_examples&quot;</span><span class="p">:</span> <span class="nb">set</span><span class="p">(),</span>
     <span class="s2">&quot;thumbnail_size&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="mi">280</span><span class="p">),</span>  <span class="c1"># Default CSS does 0.4 scaling (160, 112)</span>
     <span class="s2">&quot;min_reported_time&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;write_computation_times&quot;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;SOURCE_DATE_EPOCH&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">,</span>
     <span class="s2">&quot;binder&quot;</span><span class="p">:</span> <span class="p">{},</span>
     <span class="s2">&quot;jupyterlite&quot;</span><span class="p">:</span> <span class="p">{},</span>
     <span class="s2">&quot;promote_jupyter_magic&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
@@ -1425,6 +1426,8 @@ document.write(`
 <span class="sd">    costs: List[Dict]</span>
 <span class="sd">        List of dicts of computation costs and paths, see gen_rst.py for details.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;write_computation_times&quot;</span><span class="p">]:</span>
+        <span class="k">return</span>
     <span class="n">total_time</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">cost</span><span class="p">[</span><span class="s2">&quot;t&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">cost</span> <span class="ow">in</span> <span class="n">costs</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">target_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># all galleries together</span>
         <span class="n">out_dir</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">]</span>
