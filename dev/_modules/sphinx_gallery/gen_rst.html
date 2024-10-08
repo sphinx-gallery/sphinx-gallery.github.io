@@ -1503,12 +1503,21 @@ document.write(`
     <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span>
 
     <span class="c1"># Save figures unless there is a `sphinx_gallery_defer_figures` flag</span>
-    <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
+    <span class="n">defer_figs_match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
         <span class="sa">r</span><span class="s2">&quot;^[\ \t]*#\s*sphinx_gallery_defer_figures[\ \t]*\n?&quot;</span><span class="p">,</span>
         <span class="n">block</span><span class="o">.</span><span class="n">content</span><span class="p">,</span>
         <span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">need_save_figures</span> <span class="o">=</span> <span class="n">match</span> <span class="ow">is</span> <span class="kc">None</span>
+    <span class="n">need_save_figures</span> <span class="o">=</span> <span class="n">defer_figs_match</span> <span class="ow">is</span> <span class="kc">None</span>
+
+    <span class="c1"># Add `sphinx_gallery_multi_image_block` setting to block variables</span>
+    <span class="c1"># (extract config rather than just regex search since the option&#39;s value is needed)</span>
+    <span class="n">script_vars</span><span class="p">[</span><span class="s2">&quot;multi_image&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">py_source_parser</span><span class="o">.</span><span class="n">extract_file_config</span><span class="p">(</span>
+        <span class="n">block</span><span class="o">.</span><span class="n">content</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;multi_image_block&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Add file_conf to script_vars to be read by image scrapers</span>
+    <span class="n">script_vars</span><span class="p">[</span><span class="s2">&quot;file_conf&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">file_conf</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="c1"># The &quot;compile&quot; step itself can fail on a SyntaxError, so just prepend</span>
