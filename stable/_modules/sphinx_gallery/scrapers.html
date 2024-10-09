@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>sphinx_gallery.scrapers &#8212; Sphinx-Gallery 0.17.1-git documentation</title>
+    <title>sphinx_gallery.scrapers &#8212; Sphinx-Gallery 0.18.0-git documentation</title>
   
   
   
@@ -43,7 +43,7 @@
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../../_static/documentation_options.js?v=3af094dd"></script>
+    <script src="../../_static/documentation_options.js?v=3472c781"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/jupyterlite_sphinx.js?v=0b35d31f"></script>
@@ -686,15 +686,25 @@ document.write(`
             <span class="p">)</span>
         <span class="p">)</span>
 
+    <span class="c1"># Determine whether single-img should be converted to multi-img</span>
+    <span class="n">convert_to_multi_image</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># default is to convert</span>
+    <span class="k">if</span> <span class="n">block_vars</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;multi_image&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># block setting takes precedence</span>
+        <span class="n">convert_to_multi_image</span> <span class="o">=</span> <span class="n">block_vars</span><span class="p">[</span><span class="s2">&quot;multi_image&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;single&quot;</span>
+    <span class="k">elif</span> <span class="n">block_vars</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;file_conf&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># then file setting</span>
+        <span class="n">convert_to_multi_image</span> <span class="o">=</span> <span class="n">block_vars</span><span class="p">[</span><span class="s2">&quot;file_conf&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;multi_image&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;single&quot;</span>
+
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="s2">&quot;all&quot;</span><span class="p">)</span>
     <span class="n">rst</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">image_rsts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">rst</span> <span class="o">=</span> <span class="n">image_rsts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">image_rsts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">image_rsts</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;:class: sphx-glr-single-img&quot;</span><span class="p">,</span> <span class="s2">&quot;:class: sphx-glr-multi-img&quot;</span><span class="p">,</span> <span class="n">image</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">image</span> <span class="ow">in</span> <span class="n">image_rsts</span>
-        <span class="p">]</span>
+        <span class="k">if</span> <span class="n">convert_to_multi_image</span><span class="p">:</span>
+            <span class="n">image_rsts</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span>
+                    <span class="sa">r</span><span class="s2">&quot;:class: sphx-glr-single-img&quot;</span><span class="p">,</span> <span class="s2">&quot;:class: sphx-glr-multi-img&quot;</span><span class="p">,</span> <span class="n">image</span>
+                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">image</span> <span class="ow">in</span> <span class="n">image_rsts</span>
+            <span class="p">]</span>
         <span class="n">image_rsts</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">HLIST_IMAGE_MATPLOTLIB</span> <span class="o">+</span> <span class="n">indent</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="mi">6</span><span class="p">)</span> <span class="k">for</span> <span class="n">image</span> <span class="ow">in</span> <span class="n">image_rsts</span>
         <span class="p">]</span>
