@@ -1356,7 +1356,7 @@
 
 
 <span class="k">def</span> <span class="nf">_get_code_output</span><span class="p">(</span>
-    <span class="n">is_last_expr</span><span class="p">,</span> <span class="n">example_globals</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">logging_tee</span><span class="p">,</span> <span class="n">images_rst</span><span class="p">,</span> <span class="n">file_conf</span>
+    <span class="n">is_last_expr</span><span class="p">,</span> <span class="n">example_globals</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">logging_tee</span><span class="p">,</span> <span class="n">images_rst</span><span class="p">,</span> <span class="n">capture_repr</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Obtain standard output and html output in reST.</span>
 
@@ -1389,7 +1389,6 @@
         <span class="n">ignore_repr</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;ignore_repr_types&quot;</span><span class="p">]:</span>
             <span class="n">ignore_repr</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;ignore_repr_types&quot;</span><span class="p">],</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">___</span><span class="p">)))</span>
-        <span class="n">capture_repr</span> <span class="o">=</span> <span class="n">file_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;capture_repr&quot;</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;capture_repr&quot;</span><span class="p">])</span>
         <span class="k">if</span> <span class="n">capture_repr</span> <span class="o">!=</span> <span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">ignore_repr</span><span class="p">:</span>
             <span class="n">last_repr</span><span class="p">,</span> <span class="n">repr_meth</span> <span class="o">=</span> <span class="n">_get_last_repr</span><span class="p">(</span><span class="n">capture_repr</span><span class="p">,</span> <span class="n">___</span><span class="p">)</span>
 
@@ -1477,11 +1476,20 @@
     <span class="p">)</span>
     <span class="n">need_save_figures</span> <span class="o">=</span> <span class="n">defer_figs_match</span> <span class="ow">is</span> <span class="kc">None</span>
 
+    <span class="n">block_conf</span> <span class="o">=</span> <span class="n">py_source_parser</span><span class="o">.</span><span class="n">extract_file_config</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+
     <span class="c1"># Add `sphinx_gallery_multi_image_block` setting to block variables</span>
     <span class="c1"># (extract config rather than just regex search since the option&#39;s value is needed)</span>
-    <span class="n">script_vars</span><span class="p">[</span><span class="s2">&quot;multi_image&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">py_source_parser</span><span class="o">.</span><span class="n">extract_file_config</span><span class="p">(</span>
-        <span class="n">block</span><span class="o">.</span><span class="n">content</span>
-    <span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;multi_image_block&quot;</span><span class="p">)</span>
+    <span class="n">script_vars</span><span class="p">[</span><span class="s2">&quot;multi_image&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">block_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;multi_image_block&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Determine the block&#39;s `capture_repr` value by prioritising the block-level</span>
+    <span class="c1"># `sphinx_gallery_capture_repr_block` setting, then the file-level</span>
+    <span class="c1"># `sphinx_gallery_capture_repr` setting, and finally the</span>
+    <span class="c1"># global `capture_repr` gallery setting.</span>
+    <span class="n">capture_repr</span> <span class="o">=</span> <span class="n">block_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+        <span class="s2">&quot;capture_repr_block&quot;</span><span class="p">,</span>
+        <span class="n">file_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;capture_repr&quot;</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;capture_repr&quot;</span><span class="p">]),</span>
+    <span class="p">)</span>
 
     <span class="c1"># Add file_conf to script_vars to be read by image scrapers</span>
     <span class="n">script_vars</span><span class="p">[</span><span class="s2">&quot;file_conf&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">file_conf</span>
@@ -1529,7 +1537,7 @@
             <span class="n">gallery_conf</span><span class="p">,</span>
             <span class="n">logging_tee</span><span class="p">,</span>
             <span class="n">images_rst</span><span class="p">,</span>
-            <span class="n">file_conf</span><span class="p">,</span>
+            <span class="n">capture_repr</span><span class="p">,</span>
         <span class="p">)</span>
     <span class="k">finally</span><span class="p">:</span>
         <span class="n">_reset_cwd_syspath</span><span class="p">(</span><span class="n">cwd</span><span class="p">,</span> <span class="n">sys_path</span><span class="p">)</span>
