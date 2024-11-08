@@ -2110,7 +2110,16 @@
 
 
 <span class="k">def</span> <span class="nf">_get_callables</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">src_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get callables for the given conf key, returning tuple of callable(s).&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get callables for the given conf key, returning tuple of callable(s).</span>
+
+<span class="sd">    If value is a string, import, with the following exceptions:</span>
+
+<span class="sd">    * `within_subsection_order` - add full path if value is a built-in aliases,</span>
+<span class="sd">      instantiate if value is a class</span>
+<span class="sd">    * `image_scrapers` - get value from `_scraper_dict` or import module and</span>
+<span class="sd">      get `_get_sg_image_scraper` attribute</span>
+<span class="sd">    * `reset_modules` - get value from `_reset_dict`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">builtin_aliases</span> <span class="o">=</span> <span class="p">(</span>
         <span class="s2">&quot;ExampleTitleSortKey&quot;</span><span class="p">,</span>
         <span class="s2">&quot;FileNameSortKey&quot;</span><span class="p">,</span>
@@ -2125,6 +2134,7 @@
     <span class="p">)</span>
     <span class="c1"># the following should be the case (internal use only):</span>
     <span class="k">assert</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;image_scrapers&quot;</span><span class="p">,</span> <span class="s2">&quot;reset_modules&quot;</span><span class="p">,</span> <span class="s2">&quot;jupyterlite&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">singletons</span><span class="p">,</span> <span class="n">key</span>
+    <span class="c1"># Get correct config value and ensure it&#39;s a list</span>
     <span class="n">which</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;jupyterlite&quot;</span><span class="p">:</span>
         <span class="n">which</span> <span class="o">=</span> <span class="p">[</span><span class="n">which</span><span class="p">[</span><span class="s2">&quot;notebook_modification_function&quot;</span><span class="p">]]</span>
@@ -2133,13 +2143,16 @@
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">which</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
         <span class="n">which</span> <span class="o">=</span> <span class="p">[</span><span class="n">which</span><span class="p">]</span>
     <span class="n">which</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">which</span><span class="p">)</span>
+
     <span class="k">for</span> <span class="n">wi</span><span class="p">,</span> <span class="n">what</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">which</span><span class="p">):</span>
+        <span class="c1"># Get readable string, for error message</span>
         <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;jupyterlite&quot;</span><span class="p">:</span>
             <span class="n">readable</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">[&#39;notebook_modification_function&#39;]&quot;</span>
         <span class="k">elif</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">singletons</span><span class="p">:</span>
             <span class="n">readable</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="nb">repr</span><span class="p">(</span><span class="n">what</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">readable</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">[</span><span class="si">{</span><span class="n">wi</span><span class="si">}</span><span class="s2">]=</span><span class="si">{</span><span class="nb">repr</span><span class="p">(</span><span class="n">what</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="c1"># Import string FQNs or get value from dict</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">what</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="c1"># use fully qualified name to resolve builtin callable classes</span>
             <span class="c1"># (otherwise not serializable)</span>

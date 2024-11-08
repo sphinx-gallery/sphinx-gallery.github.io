@@ -662,6 +662,54 @@ configuration values via name strings. When using name strings, the configuratio
 object can just be a function.</p>
 </div>
 </section>
+<section id="custom-sort-keys">
+<span id="own-sort-keys"></span><h2>Custom sort keys<a class="headerlink" href="#custom-sort-keys" title="Link to this heading">#</a></h2>
+<p>You can create a custom sort key callable for the following configurations:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#sub-gallery-order"><span class="std std-ref">subsection_order</span></a> - to reorder subsections
+(sub-galleries) (passed subsection folder paths relative to the <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file)</p></li>
+<li><p><a class="reference internal" href="#within-gallery-order"><span class="std std-ref">within_subsection_order</span></a> - to reorder gallery items
+within (sub)sections (passed filenames)</p></li>
+<li><p><a class="reference internal" href="#minigallery-order"><span class="std std-ref">minigallery_sort_order</span></a> - to reorder minigallery items
+(passed full paths to example files and
+<a class="reference internal" href="#minigalleries-to-examples"><span class="std std-ref">backreference files</span></a>)</p></li>
+</ul>
+<p>The best way to do this is to define a sort function, that takes the passed path
+string. For example, this function puts all filenames starting with <code class="docutils literal notranslate"><span class="pre">plot_</span></code> before
+all other filenames:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">plotted_sorter</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="ow">not</span> <span class="n">fname</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;plot_&quot;</span><span class="p">),</span> <span class="n">fname</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then make sure it is importable (see <a class="reference internal" href="#importing-callables"><span class="std std-ref">Importing callables</span></a>) and set your
+configuration:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+<span class="c1">#...,</span>
+<span class="s2">&quot;minigallery_sort_order&quot;</span><span class="p">:</span> <span class="s2">&quot;sphinxext.plotted_sorter&quot;</span><span class="p">,</span>
+<span class="c1">#...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>For backwards compatibility you can also set your configuration to be a callable
+object but you will have to ensure that the <code class="docutils literal notranslate"><span class="pre">__repr__</span></code> is stable across runs.
+See <a class="reference internal" href="#stable-repr"><span class="std std-ref">Ensuring a stable __repr__</span></a> for details.</p>
+<p>If you do this, we recommend that you use the
+<a class="reference internal" href="gen_modules/sphinx_gallery.sorting.html#sphinx_gallery.sorting.FunctionSortKey" title="sphinx_gallery.sorting.FunctionSortKey"><code class="xref py py-class docutils literal notranslate"><span class="pre">sphinx_gallery.sorting.FunctionSortKey</span></code></a>
+because it will ensure that the <code class="docutils literal notranslate"><span class="pre">__repr__</span></code> is stable across runs.</p>
+<p><a class="reference internal" href="gen_modules/sphinx_gallery.sorting.html#sphinx_gallery.sorting.FunctionSortKey" title="sphinx_gallery.sorting.FunctionSortKey"><code class="xref py py-class docutils literal notranslate"><span class="pre">sphinx_gallery.sorting.FunctionSortKey</span></code></a> takes a function on init.
+You can create your sort key callable by instantiating a
+<a class="reference internal" href="gen_modules/sphinx_gallery.sorting.html#sphinx_gallery.sorting.FunctionSortKey" title="sphinx_gallery.sorting.FunctionSortKey"><code class="xref py py-class docutils literal notranslate"><span class="pre">FunctionSortKey</span></code></a> instance with your sort key
+function. For example, the following <code class="docutils literal notranslate"><span class="pre">minigallery_sort_order</span></code> configuration
+(which sorts on paths) will sort using the first 10 letters of each filename:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+<span class="c1">#...,</span>
+<span class="s2">&quot;minigallery_sort_order&quot;</span><span class="p">:</span> <span class="n">FunctionSortKey</span><span class="p">(</span>
+    <span class="k">lambda</span> <span class="n">filename</span><span class="p">:</span> <span class="n">filename</span><span class="p">[:</span><span class="mi">10</span><span class="p">]),</span>
+<span class="c1">#...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
 <section id="ensuring-a-stable-repr">
 <span id="stable-repr"></span><h2>Ensuring a stable <code class="docutils literal notranslate"><span class="pre">__repr__</span></code><a class="headerlink" href="#ensuring-a-stable-repr" title="Link to this heading">#</a></h2>
 <p>For backwards compatibility Sphinx-Gallery allows certain configuration values to be
@@ -685,13 +733,14 @@ is changed.</p>
 </section>
 <section id="manage-multiple-galleries">
 <span id="multiple-galleries-config"></span><h2>Manage multiple galleries<a class="headerlink" href="#manage-multiple-galleries" title="Link to this heading">#</a></h2>
-<p>Sphinx-Gallery only supports one level of subfolder nesting in its gallery directories.
-For example our <a class="reference internal" href="auto_examples/index.html#examples-index"><span class="std std-ref">Basics Gallery with Matplotlib</span></a>, has the parent gallery in <cite>examples/</cite> and
-the subsection (aka sub-gallery) in <cite>examples/no_output/</cite>. Further sub-folders are
-not supported. This might be a limitation for you. Or you might want to have separate
-galleries for different purposes; an examples gallery and a tutorials gallery.
-To do this set the Sphinx-Gallery configuration dictionary keys <cite>examples_dirs</cite> and
-<cite>gallery_dirs</cite> in your Sphinx <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file to be a list of directories:</p>
+<p>To specify the locations of your input and output gallery folder(s), use the following
+Sphinx-Gallery configuration dictionary keys:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">examples_dirs</span></code> (folder where source example files are)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">gallery_dirs</span></code> (folder where output files should be placed)</p></li>
+</ul>
+<p>Both configurations take list of directory paths, relative to the <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file.
+They can be set in your Sphinx <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
     <span class="s1">&#39;examples_dirs&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;../examples&#39;</span><span class="p">,</span> <span class="s1">&#39;../tutorials&#39;</span><span class="p">],</span>
@@ -699,7 +748,15 @@ To do this set the Sphinx-Gallery configuration dictionary keys <cite>examples_d
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Keep in mind that both lists have to be of the same length.</p>
+<p>Keep in mind that both lists should be of the same length.</p>
+<p>Each folder in <code class="docutils literal notranslate"><span class="pre">examples_dirs</span></code> will be built into an examples gallery. Subfolders
+within each <code class="docutils literal notranslate"><span class="pre">examples_dirs</span></code> will be built into gallery subsections (sub-galleries)
+of the parent gallery.</p>
+<p>Sphinx-Gallery only supports one level of subfolder nesting in its gallery directories.
+For example our <a class="reference internal" href="auto_examples/index.html#examples-index"><span class="std std-ref">Basics Gallery with Matplotlib</span></a>, has the parent gallery in <cite>examples/</cite> and
+the subsection (aka sub-gallery) in <cite>examples/no_output/</cite>. Further sub-folders are
+not supported. This might be a limitation for you, or you might want to have separate
+galleries for different purposes, e.g., an examples gallery and a tutorials gallery.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>If your examples take a long time to run, consider looking at the
@@ -888,7 +945,7 @@ See <a class="reference internal" href="#stable-repr"><span class="std std-ref">
 <p>Gallery subsections (aka sub-galleries) are sorted by default alphabetically by
 their folder name, and as such you can always organize them by changing your folder
 names. Alternatively, you can specify the order via the config value
-‘subsection_order’ by providing a list of the subsections as paths
+<code class="docutils literal notranslate"><span class="pre">subsection_order</span></code> by providing a list of the subsections as paths
 relative to <code class="file docutils literal notranslate"><span class="pre">conf.py</span></code> in the desired order:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
@@ -903,9 +960,9 @@ relative to <code class="file docutils literal notranslate"><span class="pre">co
 with subsections. You must list all subsections. If that’s too cumbersome,
 one entry can be “*”, which will collect all not-listed subsections, e.g.
 <code class="docutils literal notranslate"><span class="pre">[&quot;first_subsection&quot;,</span> <span class="pre">&quot;*&quot;,</span> <span class="pre">&quot;last_subsection&quot;]</span></code>.</p>
-<p>Even more generally, you can set ‘subsection_order’ to any callable, which
-will be used as sorting key function on the subsection paths. See
-<a class="reference internal" href="#own-sort-keys"><span class="std std-ref">Custom sort keys</span></a> for more information.</p>
+<p>Even more generally, you can set <code class="docutils literal notranslate"><span class="pre">subsection_order</span></code> to any callable, which
+will be used as the sorting key function on the subsection folder paths (relative
+to the <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file). See <a class="reference internal" href="#own-sort-keys"><span class="std std-ref">Custom sort keys</span></a> for more information.</p>
 <p>In fact, the
 above list is a convenience shortcut and it is internally wrapped in
 <a class="reference internal" href="gen_modules/sphinx_gallery.sorting.html#sphinx_gallery.sorting.ExplicitOrder" title="sphinx_gallery.sorting.ExplicitOrder"><code class="xref py py-class docutils literal notranslate"><span class="pre">sphinx_gallery.sorting.ExplicitOrder</span></code></a> as a sortkey.</p>
@@ -950,53 +1007,18 @@ the number of code lines.</p></li>
 <li><p><a class="reference internal" href="gen_modules/sphinx_gallery.sorting.html#sphinx_gallery.sorting.FileNameSortKey" title="sphinx_gallery.sorting.FileNameSortKey"><code class="xref py py-class docutils literal notranslate"><span class="pre">sphinx_gallery.sorting.FileNameSortKey</span></code></a> to sort by file name.</p></li>
 <li><p><a class="reference internal" href="gen_modules/sphinx_gallery.sorting.html#sphinx_gallery.sorting.ExampleTitleSortKey" title="sphinx_gallery.sorting.ExampleTitleSortKey"><code class="xref py py-class docutils literal notranslate"><span class="pre">sphinx_gallery.sorting.ExampleTitleSortKey</span></code></a> to sort by example title.</p></li>
 </ul>
+<p>These built in Sphinx-Gallery classes can be specified using just the classname as
+a string, e.g., <code class="docutils literal notranslate"><span class="pre">&quot;FileSizeSortKey&quot;</span></code>. It is functionally equivalent to providing the
+fully qualified name string <code class="docutils literal notranslate"><span class="pre">&quot;sphinx_gallery.sorting.NumberOfCodeLinesSortKey&quot;</span></code>
+or importing and passing the class. See <a class="reference internal" href="#importing-callables"><span class="std std-ref">Importing callables</span></a> for details.</p>
+<p>You can also pass your own custom sort key callable, which will be used to sort
+the full paths to example files in the (sub)section. See <a class="reference internal" href="#own-sort-keys"><span class="std std-ref">Custom sort keys</span></a> for
+more information.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>These built in Sphinx-Gallery classes can be
-specified using just the stem, e.g., <code class="docutils literal notranslate"><span class="pre">&quot;NumberOfLinesSortKey&quot;</span></code>. It is
-functionally equivalent to providing the fully qualified name
-<code class="docutils literal notranslate"><span class="pre">&quot;sphinx_gallery.sorting.NumberOfCodeLinesSortKey&quot;</span></code>. See
-<a class="reference internal" href="#importing-callables"><span class="std std-ref">Importing callables</span></a> for details.</p>
-</div>
-</section>
-<section id="custom-sort-keys">
-<span id="own-sort-keys"></span><h2>Custom sort keys<a class="headerlink" href="#custom-sort-keys" title="Link to this heading">#</a></h2>
-<p>You can create a custom sort key callable for the following configurations:</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="#sub-gallery-order"><span class="std std-ref">subsection_order</span></a></p></li>
-<li><p><a class="reference internal" href="#minigallery-order"><span class="std std-ref">minigallery_sort_order</span></a></p></li>
-</ul>
-<p>The best way to do this is to define a sort function, that takes the passed path
-string:</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">plotted_sorter</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
-    <span class="k">return</span> <span class="ow">not</span> <span class="n">fname</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;plot_&quot;</span><span class="p">),</span> <span class="n">fname</span>
-</pre></div>
-</div>
-<p>ensure it is importable (see <a class="reference internal" href="#importing-callables"><span class="std std-ref">Importing callables</span></a>) and set your configuration:</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
-<span class="c1">#...,</span>
-<span class="s2">&quot;minigallery_sort_order&quot;</span><span class="p">:</span> <span class="s2">&quot;sphinxext.plotted_sorter&quot;</span><span class="p">,</span>
-<span class="c1">#...</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<p>For backwards compatibility you can also set your configuration to be a callable
-object but you will have to ensure that the <code class="docutils literal notranslate"><span class="pre">__repr__</span></code> is stable across runs.
-See <a class="reference internal" href="#stable-repr"><span class="std std-ref">Ensuring a stable __repr__</span></a> for details.</p>
-<p>We recommend that you use the <a class="reference internal" href="gen_modules/sphinx_gallery.sorting.html#sphinx_gallery.sorting.FunctionSortKey" title="sphinx_gallery.sorting.FunctionSortKey"><code class="xref py py-class docutils literal notranslate"><span class="pre">sphinx_gallery.sorting.FunctionSortKey</span></code></a>
-because it will ensure that the <code class="docutils literal notranslate"><span class="pre">__repr__</span></code> is stable across runs.</p>
-<p><a class="reference internal" href="gen_modules/sphinx_gallery.sorting.html#sphinx_gallery.sorting.FunctionSortKey" title="sphinx_gallery.sorting.FunctionSortKey"><code class="xref py py-class docutils literal notranslate"><span class="pre">sphinx_gallery.sorting.FunctionSortKey</span></code></a> takes a function on init.
-You can create your sort key callable by instantiating a
-<a class="reference internal" href="gen_modules/sphinx_gallery.sorting.html#sphinx_gallery.sorting.FunctionSortKey" title="sphinx_gallery.sorting.FunctionSortKey"><code class="xref py py-class docutils literal notranslate"><span class="pre">FunctionSortKey</span></code></a> instance with your sort key
-function. For example, the following <code class="docutils literal notranslate"><span class="pre">minigallery_sort_order</span></code> configuration
-(which sorts on paths) will sort using the first 10 letters of each filename:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
-<span class="c1">#...,</span>
-<span class="s2">&quot;minigallery_sort_order&quot;</span><span class="p">:</span> <span class="n">FunctionSortKey</span><span class="p">(</span>
-    <span class="k">lambda</span> <span class="n">filename</span><span class="p">:</span> <span class="n">filename</span><span class="p">[:</span><span class="mi">10</span><span class="p">]),</span>
-<span class="c1">#...</span>
-<span class="p">}</span>
-</pre></div>
+<p>For backwards compatibility, <code class="docutils literal notranslate"><span class="pre">within_subsection_order</span></code> can also be a
+class, which will be instantiated with the full path to the output directory;
+<a class="reference internal" href="#multiple-galleries-config"><span class="std std-ref">gallery_dir</span></a>.</p>
 </div>
 </section>
 <section id="add-intersphinx-links-to-your-examples">
@@ -1239,9 +1261,9 @@ thumbnails corresponding to the input file strings or object names.
 You can specify minigallery thumbnails order via the <code class="docutils literal notranslate"><span class="pre">minigallery_sort_order</span></code>
 configuration, which gets passed to the <a class="reference external" href="https://docs.python.org/3/library/functions.html#sorted" title="(in Python v3.13)"><code class="xref py py-func docutils literal notranslate"><span class="pre">sorted()</span></code></a> <code class="docutils literal notranslate"><span class="pre">key</span></code> parameter when
 sorting all minigalleries.
-Sorting uses the paths to the gallery examples (e.g., <code class="docutils literal notranslate"><span class="pre">path/to/plot_example.py</span></code>)
-and backreferences (e.g., <code class="docutils literal notranslate"><span class="pre">path/to/numpy.exp.examples</span></code>) corresponding to the
-inputs.</p>
+Sorting is done on the full paths to the gallery examples (e.g.,
+<code class="docutils literal notranslate"><span class="pre">path/to/plot_example.py</span></code>) and backreference files (e.g.,
+<code class="docutils literal notranslate"><span class="pre">path/to/numpy.exp.examples</span></code>), corresponding to the inputs.</p>
 <p>See <a class="reference internal" href="#own-sort-keys"><span class="std std-ref">Custom sort keys</span></a> for details on writing a custom sort key.</p>
 <p>As an example, to put backreference thumbnails at the end, we could define the function
 below in <code class="docutils literal notranslate"><span class="pre">doc/sphinxext.py</span></code> (note that backreference filenames do not start with
@@ -3019,6 +3041,7 @@ desirable to document if they are used in examples.</p>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#removing-warnings">Removing warnings</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#importing-callables">Importing callables</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#custom-sort-keys">Custom sort keys</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ensuring-a-stable-repr">Ensuring a stable <code class="docutils literal notranslate"><span class="pre">__repr__</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#manage-multiple-galleries">Manage multiple galleries</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parsing-and-executing-examples-via-matching-patterns">Parsing and executing examples via matching patterns</a></li>
@@ -3026,7 +3049,6 @@ desirable to document if they are used in examples.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#passing-command-line-arguments-to-example-scripts">Passing command line arguments to example scripts</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sorting-gallery-subsections">Sorting gallery subsections</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sorting-gallery-examples">Sorting gallery examples</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#custom-sort-keys">Custom sort keys</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#add-intersphinx-links-to-your-examples">Add intersphinx links to your examples</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#resolving-module-paths">Resolving module paths</a></li>
 </ul>
