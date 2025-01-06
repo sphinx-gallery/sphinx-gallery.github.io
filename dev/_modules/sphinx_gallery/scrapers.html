@@ -29,10 +29,10 @@
   <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
-    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=13b285a0" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=e3ca86de" />
     <link rel="stylesheet" type="text/css" href="../../_static/theme_override.css?v=6ecc848e" />
     <link rel="stylesheet" type="text/css" href="../../_static/hide_links.css?v=60d22a59" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
@@ -49,7 +49,7 @@
     <script src="../../_static/documentation_options.js?v=6d629e57"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../../_static/jupyterlite_sphinx.js?v=0b35d31f"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/sphinx_gallery/scrapers';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
@@ -463,18 +463,18 @@
 <span class="sd">file generated for each example script.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">importlib</span>
-<span class="kn">import</span> <span class="nn">inspect</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">PurePosixPath</span>
-<span class="kn">from</span> <span class="nn">textwrap</span> <span class="kn">import</span> <span class="n">indent</span>
-<span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">filterwarnings</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">importlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">PurePosixPath</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">textwrap</span><span class="w"> </span><span class="kn">import</span> <span class="n">indent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">warnings</span><span class="w"> </span><span class="kn">import</span> <span class="n">filterwarnings</span>
 
-<span class="kn">from</span> <span class="nn">sphinx.errors</span> <span class="kn">import</span> <span class="n">ExtensionError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sphinx.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExtensionError</span>
 
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">optipng</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">optipng</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s2">&quot;save_figures&quot;</span><span class="p">,</span>
@@ -489,11 +489,11 @@
 <span class="c1"># Scrapers</span>
 
 
-<span class="k">def</span> <span class="nf">_import_matplotlib</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_import_matplotlib</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Import matplotlib safely.&quot;&quot;&quot;</span>
     <span class="c1"># make sure that the Agg backend is set before importing any</span>
     <span class="c1"># matplotlib</span>
-    <span class="kn">import</span> <span class="nn">matplotlib</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
 
     <span class="n">matplotlib</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">&quot;agg&quot;</span><span class="p">)</span>
     <span class="n">matplotlib_backend</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">get_backend</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
@@ -519,12 +519,12 @@
             <span class="s2">&quot;your conf.py file should fix this issue&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">matplotlib_backend</span><span class="p">)</span>
         <span class="p">)</span>
 
-    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
     <span class="k">return</span> <span class="n">matplotlib</span><span class="p">,</span> <span class="n">plt</span>
 
 
-<span class="k">def</span> <span class="nf">_matplotlib_fig_titles</span><span class="p">(</span><span class="n">fig</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_matplotlib_fig_titles</span><span class="p">(</span><span class="n">fig</span><span class="p">):</span>
     <span class="n">titles</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="c1"># get supertitle if exists</span>
     <span class="n">suptitle</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="s2">&quot;_suptitle&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
@@ -559,7 +559,7 @@
 
 <div class="viewcode-block" id="matplotlib_scraper">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.matplotlib_scraper">[docs]</a>
-<span class="k">def</span> <span class="nf">matplotlib_scraper</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">block_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">matplotlib_scraper</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">block_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Scrape Matplotlib images.</span>
 
 <span class="sd">    Parameters</span>
@@ -586,9 +586,9 @@
 <span class="sd">        the images. This is often produced by :func:`figure_rst`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Do not use _import_matplotlib() to avoid potentially changing the backend</span>
-    <span class="kn">import</span> <span class="nn">matplotlib</span>
-    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-    <span class="kn">from</span> <span class="nn">matplotlib.animation</span> <span class="kn">import</span> <span class="n">Animation</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.animation</span><span class="w"> </span><span class="kn">import</span> <span class="n">Animation</span>
 
     <span class="n">image_path_iterator</span> <span class="o">=</span> <span class="n">block_vars</span><span class="p">[</span><span class="s2">&quot;image_path_iterator&quot;</span><span class="p">]</span>
     <span class="n">image_rsts</span> <span class="o">=</span> <span class="p">[]</span>
@@ -686,9 +686,9 @@
 
 
 
-<span class="k">def</span> <span class="nf">_anim_rst</span><span class="p">(</span><span class="n">anim</span><span class="p">,</span> <span class="n">image_path</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">rcParams</span>
-    <span class="kn">from</span> <span class="nn">matplotlib.animation</span> <span class="kn">import</span> <span class="n">FFMpegWriter</span><span class="p">,</span> <span class="n">ImageMagickWriter</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_anim_rst</span><span class="p">(</span><span class="n">anim</span><span class="p">,</span> <span class="n">image_path</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">rcParams</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.animation</span><span class="w"> </span><span class="kn">import</span> <span class="n">FFMpegWriter</span><span class="p">,</span> <span class="n">ImageMagickWriter</span>
 
     <span class="c1"># output the thumbnail as the image, as it will just be copied</span>
     <span class="c1"># if it&#39;s the file thumbnail</span>
@@ -748,7 +748,7 @@
 
 <div class="viewcode-block" id="ImagePathIterator">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.ImagePathIterator">[docs]</a>
-<span class="k">class</span> <span class="nc">ImagePathIterator</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ImagePathIterator</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Iterate over image paths for a given example.</span>
 
 <span class="sd">    Parameters</span>
@@ -757,12 +757,12 @@
 <span class="sd">        The template image path.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image_path</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image_path</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">image_path</span> <span class="o">=</span> <span class="n">image_path</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">paths</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_stop</span> <span class="o">=</span> <span class="mi">1000000</span>
 
-    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the number of image paths used.</span>
 
 <span class="sd">        Returns</span>
@@ -772,7 +772,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">paths</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Iterate over paths.</span>
 
 <span class="sd">        Returns</span>
@@ -795,12 +795,12 @@
 
 <div class="viewcode-block" id="ImagePathIterator.next">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.ImagePathIterator.next">[docs]</a>
-    <span class="k">def</span> <span class="nf">next</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">next</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the next image path, with numbering starting at 1.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__next__</span><span class="p">()</span></div>
 
 
-    <span class="k">def</span> <span class="fm">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># The +1 here is because we start image numbering at 1 in filenames</span>
         <span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_path</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
@@ -813,7 +813,7 @@
 <span class="n">_KNOWN_IMG_EXTS</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;png&quot;</span><span class="p">,</span> <span class="s2">&quot;svg&quot;</span><span class="p">,</span> <span class="s2">&quot;jpg&quot;</span><span class="p">,</span> <span class="s2">&quot;gif&quot;</span><span class="p">,</span> <span class="s2">&quot;webp&quot;</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_find_image_ext</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_find_image_ext</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Find an image, tolerant of different file extensions.&quot;&quot;&quot;</span>
     <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">path</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">ext</span> <span class="ow">in</span> <span class="n">_KNOWN_IMG_EXTS</span><span class="p">:</span>
@@ -827,7 +827,7 @@
 
 <div class="viewcode-block" id="save_figures">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.save_figures">[docs]</a>
-<span class="k">def</span> <span class="nf">save_figures</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">block_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">save_figures</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">block_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Save all open figures of the example code-block.</span>
 
 <span class="sd">    Parameters</span>
@@ -844,7 +844,7 @@
 <span class="sd">    images_rst : str</span>
 <span class="sd">        rst code to embed the images in the document.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">.gen_rst</span> <span class="kn">import</span> <span class="n">_get_callables</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.gen_rst</span><span class="w"> </span><span class="kn">import</span> <span class="n">_get_callables</span>
 
     <span class="n">image_path_iterator</span> <span class="o">=</span> <span class="n">block_vars</span><span class="p">[</span><span class="s2">&quot;image_path_iterator&quot;</span><span class="p">]</span>
     <span class="n">all_rst</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
@@ -873,7 +873,7 @@
 
 <div class="viewcode-block" id="figure_rst">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.figure_rst">[docs]</a>
-<span class="k">def</span> <span class="nf">figure_rst</span><span class="p">(</span><span class="n">figure_list</span><span class="p">,</span> <span class="n">sources_dir</span><span class="p">,</span> <span class="n">fig_titles</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">srcsetpaths</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">figure_rst</span><span class="p">(</span><span class="n">figure_list</span><span class="p">,</span> <span class="n">sources_dir</span><span class="p">,</span> <span class="n">fig_titles</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">srcsetpaths</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate reST for a list of image filenames.</span>
 
 <span class="sd">    Depending on whether we have one or more figures, we use a</span>
@@ -950,7 +950,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">_get_srcset_st</span><span class="p">(</span><span class="n">sources_dir</span><span class="p">,</span> <span class="n">hinames</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_srcset_st</span><span class="p">(</span><span class="n">sources_dir</span><span class="p">,</span> <span class="n">hinames</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create the srcset string for including on the rst line.</span>
 
 <span class="sd">    For example; `sources_dir` might be `/home/sample-proj/source`,</span>
@@ -977,7 +977,7 @@
     <span class="k">return</span> <span class="n">srcst</span>
 
 
-<span class="k">def</span> <span class="nf">_single_line_sanitize</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_single_line_sanitize</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove problematic newlines.&quot;&quot;&quot;</span>
     <span class="c1"># For example, when setting a :alt: for an image, it shouldn&#39;t have \n</span>
     <span class="c1"># This is a function in case we end up finding other things to replace</span>
@@ -1023,7 +1023,7 @@
 <span class="c1"># Module resetting</span>
 
 
-<span class="k">def</span> <span class="nf">_reset_matplotlib</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_reset_matplotlib</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Reset matplotlib.&quot;&quot;&quot;</span>
     <span class="n">mpl</span><span class="p">,</span> <span class="n">plt</span> <span class="o">=</span> <span class="n">_import_matplotlib</span><span class="p">()</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">rcdefaults</span><span class="p">()</span>
@@ -1032,7 +1032,7 @@
     <span class="n">importlib</span><span class="o">.</span><span class="n">reload</span><span class="p">(</span><span class="n">mpl</span><span class="o">.</span><span class="n">category</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_reset_seaborn</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_reset_seaborn</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Reset seaborn.&quot;&quot;&quot;</span>
     <span class="n">seaborn_module</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;seaborn&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">seaborn_module</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -1047,7 +1047,7 @@
 
 <div class="viewcode-block" id="clean_modules">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.clean_modules">[docs]</a>
-<span class="k">def</span> <span class="nf">clean_modules</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">when</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">clean_modules</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">when</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove, unload, or reset modules.</span>
 
 <span class="sd">    After a script is executed it can load a variety of settings that one</span>
@@ -1066,7 +1066,7 @@
 <span class="sd">        This parameter is only forwarded when the callables accept 3</span>
 <span class="sd">        parameters.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">.gen_rst</span> <span class="kn">import</span> <span class="n">_get_callables</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.gen_rst</span><span class="w"> </span><span class="kn">import</span> <span class="n">_get_callables</span>
 
     <span class="k">for</span> <span class="n">reset_module</span> <span class="ow">in</span> <span class="n">_get_callables</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="s2">&quot;reset_modules&quot;</span><span class="p">):</span>
         <span class="n">sig</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">reset_module</span><span class="p">)</span>
@@ -1123,7 +1123,7 @@
 
   <p class="copyright">
     
-      © Copyright 2014-2024, Sphinx-gallery developers.
+      © Copyright 2014-2025, Sphinx-gallery developers.
       <br/>
     
   </p>

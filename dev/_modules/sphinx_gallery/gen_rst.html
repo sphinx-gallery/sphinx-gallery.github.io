@@ -29,10 +29,10 @@
   <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
-    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=13b285a0" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=e3ca86de" />
     <link rel="stylesheet" type="text/css" href="../../_static/theme_override.css?v=6ecc848e" />
     <link rel="stylesheet" type="text/css" href="../../_static/hide_links.css?v=60d22a59" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
@@ -49,7 +49,7 @@
     <script src="../../_static/documentation_options.js?v=6d629e57"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../../_static/jupyterlite_sphinx.js?v=0b35d31f"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/sphinx_gallery/gen_rst';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
@@ -461,32 +461,32 @@
 <span class="sd">Files that generate images should start with &#39;plot&#39;.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">ast</span>
-<span class="kn">import</span> <span class="nn">codeop</span>
-<span class="kn">import</span> <span class="nn">contextlib</span>
-<span class="kn">import</span> <span class="nn">copy</span>
-<span class="kn">import</span> <span class="nn">gc</span>
-<span class="kn">import</span> <span class="nn">importlib</span>
-<span class="kn">import</span> <span class="nn">inspect</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">stat</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">traceback</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">lru_cache</span>
-<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">shutil</span> <span class="kn">import</span> <span class="n">copyfile</span>
-<span class="kn">from</span> <span class="nn">textwrap</span> <span class="kn">import</span> <span class="n">indent</span>
-<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ast</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">codeop</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">contextlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">gc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">importlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">stat</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">traceback</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">lru_cache</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">io</span><span class="w"> </span><span class="kn">import</span> <span class="n">StringIO</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">shutil</span><span class="w"> </span><span class="kn">import</span> <span class="n">copyfile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">textwrap</span><span class="w"> </span><span class="kn">import</span> <span class="n">indent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">time</span><span class="w"> </span><span class="kn">import</span> <span class="n">time</span>
 
-<span class="kn">import</span> <span class="nn">sphinx.util</span>
-<span class="kn">from</span> <span class="nn">sphinx.errors</span> <span class="kn">import</span> <span class="n">ConfigError</span><span class="p">,</span> <span class="n">ExtensionError</span>
-<span class="kn">from</span> <span class="nn">sphinx.util.console</span> <span class="kn">import</span> <span class="n">blue</span><span class="p">,</span> <span class="n">bold</span><span class="p">,</span> <span class="n">red</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sphinx.util</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sphinx.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigError</span><span class="p">,</span> <span class="n">ExtensionError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sphinx.util.console</span><span class="w"> </span><span class="kn">import</span> <span class="n">blue</span><span class="p">,</span> <span class="n">bold</span><span class="p">,</span> <span class="n">red</span>
 
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">glr_path_static</span><span class="p">,</span> <span class="n">py_source_parser</span>
-<span class="kn">from</span> <span class="nn">.backreferences</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">glr_path_static</span><span class="p">,</span> <span class="n">py_source_parser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.backreferences</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">THUMBNAIL_PARENT_DIV</span><span class="p">,</span>
     <span class="n">THUMBNAIL_PARENT_DIV_CLOSE</span><span class="p">,</span>
     <span class="n">_make_ref_regex</span><span class="p">,</span>
@@ -494,15 +494,15 @@
     <span class="n">_write_backreferences</span><span class="p">,</span>
     <span class="n">identify_names</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">.block_parser</span> <span class="kn">import</span> <span class="n">BlockParser</span>
-<span class="kn">from</span> <span class="nn">.docs_resolv</span> <span class="kn">import</span> <span class="n">_write_code_obj</span>
-<span class="kn">from</span> <span class="nn">.interactive_example</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.block_parser</span><span class="w"> </span><span class="kn">import</span> <span class="n">BlockParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.docs_resolv</span><span class="w"> </span><span class="kn">import</span> <span class="n">_write_code_obj</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.interactive_example</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">_add_jupyterlite_badge_logo</span><span class="p">,</span>
     <span class="n">gen_binder_rst</span><span class="p">,</span>
     <span class="n">gen_jupyterlite_rst</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">.notebook</span> <span class="kn">import</span> <span class="n">jupyter_notebook</span><span class="p">,</span> <span class="n">save_notebook</span>
-<span class="kn">from</span> <span class="nn">.scrapers</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.notebook</span><span class="w"> </span><span class="kn">import</span> <span class="n">jupyter_notebook</span><span class="p">,</span> <span class="n">save_notebook</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.scrapers</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">ImagePathIterator</span><span class="p">,</span>
     <span class="n">_find_image_ext</span><span class="p">,</span>
     <span class="n">_reset_dict</span><span class="p">,</span>
@@ -510,7 +510,7 @@
     <span class="n">clean_modules</span><span class="p">,</span>
     <span class="n">save_figures</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">_W_KW</span><span class="p">,</span>
     <span class="n">_collect_gallery_files</span><span class="p">,</span>
     <span class="n">_format_toctree</span><span class="p">,</span>
@@ -528,10 +528,10 @@
 <span class="c1">###############################################################################</span>
 
 
-<span class="k">class</span> <span class="nc">_LoggingTee</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">_LoggingTee</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A tee object to redirect streams to the logger.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src_filename</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src_filename</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">src_filename</span> <span class="o">=</span> <span class="n">src_filename</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger_buffer</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
@@ -541,7 +541,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">closed</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">encoding</span> <span class="o">=</span> <span class="s2">&quot;utf-8&quot;</span>
 
-    <span class="k">def</span> <span class="nf">set_std_and_reset_position</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_std_and_reset_position</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">_LoggingTee</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">origs</span> <span class="o">=</span> <span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span> <span class="o">=</span> <span class="bp">self</span>
@@ -549,12 +549,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">output</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span>
 
-    <span class="k">def</span> <span class="nf">restore_std</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">restore_std</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">origs</span>
 
-    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">first_write</span><span class="p">:</span>
@@ -574,47 +574,47 @@
         <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">verbose</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">flush</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">flush</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger_buffer</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">verbose</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger_buffer</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger_buffer</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 
     <span class="c1"># For TextIO compatibility</span>
-    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span>
 
-    <span class="k">def</span> <span class="nf">fileno</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fileno</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">fileno</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">isatty</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">isatty</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">isatty</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">readable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">readable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">False</span>
 
-    <span class="k">def</span> <span class="nf">seekable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">seekable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">False</span>
 
-    <span class="k">def</span> <span class="nf">tell</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">tell</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">tell</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">writable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">writable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">True</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">errors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">errors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">errors</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">newlines</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">newlines</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">newlines</span>
 
     <span class="c1"># When called in gen_rst, conveniently use context managing</span>
-    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span>
 
-    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">type_</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">tb</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">type_</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">tb</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">restore_std</span><span class="p">()</span>
 
 
@@ -702,7 +702,7 @@
 
 <div class="viewcode-block" id="codestr2rst">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.codestr2rst">[docs]</a>
-<span class="k">def</span> <span class="nf">codestr2rst</span><span class="p">(</span><span class="n">codestr</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;python&quot;</span><span class="p">,</span> <span class="n">lineno</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">codestr2rst</span><span class="p">(</span><span class="n">codestr</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;python&quot;</span><span class="p">,</span> <span class="n">lineno</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return reStructuredText code block from code string.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">lineno</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># Sphinx only starts numbering from the first non-empty line.</span>
@@ -722,12 +722,12 @@
 
 
 
-<span class="k">def</span> <span class="nf">_regroup</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_regroup</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
 
 
-<span class="k">def</span> <span class="nf">_sanitize_rst</span><span class="p">(</span><span class="n">string</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_sanitize_rst</span><span class="p">(</span><span class="n">string</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Use regex to remove at least some sphinx directives.&quot;&quot;&quot;</span>
     <span class="c1"># :class:`a.b.c &lt;thing here&gt;`, :ref:`abc &lt;thing here&gt;` --&gt; thing here</span>
     <span class="n">p</span><span class="p">,</span> <span class="n">e</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(\s|^):[^:\s]+:`&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;`(\W|$)&quot;</span>
@@ -765,7 +765,7 @@
 
 <div class="viewcode-block" id="extract_intro_and_title">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.extract_intro_and_title">[docs]</a>
-<span class="k">def</span> <span class="nf">extract_intro_and_title</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">docstring</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">extract_intro_and_title</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">docstring</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract and clean the first paragraph of module-level docstring.&quot;&quot;&quot;</span>
     <span class="c1"># lstrip is just in case docstring has a &#39;\n\n&#39; at the beginning</span>
     <span class="n">paragraphs</span> <span class="o">=</span> <span class="n">docstring</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -801,7 +801,7 @@
 
 <div class="viewcode-block" id="md5sum_is_current">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.md5sum_is_current">[docs]</a>
-<span class="k">def</span> <span class="nf">md5sum_is_current</span><span class="p">(</span><span class="n">src_file</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">md5sum_is_current</span><span class="p">(</span><span class="n">src_file</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Checks whether src_file has the same md5 hash as the one on disk.&quot;&quot;&quot;</span>
     <span class="n">src_md5</span> <span class="o">=</span> <span class="n">get_md5sum</span><span class="p">(</span><span class="n">src_file</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">)</span>
 
@@ -818,7 +818,7 @@
 
 <div class="viewcode-block" id="save_thumbnail">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.save_thumbnail">[docs]</a>
-<span class="k">def</span> <span class="nf">save_thumbnail</span><span class="p">(</span><span class="n">image_path_template</span><span class="p">,</span> <span class="n">src_file</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">,</span> <span class="n">file_conf</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">save_thumbnail</span><span class="p">(</span><span class="n">image_path_template</span><span class="p">,</span> <span class="n">src_file</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">,</span> <span class="n">file_conf</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate and Save the thumbnail image.</span>
 
 <span class="sd">    Parameters</span>
@@ -895,7 +895,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">_get_gallery_header</span><span class="p">(</span><span class="n">dir_</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">raise_error</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_gallery_header</span><span class="p">(</span><span class="n">dir_</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">raise_error</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get gallery header from GALLERY_HEADER.[ext] or README.[ext] file.</span>
 
 <span class="sd">    Returns `None` if user supplied an index.rst or no gallery header file</span>
@@ -923,7 +923,7 @@
     <span class="k">return</span> <span class="kc">None</span>
 
 
-<span class="k">def</span> <span class="nf">_write_subsection_index</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_write_subsection_index</span><span class="p">(</span>
     <span class="n">gallery_conf</span><span class="p">,</span>
     <span class="n">user_index_rst</span><span class="p">,</span>
     <span class="n">is_subsection</span><span class="p">,</span>
@@ -953,7 +953,7 @@
     <span class="k">return</span> <span class="n">index_path</span>
 
 
-<span class="k">def</span> <span class="nf">_copy_non_example_files</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">,</span> <span class="n">header_fname</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_copy_non_example_files</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">,</span> <span class="n">header_fname</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Copy non-example files to `target_dir`.&quot;&quot;&quot;</span>
     <span class="n">copyregex</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;copyfile_regex&quot;</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">copyregex</span><span class="p">:</span>
@@ -969,7 +969,7 @@
 
 <div class="viewcode-block" id="generate_dir_rst">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.generate_dir_rst">[docs]</a>
-<span class="k">def</span> <span class="nf">generate_dir_rst</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">generate_dir_rst</span><span class="p">(</span>
     <span class="n">src_dir</span><span class="p">,</span>
     <span class="n">target_dir</span><span class="p">,</span>
     <span class="n">gallery_conf</span><span class="p">,</span>
@@ -1052,7 +1052,7 @@
     <span class="n">parallel</span> <span class="o">=</span> <span class="nb">list</span>
     <span class="n">p_fun</span> <span class="o">=</span> <span class="n">generate_file_rst</span>
     <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;parallel&quot;</span><span class="p">]:</span>
-        <span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">joblib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
 
         <span class="n">p_fun</span> <span class="o">=</span> <span class="n">delayed</span><span class="p">(</span><span class="n">generate_file_rst</span><span class="p">)</span>
         <span class="n">parallel</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span>
@@ -1133,9 +1133,9 @@
 
 <div class="viewcode-block" id="handle_exception">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.handle_exception">[docs]</a>
-<span class="k">def</span> <span class="nf">handle_exception</span><span class="p">(</span><span class="n">exc_info</span><span class="p">,</span> <span class="n">src_file</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">handle_exception</span><span class="p">(</span><span class="n">exc_info</span><span class="p">,</span> <span class="n">src_file</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Trim and format exception, maybe raise error, etc.&quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">.gen_gallery</span> <span class="kn">import</span> <span class="n">_expected_failing_examples</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.gen_gallery</span><span class="w"> </span><span class="kn">import</span> <span class="n">_expected_failing_examples</span>
 
     <span class="n">etype</span><span class="p">,</span> <span class="n">exc</span><span class="p">,</span> <span class="n">tb</span> <span class="o">=</span> <span class="n">exc_info</span>
     <span class="n">stack</span> <span class="o">=</span> <span class="n">traceback</span><span class="o">.</span><span class="n">extract_tb</span><span class="p">(</span><span class="n">tb</span><span class="p">)</span>
@@ -1208,7 +1208,7 @@
 
 
 <span class="c1"># Adapted from github.com/python/cpython/blob/3.7/Lib/warnings.py</span>
-<span class="k">def</span> <span class="nf">_showwarning</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">category</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">lineno</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">line</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_showwarning</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">category</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">lineno</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">line</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">file</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span>
         <span class="k">if</span> <span class="n">file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -1226,7 +1226,7 @@
 <div class="viewcode-block" id="patch_warnings">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.patch_warnings">[docs]</a>
 <span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
-<span class="k">def</span> <span class="nf">patch_warnings</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">patch_warnings</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Patch warnings.showwarning to actually write out the warning.&quot;&quot;&quot;</span>
     <span class="c1"># Sphinx or logging or someone is patching warnings, but we want to</span>
     <span class="c1"># capture them, so let&#39;s patch over their patch...</span>
@@ -1239,15 +1239,15 @@
 
 
 
-<span class="k">class</span> <span class="nc">_exec_once</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">_exec_once</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Deal with memory_usage calling functions more than once (argh).&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">fake_main</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">fake_main</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">code</span> <span class="o">=</span> <span class="n">code</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fake_main</span> <span class="o">=</span> <span class="n">fake_main</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">run</span> <span class="o">=</span> <span class="kc">False</span>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">run</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="n">old_main</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;__main__&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
@@ -1260,15 +1260,15 @@
                         <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="s2">&quot;__main__&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">old_main</span>
 
 
-<span class="k">def</span> <span class="nf">_get_memory_base</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_memory_base</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the base amount of memory used by the current Python process.&quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">memory_profiler</span> <span class="kn">import</span> <span class="n">memory_usage</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">memory_profiler</span><span class="w"> </span><span class="kn">import</span> <span class="n">memory_usage</span>
 
     <span class="n">memory_base</span> <span class="o">=</span> <span class="n">memory_usage</span><span class="p">(</span><span class="n">max_usage</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">memory_base</span>
 
 
-<span class="k">def</span> <span class="nf">_get_parser</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_parser</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get parser and language.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">fname</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.py&quot;</span><span class="p">):</span>
         <span class="n">parser</span> <span class="o">=</span> <span class="n">py_source_parser</span>
@@ -1279,7 +1279,7 @@
     <span class="k">return</span> <span class="n">parser</span><span class="p">,</span> <span class="n">language</span>
 
 
-<span class="k">def</span> <span class="nf">_check_reset_logging_tee</span><span class="p">(</span><span class="n">src_file</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_check_reset_logging_tee</span><span class="p">(</span><span class="n">src_file</span><span class="p">):</span>
     <span class="c1"># Helper to deal with our tests not necessarily calling execute_script</span>
     <span class="c1"># but rather execute_code_block directly</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">_LoggingTee</span><span class="p">):</span>
@@ -1290,7 +1290,7 @@
     <span class="k">return</span> <span class="n">logging_tee</span>
 
 
-<span class="k">def</span> <span class="nf">_exec_and_get_memory</span><span class="p">(</span><span class="n">compiler</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">code_ast</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_exec_and_get_memory</span><span class="p">(</span><span class="n">compiler</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">code_ast</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Execute ast, capturing output if last line expression and get max mem usage.</span>
 
 <span class="sd">    Parameters</span>
@@ -1342,7 +1342,7 @@
     <span class="k">return</span> <span class="n">is_last_expr</span><span class="p">,</span> <span class="n">mem_max</span>
 
 
-<span class="k">def</span> <span class="nf">_get_last_repr</span><span class="p">(</span><span class="n">capture_repr</span><span class="p">,</span> <span class="n">___</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_last_repr</span><span class="p">(</span><span class="n">capture_repr</span><span class="p">,</span> <span class="n">___</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get repr of last expression, using first method in &#39;capture_repr&#39; available.&quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">meth</span> <span class="ow">in</span> <span class="n">capture_repr</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
@@ -1361,7 +1361,7 @@
     <span class="k">return</span> <span class="n">last_repr</span><span class="p">,</span> <span class="n">repr_meth</span>
 
 
-<span class="k">def</span> <span class="nf">_get_code_output</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_code_output</span><span class="p">(</span>
     <span class="n">is_last_expr</span><span class="p">,</span> <span class="n">example_globals</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">logging_tee</span><span class="p">,</span> <span class="n">images_rst</span><span class="p">,</span> <span class="n">capture_repr</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Obtain standard output and html output in reST.</span>
@@ -1421,7 +1421,7 @@
     <span class="k">return</span> <span class="n">code_output</span>
 
 
-<span class="k">def</span> <span class="nf">_reset_cwd_syspath</span><span class="p">(</span><span class="n">cwd</span><span class="p">,</span> <span class="n">sys_path</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_reset_cwd_syspath</span><span class="p">(</span><span class="n">cwd</span><span class="p">,</span> <span class="n">sys_path</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Reset cwd and sys.path.&quot;&quot;&quot;</span>
     <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">cwd</span><span class="p">)</span>
     <span class="n">sys</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">sys_path</span>
@@ -1429,7 +1429,7 @@
 
 <div class="viewcode-block" id="execute_code_block">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.execute_code_block">[docs]</a>
-<span class="k">def</span> <span class="nf">execute_code_block</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">execute_code_block</span><span class="p">(</span>
     <span class="n">compiler</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">example_globals</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">file_conf</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Execute the code block of the example file.</span>
@@ -1555,7 +1555,7 @@
 
 <div class="viewcode-block" id="executable_script">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.executable_script">[docs]</a>
-<span class="k">def</span> <span class="nf">executable_script</span><span class="p">(</span><span class="n">src_file</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">executable_script</span><span class="p">(</span><span class="n">src_file</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate if script has to be run according to gallery configuration.</span>
 
 <span class="sd">    Parameters</span>
@@ -1577,7 +1577,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">_check_input</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_check_input</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
         <span class="s2">&quot;Cannot use input() builtin function in Sphinx-Gallery examples&quot;</span>
     <span class="p">)</span>
@@ -1585,7 +1585,7 @@
 
 <div class="viewcode-block" id="execute_script">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.execute_script">[docs]</a>
-<span class="k">def</span> <span class="nf">execute_script</span><span class="p">(</span><span class="n">script_blocks</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">file_conf</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">execute_script</span><span class="p">(</span><span class="n">script_blocks</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">file_conf</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Execute and capture output from python script already in block structure.</span>
 
 <span class="sd">    Parameters</span>
@@ -1684,7 +1684,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">_make_dummy_images</span><span class="p">(</span><span class="n">executable</span><span class="p">,</span> <span class="n">file_conf</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_make_dummy_images</span><span class="p">(</span><span class="n">executable</span><span class="p">,</span> <span class="n">file_conf</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Make dummy images when not executing the example.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">executable</span><span class="p">:</span>
         <span class="n">dummy_image</span> <span class="o">=</span> <span class="n">file_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dummy_images&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
@@ -1702,7 +1702,7 @@
                     <span class="n">copyfile</span><span class="p">(</span><span class="n">stock_img</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_clean_script_blocks</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">parser</span><span class="p">,</span> <span class="n">script_blocks</span><span class="p">,</span> <span class="n">output_blocks</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_clean_script_blocks</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">parser</span><span class="p">,</span> <span class="n">script_blocks</span><span class="p">,</span> <span class="n">output_blocks</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove ignore blocks, config comments and final empty blocks.&quot;&quot;&quot;</span>
     <span class="c1"># Ignore blocks must be processed before the</span>
     <span class="c1"># remaining config comments are removed.</span>
@@ -1727,7 +1727,7 @@
     <span class="k">return</span> <span class="n">script_blocks</span><span class="p">,</span> <span class="n">output_blocks</span>
 
 
-<span class="k">def</span> <span class="nf">_get_backreferences</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">,</span> <span class="n">script_blocks</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">target_file</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_backreferences</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">,</span> <span class="n">script_blocks</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">target_file</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get example backreferences for `script_blocks` and write _codeobj.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;inspect_global_variables&quot;</span><span class="p">]:</span>
         <span class="n">global_variables</span> <span class="o">=</span> <span class="n">script_vars</span><span class="p">[</span><span class="s2">&quot;example_globals&quot;</span><span class="p">]</span>
@@ -1739,7 +1739,7 @@
         <span class="n">_write_code_obj</span><span class="p">(</span><span class="n">target_file</span><span class="p">,</span> <span class="n">example_code_obj</span><span class="p">)</span>
     <span class="n">exclude_regex</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;exclude_implicit_doc_regex&quot;</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">_normalize_name</span><span class="p">(</span><span class="n">cobj</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_normalize_name</span><span class="p">(</span><span class="n">cobj</span><span class="p">):</span>
         <span class="n">full_name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{module}</span><span class="s2">.</span><span class="si">{name}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">cobj</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;prefer_full_module&quot;</span><span class="p">]:</span>
             <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">full_name</span><span class="p">):</span>
@@ -1768,7 +1768,7 @@
 
 <div class="viewcode-block" id="generate_file_rst">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.generate_file_rst">[docs]</a>
-<span class="k">def</span> <span class="nf">generate_file_rst</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">generate_file_rst</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate the rst file for a given example.</span>
 
 <span class="sd">    Parameters</span>
@@ -1942,7 +1942,7 @@
 
 <div class="viewcode-block" id="rst_blocks">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.rst_blocks">[docs]</a>
-<span class="k">def</span> <span class="nf">rst_blocks</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">rst_blocks</span><span class="p">(</span>
     <span class="n">script_blocks</span><span class="p">,</span> <span class="n">output_blocks</span><span class="p">,</span> <span class="n">file_conf</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;python&quot;</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate the rst string containing the script prose, code and output.</span>
@@ -2013,7 +2013,7 @@
 
 <div class="viewcode-block" id="save_rst_example">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.save_rst_example">[docs]</a>
-<span class="k">def</span> <span class="nf">save_rst_example</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">save_rst_example</span><span class="p">(</span>
     <span class="n">example_rst</span><span class="p">,</span>
     <span class="n">example_file</span><span class="p">,</span>
     <span class="n">time_elapsed</span><span class="p">,</span>
@@ -2115,7 +2115,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">_get_callables</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">src_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_callables</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">src_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get callables for the given conf key, returning tuple of callable(s).</span>
 
 <span class="sd">    If value is a string, import, with the following exceptions:</span>
@@ -2202,11 +2202,11 @@
 
 
 <span class="c1"># Default no-op version</span>
-<span class="k">def</span> <span class="nf">_sg_call_memory_noop</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_sg_call_memory_noop</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
     <span class="k">return</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">func</span><span class="p">()</span>
 
 
-<span class="k">def</span> <span class="nf">_get_call_memory_and_base</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_call_memory_and_base</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="n">show_memory</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;show_memory&quot;</span><span class="p">]</span>
 
     <span class="c1"># Default to no-op version</span>
@@ -2235,8 +2235,8 @@
     <span class="k">return</span> <span class="n">call_memory</span><span class="p">,</span> <span class="n">memory_base</span>
 
 
-<span class="k">def</span> <span class="nf">_sg_call_memory_memprof</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">memory_profiler</span> <span class="kn">import</span> <span class="n">memory_usage</span>  <span class="c1"># noqa</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_sg_call_memory_memprof</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">memory_profiler</span><span class="w"> </span><span class="kn">import</span> <span class="n">memory_usage</span>  <span class="c1"># noqa</span>
 
     <span class="n">mem</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="n">memory_usage</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">max_usage</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">retval</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">multiprocess</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
@@ -2247,9 +2247,9 @@
 
 
 <span class="nd">@lru_cache</span><span class="p">()</span>
-<span class="k">def</span> <span class="nf">_get_memprof_call_memory</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_memprof_call_memory</span><span class="p">():</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">memory_profiler</span> <span class="kn">import</span> <span class="n">memory_usage</span>  <span class="c1"># noqa</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">memory_profiler</span><span class="w"> </span><span class="kn">import</span> <span class="n">memory_usage</span>  <span class="c1"># noqa</span>
     <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
             <span class="s2">&quot;Please install &#39;memory_profiler&#39; to enable peak memory measurements.&quot;</span>
@@ -2298,7 +2298,7 @@
 
   <p class="copyright">
     
-      © Copyright 2014-2024, Sphinx-gallery developers.
+      © Copyright 2014-2025, Sphinx-gallery developers.
       <br/>
     
   </p>

@@ -29,10 +29,10 @@
   <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
-    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=13b285a0" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=e3ca86de" />
     <link rel="stylesheet" type="text/css" href="../../_static/theme_override.css?v=6ecc848e" />
     <link rel="stylesheet" type="text/css" href="../../_static/hide_links.css?v=60d22a59" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
@@ -49,7 +49,7 @@
     <script src="../../_static/documentation_options.js?v=6d629e57"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../../_static/jupyterlite_sphinx.js?v=0b35d31f"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/sphinx_gallery/directives';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
@@ -453,30 +453,30 @@
   <h1>Source code for sphinx_gallery.directives</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Custom Sphinx directives.&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">shutil</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span><span class="p">,</span> <span class="n">PurePosixPath</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span><span class="p">,</span> <span class="n">PurePosixPath</span>
 
-<span class="kn">from</span> <span class="nn">docutils</span> <span class="kn">import</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">statemachine</span>
-<span class="kn">from</span> <span class="nn">docutils.parsers.rst</span> <span class="kn">import</span> <span class="n">Directive</span><span class="p">,</span> <span class="n">directives</span>
-<span class="kn">from</span> <span class="nn">docutils.parsers.rst.directives</span> <span class="kn">import</span> <span class="n">images</span>
-<span class="kn">from</span> <span class="nn">sphinx.errors</span> <span class="kn">import</span> <span class="n">ExtensionError</span>
-<span class="kn">from</span> <span class="nn">sphinx.util.logging</span> <span class="kn">import</span> <span class="n">getLogger</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">docutils</span><span class="w"> </span><span class="kn">import</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">statemachine</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">docutils.parsers.rst</span><span class="w"> </span><span class="kn">import</span> <span class="n">Directive</span><span class="p">,</span> <span class="n">directives</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">docutils.parsers.rst.directives</span><span class="w"> </span><span class="kn">import</span> <span class="n">images</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sphinx.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExtensionError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sphinx.util.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">getLogger</span>
 
-<span class="kn">from</span> <span class="nn">.backreferences</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.backreferences</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">THUMBNAIL_PARENT_DIV</span><span class="p">,</span>
     <span class="n">THUMBNAIL_PARENT_DIV_CLOSE</span><span class="p">,</span>
     <span class="n">_thumbnail_div</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">.gen_rst</span> <span class="kn">import</span> <span class="n">extract_intro_and_title</span>
-<span class="kn">from</span> <span class="nn">.py_source_parser</span> <span class="kn">import</span> <span class="n">split_code_and_text_blocks</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.gen_rst</span><span class="w"> </span><span class="kn">import</span> <span class="n">extract_intro_and_title</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.py_source_parser</span><span class="w"> </span><span class="kn">import</span> <span class="n">split_code_and_text_blocks</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;sphinx-gallery&quot;</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="MiniGallery">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.directives.html#sphinx_gallery.directives.MiniGallery">[docs]</a>
-<span class="k">class</span> <span class="nc">MiniGallery</span><span class="p">(</span><span class="n">Directive</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MiniGallery</span><span class="p">(</span><span class="n">Directive</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Custom directive to insert a mini-gallery.</span>
 
 <span class="sd">    The required argument is one or more of the following:</span>
@@ -508,7 +508,7 @@
         <span class="s2">&quot;heading-level&quot;</span><span class="p">:</span> <span class="n">directives</span><span class="o">.</span><span class="n">single_char_or_unicode</span><span class="p">,</span>
     <span class="p">}</span>
 
-    <span class="k">def</span> <span class="nf">_get_target_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_target_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get thumbnail target directory, errors when ambiguous/not in example dir.&quot;&quot;&quot;</span>
         <span class="n">examples_dirs</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;examples_dirs&quot;</span><span class="p">]</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">examples_dirs</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
@@ -556,9 +556,9 @@
 
 <div class="viewcode-block" id="MiniGallery.run">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.directives.html#sphinx_gallery.directives.MiniGallery.run">[docs]</a>
-    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate mini-gallery from backreference and example files.&quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">.gen_rst</span> <span class="kn">import</span> <span class="n">_get_callables</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">.gen_rst</span><span class="w"> </span><span class="kn">import</span> <span class="n">_get_callables</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arguments</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">content</span><span class="p">):</span>
             <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span><span class="s2">&quot;No arguments passed to &#39;minigallery&#39;&quot;</span><span class="p">)</span>
@@ -604,7 +604,7 @@
             <span class="n">heading_level</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;heading-level&quot;</span><span class="p">,</span> <span class="s2">&quot;^&quot;</span><span class="p">)</span>
             <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">heading_level</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">heading</span><span class="p">))</span>
 
-        <span class="k">def</span> <span class="nf">has_backrefs</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">has_backrefs</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
             <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">backreferences_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">obj</span><span class="si">}</span><span class="s2">.examples&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">path</span> <span class="k">if</span> <span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="ow">and</span> <span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">stat</span><span class="p">()</span><span class="o">.</span><span class="n">st_size</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">))</span> <span class="k">else</span> <span class="kc">False</span>
 
@@ -670,7 +670,7 @@
 
 <div class="viewcode-block" id="imgsgnode">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.directives.html#sphinx_gallery.directives.imgsgnode">[docs]</a>
-<span class="k">class</span> <span class="nc">imgsgnode</span><span class="p">(</span><span class="n">nodes</span><span class="o">.</span><span class="n">General</span><span class="p">,</span> <span class="n">nodes</span><span class="o">.</span><span class="n">Element</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">imgsgnode</span><span class="p">(</span><span class="n">nodes</span><span class="o">.</span><span class="n">General</span><span class="p">,</span> <span class="n">nodes</span><span class="o">.</span><span class="n">Element</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Sphinx Gallery image node class.&quot;&quot;&quot;</span>
 
     <span class="k">pass</span></div>
@@ -679,7 +679,7 @@
 
 <div class="viewcode-block" id="ImageSg">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.directives.html#sphinx_gallery.directives.ImageSg">[docs]</a>
-<span class="k">class</span> <span class="nc">ImageSg</span><span class="p">(</span><span class="n">images</span><span class="o">.</span><span class="n">Image</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ImageSg</span><span class="p">(</span><span class="n">images</span><span class="o">.</span><span class="n">Image</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Implements a directive to allow an optional hidpi image.</span>
 
 <span class="sd">    Meant to be used with the `image_srcset` configuration option.</span>
@@ -713,7 +713,7 @@
 
 <div class="viewcode-block" id="ImageSg.run">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.directives.html#sphinx_gallery.directives.ImageSg.run">[docs]</a>
-    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Update node contents.&quot;&quot;&quot;</span>
         <span class="n">image_node</span> <span class="o">=</span> <span class="n">imgsgnode</span><span class="p">()</span>
 
@@ -733,7 +733,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">_parse_srcset</span><span class="p">(</span><span class="n">st</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_parse_srcset</span><span class="p">(</span><span class="n">st</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse st.&quot;&quot;&quot;</span>
     <span class="n">entries</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
     <span class="n">srcset</span> <span class="o">=</span> <span class="p">{}</span>
@@ -751,7 +751,7 @@
 
 <div class="viewcode-block" id="visit_imgsg_html">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.directives.html#sphinx_gallery.directives.visit_imgsg_html">[docs]</a>
-<span class="k">def</span> <span class="nf">visit_imgsg_html</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">visit_imgsg_html</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Handle HTML image tag depending on &#39;srcset&#39; configuration.</span>
 
 <span class="sd">    If &#39;srcset&#39; is not `None`, copy images, generate image html tag with &#39;srcset&#39;</span>
@@ -816,7 +816,7 @@
 
 <div class="viewcode-block" id="visit_imgsg_latex">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.directives.html#sphinx_gallery.directives.visit_imgsg_latex">[docs]</a>
-<span class="k">def</span> <span class="nf">visit_imgsg_latex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">visit_imgsg_latex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Copy images, set node[uri] to highest resolution image and call `visit_image`.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">node</span><span class="p">[</span><span class="s2">&quot;srcset&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">imagedir</span><span class="p">,</span> <span class="n">srcset</span> <span class="o">=</span> <span class="n">_copy_images</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span>
@@ -830,7 +830,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">_copy_images</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_copy_images</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
     <span class="n">srcset</span> <span class="o">=</span> <span class="n">_parse_srcset</span><span class="p">(</span><span class="n">node</span><span class="p">[</span><span class="s2">&quot;srcset&quot;</span><span class="p">])</span>
 
     <span class="c1"># where the sources are.  i.e. myproj/source</span>
@@ -854,7 +854,7 @@
 
 <div class="viewcode-block" id="depart_imgsg_html">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.directives.html#sphinx_gallery.directives.depart_imgsg_html">[docs]</a>
-<span class="k">def</span> <span class="nf">depart_imgsg_html</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">depart_imgsg_html</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;HTML depart node visitor function.&quot;&quot;&quot;</span>
     <span class="k">pass</span></div>
 
@@ -862,7 +862,7 @@
 
 <div class="viewcode-block" id="depart_imgsg_latex">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.directives.html#sphinx_gallery.directives.depart_imgsg_latex">[docs]</a>
-<span class="k">def</span> <span class="nf">depart_imgsg_latex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">depart_imgsg_latex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;LaTeX depart node visitor function.&quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">depart_image</span><span class="p">(</span><span class="n">node</span><span class="p">)</span></div>
 
@@ -870,7 +870,7 @@
 
 <div class="viewcode-block" id="imagesg_addnode">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.directives.html#sphinx_gallery.directives.imagesg_addnode">[docs]</a>
-<span class="k">def</span> <span class="nf">imagesg_addnode</span><span class="p">(</span><span class="n">app</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">imagesg_addnode</span><span class="p">(</span><span class="n">app</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Add `imgsgnode` to Sphinx app with visitor functions for HTML and LaTeX.&quot;&quot;&quot;</span>
     <span class="n">app</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span>
         <span class="n">imgsgnode</span><span class="p">,</span>
@@ -919,7 +919,7 @@
 
   <p class="copyright">
     
-      © Copyright 2014-2024, Sphinx-gallery developers.
+      © Copyright 2014-2025, Sphinx-gallery developers.
       <br/>
     
   </p>

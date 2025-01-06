@@ -29,10 +29,10 @@
   <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
-    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=13b285a0" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=e3ca86de" />
     <link rel="stylesheet" type="text/css" href="../../_static/theme_override.css?v=6ecc848e" />
     <link rel="stylesheet" type="text/css" href="../../_static/hide_links.css?v=60d22a59" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
@@ -49,7 +49,7 @@
     <script src="../../_static/documentation_options.js?v=6d629e57"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../../_static/jupyterlite_sphinx.js?v=0b35d31f"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/sphinx_gallery/sorting';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
@@ -460,18 +460,18 @@
 <span class="c1"># Author: Óscar Nájera</span>
 <span class="c1"># License: 3-clause BSD</span>
 
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">types</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">types</span>
 
-<span class="kn">from</span> <span class="nn">sphinx.errors</span> <span class="kn">import</span> <span class="n">ConfigError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sphinx.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigError</span>
 
-<span class="kn">from</span> <span class="nn">.gen_rst</span> <span class="kn">import</span> <span class="n">extract_intro_and_title</span>
-<span class="kn">from</span> <span class="nn">.py_source_parser</span> <span class="kn">import</span> <span class="n">split_code_and_text_blocks</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.gen_rst</span><span class="w"> </span><span class="kn">import</span> <span class="n">extract_intro_and_title</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.py_source_parser</span><span class="w"> </span><span class="kn">import</span> <span class="n">split_code_and_text_blocks</span>
 
 
 <div class="viewcode-block" id="ExplicitOrder">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.sorting.html#sphinx_gallery.sorting.ExplicitOrder">[docs]</a>
-<span class="k">class</span> <span class="nc">ExplicitOrder</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ExplicitOrder</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Sorting key for all gallery subsections.</span>
 
 <span class="sd">    All subsections folders must be listed, otherwise an exception is raised.</span>
@@ -490,7 +490,7 @@
 <span class="sd">        Wrong input type or Subgallery path missing.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ordered_list</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ordered_list</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ordered_list</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">GeneratorType</span><span class="p">)):</span>
             <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
                 <span class="s2">&quot;ExplicitOrder sorting key takes a list, &quot;</span>
@@ -511,7 +511,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">ordered_list_start</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ordered_list_end</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ordered_list</span>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return an integer suited for ordering the items.</span>
 
@@ -538,24 +538,24 @@
                     <span class="s2">&quot;folders.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
                 <span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> : </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ordered_list</span><span class="si">}</span><span class="s2">&gt;&quot;</span></div>
 
 
 
-<span class="k">class</span> <span class="nc">_SortKey</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">_SortKey</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for section order key classes.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">src_dir</span> <span class="o">=</span> <span class="n">src_dir</span>
 
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&gt;&quot;</span>
 
 
 <div class="viewcode-block" id="NumberOfCodeLinesSortKey">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.sorting.html#sphinx_gallery.sorting.NumberOfCodeLinesSortKey">[docs]</a>
-<span class="k">class</span> <span class="nc">NumberOfCodeLinesSortKey</span><span class="p">(</span><span class="n">_SortKey</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">NumberOfCodeLinesSortKey</span><span class="p">(</span><span class="n">_SortKey</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Sort examples in src_dir by the number of code lines.</span>
 
 <span class="sd">    Parameters</span>
@@ -564,7 +564,7 @@
 <span class="sd">        The source directory.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return number of code lines in `filename`.&quot;&quot;&quot;</span>
         <span class="n">src_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span>
         <span class="n">file_conf</span><span class="p">,</span> <span class="n">script_blocks</span> <span class="o">=</span> <span class="n">split_code_and_text_blocks</span><span class="p">(</span><span class="n">src_file</span><span class="p">)</span>
@@ -577,7 +577,7 @@
 
 <div class="viewcode-block" id="FileSizeSortKey">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.sorting.html#sphinx_gallery.sorting.FileSizeSortKey">[docs]</a>
-<span class="k">class</span> <span class="nc">FileSizeSortKey</span><span class="p">(</span><span class="n">_SortKey</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">FileSizeSortKey</span><span class="p">(</span><span class="n">_SortKey</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Sort examples in src_dir by file size.</span>
 
 <span class="sd">    Parameters</span>
@@ -586,7 +586,7 @@
 <span class="sd">        The source directory.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return file size.&quot;&quot;&quot;</span>
         <span class="n">src_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span>
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">src_file</span><span class="p">)</span><span class="o">.</span><span class="n">st_size</span><span class="p">)</span></div>
@@ -595,7 +595,7 @@
 
 <div class="viewcode-block" id="FileNameSortKey">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.sorting.html#sphinx_gallery.sorting.FileNameSortKey">[docs]</a>
-<span class="k">class</span> <span class="nc">FileNameSortKey</span><span class="p">(</span><span class="n">_SortKey</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">FileNameSortKey</span><span class="p">(</span><span class="n">_SortKey</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Sort examples in src_dir by file name.</span>
 
 <span class="sd">    Parameters</span>
@@ -604,7 +604,7 @@
 <span class="sd">        The source directory.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return `filename`.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">filename</span></div>
 
@@ -612,7 +612,7 @@
 
 <div class="viewcode-block" id="ExampleTitleSortKey">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.sorting.html#sphinx_gallery.sorting.ExampleTitleSortKey">[docs]</a>
-<span class="k">class</span> <span class="nc">ExampleTitleSortKey</span><span class="p">(</span><span class="n">_SortKey</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ExampleTitleSortKey</span><span class="p">(</span><span class="n">_SortKey</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Sort examples in src_dir by example title.</span>
 
 <span class="sd">    Parameters</span>
@@ -621,7 +621,7 @@
 <span class="sd">        The source directory.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return title of example.&quot;&quot;&quot;</span>
         <span class="n">src_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span>
         <span class="n">_</span><span class="p">,</span> <span class="n">script_blocks</span> <span class="o">=</span> <span class="n">split_code_and_text_blocks</span><span class="p">(</span><span class="n">src_file</span><span class="p">)</span>
@@ -632,7 +632,7 @@
 
 <div class="viewcode-block" id="FunctionSortKey">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.sorting.html#sphinx_gallery.sorting.FunctionSortKey">[docs]</a>
-<span class="k">class</span> <span class="nc">FunctionSortKey</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">FunctionSortKey</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Sort examples using a function passed through to :py:func:`sorted`.</span>
 
 <span class="sd">    Parameters</span>
@@ -644,14 +644,14 @@
 <span class="sd">        printable representation of object</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">f</span> <span class="o">=</span> <span class="n">func</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">r</span> <span class="o">=</span> <span class="n">r</span>
 
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">r</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">r</span> <span class="k">else</span> <span class="s2">&quot;FunctionSortKey&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return func(arg).&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span></div>
 
@@ -696,7 +696,7 @@
 
   <p class="copyright">
     
-      © Copyright 2014-2024, Sphinx-gallery developers.
+      © Copyright 2014-2025, Sphinx-gallery developers.
       <br/>
     
   </p>

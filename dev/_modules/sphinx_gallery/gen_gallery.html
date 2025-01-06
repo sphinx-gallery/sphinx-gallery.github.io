@@ -29,10 +29,10 @@
   <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
-    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=13b285a0" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=e3ca86de" />
     <link rel="stylesheet" type="text/css" href="../../_static/theme_override.css?v=6ecc848e" />
     <link rel="stylesheet" type="text/css" href="../../_static/hide_links.css?v=60d22a59" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
@@ -49,7 +49,7 @@
     <script src="../../_static/documentation_options.js?v=6d629e57"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../../_static/jupyterlite_sphinx.js?v=0b35d31f"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/sphinx_gallery/gen_gallery';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
@@ -459,37 +459,37 @@
 <span class="sd">when building the documentation.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">codecs</span>
-<span class="kn">import</span> <span class="nn">copy</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">pathlib</span>
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
-<span class="kn">from</span> <span class="nn">difflib</span> <span class="kn">import</span> <span class="n">get_close_matches</span>
-<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">textwrap</span> <span class="kn">import</span> <span class="n">indent</span>
-<span class="kn">from</span> <span class="nn">xml.sax.saxutils</span> <span class="kn">import</span> <span class="n">escape</span><span class="p">,</span> <span class="n">quoteattr</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">codecs</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pathlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">difflib</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_close_matches</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">chain</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">textwrap</span><span class="w"> </span><span class="kn">import</span> <span class="n">indent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">xml.sax.saxutils</span><span class="w"> </span><span class="kn">import</span> <span class="n">escape</span><span class="p">,</span> <span class="n">quoteattr</span>
 
-<span class="kn">import</span> <span class="nn">sphinx.util</span>
-<span class="kn">from</span> <span class="nn">docutils</span> <span class="kn">import</span> <span class="n">nodes</span>
-<span class="kn">from</span> <span class="nn">sphinx.errors</span> <span class="kn">import</span> <span class="n">ConfigError</span><span class="p">,</span> <span class="n">ExtensionError</span>
-<span class="kn">from</span> <span class="nn">sphinx.util.console</span> <span class="kn">import</span> <span class="n">blue</span><span class="p">,</span> <span class="n">bold</span><span class="p">,</span> <span class="n">purple</span><span class="p">,</span> <span class="n">red</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sphinx.util</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">docutils</span><span class="w"> </span><span class="kn">import</span> <span class="n">nodes</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sphinx.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigError</span><span class="p">,</span> <span class="n">ExtensionError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sphinx.util.console</span><span class="w"> </span><span class="kn">import</span> <span class="n">blue</span><span class="p">,</span> <span class="n">bold</span><span class="p">,</span> <span class="n">purple</span><span class="p">,</span> <span class="n">red</span>
 
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">__version__</span> <span class="k">as</span> <span class="n">_sg_version</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">glr_path_static</span>
-<span class="kn">from</span> <span class="nn">.backreferences</span> <span class="kn">import</span> <span class="n">_finalize_backreferences</span>
-<span class="kn">from</span> <span class="nn">.directives</span> <span class="kn">import</span> <span class="n">ImageSg</span><span class="p">,</span> <span class="n">MiniGallery</span><span class="p">,</span> <span class="n">imagesg_addnode</span>
-<span class="kn">from</span> <span class="nn">.docs_resolv</span> <span class="kn">import</span> <span class="n">embed_code_links</span>
-<span class="kn">from</span> <span class="nn">.downloads</span> <span class="kn">import</span> <span class="n">generate_zipfiles</span>
-<span class="kn">from</span> <span class="nn">.gen_rst</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">__version__</span> <span class="k">as</span> <span class="n">_sg_version</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">glr_path_static</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.backreferences</span><span class="w"> </span><span class="kn">import</span> <span class="n">_finalize_backreferences</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.directives</span><span class="w"> </span><span class="kn">import</span> <span class="n">ImageSg</span><span class="p">,</span> <span class="n">MiniGallery</span><span class="p">,</span> <span class="n">imagesg_addnode</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.docs_resolv</span><span class="w"> </span><span class="kn">import</span> <span class="n">embed_code_links</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.downloads</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_zipfiles</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.gen_rst</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">SPHX_GLR_SIG</span><span class="p">,</span>
     <span class="n">_get_call_memory_and_base</span><span class="p">,</span>
     <span class="n">_get_callables</span><span class="p">,</span>
     <span class="n">_get_gallery_header</span><span class="p">,</span>
     <span class="n">generate_dir_rst</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">.interactive_example</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.interactive_example</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">check_binder_conf</span><span class="p">,</span>
     <span class="n">check_jupyterlite_conf</span><span class="p">,</span>
     <span class="n">copy_binder_files</span><span class="p">,</span>
@@ -497,10 +497,10 @@
     <span class="n">post_configure_jupyterlite_sphinx</span><span class="p">,</span>
     <span class="n">pre_configure_jupyterlite_sphinx</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">.recommender</span> <span class="kn">import</span> <span class="n">ExampleRecommender</span><span class="p">,</span> <span class="n">_write_recommendations</span>
-<span class="kn">from</span> <span class="nn">.scrapers</span> <span class="kn">import</span> <span class="n">_import_matplotlib</span>
-<span class="kn">from</span> <span class="nn">.sorting</span> <span class="kn">import</span> <span class="n">ExplicitOrder</span>
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.recommender</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExampleRecommender</span><span class="p">,</span> <span class="n">_write_recommendations</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.scrapers</span><span class="w"> </span><span class="kn">import</span> <span class="n">_import_matplotlib</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.sorting</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExplicitOrder</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">_collect_gallery_files</span><span class="p">,</span>
     <span class="n">_format_toctree</span><span class="p">,</span>
     <span class="n">_has_graphviz</span><span class="p">,</span>
@@ -519,13 +519,13 @@
 
 <div class="viewcode-block" id="DefaultResetArgv">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.DefaultResetArgv">[docs]</a>
-<span class="k">class</span> <span class="nc">DefaultResetArgv</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DefaultResetArgv</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Provides default &#39;reset_argv&#39; callable that returns empty list.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;DefaultResetArgv&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return empty list.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[]</span></div>
 
@@ -600,7 +600,7 @@
 <span class="n">logger</span> <span class="o">=</span> <span class="n">sphinx</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;sphinx-gallery&quot;</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_bool_eval</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_bool_eval</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Evaluate bool only configs, to allow setting via -D on the command line.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
@@ -610,7 +610,7 @@
     <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_update_gallery_conf_exclude_implicit_doc</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_update_gallery_conf_exclude_implicit_doc</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Update gallery config exclude_implicit_doc.</span>
 
 <span class="sd">    This is separate function for better testability.</span>
@@ -626,7 +626,7 @@
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;exclude_implicit_doc_regex&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">exclude_regex</span>
 
 
-<span class="k">def</span> <span class="nf">_update_gallery_conf_builder_inited</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_update_gallery_conf_builder_inited</span><span class="p">(</span>
     <span class="n">sphinx_gallery_conf</span><span class="p">,</span>
     <span class="n">src_dir</span><span class="p">,</span>
     <span class="n">plot_gallery</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -640,7 +640,7 @@
     <span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;builder_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">builder_name</span>
 
 
-<span class="k">def</span> <span class="nf">_check_extra_config_keys</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">sphinx_gallery_conf</span><span class="p">,</span> <span class="n">check_keys</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_check_extra_config_keys</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">sphinx_gallery_conf</span><span class="p">,</span> <span class="n">check_keys</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check SG config keys, optionally raising if any extra keys present.&quot;&quot;&quot;</span>
     <span class="n">options</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">)</span>
     <span class="n">extra_keys</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">sphinx_gallery_conf</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">options</span><span class="p">))</span>
@@ -657,7 +657,7 @@
         <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
 
 
-<span class="k">def</span> <span class="nf">_check_config_type</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_check_config_type</span><span class="p">(</span>
     <span class="n">gallery_conf</span><span class="p">,</span>
     <span class="n">conf_key</span><span class="p">,</span>
     <span class="n">types</span><span class="p">,</span>
@@ -689,7 +689,7 @@
     <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_check_image_srcset</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_check_image_srcset</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check `_check_image_srcset`, convert to float and removing &#39;1&#39;.&quot;&quot;&quot;</span>
     <span class="n">_check_config_type</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="s2">&quot;image_srcset&quot;</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">),</span> <span class="n">str_to_list</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">srcset_mult_facs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
@@ -706,7 +706,7 @@
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;image_srcset&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="nb">sorted</span><span class="p">(</span><span class="n">srcset_mult_facs</span><span class="p">)]</span>
 
 
-<span class="k">def</span> <span class="nf">_check_compress_images</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_check_compress_images</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check `compress_images`, getting any command line args.&quot;&quot;&quot;</span>
     <span class="n">_check_config_type</span><span class="p">(</span>
         <span class="n">gallery_conf</span><span class="p">,</span>
@@ -740,7 +740,7 @@
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;compress_images_args&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">compress_images_args</span>
 
 
-<span class="k">def</span> <span class="nf">_check_matplotlib_animations</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">app</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_check_matplotlib_animations</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">app</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check `matplotlib_animations` config.&quot;&quot;&quot;</span>
     <span class="n">animations</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;matplotlib_animations&quot;</span><span class="p">]</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">animations</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
@@ -770,12 +770,12 @@
                         <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
                             <span class="sa">f</span><span class="s2">&quot;&#39;matplotlib_animations&#39; specifies file format: </span><span class="si">{</span><span class="n">fmt</span><span class="si">}</span><span class="s2">; &quot;</span>
                             <span class="sa">f</span><span class="s2">&quot;this requires the sphinxcontrib.video package.&quot;</span>
-                        <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+                        <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;matplotlib_animations&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">enabled</span><span class="p">,</span> <span class="n">fmt</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_check_pypandoc_config</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_check_pypandoc_config</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check `pypandoc` config.&quot;&quot;&quot;</span>
     <span class="n">pypandoc</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;pypandoc&quot;</span><span class="p">]</span>
     <span class="n">_check_config_type</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="s2">&quot;pypandoc&quot;</span><span class="p">,</span> <span class="p">(</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">bool</span><span class="p">))</span>
@@ -809,7 +809,7 @@
                 <span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_fill_gallery_conf_defaults</span><span class="p">(</span><span class="n">sphinx_gallery_conf</span><span class="p">,</span> <span class="n">app</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">check_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_fill_gallery_conf_defaults</span><span class="p">(</span><span class="n">sphinx_gallery_conf</span><span class="p">,</span> <span class="n">app</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">check_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Handle user configs, update default gallery configs and check values.&quot;&quot;&quot;</span>
     <span class="n">gallery_conf</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">DEFAULT_GALLERY_CONF</span><span class="p">)</span>
     <span class="n">_check_extra_config_keys</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">sphinx_gallery_conf</span><span class="p">,</span> <span class="n">check_keys</span><span class="p">)</span>
@@ -852,7 +852,7 @@
         <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;parallel&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;parallel&quot;</span><span class="p">]:</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="kn">import</span> <span class="nn">joblib</span>  <span class="c1"># noqa</span>
+            <span class="kn">import</span><span class="w"> </span><span class="nn">joblib</span>  <span class="c1"># noqa</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;joblib must be importable when parallel mode is enabled&quot;</span><span class="p">)</span>
 
@@ -964,7 +964,7 @@
 
 <div class="viewcode-block" id="get_subsections">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.get_subsections">[docs]</a>
-<span class="k">def</span> <span class="nf">get_subsections</span><span class="p">(</span><span class="n">srcdir</span><span class="p">,</span> <span class="n">examples_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">check_for_header</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_subsections</span><span class="p">(</span><span class="n">srcdir</span><span class="p">,</span> <span class="n">examples_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">check_for_header</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the list of subsections of a gallery.</span>
 
 <span class="sd">    Parameters</span>
@@ -1025,7 +1025,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">_prepare_sphx_glr_dirs</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">srcdir</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_prepare_sphx_glr_dirs</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">srcdir</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates necessary folders for sphinx_gallery files.&quot;&quot;&quot;</span>
     <span class="n">examples_dirs</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;examples_dirs&quot;</span><span class="p">]</span>
     <span class="n">gallery_dirs</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;gallery_dirs&quot;</span><span class="p">]</span>
@@ -1049,7 +1049,7 @@
     <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">examples_dirs</span><span class="p">,</span> <span class="n">gallery_dirs</span><span class="p">))</span>
 
 
-<span class="k">def</span> <span class="nf">_filter_tags</span><span class="p">(</span><span class="n">subsection_index_content</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_filter_tags</span><span class="p">(</span><span class="n">subsection_index_content</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Filter out tags from `subsection_index_content`.&quot;&quot;&quot;</span>
     <span class="n">tag_regex</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;^\.\.(\s+)\_(.+)\:(\s*)$&quot;</span>
     <span class="n">subsection_index_content</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
@@ -1063,7 +1063,7 @@
     <span class="k">return</span> <span class="n">subsection_index_content</span>
 
 
-<span class="k">def</span> <span class="nf">_finish_index_rst</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_finish_index_rst</span><span class="p">(</span>
     <span class="n">app</span><span class="p">,</span>
     <span class="n">gallery_conf</span><span class="p">,</span>
     <span class="n">indexst</span><span class="p">,</span>
@@ -1102,11 +1102,11 @@
         <span class="n">_replace_md5</span><span class="p">(</span><span class="n">index_rst_new</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;t&quot;</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_build_recommender</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">gallery_dir_abs_path</span><span class="p">,</span> <span class="n">subsecs</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_build_recommender</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">gallery_dir_abs_path</span><span class="p">,</span> <span class="n">subsecs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Build recommender and write recommendations.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;recommender&quot;</span><span class="p">][</span><span class="s2">&quot;enable&quot;</span><span class="p">]:</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>  <span class="c1"># noqa: F401</span>
+            <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>  <span class="c1"># noqa: F401</span>
         <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s2">&quot;gallery_conf[&#39;recommender&#39;] requires numpy&quot;</span><span class="p">)</span>
 
@@ -1138,7 +1138,7 @@
             <span class="n">_write_recommendations</span><span class="p">(</span><span class="n">recommender</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_log_costs</span><span class="p">(</span><span class="n">costs</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_log_costs</span><span class="p">(</span><span class="n">costs</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Log computation time.&quot;&quot;&quot;</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;computation time summary:&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">)</span>
     <span class="n">lines</span><span class="p">,</span> <span class="n">lens</span> <span class="o">=</span> <span class="n">_format_for_writing</span><span class="p">(</span>
@@ -1158,7 +1158,7 @@
 
 <div class="viewcode-block" id="generate_gallery_rst">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.generate_gallery_rst">[docs]</a>
-<span class="k">def</span> <span class="nf">generate_gallery_rst</span><span class="p">(</span><span class="n">app</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">generate_gallery_rst</span><span class="p">(</span><span class="n">app</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate the Main examples gallery reStructuredText.</span>
 
 <span class="sd">    Fill Sphinx-Gallery configuration and scan example directories</span>
@@ -1323,7 +1323,7 @@
 <span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_sec_to_readable</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_sec_to_readable</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a number of seconds to a more readable representation.&quot;&quot;&quot;</span>
     <span class="c1"># This will only work for &lt; 1 day execution time</span>
     <span class="c1"># And we reserve 2 digits for minutes because presumably</span>
@@ -1336,13 +1336,13 @@
     <span class="k">return</span> <span class="n">t</span>
 
 
-<span class="k">def</span> <span class="nf">_cost_key</span><span class="p">(</span><span class="n">cost</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_cost_key</span><span class="p">(</span><span class="n">cost</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Cost sorting function.&quot;&quot;&quot;</span>
     <span class="c1"># sort by descending computation time, descending memory, alphabetical name</span>
     <span class="k">return</span> <span class="p">(</span><span class="o">-</span><span class="n">cost</span><span class="p">[</span><span class="s2">&quot;t&quot;</span><span class="p">],</span> <span class="o">-</span><span class="n">cost</span><span class="p">[</span><span class="s2">&quot;mem&quot;</span><span class="p">],</span> <span class="n">cost</span><span class="p">[</span><span class="s2">&quot;src_file&quot;</span><span class="p">])</span>
 
 
-<span class="k">def</span> <span class="nf">_format_for_writing</span><span class="p">(</span><span class="n">costs</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;rst&quot;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_format_for_writing</span><span class="p">(</span><span class="n">costs</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;rst&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Provide formatted computation summary text.</span>
 
 <span class="sd">    Parameters</span>
@@ -1389,7 +1389,7 @@
 
 <div class="viewcode-block" id="write_computation_times">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.write_computation_times">[docs]</a>
-<span class="k">def</span> <span class="nf">write_computation_times</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">costs</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">write_computation_times</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">costs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Write computation times to `sg_execution_times.rst`.</span>
 
 <span class="sd">    Parameters</span>
@@ -1473,7 +1473,7 @@
 
 <div class="viewcode-block" id="write_api_entries">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.write_api_entries">[docs]</a>
-<span class="k">def</span> <span class="nf">write_api_entries</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">what</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="n">lines</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">write_api_entries</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">what</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="n">lines</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Write api entries to `_sg_api_entries` configuration.</span>
 
 <span class="sd">    To connect to `autodoc-process-docstring` event.</span>
@@ -1506,7 +1506,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">_init_api_usage</span><span class="p">(</span><span class="n">gallery_dir</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_init_api_usage</span><span class="p">(</span><span class="n">gallery_dir</span><span class="p">):</span>
     <span class="k">with</span> <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span>
         <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gallery_dir</span><span class="p">,</span> <span class="s2">&quot;sg_api_usage.rst&quot;</span><span class="p">),</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span>
     <span class="p">):</span>
@@ -1524,7 +1524,7 @@
 <span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_make_graph</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">entries</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_make_graph</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">entries</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Make a graph of unused and used API entries.</span>
 
 <span class="sd">    The used API entries themselves are documented in the list, so</span>
@@ -1548,7 +1548,7 @@
 <span class="sd">    gallery_conf : Dict[str, Any]</span>
 <span class="sd">        Sphinx-Gallery configuration dictionary.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">graphviz</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">graphviz</span>
 
     <span class="n">dg</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Digraph</span><span class="p">(</span>
         <span class="n">filename</span><span class="o">=</span><span class="n">fname</span><span class="p">,</span>
@@ -1625,7 +1625,7 @@
 
 <div class="viewcode-block" id="write_api_entry_usage">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.write_api_entry_usage">[docs]</a>
-<span class="k">def</span> <span class="nf">write_api_entry_usage</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">docname</span><span class="p">,</span> <span class="n">source</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">write_api_entry_usage</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">docname</span><span class="p">,</span> <span class="n">source</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Write an html page describing which API entries are used and unused.</span>
 
 <span class="sd">    To document and graph only those API entries that are used by</span>
@@ -1684,7 +1684,7 @@
         <span class="n">source</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="s2">&quot;No examples run, not computed.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
         <span class="k">return</span>
 
-    <span class="k">def</span> <span class="nf">get_entry_type</span><span class="p">(</span><span class="n">entry</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_entry_type</span><span class="p">(</span><span class="n">entry</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;_sg_api_entries&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="p">[]):</span>
             <span class="k">return</span> <span class="s2">&quot;class&quot;</span>
         <span class="k">elif</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;_sg_api_entries&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;method&quot;</span><span class="p">,</span> <span class="p">[]):</span>
@@ -1783,7 +1783,7 @@
 
 <div class="viewcode-block" id="clean_api_usage_files">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.clean_api_usage_files">[docs]</a>
-<span class="k">def</span> <span class="nf">clean_api_usage_files</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">exception</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">clean_api_usage_files</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">exception</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove api usage .dot files.</span>
 
 <span class="sd">    To connect to &#39;build-finished&#39; event.</span>
@@ -1800,7 +1800,7 @@
 
 <div class="viewcode-block" id="write_junit_xml">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.write_junit_xml">[docs]</a>
-<span class="k">def</span> <span class="nf">write_junit_xml</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">costs</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">write_junit_xml</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">costs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Write JUnit XML file of example run times, successes, and failures.</span>
 
 <span class="sd">    Parameters</span>
@@ -1879,7 +1879,7 @@
 
 <div class="viewcode-block" id="touch_empty_backreferences">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.touch_empty_backreferences">[docs]</a>
-<span class="k">def</span> <span class="nf">touch_empty_backreferences</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">what</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="n">lines</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">touch_empty_backreferences</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">what</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="n">lines</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate empty back-reference example files.</span>
 
 <span class="sd">    This avoids inclusion errors/warnings if there are no gallery</span>
@@ -1900,14 +1900,14 @@
 
 
 
-<span class="k">def</span> <span class="nf">_expected_failing_examples</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_expected_failing_examples</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">):</span>
     <span class="k">return</span> <span class="p">{</span>
         <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">],</span> <span class="n">path</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;expected_failing_examples&quot;</span><span class="p">]</span>
     <span class="p">}</span>
 
 
-<span class="k">def</span> <span class="nf">_parse_failures</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_parse_failures</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Split the failures.&quot;&quot;&quot;</span>
     <span class="n">failing_examples</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;failing_examples&quot;</span><span class="p">])</span>
     <span class="n">expected_failing_examples</span> <span class="o">=</span> <span class="n">_expected_failing_examples</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">)</span>
@@ -1925,7 +1925,7 @@
 
 <div class="viewcode-block" id="summarize_failing_examples">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.summarize_failing_examples">[docs]</a>
-<span class="k">def</span> <span class="nf">summarize_failing_examples</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">exception</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">summarize_failing_examples</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">exception</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Collects the list of falling examples and prints them with a traceback.</span>
 
 <span class="sd">    Raises ValueError if there where failing examples.</span>
@@ -2023,10 +2023,10 @@
 
 <div class="viewcode-block" id="get_default_config_value">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.get_default_config_value">[docs]</a>
-<span class="k">def</span> <span class="nf">get_default_config_value</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_default_config_value</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get default configuration function.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">default_getter</span><span class="p">(</span><span class="n">conf</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">default_getter</span><span class="p">(</span><span class="n">conf</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">conf</span><span class="p">[</span><span class="s2">&quot;sphinx_gallery_conf&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">DEFAULT_GALLERY_CONF</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
 
     <span class="k">return</span> <span class="n">default_getter</span></div>
@@ -2035,7 +2035,7 @@
 
 <div class="viewcode-block" id="fill_gallery_conf_defaults">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.fill_gallery_conf_defaults">[docs]</a>
-<span class="k">def</span> <span class="nf">fill_gallery_conf_defaults</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">check_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">fill_gallery_conf_defaults</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">check_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check the sphinx-gallery config and set its defaults.</span>
 
 <span class="sd">    This is called early at config-inited, so that all the rest of the code can</span>
@@ -2057,7 +2057,7 @@
 
 <div class="viewcode-block" id="update_gallery_conf_builder_inited">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.update_gallery_conf_builder_inited">[docs]</a>
-<span class="k">def</span> <span class="nf">update_gallery_conf_builder_inited</span><span class="p">(</span><span class="n">app</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">update_gallery_conf_builder_inited</span><span class="p">(</span><span class="n">app</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Update the the sphinx-gallery config at builder-inited.&quot;&quot;&quot;</span>
     <span class="n">plot_gallery</span> <span class="o">=</span> <span class="n">_bool_eval</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">plot_gallery</span><span class="p">)</span>
     <span class="n">src_dir</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span>
@@ -2074,13 +2074,13 @@
 
 <div class="viewcode-block" id="setup_template_link_getters">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.setup_template_link_getters">[docs]</a>
-<span class="k">def</span> <span class="nf">setup_template_link_getters</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">pagename</span><span class="p">,</span> <span class="n">templatename</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">doctree</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">setup_template_link_getters</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">pagename</span><span class="p">,</span> <span class="n">templatename</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">doctree</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Set up the getters for download and launcher links.</span>
 
 <span class="sd">    The getters are added to the sphinx context so as to be used in templates.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">_find_containers_with_class</span><span class="p">(</span><span class="n">class_name</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_find_containers_with_class</span><span class="p">(</span><span class="n">class_name</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">doctree</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">iter</span><span class="p">([])</span>
 
@@ -2089,7 +2089,7 @@
             <span class="ow">and</span> <span class="n">class_name</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">attributes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;classes&quot;</span><span class="p">,</span> <span class="p">[])</span>
         <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">get_download_links</span><span class="p">():</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_download_links</span><span class="p">():</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the download links for the example.</span>
 
 <span class="sd">        This function relies on `_find_containers_with_class` which in turn relies on</span>
@@ -2119,7 +2119,7 @@
                     <span class="p">}</span>
         <span class="k">return</span> <span class="n">links</span>
 
-    <span class="k">def</span> <span class="nf">get_launcher_links</span><span class="p">():</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_launcher_links</span><span class="p">():</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the launcher links for the example.</span>
 
 <span class="sd">        This function relies on `_find_containers_with_class` which in turn relies on</span>
@@ -2153,7 +2153,7 @@
 
 <div class="viewcode-block" id="setup">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.setup">[docs]</a>
-<span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="n">app</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="n">app</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Setup Sphinx-Gallery sphinx extension.&quot;&quot;&quot;</span>
     <span class="n">app</span><span class="o">.</span><span class="n">add_config_value</span><span class="p">(</span><span class="s2">&quot;sphinx_gallery_conf&quot;</span><span class="p">,</span> <span class="n">DEFAULT_GALLERY_CONF</span><span class="p">,</span> <span class="s2">&quot;html&quot;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;plot_gallery&quot;</span><span class="p">,</span> <span class="s2">&quot;abort_on_example_error&quot;</span><span class="p">]:</span>
@@ -2202,7 +2202,7 @@
 
 <div class="viewcode-block" id="setup_module">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.setup_module">[docs]</a>
-<span class="k">def</span> <span class="nf">setup_module</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">setup_module</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Hack to stop nosetests running setup() above.&quot;&quot;&quot;</span>
     <span class="k">pass</span></div>
 
@@ -2247,7 +2247,7 @@
 
   <p class="copyright">
     
-      © Copyright 2014-2024, Sphinx-gallery developers.
+      © Copyright 2014-2025, Sphinx-gallery developers.
       <br/>
     
   </p>
