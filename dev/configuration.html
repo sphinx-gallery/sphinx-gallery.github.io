@@ -1029,16 +1029,28 @@ class, which will be instantiated with the full path to the output directory;
 </section>
 <section id="add-intersphinx-links-to-your-examples">
 <span id="link-to-documentation"></span><h2>Add intersphinx links to your examples<a class="headerlink" href="#add-intersphinx-links-to-your-examples" title="Link to this heading">#</a></h2>
-<p>Sphinx-Gallery enables you to add hyperlinks in your example scripts so that
-you can link used functions/methods/attributes/objects/classes to their matching
-online documentation. Such code snippets within the gallery appear like this:</p>
+<p>Sphinx-Gallery enables you to add hyperlinks to the <strong>code blocks</strong> in your example
+files. This links functions/methods/attributes/objects/classes used, to their matching
+online documentation.</p>
+<p>Such code snippets within the gallery appear like this:</p>
 <div class="highlight-python"><div class="highlight"><pre>
 <span class="n">y</span> <span class="o">=</span> <a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.sin.html#numpy.sin"><span class="n">np</span><span class="o">.</span><span class="n">sin</span></a><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 </pre></div>
-</div><p>Have a look at this in full action
-in our example <a class="reference internal" href="auto_examples/plot_0_sin.html#sphx-glr-auto-examples-plot-0-sin-py"><span class="std std-ref">Introductory example - Plotting sin</span></a>.</p>
-<p>To make this work in your documentation you need to include to the configuration
-dictionary within your Sphinx <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file:</p>
+</div><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Sphinx-Gallery does not manage hyperlinks in reST <strong>text blocks</strong>. These
+depend on your Sphinx setup. If your project uses <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html#module-sphinx.ext.intersphinx" title="(in Sphinx v8.2.0)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sphinx.ext.intersphinx</span></code></a>,
+hyperlinks to external modules will be added to text blocks, similar to a normal
+Sphinx reST documentation file.</p>
+</div>
+<p>If you use the Sphinx extension <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html#module-sphinx.ext.intersphinx" title="(in Sphinx v8.2.0)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sphinx.ext.intersphinx</span></code></a>, entries in
+the <code class="docutils literal notranslate"><span class="pre">intersphinx</span></code> inventory will automatically be used for linking inside
+code blocks. If you wish to add or over-ride any <code class="docutils literal notranslate"><span class="pre">intersphinx</span></code> module, you can
+use the Sphinx-Gallery <code class="docutils literal notranslate"><span class="pre">reference_url</span></code> configuration.
+<code class="docutils literal notranslate"><span class="pre">reference_url</span></code> accepts a dictionary where the key is the module name string and
+value is the URL to the module’s documentation directory page, containing
+<code class="docutils literal notranslate"><span class="pre">searchindex.js</span></code>, such as <code class="docutils literal notranslate"><span class="pre">'matplotlib':</span> <span class="pre">'https://matplotlib.org'</span></code>.</p>
+<p>To link the local module, use <code class="docutils literal notranslate"><span class="pre">None</span></code> as the value, as shown below:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
     <span class="s1">&#39;reference_url&#39;</span><span class="p">:</span> <span class="p">{</span>
@@ -1048,14 +1060,10 @@ dictionary within your Sphinx <code class="docutils literal notranslate"><span c
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>To link to external modules, if you use the Sphinx extension
-<a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html#module-sphinx.ext.intersphinx" title="(in Sphinx v8.2.0)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sphinx.ext.intersphinx</span></code></a>, no additional changes are necessary,
-as the <code class="docutils literal notranslate"><span class="pre">intersphinx</span></code> inventory will automatically be used.
-If you do not use <code class="docutils literal notranslate"><span class="pre">intersphinx</span></code>, then you should add entries that
-point to the directory containing <code class="docutils literal notranslate"><span class="pre">searchindex.js</span></code>, such as
-<code class="docutils literal notranslate"><span class="pre">'matplotlib':</span> <span class="pre">'https://matplotlib.org'</span></code>.</p>
-<p>If you wish to do the same for ordinary reST documentation,
+<p>To add links to code blocks in plain reST example files inside galleries,
 see <a class="reference internal" href="syntax.html#plain-rst"><span class="std std-ref">Plain reST examples</span></a>.</p>
+<p>Have a look at this functionality in full action
+in our example <a class="reference internal" href="auto_examples/plot_0_sin.html#sphx-glr-auto-examples-plot-0-sin-py"><span class="std std-ref">Introductory example - Plotting sin</span></a>.</p>
 <section id="resolving-module-paths">
 <h3>Resolving module paths<a class="headerlink" href="#resolving-module-paths" title="Link to this heading">#</a></h3>
 <p>When finding links to objects we use, by default, the shortest module path,
