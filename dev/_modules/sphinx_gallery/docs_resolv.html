@@ -471,7 +471,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">sphinx.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExtensionError</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sphinx.search</span><span class="w"> </span><span class="kn">import</span> <span class="n">js_index</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">_W_KW</span><span class="p">,</span> <span class="n">_replace_md5</span><span class="p">,</span> <span class="n">status_iterator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">_W_KW</span><span class="p">,</span> <span class="n">_read_json</span><span class="p">,</span> <span class="n">status_iterator</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">sphinx</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;sphinx-gallery&quot;</span><span class="p">)</span>
 
@@ -795,22 +795,6 @@
     <span class="k">return</span> <span class="n">intersphinx_inv</span>
 
 
-<span class="c1"># Whatever mechanism is used for writing here should be paired with reading in</span>
-<span class="c1"># _embed_code_links</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">_write_code_obj</span><span class="p">(</span><span class="n">target_file</span><span class="p">,</span> <span class="n">example_code_obj</span><span class="p">):</span>
-    <span class="n">codeobj_fname</span> <span class="o">=</span> <span class="n">target_file</span><span class="o">.</span><span class="n">with_name</span><span class="p">(</span><span class="n">target_file</span><span class="o">.</span><span class="n">stem</span> <span class="o">+</span> <span class="s2">&quot;.codeobj.json.new&quot;</span><span class="p">)</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">codeobj_fname</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">_W_KW</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
-        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span>
-            <span class="n">example_code_obj</span><span class="p">,</span>
-            <span class="n">fid</span><span class="p">,</span>
-            <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-            <span class="n">indent</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-            <span class="n">check_circular</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="p">)</span>
-    <span class="n">_replace_md5</span><span class="p">(</span><span class="n">codeobj_fname</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span>
-
-
 <span class="k">def</span><span class="w"> </span><span class="nf">_embed_code_links</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">gallery_dir</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Add resolvers for the packages for which we want to show links.&quot;&quot;&quot;</span>
     <span class="n">doc_resolvers</span> <span class="o">=</span> <span class="p">{}</span>
@@ -865,8 +849,8 @@
             <span class="k">continue</span>
 
         <span class="c1"># we have a json file with the objects to embed links for</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">json_fname</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
-            <span class="n">example_code_obj</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fid</span><span class="p">)</span>
+        <span class="n">example_code_obj</span> <span class="o">=</span> <span class="n">_read_json</span><span class="p">(</span><span class="n">json_fname</span><span class="p">)</span>
+
         <span class="c1"># generate replacement strings with the links</span>
         <span class="n">str_repl</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">example_code_obj</span><span class="p">):</span>

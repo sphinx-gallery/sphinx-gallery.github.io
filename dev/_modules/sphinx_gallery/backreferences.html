@@ -463,6 +463,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">defaultdict</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">html</span><span class="w"> </span><span class="kn">import</span> <span class="n">escape</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
@@ -766,7 +767,7 @@
 <span class="n">THUMBNAIL_TEMPLATE</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">.. raw:: html</span>
 
-<span class="s2">    &lt;div class=&quot;sphx-glr-thumbcontainer&quot; tooltip=&quot;</span><span class="si">{snippet}</span><span class="s2">&quot;&gt;</span>
+<span class="s2">    &lt;div class=&quot;sphx-glr-thumbcontainer&quot; tooltip=&quot;</span><span class="si">{intro}</span><span class="s2">&quot;&gt;</span>
 
 <span class="s2">.. only:: html</span>
 
@@ -793,9 +794,33 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_thumbnail_div</span><span class="p">(</span>
-    <span class="n">target_dir</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">snippet</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">is_backref</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">True</span>
+    <span class="n">target_dir</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">intro</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">is_backref</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate reST to place a thumbnail in a gallery.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate reST to place a thumbnail in a gallery.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    target_dir : str</span>
+<span class="sd">        Absolute path to output directory, where thumbnails are saved.</span>
+<span class="sd">    src_dir : str</span>
+<span class="sd">        Absolute path to build source directory.</span>
+<span class="sd">    fname : str</span>
+<span class="sd">        Filename of example file.</span>
+<span class="sd">    intro : str</span>
+<span class="sd">        Introductory docstring of example, to show in tooltip</span>
+<span class="sd">    title: str</span>
+<span class="sd">        Title of example.</span>
+<span class="sd">    is_backref : bool</span>
+<span class="sd">        Whether the thumbnail is for a html backreference/recommendation file. If not</span>
+<span class="sd">        a bullet list of the example is added for non-html documentation builds.</span>
+<span class="sd">    check : bool</span>
+<span class="sd">        Whether to check if the thumbnail image file exists.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    thumbnail : str</span>
+<span class="sd">        reST for a thumbnail.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">fname</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
     <span class="n">thumb</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_find_image_ext</span><span class="p">(</span>
         <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="s2">&quot;images&quot;</span><span class="p">,</span> <span class="s2">&quot;thumb&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;sphx_glr_</span><span class="si">{</span><span class="n">fname</span><span class="o">.</span><span class="n">stem</span><span class="si">}</span><span class="s2">_thumb.png&quot;</span><span class="p">)</span>
@@ -815,14 +840,17 @@
 
     <span class="n">template</span> <span class="o">=</span> <span class="n">BACKREF_THUMBNAIL_TEMPLATE</span> <span class="k">if</span> <span class="n">is_backref</span> <span class="k">else</span> <span class="n">THUMBNAIL_TEMPLATE</span>
     <span class="k">return</span> <span class="n">template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-        <span class="n">snippet</span><span class="o">=</span><span class="n">escape</span><span class="p">(</span><span class="n">snippet</span><span class="p">),</span> <span class="n">thumbnail</span><span class="o">=</span><span class="n">thumb</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">ref_name</span><span class="o">=</span><span class="n">ref_name</span>
+        <span class="n">intro</span><span class="o">=</span><span class="n">escape</span><span class="p">(</span><span class="n">intro</span><span class="p">),</span> <span class="n">thumbnail</span><span class="o">=</span><span class="n">thumb</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">ref_name</span><span class="o">=</span><span class="n">ref_name</span>
     <span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_write_backreferences</span><span class="p">(</span>
-    <span class="n">backrefs</span><span class="p">,</span> <span class="n">seen_backrefs</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">snippet</span><span class="p">,</span> <span class="n">title</span>
+    <span class="n">backrefs</span><span class="p">,</span> <span class="n">seen_backrefs</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">intro</span><span class="p">,</span> <span class="n">title</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Write backreference file for one example including a thumbnail list of examples.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Write and return backreferences for one example.</span>
+
+<span class="sd">    Backreferences &#39;.examples&#39; file written includes reST of the list of examples</span>
+<span class="sd">    as thumbnails.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -836,14 +864,21 @@
 <span class="sd">        Absolute path to directory where examples are saved.</span>
 <span class="sd">    fname : str</span>
 <span class="sd">        Filename of current example python file.</span>
-<span class="sd">    snippet : str</span>
+<span class="sd">    intro : str</span>
 <span class="sd">        Introductory docstring of example.</span>
 <span class="sd">    title: str</span>
 <span class="sd">        Title of example.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    backrefs_example : dict[str, tuple]</span>
+<span class="sd">        Dictionary where value is the backreference object and value</span>
+<span class="sd">        is a tuple containing: full path to example file, intro, title.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;backreferences_dir&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span>
 
+    <span class="n">backrefs_example</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">backref</span> <span class="ow">in</span> <span class="n">backrefs</span><span class="p">:</span>
         <span class="n">include_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
             <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">],</span>
@@ -855,7 +890,7 @@
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">include_path</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="o">**</span><span class="n">_W_KW</span><span class="p">)</span> <span class="k">as</span> <span class="n">ex_file</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">seen</span><span class="p">:</span>
                 <span class="c1"># Be aware that if the number of lines of this heading changes,</span>
-                <span class="c1">#   the minigallery directive should be modified accordingly</span>
+                <span class="c1"># the minigallery directive should be modified accordingly</span>
                 <span class="n">heading</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Examples using ``</span><span class="si">{</span><span class="n">backref</span><span class="si">}</span><span class="s2">``&quot;</span>
                 <span class="n">ex_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">heading</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="n">ex_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;^&quot;</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">heading</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -868,12 +903,16 @@
                     <span class="n">target_dir</span><span class="p">,</span>
                     <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">],</span>
                     <span class="n">fname</span><span class="p">,</span>
-                    <span class="n">snippet</span><span class="p">,</span>
+                    <span class="n">intro</span><span class="p">,</span>
                     <span class="n">title</span><span class="p">,</span>
                     <span class="n">is_backref</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                 <span class="p">)</span>
             <span class="p">)</span>
             <span class="n">seen_backrefs</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">backref</span><span class="p">)</span>
+            <span class="n">backrefs_example</span><span class="p">[</span><span class="n">backref</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">)),</span> <span class="n">intro</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span>
+            <span class="p">)</span>
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">backrefs_example</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_finalize_backreferences</span><span class="p">(</span><span class="n">seen_backrefs</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>

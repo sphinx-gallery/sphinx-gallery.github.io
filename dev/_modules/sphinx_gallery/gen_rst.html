@@ -495,7 +495,6 @@
     <span class="n">identify_names</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.block_parser</span><span class="w"> </span><span class="kn">import</span> <span class="n">BlockParser</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.docs_resolv</span><span class="w"> </span><span class="kn">import</span> <span class="n">_write_code_obj</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.interactive_example</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">_add_jupyterlite_badge_logo</span><span class="p">,</span>
     <span class="n">gen_binder_rst</span><span class="p">,</span>
@@ -513,8 +512,10 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">_W_KW</span><span class="p">,</span>
     <span class="n">_collect_gallery_files</span><span class="p">,</span>
+    <span class="n">_combine_backreferences</span><span class="p">,</span>
     <span class="n">_format_toctree</span><span class="p">,</span>
     <span class="n">_replace_md5</span><span class="p">,</span>
+    <span class="n">_write_json</span><span class="p">,</span>
     <span class="n">get_md5sum</span><span class="p">,</span>
     <span class="n">optipng</span><span class="p">,</span>
     <span class="n">scale_image</span><span class="p">,</span>
@@ -976,7 +977,7 @@
     <span class="n">seen_backrefs</span><span class="p">,</span>
     <span class="n">is_subsection</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate the gallery reStructuredText for an example directory.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate output example reST files for one gallery (sub)directory.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1006,6 +1007,10 @@
 <span class="sd">         with keys &quot;t&quot;, &quot;mem&quot;, &quot;src_file&quot;, and &quot;target_dir&quot;.</span>
 <span class="sd">    toctree_items: list,</span>
 <span class="sd">        List of example file names we generated ReST for.</span>
+<span class="sd">    backrefs_dir : dict[str, tuple]</span>
+<span class="sd">        Dictionary where value is the backreference object and value</span>
+<span class="sd">        is a tuple containing: full path to example file, intro, title.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">index_content</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="c1"># `_get_gallery_header` returns `None` if user supplied `index.rst`</span>
@@ -1048,6 +1053,8 @@
         <span class="sa">f</span><span class="s2">&quot;generating gallery for </span><span class="si">{</span><span class="n">build_target_dir</span><span class="si">}</span><span class="s2">... &quot;</span><span class="p">,</span>
         <span class="n">length</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">sorted_listdir</span><span class="p">),</span>
     <span class="p">)</span>
+
+    <span class="n">backrefs_dir</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="n">parallel</span> <span class="o">=</span> <span class="nb">list</span>
     <span class="n">p_fun</span> <span class="o">=</span> <span class="n">generate_file_rst</span>
@@ -1092,7 +1099,7 @@
 
         <span class="c1"># Write backreferences</span>
         <span class="k">if</span> <span class="s2">&quot;backrefs&quot;</span> <span class="ow">in</span> <span class="n">out_vars</span><span class="p">:</span>
-            <span class="n">_write_backreferences</span><span class="p">(</span>
+            <span class="n">backrefs_example</span> <span class="o">=</span> <span class="n">_write_backreferences</span><span class="p">(</span>
                 <span class="n">out_vars</span><span class="p">[</span><span class="s2">&quot;backrefs&quot;</span><span class="p">],</span>
                 <span class="n">seen_backrefs</span><span class="p">,</span>
                 <span class="n">gallery_conf</span><span class="p">,</span>
@@ -1101,6 +1108,7 @@
                 <span class="n">intro</span><span class="p">,</span>
                 <span class="n">title</span><span class="p">,</span>
             <span class="p">)</span>
+            <span class="n">_combine_backreferences</span><span class="p">(</span><span class="n">backrefs_dir</span><span class="p">,</span> <span class="n">backrefs_example</span><span class="p">)</span>
 
     <span class="c1"># Close thumbnail parent div</span>
     <span class="n">index_content</span> <span class="o">+=</span> <span class="n">THUMBNAIL_PARENT_DIV_CLOSE</span>
@@ -1127,6 +1135,7 @@
         <span class="n">index_content</span><span class="p">,</span>
         <span class="n">costs</span><span class="p">,</span>
         <span class="n">toctree_filenames</span><span class="p">,</span>
+        <span class="n">backrefs_dir</span><span class="p">,</span>
     <span class="p">)</span></div>
 
 
@@ -1736,7 +1745,7 @@
     <span class="n">ref_regex</span> <span class="o">=</span> <span class="n">_make_ref_regex</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;default_role&quot;</span><span class="p">])</span>
     <span class="n">example_code_obj</span> <span class="o">=</span> <span class="n">identify_names</span><span class="p">(</span><span class="n">script_blocks</span><span class="p">,</span> <span class="n">ref_regex</span><span class="p">,</span> <span class="n">global_variables</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">example_code_obj</span><span class="p">:</span>
-        <span class="n">_write_code_obj</span><span class="p">(</span><span class="n">target_file</span><span class="p">,</span> <span class="n">example_code_obj</span><span class="p">)</span>
+        <span class="n">_write_json</span><span class="p">(</span><span class="n">target_file</span><span class="p">,</span> <span class="n">example_code_obj</span><span class="p">,</span> <span class="s2">&quot;.codeobj&quot;</span><span class="p">)</span>
     <span class="n">exclude_regex</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;exclude_implicit_doc_regex&quot;</span><span class="p">]</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_normalize_name</span><span class="p">(</span><span class="n">cobj</span><span class="p">):</span>

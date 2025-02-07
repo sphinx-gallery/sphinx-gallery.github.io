@@ -455,6 +455,7 @@
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">namedtuple</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span><span class="p">,</span> <span class="n">PurePosixPath</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">docutils</span><span class="w"> </span><span class="kn">import</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">statemachine</span>
@@ -470,6 +471,7 @@
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.gen_rst</span><span class="w"> </span><span class="kn">import</span> <span class="n">extract_intro_and_title</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.py_source_parser</span><span class="w"> </span><span class="kn">import</span> <span class="n">split_code_and_text_blocks</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">_read_json</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;sphinx-gallery&quot;</span><span class="p">)</span>
 
@@ -582,13 +584,13 @@
         <span class="c1"># Retrieve source directory</span>
         <span class="n">src_dir</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">]</span>
 
-        <span class="c1"># Parse the argument into the individual objects</span>
-        <span class="n">obj_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Parse the argument into the individual args</span>
+        <span class="n">arg_list</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">arguments</span><span class="p">:</span>
-            <span class="n">obj_list</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">c</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">arguments</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()])</span>
+            <span class="n">arg_list</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">c</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">arguments</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()])</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">content</span><span class="p">:</span>
-            <span class="n">obj_list</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">c</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">content</span><span class="p">])</span>
+            <span class="n">arg_list</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">c</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">content</span><span class="p">])</span>
 
         <span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -596,53 +598,75 @@
         <span class="k">if</span> <span class="s2">&quot;add-heading&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">:</span>
             <span class="n">heading</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;add-heading&quot;</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">heading</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">obj_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-                    <span class="n">heading</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Examples using ``</span><span class="si">{</span><span class="n">obj_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">``&quot;</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">arg_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">heading</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Examples using ``</span><span class="si">{</span><span class="n">arg_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">``&quot;</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">heading</span> <span class="o">=</span> <span class="s2">&quot;Examples using one of multiple objects&quot;</span>
             <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">heading</span><span class="p">)</span>
             <span class="n">heading_level</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;heading-level&quot;</span><span class="p">,</span> <span class="s2">&quot;^&quot;</span><span class="p">)</span>
             <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">heading_level</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">heading</span><span class="p">))</span>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">has_backrefs</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
-            <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">backreferences_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">obj</span><span class="si">}</span><span class="s2">.examples&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">path</span> <span class="k">if</span> <span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="ow">and</span> <span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">stat</span><span class="p">()</span><span class="o">.</span><span class="n">st_size</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">))</span> <span class="k">else</span> <span class="kc">False</span>
+        <span class="n">ExampleInfo</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s2">&quot;ExampleInfo&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;intro&quot;</span><span class="p">,</span> <span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="s2">&quot;arg&quot;</span><span class="p">])</span>
+        <span class="n">backreferences_all</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">backreferences_dir</span><span class="p">:</span>
+            <span class="n">backreferences_all</span> <span class="o">=</span> <span class="n">_read_json</span><span class="p">(</span>
+                <span class="n">Path</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">backreferences_dir</span><span class="p">,</span> <span class="s2">&quot;backreferences_all.json&quot;</span><span class="p">)</span>
+            <span class="p">)</span>
 
-        <span class="n">file_paths</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">obj_list</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">backreferences_dir</span> <span class="ow">and</span> <span class="p">(</span><span class="n">path</span> <span class="o">:=</span> <span class="n">has_backrefs</span><span class="p">(</span><span class="n">obj</span><span class="p">)):</span>
-                <span class="n">file_paths</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">obj</span><span class="p">,</span> <span class="n">path</span><span class="o">.</span><span class="n">resolve</span><span class="p">()))</span>
-            <span class="k">elif</span> <span class="n">paths</span> <span class="o">:=</span> <span class="n">Path</span><span class="p">(</span><span class="n">src_dir</span><span class="p">)</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
-                <span class="n">file_paths</span><span class="o">.</span><span class="n">extend</span><span class="p">([(</span><span class="n">obj</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">resolve</span><span class="p">())</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">])</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">has_backrefs</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">backreferences_all</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            <span class="n">examples</span> <span class="o">=</span> <span class="n">backreferences_all</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">examples</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">examples</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># Full paths to example files are dict keys, preventing duplicates</span>
+        <span class="n">file_paths</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">arg_list</span><span class="p">:</span>
+            <span class="c1"># Backreference arg input</span>
+            <span class="k">if</span> <span class="n">paths</span> <span class="o">:=</span> <span class="n">has_backrefs</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
+                <span class="c1"># Note `ExampleInfo.arg` not required for backreference paths</span>
+                <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
+                    <span class="n">file_paths</span><span class="p">[</span><span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span> <span class="o">=</span> <span class="n">ExampleInfo</span><span class="p">(</span>
+                        <span class="n">intro</span><span class="o">=</span><span class="n">path</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">title</span><span class="o">=</span><span class="n">path</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">arg</span><span class="o">=</span><span class="kc">None</span>
+                    <span class="p">)</span>
+            <span class="c1"># Glob path arg input</span>
+            <span class="k">elif</span> <span class="n">paths</span> <span class="o">:=</span> <span class="n">Path</span><span class="p">(</span><span class="n">src_dir</span><span class="p">)</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
+                <span class="c1"># Glob paths require extra parsing to get the intro and title</span>
+                <span class="c1"># so we don&#39;t want to override a duplicate backreference arg input</span>
+                <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
+                    <span class="n">path_resolved</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="n">path_resolved</span> <span class="ow">in</span> <span class="n">file_paths</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">file_paths</span><span class="p">[</span><span class="n">path_resolved</span><span class="p">]</span> <span class="o">=</span> <span class="n">ExampleInfo</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">arg</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">file_paths</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[]</span>
 
         <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">THUMBNAIL_PARENT_DIV</span><span class="p">)</span>
 
-        <span class="c1"># sort on the str(file_path) but keep (obj, path) pair</span>
+        <span class="c1"># sort on the file path</span>
         <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;minigallery_sort_order&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">sortkey</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="p">(</span><span class="n">sortkey</span><span class="p">,)</span> <span class="o">=</span> <span class="n">_get_callables</span><span class="p">(</span>
                 <span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">,</span> <span class="s2">&quot;minigallery_sort_order&quot;</span>
             <span class="p">)</span>
-        <span class="k">for</span> <span class="n">obj</span><span class="p">,</span> <span class="n">path</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span>
-            <span class="nb">set</span><span class="p">(</span><span class="n">file_paths</span><span class="p">),</span>
-            <span class="n">key</span><span class="o">=</span><span class="p">((</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">sortkey</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])))</span> <span class="k">if</span> <span class="n">sortkey</span> <span class="k">else</span> <span class="kc">None</span><span class="p">),</span>
+        <span class="k">for</span> <span class="n">path</span><span class="p">,</span> <span class="n">path_info</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span>
+            <span class="n">file_paths</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span>
+            <span class="c1"># `x[0]` to sort on key only</span>
+            <span class="n">key</span><span class="o">=</span><span class="p">((</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">sortkey</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span> <span class="k">if</span> <span class="n">sortkey</span> <span class="k">else</span> <span class="kc">None</span><span class="p">),</span>
         <span class="p">):</span>
-            <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">suffix</span> <span class="o">==</span> <span class="s2">&quot;.examples&quot;</span><span class="p">:</span>
-                <span class="c1"># Insert the backreferences file(s) using the `include` directive.</span>
-                <span class="c1"># / is the src_dir for include</span>
-                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
-<span class="s2">.. include:: /</span><span class="si">{</span><span class="n">path</span><span class="o">.</span><span class="n">relative_to</span><span class="p">(</span><span class="n">src_dir</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span><span class="si">}</span>
-<span class="s2">    :start-after: thumbnail-parent-div-open</span>
-<span class="s2">    :end-before: thumbnail-parent-div-close&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="n">path_info</span><span class="o">.</span><span class="n">intro</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">thumbnail</span> <span class="o">=</span> <span class="n">_thumbnail_div</span><span class="p">(</span>
+                    <span class="n">path</span><span class="o">.</span><span class="n">parent</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">,</span> <span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">path_info</span><span class="o">.</span><span class="n">intro</span><span class="p">,</span> <span class="n">path_info</span><span class="o">.</span><span class="n">title</span>
                 <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">target_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_target_dir</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
+                <span class="n">target_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_target_dir</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">path_info</span><span class="o">.</span><span class="n">arg</span><span class="p">)</span>
                 <span class="c1"># Get thumbnail</span>
+                <span class="c1"># TODO: ideally we would not need to parse file (again) here</span>
                 <span class="n">_</span><span class="p">,</span> <span class="n">script_blocks</span> <span class="o">=</span> <span class="n">split_code_and_text_blocks</span><span class="p">(</span>
                     <span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="n">return_node</span><span class="o">=</span><span class="kc">False</span>
                 <span class="p">)</span>
@@ -651,7 +675,7 @@
                 <span class="p">)</span>
 
                 <span class="n">thumbnail</span> <span class="o">=</span> <span class="n">_thumbnail_div</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">,</span> <span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">intro</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span>
-                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">thumbnail</span><span class="p">)</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">thumbnail</span><span class="p">)</span>
 
         <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">THUMBNAIL_PARENT_DIV_CLOSE</span><span class="p">)</span>
         <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
