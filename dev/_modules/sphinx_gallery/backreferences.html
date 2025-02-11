@@ -845,7 +845,7 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_write_backreferences</span><span class="p">(</span>
-    <span class="n">backrefs</span><span class="p">,</span> <span class="n">seen_backrefs</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">intro</span><span class="p">,</span> <span class="n">title</span>
+    <span class="n">backrefs</span><span class="p">,</span> <span class="n">seen_backrefs</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">intro</span><span class="p">,</span> <span class="n">title</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Write and return backreferences for one example.</span>
 
@@ -860,6 +860,8 @@
 <span class="sd">        Back references already encountered when parsing this example.</span>
 <span class="sd">    gallery_conf : Dict[str, Any]</span>
 <span class="sd">        Gallery configurations.</span>
+<span class="sd">    src_dir : str</span>
+<span class="sd">        Stuff.</span>
 <span class="sd">    target_dir : str</span>
 <span class="sd">        Absolute path to directory where examples are saved.</span>
 <span class="sd">    fname : str</span>
@@ -873,7 +875,8 @@
 <span class="sd">    -------</span>
 <span class="sd">    backrefs_example : dict[str, tuple]</span>
 <span class="sd">        Dictionary where value is the backreference object and value</span>
-<span class="sd">        is a tuple containing: full path to example file, intro, title.</span>
+<span class="sd">        is a tuple containing: example filename, full path to example source directory,</span>
+<span class="sd">        full path to example target directory, intro, title.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;backreferences_dir&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span>
@@ -909,9 +912,7 @@
                 <span class="p">)</span>
             <span class="p">)</span>
             <span class="n">seen_backrefs</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">backref</span><span class="p">)</span>
-            <span class="n">backrefs_example</span><span class="p">[</span><span class="n">backref</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">)),</span> <span class="n">intro</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span>
-            <span class="p">)</span>
+            <span class="n">backrefs_example</span><span class="p">[</span><span class="n">backref</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">fname</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">intro</span><span class="p">,</span> <span class="n">title</span><span class="p">))</span>
     <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">backrefs_example</span><span class="p">)</span>
 
 

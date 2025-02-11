@@ -1097,14 +1097,17 @@ name (e.g., module.meth). All others will use the (default) way of linking.</p>
 <section id="add-mini-galleries">
 <span id="minigalleries-to-examples"></span><h2>Add mini-galleries<a class="headerlink" href="#add-mini-galleries" title="Link to this heading">#</a></h2>
 <p>Sphinx-Gallery provides the <a class="reference internal" href="gen_modules/sphinx_gallery.directives.html#sphinx_gallery.directives.MiniGallery" title="sphinx_gallery.directives.MiniGallery"><code class="xref py py-class docutils literal notranslate"><span class="pre">sphinx_gallery.directives.MiniGallery</span></code></a>
-directive so that you can easily add a reduced version of the Gallery to
-your Sphinx documentation <code class="docutils literal notranslate"><span class="pre">.rst</span></code> files. The minigallery directive therefore
-supports passing a list (space separated) of any of the following:</p>
+directive so that you can easily add a gallery of specific examples,
+a ‘mini-gallery’, to your reST. This directive works in both reST text blocks in
+examples and <code class="docutils literal notranslate"><span class="pre">.rst</span></code> files.</p>
+<p>The minigallery directive supports passing a list, as a space separated directive
+argument or in the body of the directive. There are two ways to specify examples
+to include in the mini-gallery:</p>
 <ul class="simple">
-<li><p>fully qualified name of object (see <a class="reference internal" href="#references-to-examples"><span class="std std-ref">Add mini-galleries for API documentation</span></a>) - this
+<li><p>via fully qualified names of object (see <a class="reference internal" href="#references-to-examples"><span class="std std-ref">Add mini-galleries for API documentation</span></a>) - this
 adds all examples where the object was used in the code or referenced in
 the example text</p></li>
-<li><p>pathlike strings to example Python files, including glob-style
+<li><p>via pathlike strings to example Python files, including glob-style
 (see <a class="reference internal" href="#file-based-minigalleries"><span class="std std-ref">Create mini-galleries using file paths</span></a>)</p></li>
 </ul>
 <p>To use object names, you must enable backreference generation, see
@@ -1113,6 +1116,47 @@ If backreference generation is not enabled, object entries to the
 <a class="reference internal" href="gen_modules/sphinx_gallery.directives.html#sphinx_gallery.directives.MiniGallery" title="sphinx_gallery.directives.MiniGallery"><code class="xref py py-class docutils literal notranslate"><span class="pre">MiniGallery</span></code></a> directive will be ignored
 and all entries will be treated as pathlike strings or glob-style pathlike strings.
 See <a class="reference internal" href="#file-based-minigalleries"><span class="std std-ref">Create mini-galleries using file paths</span></a> for details.</p>
+<p>For example, the reST below will add a mini-gallery that includes all
+examples that use or reference the specific function <code class="docutils literal notranslate"><span class="pre">numpy.exp</span></code>, the example
+<code class="docutils literal notranslate"><span class="pre">examples/plot_sin_.py</span></code>, and all example files matching the string
+<code class="docutils literal notranslate"><span class="pre">/examples/plot_4*</span></code>:</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="p">..</span> <span class="ow">minigallery</span><span class="p">::</span> numpy.exp ../examples/plot_0_sin.py ../examples/plot_4*
+</pre></div>
+</div>
+<p>All relevant examples will be merged into a single mini-gallery. The
+mini-gallery will only be shown if the files exist or the items are actually
+used or referred to in an example. Sphinx-Gallery will prevent duplication, ensuring
+that examples ‘passed’ more than once (e.g., one example uses a passed object <strong>and</strong>
+matches a passed file string) will only appear once in the mini-gallery.</p>
+<p>You can also sort the examples in your mini-galleries. See <a class="reference internal" href="#minigallery-order"><span class="std std-ref">Sort mini-gallery thumbnails from files</span></a>
+for details.</p>
+<p>The mini-gallery directive also supports the following options:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">add-heading</span></code> - adds a heading to the mini-gallery.</dt><dd><ul>
+<li><p>The default heading for a mini-gallery with a single passed argument is:
+“Examples using <em>{full qualified object name}</em>”.</p></li>
+<li><p>The default heading for a mini-gallery with multiple passed arguments is:
+“Examples of one of multiple objects”.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">heading-level</span></code> - specify the heading level. Accepts a single character
+(e.g., <code class="docutils literal notranslate"><span class="pre">-</span></code>).</p></li>
+</ul>
+<p>For example, the following reST adds the heading “My examples”, with heading
+level <code class="docutils literal notranslate"><span class="pre">-</span></code>. It also shows how to pass inputs in the body of the directive (instead of
+as directive arguments).</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="p">..</span> <span class="ow">minigallery</span><span class="p">::</span>
+    <span class="nc">:add-heading:</span> My examples
+    <span class="nc">:heading-level:</span> -
+
+    numpy.exp
+<span class="c">    ../examples/plot_0_sin.py</span>
+<span class="c">    ../examples/plot_4*</span>
+</pre></div>
+</div>
 <section id="add-mini-galleries-for-api-documentation">
 <span id="references-to-examples"></span><h3>Add mini-galleries for API documentation<a class="headerlink" href="#add-mini-galleries-for-api-documentation" title="Link to this heading">#</a></h3>
 <p>Sphinx-Gallery can generate minigalleries for objects from specified modules,
@@ -1131,12 +1175,12 @@ attribute, class) to the minigallery directive to add a minigallery of all examp
 relevant to that object. This can be useful in API documentation.</p>
 <p><strong>Implicit backreferences</strong> are useful for auto-documenting objects
 that are used and classes that are explicitly instantiated, in the code. Any examples
-where an object is used in the code are added <em>implicitly</em> as backreferences.
-<strong>Explicit backreferences</strong> are for objects that are <em>explicitly</em> referred to
+where an object is used in the code are added <em>implicitly</em> as backreferences.</p>
+<p><strong>Explicit backreferences</strong> are for objects that are <em>explicitly</em> referred to
 in an example’s text. They are useful for classes that are
 typically implicitly returned in the code rather than explicitly instantiated (e.g.,
 <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="(in Matplotlib v3.10.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a> which is most often instantiated only indirectly
-within function calls)..</p>
+within function calls).</p>
 <p>For example, we can embed a small gallery of all examples that use or
 refer to <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.exp.html#numpy.exp" title="(in NumPy v2.2)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.exp</span></code></a>, which looks like this:</p>
 </section>
@@ -1151,35 +1195,48 @@ refer to <a class="reference external" href="https://numpy.org/doc/stable/refere
 </div><div class="sphx-glr-thumbcontainer" tooltip="This demonstrates how Sphinx-Gallery identifies when"><img alt="" src="_images/sphx_glr_plot_6_function_identifier_thumb.png" />
 <p><a class="reference internal" href="auto_examples/plot_6_function_identifier.html#sphx-glr-auto-examples-plot-6-function-identifier-py"><span class="std std-ref">Identifying function names in a script</span></a></p>
   <div class="sphx-glr-thumbnail-title">Identifying function names in a script</div>
-</div></div><p>For such behavior to be available, you have to activate it in
-your Sphinx-Gallery configuration <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file with:</p>
+</div></div><p>For such behavior to be available, set the following Sphinx-Gallery configurations
+in your <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file:</p>
+<p><strong>Required</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">backreferences_dir</span></code> - directory where object granular galleries are stored.
+This should be a string or <code class="docutils literal notranslate"><span class="pre">pathlib.Path</span></code> object that is <strong>relative</strong> to the
+<code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file, or <code class="docutils literal notranslate"><span class="pre">None</span></code>. It is <code class="docutils literal notranslate"><span class="pre">None</span></code> by default, which means that
+backrefererences are not generated.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">doc_module</span></code> - the modules for which you want object level galleries
+to be created, as a tuple of string module names.</p></li>
+</ul>
+<p><strong>Optional</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">exclude_implicit_doc</span></code> - Regexes to match objects to exclude from implicit
+backreferences, as set of string regexes. The default option is an empty set,
+which will exclude nothing.</p></li>
+</ul>
+<p>For example:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
     <span class="c1"># directory where function/class granular galleries are stored</span>
     <span class="s1">&#39;backreferences_dir&#39;</span>  <span class="p">:</span> <span class="s1">&#39;gen_modules/backreferences&#39;</span><span class="p">,</span>
 
-    <span class="c1"># Modules for which function/class level galleries are created. In</span>
-    <span class="c1"># this case sphinx_gallery and numpy in a tuple of strings.</span>
+    <span class="c1"># here we want to create backreferences for sphinx_gallery and numpy</span>
     <span class="s1">&#39;doc_module&#39;</span>          <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;sphinx_gallery&#39;</span><span class="p">,</span> <span class="s1">&#39;numpy&#39;</span><span class="p">),</span>
 
     <span class="c1"># Regexes to match objects to exclude from implicit backreferences.</span>
-    <span class="c1"># The default option is an empty set, i.e. exclude nothing.</span>
-    <span class="c1"># To exclude everything, use: &#39;.*&#39;</span>
     <span class="s1">&#39;exclude_implicit_doc&#39;</span><span class="p">:</span> <span class="p">{</span><span class="sa">r</span><span class="s1">&#39;pyplot\.show&#39;</span><span class="p">},</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <p>The path you specify in <code class="docutils literal notranslate"><span class="pre">backreferences_dir</span></code> (here we choose
-<code class="docutils literal notranslate"><span class="pre">gen_modules/backreferences</span></code>) will be populated with
-ReStructuredText files, with names ending with ‘.examples’.
+<code class="docutils literal notranslate"><span class="pre">gen_modules/backreferences</span></code>) will be populated with a file called
+“backreferences_all.json”. This contains a mapping of all of all objects
+belonging to the modules listed in <code class="docutils literal notranslate"><span class="pre">doc_module</span></code> and not excluded in
+<code class="docutils literal notranslate"><span class="pre">exclude_implicit_doc</span></code>, to the examples where it was used or referenced.
+Objects not used or referenced in any example are not included.</p>
+<p>For backwards compatibility <code class="docutils literal notranslate"><span class="pre">backreferences_dir</span></code> will also be populated with
+reST files for each object, named ‘&lt;object&gt;.examples’.
 Each .rst file will contain a reduced version of the
-gallery specific to every function/class that is used across all the examples
-and belonging to the modules listed in <code class="docutils literal notranslate"><span class="pre">doc_module</span></code>.
-Note that backreference files will be generated for all objects. Objects that
-are not used in any example will have an empty file to prevent inclusion
-errors during autodoc parsing.</p>
-<p><code class="docutils literal notranslate"><span class="pre">backreferences_dir</span></code> should be a string or <code class="docutils literal notranslate"><span class="pre">pathlib.Path</span></code> object that is
-<strong>relative</strong> to the <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file, or <code class="docutils literal notranslate"><span class="pre">None</span></code>. It is <code class="docutils literal notranslate"><span class="pre">None</span></code> by default.</p>
+gallery, containing examples where that “object” that is used.
+No file will be generated for objects not used or referenced in any example.</p>
 <p>Sometimes, there are functions that are being used in practically every example
 for the given module, for instance the <code class="docutils literal notranslate"><span class="pre">pyplot.show</span></code> or <code class="docutils literal notranslate"><span class="pre">pyplot.subplots</span></code>
 functions in Matplotlib, so that a large number of often spurious examples will
@@ -1201,109 +1258,39 @@ do not have functions in common, for example a set of tutorials. The
 mini-gallery directive therefore also supports passing in:</p>
 <ul class="simple">
 <li><p>pathlike strings to sphinx gallery example files (relative to <code class="docutils literal notranslate"><span class="pre">conf.py</span></code>)</p></li>
-<li><p>glob-style pathlike strings to Sphinx-Gallery example files (relative to <code class="docutils literal notranslate"><span class="pre">conf.py</span></code>)</p></li>
+<li><p>glob-style pathlike strings to Sphinx-Gallery example files (relative to <code class="docutils literal notranslate"><span class="pre">conf.py</span></code>).
+For example, passing <code class="docutils literal notranslate"><span class="pre">/examples/plot_4*</span></code> will include all example files
+matching the above pattern.</p></li>
 </ul>
-<p>For example, the rst below adds the reduced version of the Gallery for all
-examples that use the specific function <code class="docutils literal notranslate"><span class="pre">numpy.exp</span></code>, the example
-<code class="docutils literal notranslate"><span class="pre">examples/plot_sin_.py</span></code>, and all files matching the string
-<code class="docutils literal notranslate"><span class="pre">/examples/plot_4*</span></code>:</p>
-<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="p">..</span> <span class="ow">minigallery</span><span class="p">::</span>
-    <span class="nc">:add-heading:</span>
-
-    numpy.exp
-<span class="c">    ../examples/plot_0_sin.py</span>
-<span class="c">    ../examples/plot_4*</span>
-</pre></div>
-</div>
-<p>Listing multiple items merges all the examples into a single mini-gallery. The
-mini-gallery will only be shown if the files exist or the items are actually
-used or referred to in an example. Thumbnails may also be duplicated
-if they correspond to multiple object names or an object name and file/glob
-input.</p>
-</section>
-<section id="examples-using-one-of-multiple-objects">
-<h3>Examples using one of multiple objects<a class="headerlink" href="#examples-using-one-of-multiple-objects" title="Link to this heading">#</a></h3>
-<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how to import a local module and how images are stacked when two plots are created in one code block (see the plot_9_multi_image_separate example for information on controlling this behaviour). The variable N from the example &#x27;Local module&#x27; (file local_module.py) is imported in the code below. Further, note that when there is only one code block in an example, the output appears before the code block."><img alt="" src="_images/sphx_glr_plot_1_exp_thumb.png" />
-<p><a class="reference internal" href="auto_examples/plot_1_exp.html#sphx-glr-auto-examples-plot-1-exp-py"><span class="std std-ref">Plotting the exponential function</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Plotting the exponential function</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how to choose the figure that is displayed as the thumbnail, if the example generates more than one figure. This is done by specifying the keyword-value pair sphinx_gallery_thumbnail_number = &lt;fig number&gt; as a comment somewhere below the docstring in the example file. In this example, we specify that we wish for the second figure to be the thumbnail."><img alt="" src="_images/sphx_glr_plot_4_choose_thumbnail_thumb.png" />
-<p><a class="reference internal" href="auto_examples/plot_4_choose_thumbnail.html#sphx-glr-auto-examples-plot-4-choose-thumbnail-py"><span class="std std-ref">Choosing the thumbnail figure</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Choosing the thumbnail figure</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="This demonstrates how Sphinx-Gallery identifies when"><img alt="" src="_images/sphx_glr_plot_6_function_identifier_thumb.png" />
-<p><a class="reference internal" href="auto_examples/plot_6_function_identifier.html#sphx-glr-auto-examples-plot-6-function-identifier-py"><span class="std std-ref">Identifying function names in a script</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Identifying function names in a script</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="This is a general example demonstrating a Matplotlib plot output, embedded reST, the use of math notation and cross-linking to other examples. It would be useful to compare the source Python file &lt;plot_0_sin.py&gt; with the output below."><img alt="" src="_images/sphx_glr_plot_0_sin_thumb.png" />
-<p><a class="reference internal" href="auto_examples/plot_0_sin.html#sphx-glr-auto-examples-plot-0-sin-py"><span class="std std-ref">Introductory example - Plotting sin</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Introductory example - Plotting sin</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how to choose the figure that is displayed as the thumbnail, if the example generates more than one figure. This is done by specifying the keyword-value pair sphinx_gallery_thumbnail_number = &lt;fig number&gt; as a comment somewhere below the docstring in the example file. In this example, we specify that we wish for the second figure to be the thumbnail."><img alt="" src="_images/sphx_glr_plot_4_choose_thumbnail_thumb.png" />
-<p><a class="reference internal" href="auto_examples/plot_4_choose_thumbnail.html#sphx-glr-auto-examples-plot-4-choose-thumbnail-py"><span class="std std-ref">Choosing the thumbnail figure</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Choosing the thumbnail figure</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how to provide a figure that is displayed as the thumbnail. This is done by specifying the keyword-value pair sphinx_gallery_thumbnail_path = &#x27;fig path&#x27; as a comment somewhere below the docstring in the example file. In this example, we specify that we wish the figure demo.png in the folder _static to be used for the thumbnail."><img alt="" src="_images/sphx_glr_plot_4b_provide_thumbnail_thumb.png" />
-<p><a class="reference internal" href="auto_examples/plot_4b_provide_thumbnail.html#sphx-glr-auto-examples-plot-4b-provide-thumbnail-py"><span class="std std-ref">Providing a figure for the thumbnail image</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Providing a figure for the thumbnail image</div>
-</div></div><p>You can also provide the list of items in the body of the directive:</p>
-<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="p">..</span> <span class="ow">minigallery</span><span class="p">::</span>
-    <span class="nc">:add-heading:</span>
-
-    numpy.exp
-<span class="c">    ../examples/plot_0_sin.py</span>
-<span class="c">    ../examples/plot_4*</span>
-</pre></div>
-</div>
-<p>The <code class="docutils literal notranslate"><span class="pre">add-heading</span></code> option adds a heading for the mini-gallery. If no string
-argument is provided, when only a single item is listed the default heading is:</p>
-<blockquote>
-<div><p>“Examples using <em>{full qualified object name}</em>”</p>
-</div></blockquote>
-<p>Specifying a custom heading message is recommended for a gallery with multiple
-items because otherwise the default message is:</p>
-<blockquote>
-<div><p>“Examples of one of multiple objects”.</p>
-</div></blockquote>
-<p>The example mini-gallery shown above uses the default heading level <code class="docutils literal notranslate"><span class="pre">^</span></code>. This
-can be changed using the <code class="docutils literal notranslate"><span class="pre">heading-level</span></code> option, which accepts a single
-character (e.g., <code class="docutils literal notranslate"><span class="pre">-</span></code>).</p>
-<p>You can also pass inputs to the minigallery directive as a space separated
-list of arguments:</p>
-<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="p">..</span> <span class="ow">minigallery</span><span class="p">::</span> numpy.exp ../examples/plot_0_sin.py ../examples/plot_4*
-</pre></div>
-</div>
 <section id="sort-mini-gallery-thumbnails-from-files">
 <span id="minigallery-order"></span><h4>Sort mini-gallery thumbnails from files<a class="headerlink" href="#sort-mini-gallery-thumbnails-from-files" title="Link to this heading">#</a></h4>
 <p>The <a class="reference internal" href="#minigalleries-to-examples"><span class="std std-ref">minigallery</span></a> directive generates a gallery of
 thumbnails corresponding to the input file strings or object names.
 You can specify minigallery thumbnails order via the <code class="docutils literal notranslate"><span class="pre">minigallery_sort_order</span></code>
 configuration, which gets passed to the <a class="reference external" href="https://docs.python.org/3/library/functions.html#sorted" title="(in Python v3.13)"><code class="xref py py-func docutils literal notranslate"><span class="pre">sorted()</span></code></a> <code class="docutils literal notranslate"><span class="pre">key</span></code> parameter when
-sorting all minigalleries.
-Sorting is done on the full paths to the gallery examples (e.g.,
-<code class="docutils literal notranslate"><span class="pre">path/to/plot_example.py</span></code>) and backreference files (e.g.,
-<code class="docutils literal notranslate"><span class="pre">path/to/numpy.exp.examples</span></code>), corresponding to the inputs.</p>
+sorting all minigalleries.</p>
+<p>Sorting is done on the full paths to all the gallery examples (e.g.,
+<code class="docutils literal notranslate"><span class="pre">path/to/plot_example.py</span></code>) that correspond to the inputs.</p>
 <p>See <a class="reference internal" href="#own-sort-keys"><span class="std std-ref">Custom sort keys</span></a> for details on writing a custom sort key.</p>
-<p>As an example, to put backreference thumbnails at the end, we could define the function
-below in <code class="docutils literal notranslate"><span class="pre">doc/sphinxext.py</span></code> (note that backreference filenames do not start with
-“plot_” and <code class="docutils literal notranslate"><span class="pre">False</span></code> gets sorted ahead of <code class="docutils literal notranslate"><span class="pre">True</span></code> as 0 is less than 1):</p>
+<p>For example, to put all example thumbnails starting with <code class="docutils literal notranslate"><span class="pre">&quot;plot_numpy_&quot;</span></code> at the start,
+we could define the function below in <code class="docutils literal notranslate"><span class="pre">doc/sphinxext.py</span></code> (note <code class="docutils literal notranslate"><span class="pre">False</span></code> gets sorted
+ahead of <code class="docutils literal notranslate"><span class="pre">True</span></code> as 0 is less than 1):</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">function_sorter</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">(</span><span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;plot_&quot;</span><span class="p">),</span> <span class="n">x</span><span class="p">)::</span>
+    <span class="k">return</span> <span class="p">(</span><span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">starts_with</span><span class="p">(</span><span class="s2">&quot;plot_numpy_&quot;</span><span class="p">),</span> <span class="n">x</span><span class="p">)::</span>
 </pre></div>
 </div>
 <p>We can then set the configuration to be (ensuring the function is
 <a class="reference internal" href="#importing-callables"><span class="std std-ref">importable</span></a>):</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
-<span class="c1">#...,</span>
-<span class="s2">&quot;minigallery_sort_order&quot;</span><span class="p">:</span> <span class="s2">&quot;sphinxext.function_sorter&quot;</span><span class="p">,</span>
-<span class="c1">#...</span>
+    <span class="c1">#...,</span>
+    <span class="s2">&quot;minigallery_sort_order&quot;</span><span class="p">:</span> <span class="s2">&quot;sphinxext.function_sorter&quot;</span><span class="p">,</span>
+    <span class="c1">#...</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <p>Sphinx-Gallery would resolve <code class="docutils literal notranslate"><span class="pre">&quot;sphinxext.function_sorter&quot;</span></code> to the
 <code class="docutils literal notranslate"><span class="pre">function_sorter</span></code> object.</p>
-<p>Sorting the set of thumbnails generated from
-<a class="reference internal" href="#references-to-examples"><span class="std std-ref">API backreferences</span></a> (i.e. the thumbnails linked
-to a qualified object name input) is not supported, but the sorting function can
-be used to position the entire set of backreference thumbnails since minigallery sort
-gets passed the <code class="docutils literal notranslate"><span class="pre">{input}.example</span></code> backreference filename. Thumbnails may be duplicated
-if they correspond to multiple object names or an object name and file/glob
-input.</p>
+<p>Note that you can only define one sorting key for all minigalleries.</p>
 </section>
 </section>
 <section id="auto-documenting-your-api-with-links-to-examples">
@@ -2939,24 +2926,24 @@ with a flat structure and not reflect the nested folder structure of sub-galleri
 <section id="manually-passing-files">
 <span id="manual-passthrough"></span><h2>Manually passing files<a class="headerlink" href="#manually-passing-files" title="Link to this heading">#</a></h2>
 <p>By default, Sphinx-Gallery creates all the files that are written in the
-sphinx-build directory, either by generating rst and images from a <code class="docutils literal notranslate"><span class="pre">*.py</span></code>
+sphinx-build directory, either by generating reST and images from a <code class="docutils literal notranslate"><span class="pre">*.py</span></code>
 in the gallery-source, or from  creating <code class="docutils literal notranslate"><span class="pre">index.rst</span></code> from
 <code class="docutils literal notranslate"><span class="pre">GALLERY_HEADER.rst</span></code> (or <code class="docutils literal notranslate"><span class="pre">README.[rst/txt]</span></code> for backward-compatibility)
 in the gallery-source.  However, sometimes it is desirable to pass files
 from the gallery-source to the sphinx-build.  For example, you may want
 to pass an image that a gallery refers to, but does not generate itself.
-You may also want to pass raw rst from the gallery-source to the
+You may also want to pass raw reST from the gallery-source to the
 sphinx-build, because that material fits in thematically with your gallery,
-but is easier to write as rst.  To accommodate this, you may set
+but is easier to write as reST.  To accommodate this, you may set
 <code class="docutils literal notranslate"><span class="pre">copyfile_regex</span></code> in <code class="docutils literal notranslate"><span class="pre">sphinx_gallery_conf</span></code>.  The following copies
-across rst files.</p>
+across reST files.</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
    <span class="s1">&#39;copyfile_regex&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;.*\.rst&#39;</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Note that if you copy across rst files, for instance, it is your
+<p>Note that if you copy across reST files, for instance, it is your
 responsibility to ensure that they are in a sphinx <code class="docutils literal notranslate"><span class="pre">toctree</span></code> somewhere
 in your document.  You can, of course, add a <code class="docutils literal notranslate"><span class="pre">toctree</span></code> to your
 <code class="docutils literal notranslate"><span class="pre">GALLERY_HEADER.rst</span></code>.</p>
@@ -3075,8 +3062,7 @@ desirable to document if they are used in examples.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#add-mini-galleries">Add mini-galleries</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#add-mini-galleries-for-api-documentation">Add mini-galleries for API documentation</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#examples-using-numpy-exp">Examples using <code class="docutils literal notranslate"><span class="pre">numpy.exp</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#create-mini-galleries-using-file-paths">Create mini-galleries using file paths</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#examples-using-one-of-multiple-objects">Examples using one of multiple objects</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#create-mini-galleries-using-file-paths">Create mini-galleries using file paths</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#sort-mini-gallery-thumbnails-from-files">Sort mini-gallery thumbnails from files</a></li>
 </ul>
 </li>
