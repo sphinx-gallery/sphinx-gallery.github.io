@@ -33,7 +33,7 @@
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
-    <link rel="stylesheet" type="text/css" href="_static/jupyterlite_sphinx.css?v=e3ca86de" />
+    <link rel="stylesheet" type="text/css" href="_static/jupyterlite_sphinx.css?v=2c9f8f05" />
     <link rel="stylesheet" type="text/css" href="_static/theme_override.css?v=6ecc848e" />
     <link rel="stylesheet" type="text/css" href="_static/hide_links.css?v=60d22a59" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css?v=d2d258e8" />
@@ -50,7 +50,7 @@
     <script src="_static/documentation_options.js?v=6d629e57"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="_static/jupyterlite_sphinx.js?v=96e329c5"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'configuration';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
@@ -1132,15 +1132,13 @@ matches a passed file string) will only appear once in the mini-gallery.</p>
 for details.</p>
 <p>The mini-gallery directive also supports the following options:</p>
 <ul class="simple">
-<li><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">add-heading</span></code> - adds a heading to the mini-gallery.</dt><dd><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">add-heading</span></code> - adds a heading to the mini-gallery.</p>
+<ul>
 <li><p>The default heading for a mini-gallery with a single passed argument is:
 “Examples using <em>{full qualified object name}</em>”.</p></li>
 <li><p>The default heading for a mini-gallery with multiple passed arguments is:
 “Examples of one of multiple objects”.</p></li>
 </ul>
-</dd>
-</dl>
 </li>
 <li><p><code class="docutils literal notranslate"><span class="pre">heading-level</span></code> - specify the heading level. Accepts a single character
 (e.g., <code class="docutils literal notranslate"><span class="pre">-</span></code>).</p></li>
@@ -1199,18 +1197,30 @@ refer to <a class="reference external" href="https://numpy.org/doc/stable/refere
 in your <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file:</p>
 <p><strong>Required</strong></p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">backreferences_dir</span></code> - directory where object granular galleries are stored.
-This should be a string or <code class="docutils literal notranslate"><span class="pre">pathlib.Path</span></code> object that is <strong>relative</strong> to the
-<code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file, or <code class="docutils literal notranslate"><span class="pre">None</span></code>. It is <code class="docutils literal notranslate"><span class="pre">None</span></code> by default, which means that
+<li><p><code class="docutils literal notranslate"><span class="pre">backreferences_dir</span></code> - directory where object granular galleries are stored.</p>
+<ul>
+<li><p>This should be a string or <code class="docutils literal notranslate"><span class="pre">pathlib.Path</span></code> object that is <strong>relative</strong> to the
+<code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file, or <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p>It is <code class="docutils literal notranslate"><span class="pre">None</span></code> by default, which means that
 backrefererences are not generated.</p></li>
+</ul>
+</li>
 <li><p><code class="docutils literal notranslate"><span class="pre">doc_module</span></code> - the modules for which you want object level galleries
-to be created, as a tuple of string module names.</p></li>
+to be created.</p>
+<ul>
+<li><p>It should be a tuple of string module names.</p></li>
+</ul>
+</li>
 </ul>
 <p><strong>Optional</strong></p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">exclude_implicit_doc</span></code> - Regexes to match objects to exclude from implicit
-backreferences, as set of string regexes. The default option is an empty set,
-which will exclude nothing.</p></li>
+backreferences, as set of string regexes.</p>
+<ul>
+<li><p>The default option is an empty set, which will exclude nothing.</p></li>
+<li><p>See <a class="reference internal" href="#exclude-implicit-doc"><span class="std std-ref">exclude_implicit_doc</span></a> for details.</p></li>
+</ul>
+</li>
 </ul>
 <p>For example:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
@@ -1236,7 +1246,11 @@ Objects not used or referenced in any example are not included.</p>
 reST files for each object, named ‘&lt;object&gt;.examples’.
 Each .rst file will contain a reduced version of the
 gallery, containing examples where that “object” that is used.
-No file will be generated for objects not used or referenced in any example.</p>
+‘&lt;object&gt;.examples’ files will be generated for all objects to prevent inclusion
+errors. Empty ‘&lt;object&gt;.examples’ files are created for objects not used in any
+example.</p>
+<section id="exclude-implicit-doc">
+<span id="id4"></span><h4><code class="docutils literal notranslate"><span class="pre">exclude_implicit_doc</span></code><a class="headerlink" href="#exclude-implicit-doc" title="Link to this heading">#</a></h4>
 <p>Sometimes, there are functions that are being used in practically every example
 for the given module, for instance the <code class="docutils literal notranslate"><span class="pre">pyplot.show</span></code> or <code class="docutils literal notranslate"><span class="pre">pyplot.subplots</span></code>
 functions in Matplotlib, so that a large number of often spurious examples will
@@ -1249,6 +1263,7 @@ To exclude the functions mentioned above you would use
 <code class="docutils literal notranslate"><span class="pre">{r'pyplot\.show',</span> <span class="pre">r'pyplot\.subplots'}</span></code> (note the escape to match a dot
 instead of any character, if the name is unambiguous you can also write
 <code class="docutils literal notranslate"><span class="pre">pyplot.show</span></code> or just <code class="docutils literal notranslate"><span class="pre">show</span></code>).</p>
+</section>
 </section>
 <section id="create-mini-galleries-using-file-paths">
 <span id="file-based-minigalleries"></span><h3>Create mini-galleries using file paths<a class="headerlink" href="#create-mini-galleries-using-file-paths" title="Link to this heading">#</a></h3>
@@ -1573,7 +1588,7 @@ setting:</p>
 </div>
 </section>
 <section id="removing-config-comments">
-<span id="id6"></span><h2>Removing config comments<a class="headerlink" href="#removing-config-comments" title="Link to this heading">#</a></h2>
+<span id="id7"></span><h2>Removing config comments<a class="headerlink" href="#removing-config-comments" title="Link to this heading">#</a></h2>
 <p>Some configurations can be specified within a file by adding a special
 comment with the pattern <code class="samp docutils literal notranslate"><span class="pre">#</span> <span class="pre">sphinx_gallery_</span><em><span class="pre">config</span></em> <span class="pre">[=</span> <em><span class="pre">value</span></em><span class="pre">]</span></code> to the
 example source files. By default, the source files are parsed as is and thus
@@ -2212,7 +2227,7 @@ directive tags like <code class="docutils literal notranslate"><span class="pre"
 with the <em>html</em> and <em>latex</em>  builders.</p>
 </section>
 <section id="image-scrapers">
-<span id="id8"></span><h2>Image scrapers<a class="headerlink" href="#image-scrapers" title="Link to this heading">#</a></h2>
+<span id="id9"></span><h2>Image scrapers<a class="headerlink" href="#image-scrapers" title="Link to this heading">#</a></h2>
 <p>Image scrapers are plugins that allow Sphinx-Gallery to detect images produced
 during execution of your examples, and then embed them into documentation.
 Scrapers can be activated by appending scraper names to the
@@ -2704,7 +2719,7 @@ duration of scripts that ran faster than that amount will not be logged nor
 embedded in the html output.</p>
 </section>
 <section id="write-computation-times">
-<span id="id10"></span><h2>Write computation times<a class="headerlink" href="#write-computation-times" title="Link to this heading">#</a></h2>
+<span id="id11"></span><h2>Write computation times<a class="headerlink" href="#write-computation-times" title="Link to this heading">#</a></h2>
 <p>Set to <code class="docutils literal notranslate"><span class="pre">False</span></code> if you want to omit computation times from all gallery outputs.
 This helps with reproducible builds.
 Default is <code class="docutils literal notranslate"><span class="pre">True</span></code> unless the <code class="docutils literal notranslate"><span class="pre">SOURCE_DATE_EPOCH</span></code> environment variable is set.</p>
@@ -2738,7 +2753,7 @@ tuple containing:</p>
 </div>
 </section>
 <section id="show-signature">
-<span id="id11"></span><h2>Show signature<a class="headerlink" href="#show-signature" title="Link to this heading">#</a></h2>
+<span id="id12"></span><h2>Show signature<a class="headerlink" href="#show-signature" title="Link to this heading">#</a></h2>
 <p>By default, Sphinx-Gallery writes a <strong>Generated by …</strong> notice in the
 generated output.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">show_signature</span></code> parameter can be used to disable it.</p>
@@ -3061,7 +3076,10 @@ desirable to document if they are used in examples.</p>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#add-mini-galleries">Add mini-galleries</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#add-mini-galleries-for-api-documentation">Add mini-galleries for API documentation</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#examples-using-numpy-exp">Examples using <code class="docutils literal notranslate"><span class="pre">numpy.exp</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#examples-using-numpy-exp">Examples using <code class="docutils literal notranslate"><span class="pre">numpy.exp</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#exclude-implicit-doc"><code class="docutils literal notranslate"><span class="pre">exclude_implicit_doc</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#create-mini-galleries-using-file-paths">Create mini-galleries using file paths</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#sort-mini-gallery-thumbnails-from-files">Sort mini-gallery thumbnails from files</a></li>
 </ul>
