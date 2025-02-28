@@ -585,11 +585,23 @@ the rendered examples.</p>
 </section>
 <section id="build-options">
 <h3>Build options<a class="headerlink" href="#build-options" title="Link to this heading">#</a></h3>
-<p>Some options can be set during the build execution step, e.g. using a Makefile:</p>
+<p>Configuration options can be set at build time via the
+<a class="reference external" href="https://www.sphinx-doc.org/en/master/man/sphinx-build.html#cmdoption-sphinx-build-D">Sphinx build -D</a>
+command line option. This overrides the value set in your <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file for that
+configuration. Values set in your <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> are effectively the ‘default’,
+as it takes lower precedence than values passed via the <code class="docutils literal notranslate"><span class="pre">-D</span></code> build option.</p>
+<p>You can also use the <code class="docutils literal notranslate"><span class="pre">-D</span></code> option in your Makefile to create useful targets,
+for example:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">html-noplot</span></code> (<a class="reference internal" href="#without-execution"><span class="std std-ref">Building without executing examples</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">html_abort_on_example_error</span></code> (<a class="reference internal" href="#abort-on-first"><span class="std std-ref">Abort build on first fail</span></a>)</p></li>
 </ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you wish to use the <code class="docutils literal notranslate"><span class="pre">-D</span></code> build option to pass an instantiated class, class or
+function as a configuration value, you can do so by passing a fully qualified name
+string to the object. See <a class="reference internal" href="#importing-callables"><span class="std std-ref">Importing callables</span></a> for details.</p>
+</div>
 </section>
 <section id="css-changes">
 <h3>CSS changes<a class="headerlink" href="#css-changes" title="Link to this heading">#</a></h3>
@@ -1177,7 +1189,7 @@ where an object is used in the code are added <em>implicitly</em> as backreferen
 <p><strong>Explicit backreferences</strong> are for objects that are <em>explicitly</em> referred to
 in an example’s text. They are useful for classes that are
 typically implicitly returned in the code rather than explicitly instantiated (e.g.,
-<a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="(in Matplotlib v3.10.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a> which is most often instantiated only indirectly
+<a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="(in Matplotlib v3.10.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></a> which is most often instantiated only indirectly
 within function calls).</p>
 <p>For example, we can embed a small gallery of all examples that use or
 refer to <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.exp.html#numpy.exp" title="(in NumPy v2.2)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.exp</span></code></a>, which looks like this:</p>
@@ -1478,10 +1490,10 @@ For example, this code:</p>
 properly):</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">lst</span></code></a></p></li>
-<li><p><a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="(in Matplotlib v3.10.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">plt.subplots</span></code></a></p></li>
-<li><p><a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v3.10.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">fig</span></code></a></p></li>
-<li><p><a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="(in Matplotlib v3.10.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ax</span></code></a></p></li>
-<li><p><a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="(in Matplotlib v3.10.0)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ax.plot</span></code></a></p></li>
+<li><p><a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots" title="(in Matplotlib v3.10.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">plt.subplots</span></code></a></p></li>
+<li><p><a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v3.10.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">fig</span></code></a></p></li>
+<li><p><a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="(in Matplotlib v3.10.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ax</span></code></a></p></li>
+<li><p><a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot" title="(in Matplotlib v3.10.1)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ax.plot</span></code></a></p></li>
 </ul>
 <p>However, this feature might not work properly in all instances.
 Moreover, if variable names get reused in the same script to refer to
@@ -1684,7 +1696,7 @@ included in the prefix if it’s required.</p>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
 <p>If building multiple versions of your documentation on a hosted service and
-using prefix, consider using <a class="reference external" href="https://www.sphinx-doc.org/en/master/man/sphinx-build.html#cmdoption-sphinx-build-D">sphinx build -D</a>
+using prefix, consider using <a class="reference external" href="https://www.sphinx-doc.org/en/master/man/sphinx-build.html#cmdoption-sphinx-build-D">Sphinx build -D</a>
 command line option to ensure links point to the correct version. For
 example:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sphinx-build<span class="w"> </span><span class="se">\</span>
@@ -2135,9 +2147,18 @@ relevant code is intended to be executed by the end user.</p>
 <p>Sphinx-Gallery can parse all your examples and build the gallery
 without executing any of the scripts. This is just for speed
 visualization processes of the gallery and the size it takes your
-website to display, or any use you can imagine for it. To achieve this you
-need to pass the no plot option in the build process by modifying
-your <code class="docutils literal notranslate"><span class="pre">Makefile</span></code> with:</p>
+website to display, or any use you can imagine for it.</p>
+<p>This can be done by setting the <code class="docutils literal notranslate"><span class="pre">plot_gallery</span></code> configuration in the
+<code class="docutils literal notranslate"><span class="pre">sphinx_gallery_conf</span></code> dictionary inside your <code class="docutils literal notranslate"><span class="pre">conf.py</span></code>:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">...</span>
+    <span class="s1">&#39;plot_gallery&#39;</span><span class="p">:</span> <span class="s1">&#39;False&#39;</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>You can also change this via the
+<a class="reference external" href="https://www.sphinx-doc.org/en/master/man/sphinx-build.html#cmdoption-sphinx-build-D">Sphinx build option -D</a>,
+which can be used to add a ‘no-plot’ target to your <code class="docutils literal notranslate"><span class="pre">Makefile</span></code>:</p>
 <div class="highlight-Makefile notranslate"><div class="highlight"><pre><span></span><span class="nf">html-noplot</span><span class="o">:</span>
 <span class="w">    </span><span class="k">$(</span>SPHINXBUILD<span class="k">)</span><span class="w"> </span>-D<span class="w"> </span><span class="nv">plot_gallery</span><span class="o">=</span><span class="m">0</span><span class="w"> </span>-b<span class="w"> </span>html<span class="w"> </span><span class="k">$(</span>ALLSPHINXOPTS<span class="k">)</span><span class="w"> </span><span class="k">$(</span>SOURCEDIR<span class="k">)</span><span class="w"> </span><span class="k">$(</span>BUILDDIR<span class="k">)</span>/html
 <span class="w">    </span>@echo
@@ -2146,17 +2167,9 @@ your <code class="docutils literal notranslate"><span class="pre">Makefile</span
 </div>
 <p>Remember that for <code class="docutils literal notranslate"><span class="pre">Makefile</span></code> white space is significant and the indentation are tabs
 and not spaces.</p>
-<p>Alternatively, you can add the <code class="docutils literal notranslate"><span class="pre">plot_gallery</span></code> option to the
-<code class="docutils literal notranslate"><span class="pre">sphinx_gallery_conf</span></code> dictionary inside your <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> to have it as
-a default:</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="o">...</span>
-    <span class="s1">&#39;plot_gallery&#39;</span><span class="p">:</span> <span class="s1">&#39;False&#39;</span><span class="p">,</span>
-<span class="p">}</span>
-</pre></div>
-</div>
 <p>The highest precedence is always given to the <cite>-D</cite> flag of the
-<code class="docutils literal notranslate"><span class="pre">sphinx-build</span></code> command.</p>
+<code class="docutils literal notranslate"><span class="pre">sphinx-build</span></code> command, which effectively makes the value set in your <code class="docutils literal notranslate"><span class="pre">conf.py</span></code>
+file the ‘default’.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>If adding <code class="docutils literal notranslate"><span class="pre">html-noplot</span></code> to your <code class="docutils literal notranslate"><span class="pre">Makefile</span></code>, you will also need to
@@ -2227,7 +2240,7 @@ directive tags like <code class="docutils literal notranslate"><span class="pre"
 with the <em>html</em> and <em>latex</em>  builders.</p>
 </section>
 <section id="image-scrapers">
-<span id="id9"></span><h2>Image scrapers<a class="headerlink" href="#image-scrapers" title="Link to this heading">#</a></h2>
+<span id="id10"></span><h2>Image scrapers<a class="headerlink" href="#image-scrapers" title="Link to this heading">#</a></h2>
 <p>Image scrapers are plugins that allow Sphinx-Gallery to detect images produced
 during execution of your examples, and then embed them into documentation.
 Scrapers can be activated by appending scraper names to the
@@ -2244,7 +2257,7 @@ Matplotlib images. Note that this includes any images produced by packages that
 are based on Matplotlib, for example Seaborn or Yellowbrick.</p>
 <section id="matplotlib-animations">
 <h3>Matplotlib animations<a class="headerlink" href="#matplotlib-animations" title="Link to this heading">#</a></h3>
-<p>If you wish to embed <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.animation.Animation.html#matplotlib.animation.Animation" title="(in Matplotlib v3.10.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.animation.Animation</span></code></a>s as animations rather
+<p>If you wish to embed <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.animation.Animation.html#matplotlib.animation.Animation" title="(in Matplotlib v3.10.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.animation.Animation</span></code></a>s as animations rather
 than a single static image of the animation figure, you should use the
 <cite>matplotlib_animations</cite> configuration. It accepts either a bool, indicating whether
 animations should be enabled, or a tuple of the format: (enabled: bool, format: str):</p>
@@ -2273,16 +2286,16 @@ installed in your environment.</p>
 override the global setting.</p>
 <p>It’s also recommended to ensure that “FFmpeg” or “imagemagick” is available as a
 <code class="docutils literal notranslate"><span class="pre">writer</span></code>. Use
-<a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.animation.ImageMagickWriter.html#matplotlib.animation.ImageMagickWriter" title="(in Matplotlib v3.10.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.animation.ImageMagickWriter.isAvailable()</span></code></a>
+<a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.animation.ImageMagickWriter.html#matplotlib.animation.ImageMagickWriter" title="(in Matplotlib v3.10.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.animation.ImageMagickWriter.isAvailable()</span></code></a>
 or
-<a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.animation.FFMpegWriter.html#matplotlib.animation.FFMpegWriter" title="(in Matplotlib v3.10.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.animation.FFMpegWriter.isAvailable()</span></code></a>
+<a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.animation.FFMpegWriter.html#matplotlib.animation.FFMpegWriter" title="(in Matplotlib v3.10.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.animation.FFMpegWriter.isAvailable()</span></code></a>
 to check.
 We recommend FFMpeg writer, unless you are using Matplotlib &lt;3.3.1.</p>
 <p>The following scrapers are supported:</p>
 <ul class="simple">
 <li><dl class="simple">
 <dt>matplotlib</dt><dd><p>Sphinx-Gallery maintains a scraper for
-<a class="reference external" href="https://matplotlib.org/stable/api/pyplot_summary.html#module-matplotlib.pyplot" title="(in Matplotlib v3.10.0)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib</span></code></a> figures via the string
+<a class="reference external" href="https://matplotlib.org/stable/api/pyplot_summary.html#module-matplotlib.pyplot" title="(in Matplotlib v3.10.1)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib</span></code></a> figures via the string
 <code class="docutils literal notranslate"><span class="pre">'matplotlib'</span></code>.</p>
 </dd>
 </dl>
@@ -2469,7 +2482,7 @@ examples when you switch to building your gallery with execution.</p>
 to ensure that any changes made to plotting behavior in one example do not
 propagate to the other examples.</p>
 <p>By default, before each example file executes, Sphinx-Gallery will
-reset <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> (by using <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.rcdefaults.html#matplotlib.pyplot.rcdefaults" title="(in Matplotlib v3.10.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.rcdefaults()</span></code></a> and
+reset <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> (by using <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.rcdefaults.html#matplotlib.pyplot.rcdefaults" title="(in Matplotlib v3.10.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.rcdefaults()</span></code></a> and
 reloading submodules that populate the units registry) and <code class="docutils literal notranslate"><span class="pre">seaborn</span></code>
 (by trying to unload the module from <code class="docutils literal notranslate"><span class="pre">sys.modules</span></code>). This is equivalent to the
 following configuration:</p>
@@ -2523,9 +2536,18 @@ easily.</p>
 <span id="abort-on-first"></span><h3>Abort build on first fail<a class="headerlink" href="#abort-build-on-first-fail" title="Link to this heading">#</a></h3>
 <p>Sphinx-Gallery provides the early fail option. In
 this mode the gallery build process breaks as soon as an exception
-occurs in the execution of the examples scripts. To activate this
-behavior you need to pass a flag at the build process. It can be done
-by including in your <code class="docutils literal notranslate"><span class="pre">Makefile</span></code>:</p>
+occurs in the execution of the examples scripts. This can by activated via the
+<code class="docutils literal notranslate"><span class="pre">abort_on_example_error</span></code> configuration, which can be set <code class="docutils literal notranslate"><span class="pre">sphinx_gallery_conf</span></code>
+dictionary inside your <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> configuration file:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">...</span>
+    <span class="s1">&#39;abort_on_example_error&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>You can also change this via the
+<a class="reference external" href="https://www.sphinx-doc.org/en/master/man/sphinx-build.html#cmdoption-sphinx-build-D">Sphinx build option -D</a>,
+which can be used to add a ‘abort_on_example_error’ target to your <code class="docutils literal notranslate"><span class="pre">Makefile</span></code>:</p>
 <div class="highlight-makefile notranslate"><div class="highlight"><pre><span></span><span class="nf">html_abort_on_example_error</span><span class="o">:</span>
 <span class="w">    </span><span class="k">$(</span>SPHINXBUILD<span class="k">)</span><span class="w"> </span>-D<span class="w"> </span><span class="nv">abort_on_example_error</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>-b<span class="w"> </span>html<span class="w"> </span><span class="k">$(</span>ALLSPHINXOPTS<span class="k">)</span><span class="w"> </span><span class="k">$(</span>BUILDDIR<span class="k">)</span>/html
 <span class="w">    </span>@echo
@@ -2534,17 +2556,9 @@ by including in your <code class="docutils literal notranslate"><span class="pre
 </div>
 <p>Remember that for <code class="docutils literal notranslate"><span class="pre">Makefile</span></code> white space is significant and the indentation
 are tabs and not spaces.</p>
-<p>Alternatively, you can add the <code class="docutils literal notranslate"><span class="pre">abort_on_example_error</span></code> option to
-the <code class="docutils literal notranslate"><span class="pre">sphinx_gallery_conf</span></code> dictionary inside your <code class="docutils literal notranslate"><span class="pre">conf.py</span></code>
-configuration file to have it as a default:</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="o">...</span>
-    <span class="s1">&#39;abort_on_example_error&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<p>The highest precedence is always given to the <cite>-D</cite> flag of
-the <code class="docutils literal notranslate"><span class="pre">sphinx-build</span></code> command.</p>
+<p>The highest precedence is always given to the <cite>-D</cite> flag of the
+<code class="docutils literal notranslate"><span class="pre">sphinx-build</span></code> command, which effectively makes the value set in your <code class="docutils literal notranslate"><span class="pre">conf.py</span></code>
+file the ‘default’.</p>
 </section>
 <section id="don-t-fail-the-build-if-specific-examples-error">
 <span id="dont-fail-exit"></span><h3>Don’t fail the build if specific examples error<a class="headerlink" href="#don-t-fail-the-build-if-specific-examples-error" title="Link to this heading">#</a></h3>
@@ -2719,7 +2733,7 @@ duration of scripts that ran faster than that amount will not be logged nor
 embedded in the html output.</p>
 </section>
 <section id="write-computation-times">
-<span id="id11"></span><h2>Write computation times<a class="headerlink" href="#write-computation-times" title="Link to this heading">#</a></h2>
+<span id="id13"></span><h2>Write computation times<a class="headerlink" href="#write-computation-times" title="Link to this heading">#</a></h2>
 <p>Set to <code class="docutils literal notranslate"><span class="pre">False</span></code> if you want to omit computation times from all gallery outputs.
 This helps with reproducible builds.
 Default is <code class="docutils literal notranslate"><span class="pre">True</span></code> unless the <code class="docutils literal notranslate"><span class="pre">SOURCE_DATE_EPOCH</span></code> environment variable is set.</p>
@@ -2753,7 +2767,7 @@ tuple containing:</p>
 </div>
 </section>
 <section id="show-signature">
-<span id="id12"></span><h2>Show signature<a class="headerlink" href="#show-signature" title="Link to this heading">#</a></h2>
+<span id="id14"></span><h2>Show signature<a class="headerlink" href="#show-signature" title="Link to this heading">#</a></h2>
 <p>By default, Sphinx-Gallery writes a <strong>Generated by …</strong> notice in the
 generated output.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">show_signature</span></code> parameter can be used to disable it.</p>

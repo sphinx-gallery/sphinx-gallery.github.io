@@ -552,11 +552,8 @@
     <span class="s2">&quot;reference_url&quot;</span><span class="p">:</span> <span class="p">{},</span>
     <span class="s2">&quot;capture_repr&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;_repr_html_&quot;</span><span class="p">,</span> <span class="s2">&quot;__repr__&quot;</span><span class="p">),</span>
     <span class="s2">&quot;ignore_repr_types&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-    <span class="c1"># Build options</span>
-    <span class="c1"># -------------</span>
-    <span class="c1"># &#39;plot_gallery&#39; also accepts strings that evaluate to a bool, e.g. &quot;True&quot;,</span>
-    <span class="c1"># &quot;False&quot;, &quot;1&quot;, &quot;0&quot; so that they can be easily set via command line</span>
-    <span class="c1"># switches of sphinx-build</span>
+    <span class="c1"># &#39;plot_gallery&#39; should accept strings that evaluate to a bool, to allow</span>
+    <span class="c1"># setting via `sphinx-build -D` on command line</span>
     <span class="s2">&quot;plot_gallery&quot;</span><span class="p">:</span> <span class="s2">&quot;True&quot;</span><span class="p">,</span>
     <span class="s2">&quot;download_all_examples&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
     <span class="s2">&quot;abort_on_example_error&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
@@ -604,7 +601,11 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_bool_eval</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Evaluate bool only configs, to allow setting via -D on the command line.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Evaluate bool only configs, allows setting via `sphinx-build -D` on command line.</span>
+
+<span class="sd">    Ensures that strings that evaluate to a bool, e.g. &quot;True&quot;, &quot;False&quot;, &quot;1&quot;, &quot;0&quot;,</span>
+<span class="sd">    work as expected.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">x</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
@@ -818,11 +819,18 @@
     <span class="n">_check_extra_config_keys</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">sphinx_gallery_conf</span><span class="p">,</span> <span class="n">check_keys</span><span class="p">)</span>
 
     <span class="n">gallery_conf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">sphinx_gallery_conf</span><span class="p">)</span>
-    <span class="c1"># XXX anything that can only be a bool (rather than str) should probably be</span>
-    <span class="c1"># evaluated this way as it allows setting via -D on the command line</span>
+    <span class="c1"># Bool only (i.e. not string) configs are evaluated with</span>
+    <span class="c1"># `_bool_eval` to allow setting via `sphinx-build -D`</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span>
+        <span class="s2">&quot;download_all_examples&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;inspect_global_variables&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;line_numbers&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;nested_sections&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;only_warn_on_example_error&quot;</span><span class="p">,</span>
         <span class="s2">&quot;promote_jupyter_magic&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;remove_config_comments&quot;</span><span class="p">,</span>
         <span class="s2">&quot;run_stale_examples&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;show_signature&quot;</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="n">gallery_conf</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">_bool_eval</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
 
