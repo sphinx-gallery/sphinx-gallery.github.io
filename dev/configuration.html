@@ -3022,6 +3022,39 @@ adding your own Sphinx <code class="docutils literal notranslate"><span class="p
 documentation) that includes any gallery items or other files in that
 directory. You are also responsible for adding any necessary <code class="docutils literal notranslate"><span class="pre">index.rst</span></code>
 files for that gallery’s sub-galleries.</p>
+<p>The following is an example of <code class="docutils literal notranslate"><span class="pre">index.rst</span></code> that handles a gallery with
+sub-galleries and can insert an example from one sub-gallery into another one
+while preserving the nested structure in the TOC tree.:</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="gh">Examples gallery</span>
+<span class="gh">================</span>
+
+<span class="gh">Subgallery 1</span>
+<span class="gh">------------</span>
+
+<span class="p">..</span> <span class="ow">toctree</span><span class="p">::</span>
+    <span class="nc">:maxdepth:</span> 2
+    <span class="nc">:glob:</span>
+    <span class="nc">:hidden:</span>
+
+    subgallery1/plot_*
+
+<span class="p">..</span> <span class="ow">minigallery</span><span class="p">::</span> ../../examples/subgallery1/plot_*.py
+
+<span class="gh">Subgallery 2</span>
+<span class="gh">------------</span>
+
+<span class="p">..</span> <span class="ow">toctree</span><span class="p">::</span>
+    <span class="nc">:maxdepth:</span> 2
+    <span class="nc">:glob:</span>
+    <span class="nc">:hidden:</span>
+
+    subgallery2/plot_*
+
+<span class="p">..</span> <span class="ow">minigallery</span><span class="p">::</span>
+<span class="c">    ../../examples/subgallery2/plot_*.py</span>
+<span class="c">    ../../examples/subgallery1/plot_example_in_both.py</span>
+</pre></div>
+</div>
 </section>
 </section>
 <section id="showing-api-usage">
