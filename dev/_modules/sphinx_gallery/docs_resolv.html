@@ -842,9 +842,12 @@
     <span class="k">for</span> <span class="n">dirpath</span><span class="p">,</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">iterator</span><span class="p">:</span>
         <span class="n">full_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">html_gallery_dir</span><span class="p">,</span> <span class="n">dirpath</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
         <span class="n">subpath</span> <span class="o">=</span> <span class="n">dirpath</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">html_gallery_dir</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:]</span>
-        <span class="n">json_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-            <span class="n">src_gallery_dir</span><span class="p">,</span> <span class="n">subpath</span><span class="p">,</span> <span class="n">fname</span><span class="p">[:</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;.codeobj.json&quot;</span>
-        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;dirhtml&quot;</span><span class="p">:</span>
+            <span class="n">json_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">src_gallery_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subpath</span><span class="si">}</span><span class="s2">.codeobj.json&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">json_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="n">src_gallery_dir</span><span class="p">,</span> <span class="n">subpath</span><span class="p">,</span> <span class="n">fname</span><span class="p">[:</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;.codeobj.json&quot;</span>
+            <span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">json_fname</span><span class="p">):</span>
             <span class="k">continue</span>
 
@@ -873,6 +876,8 @@
                             <span class="n">_handle_http_url_error</span><span class="p">(</span>
                                 <span class="n">e</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;resolving </span><span class="si">{</span><span class="n">modname</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">cname</span><span class="si">}</span><span class="s2">&quot;</span>
                             <span class="p">)</span>
+                        <span class="k">if</span> <span class="n">link</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;dirhtml&quot;</span><span class="p">:</span>
+                            <span class="n">link</span> <span class="o">=</span> <span class="n">link</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.html&quot;</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span><span class="p">)</span>
 
                     <span class="c1"># next try intersphinx</span>
                     <span class="k">if</span> <span class="n">this_module</span> <span class="o">==</span> <span class="n">modname</span> <span class="o">==</span> <span class="s2">&quot;builtins&quot;</span><span class="p">:</span>
@@ -956,7 +961,7 @@
     <span class="c1"># require searchindex.js to exist for the links to the local doc</span>
     <span class="c1"># and there does not seem to be a good way of knowing which</span>
     <span class="c1"># builders creates a searchindex.js.</span>
-    <span class="k">if</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;html&quot;</span><span class="p">,</span> <span class="s2">&quot;readthedocs&quot;</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;html&quot;</span><span class="p">,</span> <span class="s2">&quot;dirhtml&quot;</span><span class="p">,</span> <span class="s2">&quot;readthedocs&quot;</span><span class="p">]:</span>
         <span class="k">return</span>
 
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;embedding documentation hyperlinks...&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">)</span>
