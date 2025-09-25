@@ -2016,7 +2016,14 @@
             <span class="n">block_separator</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">script_block</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="p">)</span>
-            <span class="n">example_rst</span> <span class="o">+=</span> <span class="n">script_block</span><span class="o">.</span><span class="n">content</span> <span class="o">+</span> <span class="n">block_separator</span>
+            <span class="c1"># Remove &quot;# noqa: E501&quot; at the end of any lines (issue #1403)</span>
+            <span class="n">text_content</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span>
+                <span class="sa">r</span><span class="s2">&quot;^(.*)( +# noqa: ?E501 *)$&quot;</span><span class="p">,</span>
+                <span class="sa">r</span><span class="s2">&quot;\1&quot;</span><span class="p">,</span>  <span class="c1"># replace with first capturing group</span>
+                <span class="n">script_block</span><span class="o">.</span><span class="n">content</span><span class="p">,</span>
+                <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">example_rst</span> <span class="o">+=</span> <span class="n">text_content</span> <span class="o">+</span> <span class="n">block_separator</span>
 
     <span class="k">return</span> <span class="n">example_rst</span></div>
 
