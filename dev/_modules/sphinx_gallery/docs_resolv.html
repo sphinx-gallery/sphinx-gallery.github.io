@@ -893,7 +893,10 @@
                         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">inv</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                             <span class="c1"># only python domain</span>
                             <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;py&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">want</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
-                                <span class="n">link</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="n">want</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+                                <span class="k">try</span><span class="p">:</span>
+                                    <span class="n">link</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="n">want</span><span class="p">]</span><span class="o">.</span><span class="n">uri</span>
+                                <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>  <span class="c1"># sphinx &lt; 8.2</span>
+                                    <span class="n">link</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="n">want</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
                                 <span class="n">type_</span> <span class="o">=</span> <span class="n">key</span>
                                 <span class="k">break</span>
 
