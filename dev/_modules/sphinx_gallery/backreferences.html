@@ -776,7 +776,7 @@
 <span class="s2">  .. image:: /</span><span class="si">{thumbnail}</span>
 <span class="s2">    :alt:</span>
 
-<span class="s2">  :ref:`sphx_glr_</span><span class="si">{ref_name}</span><span class="s2">`</span>
+<span class="s2">  :doc:`</span><span class="si">{doc_name}</span><span class="s2">`</span>
 
 <span class="s2">.. raw:: html</span>
 
@@ -790,7 +790,7 @@
     <span class="o">+</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">.. only:: not html</span>
 
-<span class="s2"> * :ref:`sphx_glr_</span><span class="si">{ref_name}</span><span class="s2">`</span>
+<span class="s2"> * :doc:`</span><span class="si">{doc_name}</span><span class="s2">`</span>
 <span class="s2">&quot;&quot;&quot;</span>
 <span class="p">)</span>
 
@@ -838,11 +838,11 @@
     <span class="c1"># Inside rst files forward slash defines paths</span>
     <span class="n">thumb</span> <span class="o">=</span> <span class="n">thumb</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span><span class="p">)</span>
 
-    <span class="n">ref_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">full_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
+    <span class="n">doc_name</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">full_dir</span><span class="p">)</span> <span class="o">/</span> <span class="n">fname</span><span class="p">)</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
 
     <span class="n">template</span> <span class="o">=</span> <span class="n">BACKREF_THUMBNAIL_TEMPLATE</span> <span class="k">if</span> <span class="n">is_backref</span> <span class="k">else</span> <span class="n">THUMBNAIL_TEMPLATE</span>
     <span class="k">return</span> <span class="n">template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-        <span class="n">intro</span><span class="o">=</span><span class="n">escape</span><span class="p">(</span><span class="n">intro</span><span class="p">),</span> <span class="n">thumbnail</span><span class="o">=</span><span class="n">thumb</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">ref_name</span><span class="o">=</span><span class="n">ref_name</span>
+        <span class="n">intro</span><span class="o">=</span><span class="n">escape</span><span class="p">(</span><span class="n">intro</span><span class="p">),</span> <span class="n">thumbnail</span><span class="o">=</span><span class="n">thumb</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">doc_name</span><span class="o">=</span><span class="n">doc_name</span>
     <span class="p">)</span>
 
 
