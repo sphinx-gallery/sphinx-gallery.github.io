@@ -559,7 +559,8 @@
 <span class="sd">    download_rst: str</span>
 <span class="sd">        RestructuredText to include download buttons to the generated files</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">src_ext</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;example_extensions&quot;</span><span class="p">])</span>
+    <span class="c1"># .rst are plain sources which should not be available as zip.</span>
+    <span class="n">src_ext</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">ext</span> <span class="k">for</span> <span class="n">ext</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;example_extensions&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">ext</span> <span class="o">!=</span> <span class="s2">&quot;.rst&quot;</span><span class="p">)</span>
     <span class="n">notebook_ext</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;notebook_extensions&quot;</span><span class="p">])</span>
     <span class="n">source_files</span> <span class="o">=</span> <span class="n">list_downloadable_sources</span><span class="p">(</span><span class="n">gallery_dir</span><span class="p">,</span> <span class="n">src_ext</span><span class="p">)</span>
     <span class="n">notebook_files</span> <span class="o">=</span> <span class="n">list_downloadable_sources</span><span class="p">(</span><span class="n">gallery_dir</span><span class="p">,</span> <span class="n">notebook_ext</span><span class="p">)</span>

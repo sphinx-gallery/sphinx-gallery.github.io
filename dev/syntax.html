@@ -668,12 +668,24 @@ the multi-language syntax described above:</p>
 </section>
 <section id="plain-rest-examples">
 <span id="plain-rst"></span><h2>Plain reST examples<a class="headerlink" href="#plain-rest-examples" title="Link to this heading">#</a></h2>
-<p>Sphinx-Gallery generates examples from Python scripts,
-so examples written in plain reST files are not supported.
-If you’re looking to generate hyperlinks for functions (linking to their
-corresponding online documentation) in code blocks of ordinary reST
-documentation, you might find
-<a class="reference external" href="https://sphinx-codeautolink.readthedocs.io/en/latest/">sphinx-codeautolink</a> helpful.</p>
+<p>Sphinx-Gallery can also generate gallery pages from plain reStructuredText
+files. Place .rst files in your example folder and include ‘.rst’ in the
+<a class="reference internal" href="configuration.html#build-pattern"><span class="std std-ref">example_extensions config</span></a>, e.g.</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">...</span>
+    <span class="s1">&#39;example_extensions&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;.py&#39;</span><span class="p">,</span> <span class="s1">&#39;.rst&#39;</span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Because Sphinx-Gallery copies the .rst files as-is, no code is executed,
+and no .py and notebook downloads are available.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>If you want classes and functions in reST code blocks to become hyperlinks
+to their documentation, you might find
+<a class="reference external" href="https://sphinx-codeautolink.readthedocs.io/en/latest/">sphinx-codeautolink</a>
+helpful.</p>
+</div>
 </section>
 </section>
 
