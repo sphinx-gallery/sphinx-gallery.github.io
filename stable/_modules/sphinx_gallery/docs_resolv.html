@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>sphinx_gallery.docs_resolv &#8212; Sphinx-Gallery 0.19.0-git documentation</title>
+    <title>sphinx_gallery.docs_resolv &#8212; Sphinx-Gallery 0.20.0-git documentation</title>
   
   
   
@@ -32,13 +32,14 @@
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
-    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=2c9f8f05" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=8ee2c72c" />
     <link rel="stylesheet" type="text/css" href="../../_static/theme_override.css?v=6ecc848e" />
     <link rel="stylesheet" type="text/css" href="../../_static/hide_links.css?v=60d22a59" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
   
   <!-- So that users can add custom icons -->
   <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -46,10 +47,11 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../_static/documentation_options.js?v=2437ff4f"></script>
+    <script src="../../_static/documentation_options.js?v=330efe60"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/jupyterlite_sphinx.js?v=96e329c5"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/sphinx_gallery/docs_resolv';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
@@ -62,7 +64,7 @@
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.19.0" />
+  <meta name="docsearch:version" content="0.20.0" />
   </head>
   
   
@@ -842,9 +844,12 @@
     <span class="k">for</span> <span class="n">dirpath</span><span class="p">,</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">iterator</span><span class="p">:</span>
         <span class="n">full_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">html_gallery_dir</span><span class="p">,</span> <span class="n">dirpath</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
         <span class="n">subpath</span> <span class="o">=</span> <span class="n">dirpath</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">html_gallery_dir</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:]</span>
-        <span class="n">json_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-            <span class="n">src_gallery_dir</span><span class="p">,</span> <span class="n">subpath</span><span class="p">,</span> <span class="n">fname</span><span class="p">[:</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;.codeobj.json&quot;</span>
-        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;dirhtml&quot;</span><span class="p">:</span>
+            <span class="n">json_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">src_gallery_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subpath</span><span class="si">}</span><span class="s2">.codeobj.json&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">json_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="n">src_gallery_dir</span><span class="p">,</span> <span class="n">subpath</span><span class="p">,</span> <span class="n">fname</span><span class="p">[:</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;.codeobj.json&quot;</span>
+            <span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">json_fname</span><span class="p">):</span>
             <span class="k">continue</span>
 
@@ -873,6 +878,8 @@
                             <span class="n">_handle_http_url_error</span><span class="p">(</span>
                                 <span class="n">e</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;resolving </span><span class="si">{</span><span class="n">modname</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">cname</span><span class="si">}</span><span class="s2">&quot;</span>
                             <span class="p">)</span>
+                        <span class="k">if</span> <span class="n">link</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;dirhtml&quot;</span><span class="p">:</span>
+                            <span class="n">link</span> <span class="o">=</span> <span class="n">link</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.html&quot;</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span><span class="p">)</span>
 
                     <span class="c1"># next try intersphinx</span>
                     <span class="k">if</span> <span class="n">this_module</span> <span class="o">==</span> <span class="n">modname</span> <span class="o">==</span> <span class="s2">&quot;builtins&quot;</span><span class="p">:</span>
@@ -886,7 +893,10 @@
                         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">inv</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                             <span class="c1"># only python domain</span>
                             <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;py&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">want</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
-                                <span class="n">link</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="n">want</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+                                <span class="k">try</span><span class="p">:</span>
+                                    <span class="n">link</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="n">want</span><span class="p">]</span><span class="o">.</span><span class="n">uri</span>
+                                <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>  <span class="c1"># sphinx &lt; 8.2</span>
+                                    <span class="n">link</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="n">want</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
                                 <span class="n">type_</span> <span class="o">=</span> <span class="n">key</span>
                                 <span class="k">break</span>
 
@@ -956,7 +966,7 @@
     <span class="c1"># require searchindex.js to exist for the links to the local doc</span>
     <span class="c1"># and there does not seem to be a good way of knowing which</span>
     <span class="c1"># builders creates a searchindex.js.</span>
-    <span class="k">if</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;html&quot;</span><span class="p">,</span> <span class="s2">&quot;readthedocs&quot;</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;html&quot;</span><span class="p">,</span> <span class="s2">&quot;dirhtml&quot;</span><span class="p">,</span> <span class="s2">&quot;readthedocs&quot;</span><span class="p">]:</span>
         <span class="k">return</span>
 
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;embedding documentation hyperlinks...&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">)</span>
@@ -1018,7 +1028,7 @@
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     <br/>
   </p>
 </div>

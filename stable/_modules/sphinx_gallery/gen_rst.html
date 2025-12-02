@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>sphinx_gallery.gen_rst &#8212; Sphinx-Gallery 0.19.0-git documentation</title>
+    <title>sphinx_gallery.gen_rst &#8212; Sphinx-Gallery 0.20.0-git documentation</title>
   
   
   
@@ -32,13 +32,14 @@
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
-    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=2c9f8f05" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=8ee2c72c" />
     <link rel="stylesheet" type="text/css" href="../../_static/theme_override.css?v=6ecc848e" />
     <link rel="stylesheet" type="text/css" href="../../_static/hide_links.css?v=60d22a59" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
   
   <!-- So that users can add custom icons -->
   <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -46,10 +47,11 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../_static/documentation_options.js?v=2437ff4f"></script>
+    <script src="../../_static/documentation_options.js?v=330efe60"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/jupyterlite_sphinx.js?v=96e329c5"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/sphinx_gallery/gen_rst';</script>
     <script>
         DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
@@ -62,7 +64,7 @@
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.19.0" />
+  <meta name="docsearch:version" content="0.20.0" />
   </head>
   
   
@@ -485,7 +487,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">sphinx.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigError</span><span class="p">,</span> <span class="n">ExtensionError</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sphinx.util.console</span><span class="w"> </span><span class="kn">import</span> <span class="n">blue</span><span class="p">,</span> <span class="n">bold</span><span class="p">,</span> <span class="n">red</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">glr_path_static</span><span class="p">,</span> <span class="n">py_source_parser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">glr_path_static</span><span class="p">,</span> <span class="n">py_source_parser</span><span class="p">,</span> <span class="n">rst_source_parser</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.backreferences</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">THUMBNAIL_PARENT_DIV</span><span class="p">,</span>
     <span class="n">THUMBNAIL_PARENT_DIV_CLOSE</span><span class="p">,</span>
@@ -517,6 +519,7 @@
     <span class="n">_replace_md5</span><span class="p">,</span>
     <span class="n">_write_json</span><span class="p">,</span>
     <span class="n">get_md5sum</span><span class="p">,</span>
+    <span class="n">iter_gallery_header_filenames</span><span class="p">,</span>
     <span class="n">optipng</span><span class="p">,</span>
     <span class="n">scale_image</span><span class="p">,</span>
     <span class="n">status_iterator</span><span class="p">,</span>
@@ -909,13 +912,19 @@
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">fpth</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">None</span>
     <span class="c1"># Next look for GALLERY_HEADER.[ext] (and for backward-compatibility README.[ext]</span>
-    <span class="n">extensions</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;.txt&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;source_suffix&quot;</span><span class="p">])</span>
-    <span class="k">for</span> <span class="n">ext</span> <span class="ow">in</span> <span class="n">extensions</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;GALLERY_HEADER&quot;</span><span class="p">,</span> <span class="s2">&quot;README&quot;</span><span class="p">,</span> <span class="s2">&quot;readme&quot;</span><span class="p">):</span>
-            <span class="n">fpth</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dir_</span><span class="p">,</span> <span class="n">fname</span> <span class="o">+</span> <span class="n">ext</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">fpth</span><span class="p">):</span>
-                <span class="k">return</span> <span class="n">fpth</span>
+    <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">iter_gallery_header_filenames</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">):</span>
+        <span class="n">fpth</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dir_</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">fpth</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">fpth</span>
     <span class="k">if</span> <span class="n">raise_error</span><span class="p">:</span>
+        <span class="n">extensions</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+            <span class="nb">sorted</span><span class="p">(</span>
+                <span class="nb">set</span><span class="p">(</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">fname</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">iter_gallery_header_filenames</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">)</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
         <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
             <span class="s2">&quot;Example directory </span><span class="si">{}</span><span class="s2"> does not have a GALLERY_HEADER file with &quot;</span>
             <span class="s2">&quot;one of the expected file extensions </span><span class="si">{}</span><span class="s2">. Please write one to &quot;</span>
@@ -1284,6 +1293,9 @@
     <span class="k">if</span> <span class="n">fname</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.py&quot;</span><span class="p">):</span>
         <span class="n">parser</span> <span class="o">=</span> <span class="n">py_source_parser</span>
         <span class="n">language</span> <span class="o">=</span> <span class="s2">&quot;Python&quot;</span>
+    <span class="k">elif</span> <span class="n">fname</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.rst&quot;</span><span class="p">):</span>
+        <span class="n">parser</span> <span class="o">=</span> <span class="n">rst_source_parser</span>
+        <span class="n">language</span> <span class="o">=</span> <span class="s2">&quot;RST&quot;</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">parser</span> <span class="o">=</span> <span class="n">BlockParser</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
         <span class="n">language</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">language</span>
@@ -1938,7 +1950,7 @@
 <span class="s2">        :class: sphx-glr-download-link-note</span>
 
 <span class="s2">        :ref:`Go to the end &lt;sphx_glr_download_</span><span class="si">{1}</span><span class="s2">&gt;`</span>
-<span class="s2">        to download the full example code.</span><span class="si">{2}</span>
+<span class="s2">        to download the full example code</span><span class="si">{2}</span>
 
 <span class="s2">.. rst-class:: sphx-glr-example-title</span>
 
@@ -2016,7 +2028,14 @@
             <span class="n">block_separator</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">script_block</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="p">)</span>
-            <span class="n">example_rst</span> <span class="o">+=</span> <span class="n">script_block</span><span class="o">.</span><span class="n">content</span> <span class="o">+</span> <span class="n">block_separator</span>
+            <span class="c1"># Remove &quot;# noqa: E501&quot; at the end of any lines (issue #1403)</span>
+            <span class="n">text_content</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span>
+                <span class="sa">r</span><span class="s2">&quot;^(.*)( +# noqa: ?E501 *)$&quot;</span><span class="p">,</span>
+                <span class="sa">r</span><span class="s2">&quot;\1&quot;</span><span class="p">,</span>  <span class="c1"># replace with first capturing group</span>
+                <span class="n">script_block</span><span class="o">.</span><span class="n">content</span><span class="p">,</span>
+                <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">example_rst</span> <span class="o">+=</span> <span class="n">text_content</span> <span class="o">+</span> <span class="n">block_separator</span>
 
     <span class="k">return</span> <span class="n">example_rst</span></div>
 
@@ -2060,16 +2079,17 @@
     <span class="n">jupyterlite_conf</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;jupyterlite&quot;</span><span class="p">]</span>
     <span class="n">is_jupyterlite_enabled</span> <span class="o">=</span> <span class="n">jupyterlite_conf</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
-    <span class="n">interactive_example_text</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="k">if</span> <span class="n">is_binder_enabled</span> <span class="ow">or</span> <span class="n">is_jupyterlite_enabled</span><span class="p">:</span>
-        <span class="n">interactive_example_text</span> <span class="o">+=</span> <span class="s2">&quot; or to run this example in your browser via &quot;</span>
+        <span class="n">interactive_example_text</span> <span class="o">=</span> <span class="s2">&quot; or to run this example in your browser via &quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">interactive_example_text</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span>
 
     <span class="k">if</span> <span class="n">is_binder_enabled</span> <span class="ow">and</span> <span class="n">is_jupyterlite_enabled</span><span class="p">:</span>
-        <span class="n">interactive_example_text</span> <span class="o">+=</span> <span class="s2">&quot;JupyterLite or Binder&quot;</span>
+        <span class="n">interactive_example_text</span> <span class="o">+=</span> <span class="s2">&quot;JupyterLite or Binder.&quot;</span>
     <span class="k">elif</span> <span class="n">is_binder_enabled</span><span class="p">:</span>
-        <span class="n">interactive_example_text</span> <span class="o">+=</span> <span class="s2">&quot;Binder&quot;</span>
+        <span class="n">interactive_example_text</span> <span class="o">+=</span> <span class="s2">&quot;Binder.&quot;</span>
     <span class="k">elif</span> <span class="n">is_jupyterlite_enabled</span><span class="p">:</span>
-        <span class="n">interactive_example_text</span> <span class="o">+=</span> <span class="s2">&quot;JupyterLite&quot;</span>
+        <span class="n">interactive_example_text</span> <span class="o">+=</span> <span class="s2">&quot;JupyterLite.&quot;</span>
 
     <span class="n">example_rst</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">EXAMPLE_HEADER</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">example_fname</span><span class="p">,</span> <span class="n">ref_fname</span><span class="p">,</span> <span class="n">interactive_example_text</span><span class="p">)</span>
@@ -2318,7 +2338,7 @@
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     <br/>
   </p>
 </div>

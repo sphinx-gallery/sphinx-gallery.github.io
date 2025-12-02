@@ -127,10 +127,22 @@ the rendered examples.
 Build options
 ^^^^^^^^^^^^^
 
-Some options can be set during the build execution step, e.g. using a Makefile:
+Configuration options can be set at build time via the
+`Sphinx build -D <https://www.sphinx-doc.org/en/master/man/sphinx-build.html#cmdoption-sphinx-build-D>`_
+command line option. This overrides the value set in your ``conf.py`` file for that
+configuration. Values set in your ``conf.py`` are effectively the 'default',
+as it takes lower precedence than values passed via the ``-D`` build option.
+
+You can also use the ``-D`` option in your Makefile to create useful targets,
+for example:
 
 - ``make html-noplot`` (:ref:`without_execution`)
 - ``make html_abort_on_example_error`` (:ref:`abort_on_first`)
+
+.. note::
+    If you wish to use the ``-D`` build option to pass an instantiated class, class or
+    function as a configuration value, you can do so by passing a fully qualified name
+    string to the object. See :ref:`importing_callables` for details.
 
 CSS changes
 ^^^^^^^^^^^
@@ -1233,7 +1245,7 @@ included in the prefix if it's required.
 .. tip::
 
     If building multiple versions of your documentation on a hosted service and
-    using prefix, consider using `sphinx build -D <https://www.sphinx-doc.org/en/master/man/sphinx-build.html#cmdoption-sphinx-build-D>`_
+    using prefix, consider using `Sphinx build -D <https://www.sphinx-doc.org/en/master/man/sphinx-build.html#cmdoption-sphinx-build-D>`_
     command line option to ensure links point to the correct version. For
     example:
 
@@ -1288,16 +1300,22 @@ Using JUnit XML files
 =====================
 
 Sphinx-Gallery can create a JUnit XML file of your example run times,
-successes, and failures. To create a file named e.g. ``junit-result.xml``
-in the ``/build`` output directory, set the configuration key (path is relative
-to the HTML output directory)::
+successes, and failures. Set ``junit`` configuration to the value of your
+desired JUnit file path, relative to the HTML output directory (which is by
+default ``/_build/html`` relative to your ``conf.py`` file).
+For example, assuming output directory is the default, the configuration below creates
+a file ``junit.xml`` in ``doc/_build/test-results/sphinx-gallery/``::
 
      sphinx_gallery_conf = {
          ...
          'junit': '../test-results/sphinx-gallery/junit.xml',
      }
 
-By default, JUnit XML file generation is disabled (by setting ``'junit': ''``).
+By default, JUnit XML file generation is disabled (default value is: ``'junit': ''``).
+
+Integration with ``CircleCI``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 JUnit XML files are useful for example on CircleCI builds, where you can add
 a line like this to get a summary of your example run times in the CircleCI GUI
 (which will parse the file path
@@ -1315,6 +1333,23 @@ For more information on CircleCI integration, peruse the related
 `CircleCI doc <https://circleci.com/docs/2.0/collect-test-data/#metadata-collection-in-custom-test-steps>`__
 and `blog post <https://circleci.com/blog/how-to-output-junit-tests-through-circleci-2-0-for-expanded-insights/>`__.
 
+Parsing the XML file
+^^^^^^^^^^^^^^^^^^^^
+
+The JUnit XML file can also be parsed manually, e.g. to generate parametrized
+test cases with ``pytest`` to limit the maximum execution time. The following
+code block parses the XML file to create a list of test case dictionaries with
+the execution time(s).
+
+.. code-block:: python
+
+    from xml.etree.ElementTree import parse
+
+    xml_path =  "doc/_build/html/sphinx-gallery/junit-results.xml"
+    test_cases = [dict(case.attrib) for case in parse(xml_path).getroot().iterfind("testcase")]
+
+    print(test_cases[0]["time"])
+    0.10358190536499023
 
 .. _log_level:
 
@@ -1746,9 +1781,19 @@ Building without executing examples
 Sphinx-Gallery can parse all your examples and build the gallery
 without executing any of the scripts. This is just for speed
 visualization processes of the gallery and the size it takes your
-website to display, or any use you can imagine for it. To achieve this you
-need to pass the no plot option in the build process by modifying
-your ``Makefile`` with:
+website to display, or any use you can imagine for it.
+
+This can be done by setting the ``plot_gallery`` configuration in the
+``sphinx_gallery_conf`` dictionary inside your ``conf.py``::
+
+    sphinx_gallery_conf = {
+        ...
+        'plot_gallery': 'False',
+    }
+
+You can also change this via the
+`Sphinx build option -D <https://www.sphinx-doc.org/en/master/man/sphinx-build.html#cmdoption-sphinx-build-D>`_,
+which can be used to add a 'no-plot' target to your ``Makefile``:
 
 .. code-block:: Makefile
 
@@ -1760,17 +1805,9 @@ your ``Makefile`` with:
 Remember that for ``Makefile`` white space is significant and the indentation are tabs
 and not spaces.
 
-Alternatively, you can add the ``plot_gallery`` option to the
-``sphinx_gallery_conf`` dictionary inside your ``conf.py`` to have it as
-a default::
-
-    sphinx_gallery_conf = {
-        ...
-        'plot_gallery': 'False',
-    }
-
 The highest precedence is always given to the `-D` flag of the
-``sphinx-build`` command.
+``sphinx-build`` command, which effectively makes the value set in your ``conf.py``
+file the 'default'.
 
 .. note::
 
@@ -1911,6 +1948,9 @@ or
 to check.
 We recommend FFMpeg writer, unless you are using Matplotlib <3.3.1.
 
+Supported scrapers
+^^^^^^^^^^^^^^^^^^
+
 The following scrapers are supported:
 
 - matplotlib
@@ -1926,6 +1966,10 @@ The following scrapers are supported:
 - qtgallery
     This library provides a scraper for Qt windows. See `their repository <https://github.com/ixjlyons/qtgallery>`_
     for instructions on integrating with Sphinx-Gallery.
+- plotly
+    This library provides a scraper, though it is also possible to capture plotly
+    figures using :ref:`capture_repr <capture_repr>` configuration.
+    See :ref:`sphx_glr_auto_plotly_examples_plot_0_plotly.py` for details.
 
 It is possible to write custom scrapers for images generated by packages
 outside of those listed above. This is accomplished
@@ -2176,9 +2220,18 @@ Abort build on first fail
 
 Sphinx-Gallery provides the early fail option. In
 this mode the gallery build process breaks as soon as an exception
-occurs in the execution of the examples scripts. To activate this
-behavior you need to pass a flag at the build process. It can be done
-by including in your ``Makefile``:
+occurs in the execution of the examples scripts. This can by activated via the
+``abort_on_example_error`` configuration, which can be set ``sphinx_gallery_conf``
+dictionary inside your ``conf.py`` configuration file::
+
+    sphinx_gallery_conf = {
+        ...
+        'abort_on_example_error': True,
+    }
+
+You can also change this via the
+`Sphinx build option -D <https://www.sphinx-doc.org/en/master/man/sphinx-build.html#cmdoption-sphinx-build-D>`_,
+which can be used to add a 'abort_on_example_error' target to your ``Makefile``:
 
 .. code-block:: makefile
 
@@ -2190,18 +2243,9 @@ by including in your ``Makefile``:
 Remember that for ``Makefile`` white space is significant and the indentation
 are tabs and not spaces.
 
-Alternatively, you can add the ``abort_on_example_error`` option to
-the ``sphinx_gallery_conf`` dictionary inside your ``conf.py``
-configuration file to have it as a default::
-
-    sphinx_gallery_conf = {
-        ...
-        'abort_on_example_error': True,
-    }
-
-
-The highest precedence is always given to the `-D` flag of
-the ``sphinx-build`` command.
+The highest precedence is always given to the `-D` flag of the
+``sphinx-build`` command, which effectively makes the value set in your ``conf.py``
+file the 'default'.
 
 .. _dont_fail_exit:
 
@@ -2404,6 +2448,9 @@ Write computation times
 Set to ``False`` if you want to omit computation times from all gallery outputs.
 This helps with reproducible builds.
 Default is ``True`` unless the ``SOURCE_DATE_EPOCH`` environment variable is set.
+
+If you are interested in using execution time and execution success and failure data,
+see :ref:`junit_xml`.
 
 .. _show_memory:
 
@@ -2680,6 +2727,41 @@ adding your own Sphinx ``toctree`` in that index (or elsewhere in your Sphinx
 documentation) that includes any gallery items or other files in that
 directory. You are also responsible for adding any necessary ``index.rst``
 files for that gallery's sub-galleries.
+
+The following is an example of ``index.rst`` that handles a gallery with
+sub-galleries and can insert an example from one sub-gallery into another one
+while preserving the nested structure in the TOC tree.:
+
+.. code-block:: rst
+
+    Examples gallery
+    ================
+
+    Subgallery 1
+    ------------
+
+    .. toctree::
+        :maxdepth: 2
+        :glob:
+        :hidden:
+
+        subgallery1/plot_*
+
+    .. minigallery:: ../../examples/subgallery1/plot_*.py
+
+    Subgallery 2
+    ------------
+
+    .. toctree::
+        :maxdepth: 2
+        :glob:
+        :hidden:
+
+        subgallery2/plot_*
+
+    .. minigallery::
+        ../../examples/subgallery2/plot_*.py
+        ../../examples/subgallery1/plot_example_in_both.py
 
 .. _show_api_usage:
 
