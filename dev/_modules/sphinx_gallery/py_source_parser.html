@@ -568,7 +568,7 @@
     <span class="n">docstring</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">get_docstring</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">docstring</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>  <span class="c1"># should be guaranteed above</span>
     <span class="c1"># This is just for backward compat</span>
-    <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">value</span><span class="p">[:</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">body</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">value</span><span class="p">[:</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">:</span>  <span class="c1"># type: ignore[index]</span>
         <span class="c1"># just for strict backward compat here</span>
         <span class="n">docstring</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">docstring</span>
     <span class="n">ts</span> <span class="o">=</span> <span class="n">tokenize</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">content</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">readline</span><span class="p">)</span>
@@ -671,16 +671,16 @@
     <span class="k">if</span> <span class="n">remaining_content</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
         <span class="n">blocks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Block</span><span class="p">(</span><span class="s2">&quot;code&quot;</span><span class="p">,</span> <span class="n">remaining_content</span><span class="p">,</span> <span class="n">lineno</span><span class="p">))</span>
 
-    <span class="n">out</span> <span class="o">=</span> <span class="p">(</span><span class="n">file_conf</span><span class="p">,</span> <span class="n">blocks</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">return_node</span><span class="p">:</span>
-        <span class="n">out</span> <span class="o">+=</span> <span class="p">(</span><span class="n">node</span><span class="p">,)</span>
-    <span class="k">return</span> <span class="n">out</span></div>
+        <span class="k">return</span> <span class="n">file_conf</span><span class="p">,</span> <span class="n">blocks</span><span class="p">,</span> <span class="n">node</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">file_conf</span><span class="p">,</span> <span class="n">blocks</span></div>
 
 
 
 <div class="viewcode-block" id="remove_ignore_blocks">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.py_source_parser.html#sphinx_gallery.py_source_parser.remove_ignore_blocks">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">remove_ignore_blocks</span><span class="p">(</span><span class="n">code_block</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">remove_ignore_blocks</span><span class="p">(</span><span class="n">code_block</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return the content of *code_block* with ignored areas removed.</span>
 
@@ -707,7 +707,7 @@
 
 <div class="viewcode-block" id="remove_config_comments">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.py_source_parser.html#sphinx_gallery.py_source_parser.remove_config_comments">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">remove_config_comments</span><span class="p">(</span><span class="n">code_block</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">remove_config_comments</span><span class="p">(</span><span class="n">code_block</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return the content of *code_block* with in-file config comments removed.</span>
 
