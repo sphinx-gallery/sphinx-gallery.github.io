@@ -460,6 +460,8 @@
 <span class="sd">Parses example file code in order to keep track of used functions.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
 <span class="kn">import</span><span class="w"> </span><span class="nn">ast</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
@@ -468,6 +470,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">defaultdict</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">html</span><span class="w"> </span><span class="kn">import</span> <span class="n">escape</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">sphinx.util</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sphinx.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExtensionError</span>
@@ -475,6 +478,9 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">._dummy</span><span class="w"> </span><span class="kn">import</span> <span class="n">DummyClass</span>  <span class="c1"># noqa: F401</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.scrapers</span><span class="w"> </span><span class="kn">import</span> <span class="n">_find_image_ext</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">_W_KW</span><span class="p">,</span> <span class="n">_replace_md5</span>
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.py_source_parser</span><span class="w"> </span><span class="kn">import</span> <span class="n">Block</span>
 
 <span class="n">THUMBNAIL_PARENT_DIV</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">.. raw:: html</span>
@@ -502,15 +508,15 @@
 <span class="sd">    Only retains names from imported modules.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">global_variables</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">global_variables</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">imported_names</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">global_variables</span> <span class="o">=</span> <span class="n">global_variables</span> <span class="ow">or</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">accessed_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">imported_names</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">global_variables</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">global_variables</span> <span class="ow">or</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">accessed_names</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
 
 <div class="viewcode-block" id="NameFinder.visit_Import">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.backreferences.html#sphinx_gallery.backreferences.NameFinder.visit_Import">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">visit_Import</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">visit_Import</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;For &#39;import&#39; add node names to `imported_names`.&quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">alias</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">names</span><span class="p">:</span>
             <span class="n">local_name</span> <span class="o">=</span> <span class="n">alias</span><span class="o">.</span><span class="n">asname</span> <span class="ow">or</span> <span class="n">alias</span><span class="o">.</span><span class="n">name</span>
@@ -519,21 +525,21 @@
 
 <div class="viewcode-block" id="NameFinder.visit_ImportFrom">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.backreferences.html#sphinx_gallery.backreferences.NameFinder.visit_ImportFrom">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">visit_ImportFrom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">visit_ImportFrom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;For &#39;from import&#39; add node names to `imported_names`, incl module prefix.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">visit_Import</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">module</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="NameFinder.visit_Name">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.backreferences.html#sphinx_gallery.backreferences.NameFinder.visit_Name">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">visit_Name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">visit_Name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add node id to `accessed_names`.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">accessed_names</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">id</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="NameFinder.visit_Attribute">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.backreferences.html#sphinx_gallery.backreferences.NameFinder.visit_Attribute">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">visit_Attribute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">visit_Attribute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add attributes, including their prefix, to `accessed_names`.&quot;&quot;&quot;</span>
         <span class="n">attrs</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">while</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Attribute</span><span class="p">):</span>
@@ -551,7 +557,7 @@
 
 <div class="viewcode-block" id="NameFinder.get_mapping">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.backreferences.html#sphinx_gallery.backreferences.NameFinder.get_mapping">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_mapping</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_mapping</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Map names used in code, using AST nodes, to their fully qualified names.</span>
 
 <span class="sd">        Returns</span>
@@ -615,13 +621,13 @@
                     <span class="k">for</span> <span class="n">cc</span> <span class="ow">in</span> <span class="n">classes</span><span class="p">:</span>
                         <span class="n">module</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getmodule</span><span class="p">(</span><span class="n">cc</span><span class="p">)</span>
                         <span class="k">if</span> <span class="n">module</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                            <span class="n">module</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+                            <span class="n">module_parts</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
                             <span class="n">class_name</span> <span class="o">=</span> <span class="n">cc</span><span class="o">.</span><span class="vm">__qualname__</span>
                             <span class="c1"># a.b.C.meth could be documented as a.C.meth,</span>
                             <span class="c1"># so go down the list</span>
-                            <span class="k">for</span> <span class="n">depth</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">module</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+                            <span class="k">for</span> <span class="n">depth</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">module_parts</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
                                 <span class="n">full_name</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-                                    <span class="n">module</span><span class="p">[:</span><span class="n">depth</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">class_name</span><span class="p">]</span> <span class="o">+</span> <span class="n">method</span>
+                                    <span class="n">module_parts</span><span class="p">[:</span><span class="n">depth</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">class_name</span><span class="p">]</span> <span class="o">+</span> <span class="n">method</span>
                                 <span class="p">)</span>
                                 <span class="n">options</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                                     <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">full_name</span><span class="p">,</span> <span class="n">class_attr</span><span class="p">,</span> <span class="n">is_class</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
@@ -641,7 +647,7 @@
 
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_get_short_module_name</span><span class="p">(</span><span class="n">module_name</span><span class="p">,</span> <span class="n">obj_name</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_short_module_name</span><span class="p">(</span><span class="n">module_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">obj_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the shortest possible module name.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s2">&quot;.&quot;</span> <span class="ow">in</span> <span class="n">obj_name</span><span class="p">:</span>
         <span class="n">obj_name</span><span class="p">,</span> <span class="n">attr</span> <span class="o">=</span> <span class="n">obj_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
@@ -675,7 +681,7 @@
     <span class="k">return</span> <span class="n">short_name</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_make_ref_regex</span><span class="p">(</span><span class="n">default_role</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_make_ref_regex</span><span class="p">(</span><span class="n">default_role</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Make regex to find reference to python objects.&quot;&quot;&quot;</span>
     <span class="c1"># keep roles variable in sync values shown in configuration.rst</span>
     <span class="c1"># &quot;Add mini-galleries for API documentation&quot;</span>
@@ -693,7 +699,12 @@
 
 <div class="viewcode-block" id="identify_names">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.backreferences.html#sphinx_gallery.backreferences.identify_names">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">identify_names</span><span class="p">(</span><span class="n">script_blocks</span><span class="p">,</span> <span class="n">ref_regex</span><span class="p">,</span> <span class="n">global_variables</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">node</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">identify_names</span><span class="p">(</span>
+    <span class="n">script_blocks</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Block</span><span class="p">],</span>
+    <span class="n">ref_regex</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">global_variables</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">node</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Build a codeobj summary by identifying and resolving used names.</span>
 
 <span class="sd">    Parameters</span>
@@ -704,22 +715,23 @@
 <span class="sd">        the corresponding content string of block and the leading line number.</span>
 <span class="sd">    ref_regex : str</span>
 <span class="sd">        Regex to find references to python objects.</span>
-<span class="sd">    example_globals: Optional[Dict[str, Any]]</span>
+<span class="sd">    global_variables: Optional[Dict[str, Any]]</span>
 <span class="sd">        Global variables for examples. Default=None</span>
 <span class="sd">    node : ast.Module or str</span>
 <span class="sd">        The parsed node. Default=&quot;&quot;.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    example_code_obj : Dict[str, Any]</span>
+<span class="sd">    example_code_obj : dict[str, list[dict[str, Any]]]</span>
 <span class="sd">        Dict with information about all code object references found in an</span>
-<span class="sd">        example. Dict contains the following keys:</span>
+<span class="sd">        example. Keys are the names as used in the example, values are lists of</span>
+<span class="sd">        possible resolved objects with the following keys:</span>
 
-<span class="sd">            - example_code_obj[&#39;name&#39;] : function or class name (str)</span>
-<span class="sd">            - example_code_obj[&#39;module&#39;] : module name (str)</span>
-<span class="sd">            - example_code_obj[&#39;module_short&#39;] : shortened module name (str)</span>
-<span class="sd">            - example_code_obj[&#39;is_class&#39;] : whether object is class (bool)</span>
-<span class="sd">            - example_code_obj[&#39;is_explicit&#39;] : whether object is an explicit</span>
+<span class="sd">            - code_obj[&#39;name&#39;] : function or class name (str)</span>
+<span class="sd">            - code_obj[&#39;module&#39;] : module name (str)</span>
+<span class="sd">            - code_obj[&#39;module_short&#39;] : shortened module name (str)</span>
+<span class="sd">            - code_obj[&#39;is_class&#39;] : whether object is class (bool)</span>
+<span class="sd">            - code_obj[&#39;is_explicit&#39;] : whether object is an explicit</span>
 <span class="sd">                backreference (referred to by sphinx markup) (bool)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">node</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>  <span class="c1"># mostly convenience for testing functions</span>
@@ -733,7 +745,9 @@
     <span class="c1"># Get matches from docstring inspection (explicit matches)</span>
     <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">content</span> <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">script_blocks</span> <span class="k">if</span> <span class="n">block</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;text&quot;</span><span class="p">)</span>
     <span class="n">names</span><span class="o">.</span><span class="n">extend</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">ref_regex</span><span class="p">,</span> <span class="n">text</span><span class="p">))</span>
-    <span class="n">example_code_obj</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>  <span class="c1"># native dict preserves order nowadays</span>
+    <span class="n">example_code_obj</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="nb">dict</span><span class="p">()</span>
+    <span class="p">)</span>  <span class="c1"># native dict preserves order nowadays</span>
     <span class="c1"># Make a list of all guesses, in `_embed_code_links` we will break</span>
     <span class="c1"># when we find a match</span>
     <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">full_name</span><span class="p">,</span> <span class="n">class_like</span><span class="p">,</span> <span class="n">is_class</span><span class="p">,</span> <span class="n">is_explicit</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
@@ -741,16 +755,17 @@
             <span class="n">example_code_obj</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
         <span class="c1"># name is as written in file (e.g. np.asarray)</span>
         <span class="c1"># full_name includes resolved import path (e.g. numpy.asarray)</span>
-        <span class="n">splits</span> <span class="o">=</span> <span class="n">full_name</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">class_like</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">splits</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">splits</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;builtins&quot;</span><span class="p">,</span> <span class="n">splits</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">splits</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>  <span class="c1"># class-like</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="n">full_name</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">class_like</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">module</span> <span class="o">=</span> <span class="s2">&quot;builtins&quot;</span>
+            <span class="n">attribute</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>  <span class="c1"># class-like</span>
             <span class="k">assert</span> <span class="n">class_like</span>
-            <span class="n">splits</span> <span class="o">=</span> <span class="p">(</span><span class="n">splits</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">splits</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span>
+            <span class="n">module</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">attribute</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">assert</span> <span class="ow">not</span> <span class="n">class_like</span>
-
-        <span class="n">module</span><span class="p">,</span> <span class="n">attribute</span> <span class="o">=</span> <span class="n">splits</span>
+            <span class="n">module</span><span class="p">,</span> <span class="n">attribute</span> <span class="o">=</span> <span class="n">parts</span>
 
         <span class="c1"># get shortened module name</span>
         <span class="n">module_short</span> <span class="o">=</span> <span class="n">_get_short_module_name</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">attribute</span><span class="p">)</span>
@@ -892,7 +907,7 @@
         <span class="p">)</span>
         <span class="n">seen</span> <span class="o">=</span> <span class="n">backref</span> <span class="ow">in</span> <span class="n">seen_backrefs</span>
         <span class="n">mode</span> <span class="o">=</span> <span class="s2">&quot;a&quot;</span> <span class="k">if</span> <span class="n">seen</span> <span class="k">else</span> <span class="s2">&quot;w&quot;</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">include_path</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="o">**</span><span class="n">_W_KW</span><span class="p">)</span> <span class="k">as</span> <span class="n">ex_file</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">include_path</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="o">**</span><span class="n">_W_KW</span><span class="p">)</span> <span class="k">as</span> <span class="n">ex_file</span><span class="p">:</span>  <span class="c1"># type: ignore[call-overload]</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">seen</span><span class="p">:</span>
                 <span class="c1"># Be aware that if the number of lines of this heading changes,</span>
                 <span class="c1"># the minigallery directive should be modified accordingly</span>
@@ -933,7 +948,7 @@
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
             <span class="c1"># Close div containing all thumbnails</span>
             <span class="c1"># (it was open in _write_backreferences)</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">_W_KW</span><span class="p">)</span> <span class="k">as</span> <span class="n">ex_file</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">_W_KW</span><span class="p">)</span> <span class="k">as</span> <span class="n">ex_file</span><span class="p">:</span>  <span class="c1"># type: ignore[call-overload]</span>
                 <span class="n">ex_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">THUMBNAIL_PARENT_DIV_CLOSE</span><span class="p">)</span>
             <span class="n">_replace_md5</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;t&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
