@@ -460,6 +460,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">textwrap</span><span class="w"> </span><span class="kn">import</span> <span class="n">dedent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Literal</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">pygments.lexers</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pygments.token</span>
@@ -495,13 +496,21 @@
 <span class="sd">        Contains the configuration of Sphinx-Gallery.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_file</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">):</span>
-        <span class="n">source_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">source_file</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="o">:=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;filetype_parsers&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">source_file</span><span class="o">.</span><span class="n">suffix</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">source_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">source_file</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">:=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;filetype_parsers&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">source_path</span><span class="o">.</span><span class="n">suffix</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">lexer</span> <span class="o">=</span> <span class="n">pygments</span><span class="o">.</span><span class="n">lexers</span><span class="o">.</span><span class="n">find_lexer_class_by_name</span><span class="p">(</span><span class="n">name</span><span class="p">)()</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">lexer</span> <span class="o">=</span> <span class="n">pygments</span><span class="o">.</span><span class="n">lexers</span><span class="o">.</span><span class="n">find_lexer_class_for_filename</span><span class="p">(</span><span class="n">source_file</span><span class="p">)()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">language</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lexer</span><span class="o">.</span><span class="n">name</span>
+            <span class="n">lexer_class</span> <span class="o">=</span> <span class="n">pygments</span><span class="o">.</span><span class="n">lexers</span><span class="o">.</span><span class="n">find_lexer_class_for_filename</span><span class="p">(</span><span class="n">source_path</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">lexer_class</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Sphinx-gallery could not find a lexer for files with &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;the suffix &#39;</span><span class="si">{</span><span class="n">source_path</span><span class="o">.</span><span class="n">suffix</span><span class="si">}</span><span class="s2">&#39;. Please specify a &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;&#39;filetype_parsers&#39; entry in the &#39;sphinx_gallery_conf&#39; &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;setting.&quot;</span>
+                <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lexer</span> <span class="o">=</span> <span class="n">lexer_class</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">language</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lexer</span><span class="o">.</span><span class="n">name</span>
 
         <span class="c1"># determine valid comment syntaxes. For each possible syntax, the tuple contains</span>
         <span class="c1"># - A test comment</span>
@@ -543,10 +552,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">multiline_cleanup</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\s*&quot;</span><span class="p">)</span>
 
         <span class="n">comment_start</span> <span class="o">=</span> <span class="s2">&quot;|&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">allowed_comments</span><span class="p">)</span>
-        <span class="n">allowed_special</span> <span class="o">=</span> <span class="s2">&quot;|&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">allowed_special</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">allowed_special</span><span class="p">:</span>
+        <span class="n">allowed_special_str</span> <span class="o">=</span> <span class="s2">&quot;|&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">allowed_special</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">allowed_special_str</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">start_special</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;(?:(?:</span><span class="si">{</span><span class="n">comment_start</span><span class="si">}</span><span class="s2">) ?%% ?|</span><span class="si">{</span><span class="n">allowed_special</span><span class="si">}</span><span class="s2">)(.*)&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;(?:(?:</span><span class="si">{</span><span class="n">comment_start</span><span class="si">}</span><span class="s2">) ?%% ?|</span><span class="si">{</span><span class="n">allowed_special_str</span><span class="si">}</span><span class="s2">)(.*)&quot;</span>
             <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">start_special</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;(?:</span><span class="si">{</span><span class="n">comment_start</span><span class="si">}</span><span class="s2">) ?%% ?(.*)&quot;</span><span class="p">)</span>
@@ -574,7 +583,11 @@
 
 <div class="viewcode-block" id="BlockParser.split_code_and_text_blocks">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.block_parser.html#sphinx_gallery.block_parser.BlockParser.split_code_and_text_blocks">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">split_code_and_text_blocks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_file</span><span class="p">,</span> <span class="n">return_node</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">split_code_and_text_blocks</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">source_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">return_node</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">Block</span><span class="p">],</span> <span class="kc">None</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return list with source file separated into code and text blocks.</span>
 
 <span class="sd">        Parameters</span>
@@ -603,7 +616,9 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_split_content</span><span class="p">(</span><span class="n">content</span><span class="p">)</span></div>
 
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_get_content_lines</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_content_lines</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">pygments</span><span class="o">.</span><span class="n">token</span><span class="o">.</span><span class="n">_TokenType</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Combine individual tokens into lines.</span>
 
@@ -611,7 +626,7 @@
 <span class="sd">        the line.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">current_line</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">line_token</span> <span class="o">=</span> <span class="n">pygments</span><span class="o">.</span><span class="n">token</span><span class="o">.</span><span class="n">Whitespace</span>
+        <span class="n">line_token</span><span class="p">:</span> <span class="n">pygments</span><span class="o">.</span><span class="n">token</span><span class="o">.</span><span class="n">_TokenType</span> <span class="o">=</span> <span class="n">pygments</span><span class="o">.</span><span class="n">token</span><span class="o">.</span><span class="n">Whitespace</span>
         <span class="k">for</span> <span class="n">token</span><span class="p">,</span> <span class="n">text</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">lexer</span><span class="o">.</span><span class="n">get_tokens</span><span class="p">(</span><span class="n">content</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">line_token</span> <span class="o">==</span> <span class="n">pygments</span><span class="o">.</span><span class="n">token</span><span class="o">.</span><span class="n">Whitespace</span><span class="p">:</span>
                 <span class="n">line_token</span> <span class="o">=</span> <span class="n">token</span>
@@ -633,7 +648,7 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">current_line</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_get_blocks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_blocks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Block</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate a sequence of &quot;blocks&quot; from the lines in ``content``.</span>
 
@@ -660,7 +675,7 @@
             <span class="n">needs_multiline_cleanup</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="k">return</span> <span class="n">lines</span>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">finalize_block</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">block</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">finalize_block</span><span class="p">(</span><span class="n">mode</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;code&quot;</span><span class="p">],</span> <span class="n">block</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Block</span><span class="p">:</span>
             <span class="k">nonlocal</span> <span class="n">start_text</span>
             <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;text&quot;</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">needs_multiline_cleanup</span><span class="p">:</span>
@@ -686,10 +701,10 @@
                 <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">Block</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">block</span><span class="p">))</span>
 
-        <span class="n">block</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">mode</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">block</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">mode</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;code&quot;</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_content_lines</span><span class="p">(</span><span class="n">content</span><span class="p">)):</span>
-            <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;text&quot;</span> <span class="ow">and</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">pygments</span><span class="o">.</span><span class="n">token</span><span class="o">.</span><span class="n">Whitespace</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;text&quot;</span> <span class="ow">and</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">pygments</span><span class="o">.</span><span class="n">token</span><span class="o">.</span><span class="n">Whitespace</span><span class="p">:</span>  <span class="c1"># type: ignore[comparison-overlap]</span>
                 <span class="c1"># Blank line ends current text block</span>
                 <span class="k">if</span> <span class="n">block</span><span class="p">:</span>
                     <span class="k">yield</span> <span class="n">finalize_block</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">block</span><span class="p">)</span>
@@ -701,6 +716,7 @@
             <span class="p">):</span>
                 <span class="c1"># start of a text block; end the current block</span>
                 <span class="k">if</span> <span class="n">block</span><span class="p">:</span>
+                    <span class="k">assert</span> <span class="n">mode</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
                     <span class="k">yield</span> <span class="n">finalize_block</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">block</span><span class="p">)</span>
                 <span class="n">mode</span><span class="p">,</span> <span class="n">block</span> <span class="o">=</span> <span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="p">[]</span>
                 <span class="k">if</span> <span class="p">(</span><span class="n">trailing_text</span> <span class="o">:=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -731,10 +747,11 @@
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">block</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">block</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">continue_text</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">text</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+                    <span class="n">block</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">continue_text</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">text</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>  <span class="c1"># type: ignore[union-attr]</span>
             <span class="k">elif</span> <span class="n">mode</span> <span class="o">!=</span> <span class="s2">&quot;code&quot;</span><span class="p">:</span>
                 <span class="c1"># start of a code block</span>
                 <span class="k">if</span> <span class="n">block</span><span class="p">:</span>
+                    <span class="k">assert</span> <span class="n">mode</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
                     <span class="k">yield</span> <span class="n">finalize_block</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">block</span><span class="p">)</span>
                 <span class="n">mode</span><span class="p">,</span> <span class="n">block</span> <span class="o">=</span> <span class="s2">&quot;code&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">text</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
@@ -743,9 +760,10 @@
 
         <span class="c1"># end of input ends final block</span>
         <span class="k">if</span> <span class="n">block</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">mode</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
             <span class="k">yield</span> <span class="n">finalize_block</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">block</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_split_content</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_split_content</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">Block</span><span class="p">],</span> <span class="kc">None</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Split the input content into blocks.</span>
 
@@ -772,7 +790,7 @@
 
 <div class="viewcode-block" id="BlockParser.extract_file_config">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.block_parser.html#sphinx_gallery.block_parser.BlockParser.extract_file_config">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">extract_file_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extract_file_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Pull out the file-specific config specified in the docstring.&quot;&quot;&quot;</span>
         <span class="n">file_conf</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">infile_config_pattern</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
@@ -793,7 +811,7 @@
 
 <div class="viewcode-block" id="BlockParser.remove_ignore_blocks">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.block_parser.html#sphinx_gallery.block_parser.BlockParser.remove_ignore_blocks">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">remove_ignore_blocks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code_block</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_ignore_blocks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code_block</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the content of *code_block* with ignored areas removed.</span>
 
@@ -820,7 +838,7 @@
 
 <div class="viewcode-block" id="BlockParser.remove_config_comments">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.block_parser.html#sphinx_gallery.block_parser.BlockParser.remove_config_comments">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">remove_config_comments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code_block</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_config_comments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code_block</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the content of *code_block* with in-file config comments removed.</span>
 
