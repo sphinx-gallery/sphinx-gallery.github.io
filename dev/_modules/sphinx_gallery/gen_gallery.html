@@ -1280,8 +1280,12 @@
 
             <span class="n">has_subsection_header</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="k">if</span> <span class="n">subsection_index_content</span><span class="p">:</span>
-                <span class="c1"># Filter tags to prevent tag duplication across the documentation</span>
-                <span class="n">indexst</span> <span class="o">+=</span> <span class="n">_filter_tags</span><span class="p">(</span><span class="n">subsection_index_content</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;nested_sections&quot;</span><span class="p">]:</span>
+                    <span class="c1"># Filter tags to prevent tag duplication as subsection headers</span>
+                    <span class="c1"># are included in both root index and subsection index files</span>
+                    <span class="n">indexst</span> <span class="o">+=</span> <span class="n">_filter_tags</span><span class="p">(</span><span class="n">subsection_index_content</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">indexst</span> <span class="o">+=</span> <span class="n">subsection_index_content</span>
                 <span class="n">has_subsection_header</span> <span class="o">=</span> <span class="kc">True</span>
 
             <span class="c1"># Write subsection toctree containing all filenames, if req.</span>
