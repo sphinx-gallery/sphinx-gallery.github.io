@@ -35,7 +35,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=8ee2c72c" />
     <link rel="stylesheet" type="text/css" href="../../_static/theme_override.css?v=6ecc848e" />
     <link rel="stylesheet" type="text/css" href="../../_static/hide_links.css?v=60d22a59" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=fd6457a4" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
@@ -50,6 +50,7 @@
     <script src="../../_static/documentation_options.js?v=8ad76226"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/sg-tags.js?v=d80f6fa4"></script>
     <script src="../../_static/jupyterlite_sphinx.js?v=96e329c5"></script>
     <script src="../../_static/design-tabs.js?v=f930bc37"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/sphinx_gallery/backreferences';</script>
@@ -464,6 +465,7 @@
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">ast</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
@@ -784,7 +786,7 @@
 <span class="n">THUMBNAIL_TEMPLATE</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">.. raw:: html</span>
 
-<span class="s2">    &lt;div class=&quot;sphx-glr-thumbcontainer&quot; tooltip=&quot;</span><span class="si">{intro}</span><span class="s2">&quot;&gt;</span>
+<span class="s2">    &lt;div class=&quot;sphx-glr-thumbcontainer&quot; </span><span class="si">{tags}</span><span class="s2">tooltip=&quot;</span><span class="si">{intro}</span><span class="s2">&quot;&gt;</span>
 
 <span class="s2">.. only:: html</span>
 
@@ -811,7 +813,7 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_thumbnail_div</span><span class="p">(</span>
-    <span class="n">target_dir</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">intro</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">is_backref</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">True</span>
+    <span class="n">target_dir</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">intro</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">is_backref</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="kc">None</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate reST to place a thumbnail in a gallery.</span>
 
@@ -855,9 +857,18 @@
 
     <span class="n">doc_name</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">full_dir</span><span class="p">)</span> <span class="o">/</span> <span class="n">fname</span><span class="p">)</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
 
+    <span class="n">tag_html_attr</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">tags</span><span class="p">:</span>
+        <span class="n">tag_json</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">tags</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">tag_html_attr</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;data-sgtags=&#39;</span><span class="si">{</span><span class="n">tag_json</span><span class="si">}</span><span class="s2">&#39; &quot;</span>
+
     <span class="n">template</span> <span class="o">=</span> <span class="n">BACKREF_THUMBNAIL_TEMPLATE</span> <span class="k">if</span> <span class="n">is_backref</span> <span class="k">else</span> <span class="n">THUMBNAIL_TEMPLATE</span>
     <span class="k">return</span> <span class="n">template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-        <span class="n">intro</span><span class="o">=</span><span class="n">escape</span><span class="p">(</span><span class="n">intro</span><span class="p">),</span> <span class="n">thumbnail</span><span class="o">=</span><span class="n">thumb</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">doc_name</span><span class="o">=</span><span class="n">doc_name</span>
+        <span class="n">intro</span><span class="o">=</span><span class="n">escape</span><span class="p">(</span><span class="n">intro</span><span class="p">),</span>
+        <span class="n">thumbnail</span><span class="o">=</span><span class="n">thumb</span><span class="p">,</span>
+        <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span>
+        <span class="n">doc_name</span><span class="o">=</span><span class="n">doc_name</span><span class="p">,</span>
+        <span class="n">tags</span><span class="o">=</span><span class="n">tag_html_attr</span><span class="p">,</span>
     <span class="p">)</span>
 
 

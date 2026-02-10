@@ -36,7 +36,7 @@
     <link rel="stylesheet" type="text/css" href="_static/jupyterlite_sphinx.css?v=8ee2c72c" />
     <link rel="stylesheet" type="text/css" href="_static/theme_override.css?v=6ecc848e" />
     <link rel="stylesheet" type="text/css" href="_static/hide_links.css?v=60d22a59" />
-    <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css?v=fd6457a4" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery-binder.css?v=f4aeca0c" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery-rendered-html.css?v=1277b6f3" />
@@ -51,6 +51,7 @@
     <script src="_static/documentation_options.js?v=8ad76226"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/sg-tags.js?v=d80f6fa4"></script>
     <script src="_static/jupyterlite_sphinx.js?v=96e329c5"></script>
     <script src="_static/design-tabs.js?v=f930bc37"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'configuration';</script>
@@ -573,6 +574,7 @@ and <code class="docutils literal notranslate"><span class="pre">inspect_global_
 <li><p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">sphinx_gallery_dummy_images</span></code> (<a class="reference internal" href="#dummy-images"><span class="std std-ref">Generating dummy images</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">sphinx_gallery_capture_repr</span></code> (<a class="reference internal" href="#capture-repr"><span class="std std-ref">Controlling what output is captured</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">sphinx_gallery_multi_image</span></code> (<a class="reference internal" href="#multi-image"><span class="std std-ref">Controlling the layout of multiple figures from the same code block</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">sphinx_gallery_tags</span></code> (<a class="reference internal" href="#tagging-examples"><span class="std std-ref">Tagging Examples and Filtering</span></a>)</p></li>
 </ul>
 <p>Some options can be set on a per-code-block basis in a file:</p>
 <ul class="simple">
@@ -3085,6 +3087,20 @@ ignore any kind of file that should not be considered. The default regular
 expression ignores functions like <code class="docutils literal notranslate"><span class="pre">__len__()</span></code> for which it may not be
 desirable to document if they are used in examples.</p>
 </section>
+<section id="tagging-examples-and-filtering">
+<span id="tagging-examples"></span><h3>Tagging Examples and Filtering<a class="headerlink" href="#tagging-examples-and-filtering" title="Link to this heading">#</a></h3>
+<p>You can tag examples with the:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># sphinx_gallery_tags = [&quot;tag1&quot;, &quot;tag2&quot;]</span>
+</pre></div>
+</div>
+<p>syntax.</p>
+<p>This adds the tags to the end of each example, and also adds dynamic
+filtering of the examples on index pages.
+See <a class="reference internal" href="auto_examples/index.html#examples-index"><span class="std std-ref">Basics Gallery with Matplotlib</span></a> for a demonstration.</p>
+<p>Tags support a wide character set, although some with special meaning
+in HTML documents might not render correctly, specifically <code class="docutils literal notranslate"><span class="pre">|</span></code> and
+<code class="docutils literal notranslate"><span class="pre">&#64;</span></code> are known not to work well.</p>
+</section>
 </section>
 </section>
 
@@ -3231,6 +3247,7 @@ desirable to document if they are used in examples.</p>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#showing-api-usage">Showing API Usage</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ignoring-api-entries">Ignoring API entries</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tagging-examples-and-filtering">Tagging Examples and Filtering</a></li>
 </ul>
 </li>
 </ul>
