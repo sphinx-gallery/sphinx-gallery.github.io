@@ -469,7 +469,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">defaultdict</span><span class="p">,</span> <span class="n">namedtuple</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">html</span><span class="w"> </span><span class="kn">import</span> <span class="n">escape</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span>
@@ -872,9 +872,14 @@
     <span class="p">)</span>
 
 
+<span class="n">Backreference</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span>
+    <span class="s2">&quot;Backreference&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;fname&quot;</span><span class="p">,</span> <span class="s2">&quot;src_dir&quot;</span><span class="p">,</span> <span class="s2">&quot;target_dir&quot;</span><span class="p">,</span> <span class="s2">&quot;intro&quot;</span><span class="p">,</span> <span class="s2">&quot;title&quot;</span><span class="p">]</span>
+<span class="p">)</span>
+
+
 <span class="k">def</span><span class="w"> </span><span class="nf">_write_backreferences</span><span class="p">(</span>
     <span class="n">backrefs</span><span class="p">,</span> <span class="n">seen_backrefs</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">intro</span><span class="p">,</span> <span class="n">title</span>
-<span class="p">):</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Backreference</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Write and return backreferences for one example.</span>
 
 <span class="sd">    Backreferences &#39;.examples&#39; file written includes reST of the list of examples</span>
@@ -901,13 +906,13 @@
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    backrefs_example : dict[str, tuple]</span>
+<span class="sd">    backrefs_example : dict[str, Backreference]</span>
 <span class="sd">        Dictionary where value is the backreference object and value</span>
 <span class="sd">        is a tuple containing: example filename, full path to example source directory,</span>
 <span class="sd">        full path to example target directory, intro, title.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;backreferences_dir&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span>
+        <span class="k">return</span> <span class="kc">None</span>
 
     <span class="n">backrefs_example</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">backref</span> <span class="ow">in</span> <span class="n">backrefs</span><span class="p">:</span>
@@ -940,7 +945,9 @@
                 <span class="p">)</span>
             <span class="p">)</span>
             <span class="n">seen_backrefs</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">backref</span><span class="p">)</span>
-            <span class="n">backrefs_example</span><span class="p">[</span><span class="n">backref</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">fname</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">intro</span><span class="p">,</span> <span class="n">title</span><span class="p">))</span>
+            <span class="n">backrefs_example</span><span class="p">[</span><span class="n">backref</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">Backreference</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">intro</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span>
+            <span class="p">)</span>
     <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">backrefs_example</span><span class="p">)</span>
 
 
