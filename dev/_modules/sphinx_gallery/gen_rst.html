@@ -1058,7 +1058,7 @@
     <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="nb">list</span><span class="p">[</span><span class="n">ExampleCost</span><span class="p">],</span>
     <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-    <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Backreference</span><span class="p">],</span>
+    <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">Backreference</span><span class="p">]],</span>
 <span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate output example reST files for one gallery (sub)directory.</span>
 
@@ -1089,9 +1089,9 @@
 <span class="sd">        List of runtime costs for building each element of the gallery.</span>
 <span class="sd">    toctree_items: list,</span>
 <span class="sd">        List of example file names we generated ReST for.</span>
-<span class="sd">    backrefs_dir : dict[str, tuple]</span>
-<span class="sd">        Dictionary where value is the backreference object and value</span>
-<span class="sd">        is a tuple containing: example filename, full path to example source directory,</span>
+<span class="sd">    backrefs_dir : dict[str, list[tuple]]</span>
+<span class="sd">        Dictionary where key is the backreference object name and value is a list of</span>
+<span class="sd">        tuples containing: example filename, full path to example source directory,</span>
 <span class="sd">        full path to example target directory, intro, title.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1142,7 +1142,7 @@
         <span class="n">length</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">sorted_listdir</span><span class="p">),</span>
     <span class="p">)</span>
 
-    <span class="n">backrefs_dir</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Backreference</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">backrefs_dir</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">Backreference</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="n">parallel</span> <span class="o">=</span> <span class="nb">list</span>
     <span class="n">p_fun</span> <span class="o">=</span> <span class="n">generate_file_rst</span>
@@ -1196,7 +1196,7 @@
 
         <span class="c1"># Write backreferences</span>
         <span class="k">if</span> <span class="s2">&quot;backrefs&quot;</span> <span class="ow">in</span> <span class="n">out_vars</span><span class="p">:</span>
-            <span class="n">backrefs_example</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Backreference</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">_write_backreferences</span><span class="p">(</span>
+            <span class="n">backrefs_example</span> <span class="o">=</span> <span class="n">_write_backreferences</span><span class="p">(</span>
                 <span class="n">out_vars</span><span class="p">[</span><span class="s2">&quot;backrefs&quot;</span><span class="p">],</span>
                 <span class="n">seen_backrefs</span><span class="p">,</span>
                 <span class="n">gallery_conf</span><span class="p">,</span>
