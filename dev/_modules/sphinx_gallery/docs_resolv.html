@@ -26,8 +26,8 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=a95f357e85573c9b56d5" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=a95f357e85573c9b56d5" rel="stylesheet" />
+  <link href="../../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
@@ -42,10 +42,10 @@
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
   
   <!-- So that users can add custom icons -->
-  <script defer src="../../_static/scripts/fontawesome.js?digest=a95f357e85573c9b56d5"></script>
+  <script defer src="../../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=a95f357e85573c9b56d5" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=a95f357e85573c9b56d5" />
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
     <script src="../../_static/documentation_options.js?v=d72d45e9"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
@@ -55,7 +55,7 @@
     <script src="../../_static/design-tabs.js?v=f930bc37"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/sphinx_gallery/docs_resolv';</script>
     <script>
-        DOCUMENTATION_OPTIONS.theme_version = '0.19.0';
+        DOCUMENTATION_OPTIONS.theme_version = '0.20.0';
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://sphinx-gallery.github.io/dev/_static/switcher.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'dev';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
@@ -814,8 +814,8 @@
 <span class="sd">    adds that additional module mapping.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">inventory</span><span class="p">:</span> <span class="n">IntersphinxInventory</span>
-    <span class="k">if</span> <span class="n">inventory</span> <span class="o">:=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">env</span><span class="p">,</span> <span class="s2">&quot;sg_intersphinx_inventory&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>  <span class="c1"># type: ignore[assignment]</span>
-        <span class="k">return</span> <span class="n">inventory</span>  <span class="c1"># type: ignore[no-any-return]</span>
+    <span class="k">if</span> <span class="n">inventory</span> <span class="o">:=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">env</span><span class="p">,</span> <span class="s2">&quot;sg_intersphinx_inventory&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>  <span class="c1"># ty: ignore[invalid-assignment]</span>
+        <span class="k">return</span> <span class="n">inventory</span>
 
     <span class="c1"># Make a copy of the inventories, because this dict is created by intersphinx and we</span>
     <span class="c1"># don&#39;t want to break whatever assumptions it has made about it.</span>
@@ -828,7 +828,7 @@
         <span class="k">for</span> <span class="n">other_module_name</span> <span class="ow">in</span> <span class="n">documented_modules</span> <span class="o">-</span> <span class="p">{</span><span class="n">module_name</span><span class="p">}:</span>
             <span class="n">intersphinx_inv</span><span class="p">[</span><span class="n">other_module_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">inventory</span>
 
-    <span class="n">app</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">sg_intersphinx_inventory</span> <span class="o">=</span> <span class="n">intersphinx_inv</span>  <span class="c1"># type: ignore[attr-defined]</span>
+    <span class="nb">setattr</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">env</span><span class="p">,</span> <span class="s2">&quot;sg_intersphinx_inventory&quot;</span><span class="p">,</span> <span class="n">intersphinx_inv</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">intersphinx_inv</span>
 
 
@@ -985,7 +985,7 @@
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">str_repl</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">full_fname</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
                 <span class="n">lines_in</span> <span class="o">=</span> <span class="n">fid</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">full_fname</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">_W_KW</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>  <span class="c1"># type: ignore[call-overload]</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">full_fname</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">_W_KW</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines_in</span><span class="p">:</span>
                     <span class="n">line_out</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">substitute_link</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
                     <span class="n">fid</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line_out</span><span class="p">)</span>
@@ -1048,8 +1048,8 @@
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../../_static/scripts/bootstrap.js?digest=a95f357e85573c9b56d5"></script>
-<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=a95f357e85573c9b56d5"></script>
+  <script defer src="../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -1083,7 +1083,7 @@
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.19.0.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.20.0.
 </p></div>
       
     </div>
