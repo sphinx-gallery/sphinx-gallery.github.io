@@ -33,7 +33,7 @@
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
-    <link rel="stylesheet" type="text/css" href="_static/jupyterlite_sphinx.css?v=8ee2c72c" />
+    <link rel="stylesheet" type="text/css" href="_static/jupyterlite_sphinx.css?v=f676e775" />
     <link rel="stylesheet" type="text/css" href="_static/theme_override.css?v=6ecc848e" />
     <link rel="stylesheet" type="text/css" href="_static/hide_links.css?v=60d22a59" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css?v=fd6457a4" />
@@ -600,6 +600,7 @@ and <code class="docutils literal notranslate"><span class="pre">inspect_global_
 <li><p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">sphinx_gallery_capture_repr</span></code> (<a class="reference internal" href="#capture-repr"><span class="std std-ref">Controlling what output is captured</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">sphinx_gallery_multi_image</span></code> (<a class="reference internal" href="#multi-image"><span class="std std-ref">Controlling the layout of multiple figures from the same code block</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">sphinx_gallery_tags</span></code> (<a class="reference internal" href="#tagging-examples"><span class="std std-ref">Tagging Examples and Filtering</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">sphinx_gallery_parallel</span></code> (<a class="reference internal" href="#parallel"><span class="std std-ref">Build examples in parallel</span></a>)</p></li>
 </ul>
 <p>Some options can be set on a per-code-block basis in a file:</p>
 <ul class="simple">
@@ -2691,6 +2692,23 @@ joblib, see <a class="reference external" href="https://joblib.readthedocs.io/en
 (e.g., pickling, oversubscription of CPU resources, etc.).</p>
 <p>Using parallel building will also disable memory measurements.</p>
 </div>
+<section id="excluding-individual-examples-from-parallel-execution">
+<h4>Excluding individual examples from parallel execution<a class="headerlink" href="#excluding-individual-examples-from-parallel-execution" title="Link to this heading">#</a></h4>
+<p>Individual examples that cannot be run in a worker process – for example because
+they use <a class="reference external" href="https://docs.python.org/3/library/multiprocessing.html#module-multiprocessing" title="(in Python v3.14)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">multiprocessing</span></code></a> themselves, require a library that is not
+fork/spawn safe, or need exclusive access to a resource such as a GPU – can opt out
+by adding the following comment anywhere in the example file:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># sphinx_gallery_parallel = False</span>
+</pre></div>
+</div>
+<p>Such examples are executed one at a time in the main process, before anything is
+dispatched to the worker processes, so that no other example is running while they
+execute. This is exactly how they would be run with <code class="docutils literal notranslate"><span class="pre">'parallel':</span> <span class="pre">False</span></code>. The
+setting has no effect when parallel building is disabled.</p>
+<p>Note that this affects execution order but not the order of the gallery itself,
+which is still determined by
+<a class="reference internal" href="#within-gallery-order"><span class="std std-ref">within_subsection_order</span></a>.</p>
+</section>
 </section>
 </section>
 <section id="enabling-the-example-recommender-system">
@@ -3253,7 +3271,10 @@ in HTML documents might not render correctly, specifically <code class="docutils
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#abort-build-on-first-fail">Abort build on first fail</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#don-t-fail-the-build-if-specific-examples-error">Don’t fail the build if specific examples error</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#never-fail-the-build-on-error">Never fail the build on error</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build-examples-in-parallel">Build examples in parallel</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build-examples-in-parallel">Build examples in parallel</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#excluding-individual-examples-from-parallel-execution">Excluding individual examples from parallel execution</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#enabling-the-example-recommender-system">Enabling the example recommender system</a></li>

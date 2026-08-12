@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
-    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=8ee2c72c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=f676e775" />
     <link rel="stylesheet" type="text/css" href="../../_static/theme_override.css?v=6ecc848e" />
     <link rel="stylesheet" type="text/css" href="../../_static/hide_links.css?v=60d22a59" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=fd6457a4" />
@@ -500,6 +500,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">lru_cache</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">io</span><span class="w"> </span><span class="kn">import</span> <span class="n">StringIO</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">islice</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">shutil</span><span class="w"> </span><span class="kn">import</span> <span class="n">copyfile</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">textwrap</span><span class="w"> </span><span class="kn">import</span> <span class="n">indent</span>
@@ -1058,6 +1059,33 @@
             <span class="n">_replace_md5</span><span class="p">(</span><span class="n">src_file</span><span class="p">,</span> <span class="n">fname_old</span><span class="o">=</span><span class="n">target_file</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;copy&quot;</span><span class="p">)</span>
 
 
+<span class="k">def</span><span class="w"> </span><span class="nf">_split_parallel</span><span class="p">(</span>
+    <span class="n">sorted_listdir</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">src_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Split examples into those that opt out of parallel execution, and the rest.</span>
+
+<span class="sd">    Both lists keep their relative order from ``sorted_listdir``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">serial_listdir</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">parallel_listdir</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">sorted_listdir</span><span class="p">:</span>
+        <span class="n">parser</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_get_parser</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
+        <span class="n">src_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">))</span>
+        <span class="c1"># full parse rather than a cheaper regex over the file, so that we see exactly</span>
+        <span class="c1"># the same file_conf as `generate_file_rst` (e.g. docstrings are excluded)</span>
+        <span class="n">file_conf</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">split_code_and_text_blocks</span><span class="p">(</span><span class="n">src_file</span><span class="p">,</span> <span class="n">return_node</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">run_parallel</span> <span class="o">=</span> <span class="n">file_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;parallel&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">run_parallel</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;sphinx_gallery_parallel setting is not a boolean, got </span><span class="si">%r</span><span class="s2"> in file </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">run_parallel</span><span class="p">,</span>
+                <span class="n">fname</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">run_parallel</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="p">(</span><span class="n">parallel_listdir</span> <span class="k">if</span> <span class="n">run_parallel</span> <span class="k">else</span> <span class="n">serial_listdir</span><span class="p">)</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">serial_listdir</span><span class="p">,</span> <span class="n">parallel_listdir</span>
+
+
 <div class="viewcode-block" id="generate_dir_rst">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.generate_dir_rst">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">generate_dir_rst</span><span class="p">(</span>
@@ -1149,32 +1177,45 @@
     <span class="n">costs</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">toctree_filenames</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">build_target_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">])</span>
+    <span class="n">backrefs_dir</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">Backreference</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="c1"># Always split, so that a bad in-file setting is reported even in serial builds</span>
+    <span class="n">serial_listdir</span><span class="p">,</span> <span class="n">parallel_listdir</span> <span class="o">=</span> <span class="n">_split_parallel</span><span class="p">(</span>
+        <span class="n">sorted_listdir</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">,</span> <span class="n">gallery_conf</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;parallel&quot;</span><span class="p">]:</span>
+        <span class="c1"># everything runs here anyway, so keep the original order</span>
+        <span class="n">serial_listdir</span><span class="p">,</span> <span class="n">parallel_listdir</span> <span class="o">=</span> <span class="n">sorted_listdir</span><span class="p">,</span> <span class="p">[]</span>
+
     <span class="n">iterator</span> <span class="o">=</span> <span class="n">status_iterator</span><span class="p">(</span>
-        <span class="n">sorted_listdir</span><span class="p">,</span>
+        <span class="n">serial_listdir</span> <span class="o">+</span> <span class="n">parallel_listdir</span><span class="p">,</span>
         <span class="sa">f</span><span class="s2">&quot;generating gallery for </span><span class="si">{</span><span class="n">build_target_dir</span><span class="si">}</span><span class="s2">... &quot;</span><span class="p">,</span>
         <span class="n">length</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">sorted_listdir</span><span class="p">),</span>
     <span class="p">)</span>
 
-    <span class="n">backrefs_dir</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">Backreference</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
-
-    <span class="n">parallel</span> <span class="o">=</span> <span class="nb">list</span>
-    <span class="n">p_fun</span> <span class="o">=</span> <span class="n">generate_file_rst</span>
-    <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;parallel&quot;</span><span class="p">]:</span>
+    <span class="c1"># Examples opting out of parallelism run first, alone in this process, so that</span>
+    <span class="c1"># nothing else is executing while they do</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">generate_file_rst</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">islice</span><span class="p">(</span><span class="n">iterator</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">serial_listdir</span><span class="p">))</span>
+    <span class="p">]</span>
+    <span class="k">if</span> <span class="n">parallel_listdir</span><span class="p">:</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">joblib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
 
-        <span class="n">p_fun</span> <span class="o">=</span> <span class="n">delayed</span><span class="p">(</span><span class="n">generate_file_rst</span><span class="p">)</span>
         <span class="n">parallel</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span>
             <span class="n">n_jobs</span><span class="o">=</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;parallel&quot;</span><span class="p">],</span>
             <span class="n">pre_dispatch</span><span class="o">=</span><span class="s2">&quot;n_jobs&quot;</span><span class="p">,</span>
             <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
             <span class="n">backend</span><span class="o">=</span><span class="s2">&quot;loky&quot;</span><span class="p">,</span>
         <span class="p">)</span>
-
-    <span class="n">results</span> <span class="o">=</span> <span class="n">parallel</span><span class="p">(</span>
-        <span class="n">p_fun</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span> <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">iterator</span>
-    <span class="p">)</span>
-    <span class="k">for</span> <span class="n">fi</span><span class="p">,</span> <span class="p">(</span><span class="n">intro</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">mem</span><span class="p">),</span> <span class="n">out_vars</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">results</span><span class="p">):</span>
-        <span class="n">fname</span> <span class="o">=</span> <span class="n">sorted_listdir</span><span class="p">[</span><span class="n">fi</span><span class="p">]</span>
+        <span class="n">results</span> <span class="o">+=</span> <span class="n">parallel</span><span class="p">(</span>
+            <span class="n">delayed</span><span class="p">(</span><span class="n">generate_file_rst</span><span class="p">)(</span><span class="n">fname</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">iterator</span>
+        <span class="p">)</span>
+    <span class="c1"># Restore gallery (not execution) order so the index and toctree are unaffected</span>
+    <span class="n">results_by_fname</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">serial_listdir</span> <span class="o">+</span> <span class="n">parallel_listdir</span><span class="p">,</span> <span class="n">results</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">sorted_listdir</span><span class="p">:</span>
+        <span class="n">intro</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">mem</span><span class="p">),</span> <span class="n">out_vars</span> <span class="o">=</span> <span class="n">results_by_fname</span><span class="p">[</span><span class="n">fname</span><span class="p">]</span>
         <span class="n">src_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">))</span>
         <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;titles&quot;</span><span class="p">][</span><span class="n">src_file</span><span class="p">]</span> <span class="o">=</span> <span class="n">title</span>
         <span class="c1"># n.b. non-executable files have none of these three variables defined,</span>
