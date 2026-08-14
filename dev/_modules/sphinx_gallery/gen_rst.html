@@ -937,8 +937,18 @@
         <span class="k">if</span> <span class="n">thumbnail_number</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">thumbnail_number</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">script_vars</span><span class="p">[</span><span class="s2">&quot;image_path_iterator&quot;</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="n">image_path</span> <span class="o">=</span> <span class="n">image_path_template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">thumbnail_number</span><span class="p">)</span>
+    <span class="c1"># thumbnail_number wins above, so only blame thumbnail_path when it was used</span>
+    <span class="n">thumbnail_path_used</span> <span class="o">=</span> <span class="n">thumbnail_number</span> <span class="ow">is</span> <span class="kc">None</span>
     <span class="k">del</span> <span class="n">thumbnail_number</span><span class="p">,</span> <span class="n">thumbnail_path</span><span class="p">,</span> <span class="n">image_path_template</span>
     <span class="n">thumbnail_image_path</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">_find_image_ext</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span>
+    <span class="c1"># warn here rather than in the fallback below, which a cached thumb file skips</span>
+    <span class="k">if</span> <span class="n">thumbnail_path_used</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">thumbnail_image_path</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="s2">&quot;sphinx_gallery_thumbnail_path &#39;</span><span class="si">%s</span><span class="s2">&#39; not found for &#39;</span><span class="si">%s</span><span class="s2">&#39;, &quot;</span>
+            <span class="s2">&quot;using default thumbnail.&quot;</span><span class="p">,</span>
+            <span class="n">image_path</span><span class="p">,</span>
+            <span class="n">src_file</span><span class="p">,</span>
+        <span class="p">)</span>
 
     <span class="n">base_image_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">src_file</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">thumb_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">thumb_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;sphx_glr_</span><span class="si">{</span><span class="n">base_image_name</span><span class="si">}</span><span class="s2">_thumb.</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
