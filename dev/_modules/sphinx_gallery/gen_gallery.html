@@ -493,6 +493,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">sphinx.util</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">docutils</span><span class="w"> </span><span class="kn">import</span> <span class="n">nodes</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sphinx.application</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sphinx</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sphinx.environment</span><span class="w"> </span><span class="kn">import</span> <span class="n">BuildEnvironment</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sphinx.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigError</span><span class="p">,</span> <span class="n">ExtensionError</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sphinx.util.console</span><span class="w"> </span><span class="kn">import</span> <span class="n">blue</span><span class="p">,</span> <span class="n">bold</span><span class="p">,</span> <span class="n">purple</span><span class="p">,</span> <span class="n">red</span>
 
@@ -523,6 +524,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">.sorting</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExplicitOrder</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">GalleryConfig</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">_W_KW</span><span class="p">,</span>
     <span class="n">_collect_gallery_files</span><span class="p">,</span>
     <span class="n">_combine_backreferences</span><span class="p">,</span>
     <span class="n">_format_toctree</span><span class="p">,</span>
@@ -531,6 +533,7 @@
     <span class="n">_has_pypandoc</span><span class="p">,</span>
     <span class="n">_read_json</span><span class="p">,</span>
     <span class="n">_replace_md5</span><span class="p">,</span>
+    <span class="n">_single_threaded</span><span class="p">,</span>
     <span class="n">_write_json</span><span class="p">,</span>
 <span class="p">)</span>
 
@@ -1187,7 +1190,13 @@
             <span class="p">)</span>
             <span class="n">gallery_py_files</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">py_files</span><span class="p">)</span>
 
-        <span class="n">recommender</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">gallery_py_files</span><span class="p">)</span>
+        <span class="c1"># `fit` builds the similarity matrix with BLAS. Keep that single threaded so</span>
+        <span class="c1"># that no OpenMP thread pool is left alive in the Sphinx process, which would</span>
+        <span class="c1"># deadlock the workers Sphinx later forks for its parallel read/write phases</span>
+        <span class="c1"># (see `_single_threaded`). The matrices here are tiny, so nothing is lost.</span>
+        <span class="c1"># `predict` below only indexes into that matrix, so it needs no protection.</span>
+        <span class="k">with</span> <span class="n">_single_threaded</span><span class="p">():</span>
+            <span class="n">recommender</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">gallery_py_files</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">gallery_py_files</span><span class="p">:</span>
             <span class="n">_write_recommendations</span><span class="p">(</span><span class="n">recommender</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
 
@@ -1377,6 +1386,8 @@
 
     <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;show_api_usage&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">False</span><span class="p">:</span>
         <span class="n">_init_api_usage</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">_remove_api_usage</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">))</span>
     <span class="n">_finalize_backreferences</span><span class="p">(</span><span class="n">seen_backrefs</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;plot_gallery&quot;</span><span class="p">]:</span>
@@ -1491,9 +1502,10 @@
         <span class="n">ref_extra</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">where</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">_&quot;</span>
     <span class="n">new_ref</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;sphx_glr_</span><span class="si">{</span><span class="n">ref_extra</span><span class="si">}</span><span class="s2">sg_execution_times&quot;</span>
     <span class="n">out_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">out_dir</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;sg_execution_times.rst&quot;</span>
-    <span class="k">if</span> <span class="n">out_file</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="ow">and</span> <span class="n">total_time</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># a re-run</span>
+    <span class="k">if</span> <span class="n">out_file</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="ow">and</span> <span class="n">total_time</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># nothing ran and nothing was cached</span>
         <span class="k">return</span>
-    <span class="k">with</span> <span class="n">out_file</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
+    <span class="n">out_file_new</span> <span class="o">=</span> <span class="n">out_file</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">&quot;.rst.new&quot;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">out_file_new</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">_W_KW</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
         <span class="n">fid</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">SPHX_GLR_COMP_TIMES</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">new_ref</span><span class="p">))</span>
         <span class="n">fid</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;**</span><span class="si">{</span><span class="n">_sec_to_readable</span><span class="p">(</span><span class="n">total_time</span><span class="p">)</span><span class="si">}</span><span class="s2">** total execution time for &quot;</span>
@@ -1537,7 +1549,9 @@
 <span class="s2">     - </span><span class="si">{</span><span class="n">t</span><span class="si">}</span>
 <span class="s2">     - </span><span class="si">{</span><span class="n">mb</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="n">maxsplit</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span>
 <span class="s2">&quot;&quot;&quot;</span>
-            <span class="p">)</span>  <span class="c1"># remove the &quot;MB&quot; from the right</span></div>
+            <span class="p">)</span>  <span class="c1"># remove the &quot;MB&quot; from the right</span>
+    <span class="c1"># unchanged timings must not touch the mtime, or Sphinx re-reads the page</span>
+    <span class="n">_replace_md5</span><span class="p">(</span><span class="n">out_file_new</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;t&quot;</span><span class="p">)</span></div>
 
 
 
@@ -1546,7 +1560,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">write_api_entries</span><span class="p">(</span>
     <span class="n">app</span><span class="p">:</span> <span class="n">Sphinx</span><span class="p">,</span> <span class="n">what</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">options</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">lines</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Write api entries to `_sg_api_entries` configuration.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Collect an API entry into the build environment.</span>
 
 <span class="sd">    To connect to `autodoc-process-docstring` event.</span>
 
@@ -1570,16 +1584,71 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;show_api_usage&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
         <span class="k">return</span>
-    <span class="k">if</span> <span class="s2">&quot;_sg_api_entries&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">:</span>
-        <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;_sg_api_entries&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">what</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;_sg_api_entries&quot;</span><span class="p">]:</span>
-        <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;_sg_api_entries&quot;</span><span class="p">][</span><span class="n">what</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-    <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;_sg_api_entries&quot;</span><span class="p">][</span><span class="n">what</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div>
+    <span class="c1"># keyed by docname so that entries can be purged when a doc is re-read, which</span>
+    <span class="c1"># is what keeps the set complete (and correct) across incremental builds</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">env</span>
+    <span class="n">_env_api_entries</span><span class="p">(</span><span class="n">env</span><span class="p">)</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">docname</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">what</span><span class="p">,</span> <span class="nb">set</span><span class="p">())</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+        <span class="n">name</span>
+    <span class="p">)</span></div>
 
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_env_api_entries</span><span class="p">(</span><span class="n">env</span><span class="p">:</span> <span class="n">BuildEnvironment</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the ``{docname: {what: {name, ...}}}`` store, creating it if needed.&quot;&quot;&quot;</span>
+    <span class="n">entries</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="s2">&quot;sg_api_entries&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">entries</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">entries</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="s2">&quot;sg_api_entries&quot;</span><span class="p">,</span> <span class="n">entries</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">entries</span>
+
+
+<div class="viewcode-block" id="purge_api_entries">
+<a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.purge_api_entries">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">purge_api_entries</span><span class="p">(</span><span class="n">app</span><span class="p">:</span> <span class="n">Sphinx</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="n">BuildEnvironment</span><span class="p">,</span> <span class="n">docname</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Drop the API entries of a document that is about to be re-read.</span>
+
+<span class="sd">    To connect to `env-purge-doc` event.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_env_api_entries</span><span class="p">(</span><span class="n">env</span><span class="p">)</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">docname</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="merge_api_entries">
+<a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.merge_api_entries">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">merge_api_entries</span><span class="p">(</span>
+    <span class="n">app</span><span class="p">:</span> <span class="n">Sphinx</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="n">BuildEnvironment</span><span class="p">,</span> <span class="n">docnames</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">other</span><span class="p">:</span> <span class="n">BuildEnvironment</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Merge the API entries collected by a parallel read worker.</span>
+
+<span class="sd">    To connect to `env-merge-info` event.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_env_api_entries</span><span class="p">(</span><span class="n">env</span><span class="p">)</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="s2">&quot;sg_api_entries&quot;</span><span class="p">,</span> <span class="p">{}))</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_api_entries</span><span class="p">(</span><span class="n">env</span><span class="p">:</span> <span class="n">BuildEnvironment</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Flatten the per-document API entries into ``{what: {name, ...}}``.&quot;&quot;&quot;</span>
+    <span class="n">entries</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">doc_entries</span> <span class="ow">in</span> <span class="n">_env_api_entries</span><span class="p">(</span><span class="n">env</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">what</span><span class="p">,</span> <span class="n">names</span> <span class="ow">in</span> <span class="n">doc_entries</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">entries</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">what</span><span class="p">,</span> <span class="nb">set</span><span class="p">())</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">names</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">entries</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_init_api_usage</span><span class="p">(</span><span class="n">gallery_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="p">(</span><span class="n">gallery_dir</span> <span class="o">/</span> <span class="s2">&quot;sg_api_usage.rst&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="c1"># Just a placeholder so that Sphinx discovers the docname; the real content is</span>
+    <span class="c1"># written by write_api_entry_usage once autodoc has reported every entry.</span>
+    <span class="n">fname</span> <span class="o">=</span> <span class="n">gallery_dir</span> <span class="o">/</span> <span class="s2">&quot;sg_api_usage.rst&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">fname</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+        <span class="n">fname</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">_W_KW</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_remove_api_usage</span><span class="p">(</span><span class="n">gallery_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="c1"># the generated page and graphs persist across builds, so a build with the</span>
+    <span class="c1"># feature turned off has to remove them or the stale page keeps being built</span>
+    <span class="p">(</span><span class="n">gallery_dir</span> <span class="o">/</span> <span class="s2">&quot;sg_api_usage.rst&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">missing_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">dot_file</span> <span class="ow">in</span> <span class="n">gallery_dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*sg_api_*.dot&quot;</span><span class="p">):</span>
+        <span class="n">dot_file</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
 
 
 <span class="c1"># Colors from https://personal.sron.nl/~pault/data/colourschemes.pdf</span>
@@ -1594,7 +1663,9 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_make_graph</span><span class="p">(</span>
-    <span class="n">fname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">entries</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span>
+    <span class="n">fname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">entries</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">api_entries</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Make a graph of unused and used API entries.</span>
 
@@ -1616,8 +1687,8 @@
 <span class="sd">        Path to &#39;*sg_api_unused.dot&#39; file.</span>
 <span class="sd">    entries: Dict[str, List] or List[str]</span>
 <span class="sd">        Used (List) or unused (Dict) API entries.</span>
-<span class="sd">    gallery_conf : Dict[str, Any]</span>
-<span class="sd">        Sphinx-Gallery configuration dictionary.</span>
+<span class="sd">    api_entries : Dict[str, Set[str]]</span>
+<span class="sd">        All API entries collected from autodoc, keyed by object type.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">graphviz</span>
 
@@ -1641,7 +1712,9 @@
         <span class="c1"># look up table for connections so they don&#39;t repeat</span>
         <span class="n">lut</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
         <span class="n">structs</span> <span class="o">=</span> <span class="p">[</span><span class="n">entry</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">entries</span><span class="p">]</span>
-        <span class="k">for</span> <span class="n">struct</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">structs</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="nb">len</span><span class="p">):</span>
+        <span class="c1"># total order: sets iterate arbitrarily across processes, and a graph</span>
+        <span class="c1"># that reshuffles every build churns the .dot the page depends on</span>
+        <span class="k">for</span> <span class="n">struct</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">structs</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">struct</span><span class="p">:</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">struct</span><span class="p">),</span> <span class="n">struct</span><span class="p">)):</span>
             <span class="k">for</span> <span class="n">level</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">struct</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="p">):</span>
                 <span class="k">if</span> <span class="p">(</span><span class="n">struct</span><span class="p">[</span><span class="n">level</span><span class="p">],</span> <span class="n">struct</span><span class="p">[</span><span class="n">level</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span> <span class="ow">in</span> <span class="n">connections</span><span class="p">:</span>
                     <span class="k">continue</span>
@@ -1680,89 +1753,63 @@
                 <span class="n">dg</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="n">node_to</span><span class="p">,</span> <span class="o">**</span><span class="n">node_kwargs</span><span class="p">)</span>
                 <span class="n">dg</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="n">node_from</span><span class="p">,</span> <span class="n">node_to</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">API_COLORS</span><span class="p">[</span><span class="s2">&quot;edge&quot;</span><span class="p">])</span>
         <span class="c1"># add modules with all API entries</span>
-        <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;_sg_api_entries&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;module&quot;</span><span class="p">,</span> <span class="p">[]):</span>
+        <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">api_entries</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;module&quot;</span><span class="p">,</span> <span class="p">[])):</span>
             <span class="n">struct</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">struct</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">struct</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">lut</span><span class="p">:</span>
                     <span class="n">dg</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="n">struct</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">struct</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">entries</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">entry</span><span class="p">,</span> <span class="n">refs</span> <span class="ow">in</span> <span class="n">entries</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">entry</span><span class="p">,</span> <span class="n">refs</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">entries</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
             <span class="n">dg</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">ref</span> <span class="ow">in</span> <span class="n">refs</span><span class="p">:</span>
                 <span class="n">dg</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">API_COLORS</span><span class="p">[</span><span class="s2">&quot;bad_1&quot;</span><span class="p">])</span>
                 <span class="n">dg</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">API_COLORS</span><span class="p">[</span><span class="s2">&quot;edge&quot;</span><span class="p">])</span>
-    <span class="n">dg</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+    <span class="c1"># graphviz records the .dot as a dependency of the page, so an unchanged graph</span>
+    <span class="c1"># must keep its mtime or the page is re-read on every build</span>
+    <span class="n">dg</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">fname</span> <span class="o">+</span> <span class="s2">&quot;.new&quot;</span><span class="p">)</span>
+    <span class="n">_replace_md5</span><span class="p">(</span><span class="n">fname</span> <span class="o">+</span> <span class="s2">&quot;.new&quot;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;t&quot;</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="write_api_entry_usage">
-<a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.write_api_entry_usage">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">write_api_entry_usage</span><span class="p">(</span><span class="n">app</span><span class="p">:</span> <span class="n">Sphinx</span><span class="p">,</span> <span class="n">docname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Write an html page describing which API entries are used and unused.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_api_usage_rst</span><span class="p">(</span><span class="n">app</span><span class="p">:</span> <span class="n">Sphinx</span><span class="p">,</span> <span class="n">api_entries</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build the reST describing which API entries are used and unused.</span>
 
-<span class="sd">    To document and graph only those API entries that are used by</span>
-<span class="sd">    autodoc, we have to wait for autodoc to finish and hook into the</span>
-<span class="sd">    ``source-read`` event. This intercepts the text from the rst such</span>
-<span class="sd">    that it can be modified. Since, we only touched an empty file,</span>
-<span class="sd">    we have to add 1) a list of all the API entries that are unused</span>
-<span class="sd">    and a graph of the number of unused API entries per module and 2)</span>
-<span class="sd">    a list of API entries that are used in examples, each with a sub-list</span>
-<span class="sd">    of which examples that API entry is used in, and a graph that</span>
-<span class="sd">    connects all of the API entries in a module to the examples</span>
-<span class="sd">    that they are used in.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    app :</span>
-<span class="sd">        The Sphinx application object.</span>
-<span class="sd">    docname :</span>
-<span class="sd">        Docname of the document currently being parsed.</span>
-<span class="sd">    source :</span>
-<span class="sd">        List whose single element is the contents of the source file</span>
+<span class="sd">    Returns 1) a list of all the API entries that are unused and a graph of the</span>
+<span class="sd">    number of unused API entries per module and 2) a list of API entries that</span>
+<span class="sd">    are used in examples, each with a sub-list of which examples that API entry</span>
+<span class="sd">    is used in, and a graph that connects all of the API entries in a module to</span>
+<span class="sd">    the examples that they are used in.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">docname</span> <span class="o">=</span> <span class="n">docname</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>  <span class="c1"># can be None on Sphinx 7.2</span>
-    <span class="k">if</span> <span class="n">docname</span> <span class="o">!=</span> <span class="s2">&quot;sg_api_usage&quot;</span><span class="p">:</span>
-        <span class="k">return</span>
     <span class="n">gallery_conf</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span>
-    <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;show_api_usage&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
-        <span class="k">return</span>
-    <span class="c1"># since this is done at the gallery directory level (as opposed</span>
-    <span class="c1"># to in a gallery directory, e.g. auto_examples), it runs last</span>
-    <span class="c1"># which means that all the api entries will be in gallery_conf</span>
 
     <span class="c1"># Always write at least the title</span>
-    <span class="n">source</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">SPHX_GLR_ORPHAN</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;sphx_glr_sg_api_usage&quot;</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">SPHX_GLR_ORPHAN</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;sphx_glr_sg_api_usage&quot;</span><span class="p">)</span>
     <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Unused API Entries&quot;</span>
-    <span class="n">source</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">title</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;^&quot;</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">title</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
-    <span class="k">if</span> <span class="p">(</span>
-        <span class="s2">&quot;_sg_api_entries&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">gallery_conf</span>
-        <span class="ow">or</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;backreferences_dir&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span>
-    <span class="p">):</span>
-        <span class="n">source</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="s2">&quot;No API entries found, not computed.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
-        <span class="k">return</span>
+    <span class="n">out</span> <span class="o">+=</span> <span class="n">title</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;^&quot;</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">title</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">api_entries</span> <span class="ow">or</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;backreferences_dir&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">out</span> <span class="o">+</span> <span class="s2">&quot;No API entries found, not computed.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
     <span class="n">backreferences_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
         <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">],</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;backreferences_dir&quot;</span><span class="p">]</span>
     <span class="p">)</span>
 
-    <span class="n">example_files</span> <span class="o">=</span> <span class="nb">set</span><span class="o">.</span><span class="n">union</span><span class="p">(</span>
+    <span class="n">example_files</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span><span class="o">.</span><span class="n">union</span><span class="p">(</span>
         <span class="o">*</span><span class="p">[</span>
-            <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;_sg_api_entries&quot;</span><span class="p">][</span><span class="n">obj_type</span><span class="p">]</span>
+            <span class="n">api_entries</span><span class="p">[</span><span class="n">obj_type</span><span class="p">]</span>
             <span class="k">for</span> <span class="n">obj_type</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="s2">&quot;method&quot;</span><span class="p">,</span> <span class="s2">&quot;function&quot;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">obj_type</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;_sg_api_entries&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">obj_type</span> <span class="ow">in</span> <span class="n">api_entries</span>
         <span class="p">]</span>
     <span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">example_files</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">source</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="s2">&quot;No examples run, not computed.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
-        <span class="k">return</span>
+        <span class="k">return</span> <span class="n">out</span> <span class="o">+</span> <span class="s2">&quot;No examples run, not computed.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_entry_type</span><span class="p">(</span><span class="n">entry</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;_sg_api_entries&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="p">[]):</span>
+        <span class="k">if</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">api_entries</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="p">[]):</span>
             <span class="k">return</span> <span class="s2">&quot;class&quot;</span>
-        <span class="k">elif</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;_sg_api_entries&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;method&quot;</span><span class="p">,</span> <span class="p">[]):</span>
+        <span class="k">elif</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">api_entries</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;method&quot;</span><span class="p">,</span> <span class="p">[]):</span>
             <span class="k">return</span> <span class="s2">&quot;meth&quot;</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">assert</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;_sg_api_entries&quot;</span><span class="p">][</span><span class="s2">&quot;function&quot;</span><span class="p">]</span>
+            <span class="k">assert</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">api_entries</span><span class="p">[</span><span class="s2">&quot;function&quot;</span><span class="p">]</span>
             <span class="k">return</span> <span class="s2">&quot;func&quot;</span>
 
     <span class="c1"># find used and unused API entries</span>
@@ -1770,7 +1817,7 @@
     <span class="n">used_api_entries</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
     <span class="n">backreferences_all</span> <span class="o">=</span> <span class="n">_read_json</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">backreferences_dir</span><span class="p">,</span> <span class="s2">&quot;backreferences_all.json&quot;</span><span class="p">))</span>
     <span class="n">src_dir</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">]</span>
-    <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">example_files</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">example_files</span><span class="p">):</span>
         <span class="c1"># don&#39;t include built-in methods etc.</span>
         <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;api_usage_ignore&quot;</span><span class="p">],</span> <span class="n">entry</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">continue</span>
@@ -1787,12 +1834,12 @@
                 <span class="n">used_api_entries</span><span class="p">[</span><span class="n">entry</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;sphx_glr_</span><span class="si">{</span><span class="n">ref_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">unused_api_entries</span><span class="p">):</span>
-        <span class="n">source</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;- :</span><span class="si">{</span><span class="n">get_entry_type</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span><span class="si">}</span><span class="s2">:`</span><span class="si">{</span><span class="n">entry</span><span class="si">}</span><span class="s2">`</span><span class="se">\n</span><span class="s2">&quot;</span>
-    <span class="n">source</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="n">out</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;- :</span><span class="si">{</span><span class="n">get_entry_type</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span><span class="si">}</span><span class="s2">:`</span><span class="si">{</span><span class="n">entry</span><span class="si">}</span><span class="s2">`</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">out</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
 
     <span class="n">has_graphviz</span> <span class="o">=</span> <span class="n">_has_graphviz</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">has_graphviz</span> <span class="ow">and</span> <span class="n">unused_api_entries</span><span class="p">:</span>
-        <span class="n">source</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span>
+        <span class="n">out</span> <span class="o">+=</span> <span class="p">(</span>
             <span class="s2">&quot;.. graphviz:: ./sg_api_unused.dot</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="s2">&quot;    :alt: API unused entries graph</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="s2">&quot;    :layout: neato</span><span class="se">\n\n</span><span class="s2">&quot;</span>
@@ -1801,7 +1848,7 @@
     <span class="n">used_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">used_api_entries</span><span class="p">)</span>
     <span class="n">total_count</span> <span class="o">=</span> <span class="n">used_count</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">unused_api_entries</span><span class="p">)</span>
     <span class="n">used_percentage</span> <span class="o">=</span> <span class="n">used_count</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">total_count</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># avoid div by zero</span>
-    <span class="n">source</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span>
+    <span class="n">out</span> <span class="o">+=</span> <span class="p">(</span>
         <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">API entries used: &quot;</span>
         <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">used_percentage</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">% &quot;</span>
         <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="n">used_count</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">total_count</span><span class="si">}</span><span class="s2">)</span><span class="se">\n\n</span><span class="s2">&quot;</span>
@@ -1811,29 +1858,29 @@
         <span class="n">_make_graph</span><span class="p">(</span>
             <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span> <span class="s2">&quot;sg_api_unused.dot&quot;</span><span class="p">),</span>
             <span class="n">unused_api_entries</span><span class="p">,</span>
-            <span class="n">gallery_conf</span><span class="p">,</span>
+            <span class="n">api_entries</span><span class="p">,</span>
         <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;show_api_usage&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">True</span> <span class="ow">and</span> <span class="n">used_api_entries</span><span class="p">:</span>
         <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Used API Entries&quot;</span>
-        <span class="n">source</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">title</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;^&quot;</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">title</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="n">out</span> <span class="o">+=</span> <span class="n">title</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;^&quot;</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">title</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
         <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">used_api_entries</span><span class="p">):</span>
-            <span class="n">source</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;- :</span><span class="si">{</span><span class="n">get_entry_type</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span><span class="si">}</span><span class="s2">:`</span><span class="si">{</span><span class="n">entry</span><span class="si">}</span><span class="s2">`</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+            <span class="n">out</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;- :</span><span class="si">{</span><span class="n">get_entry_type</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span><span class="si">}</span><span class="s2">:`</span><span class="si">{</span><span class="n">entry</span><span class="si">}</span><span class="s2">`</span><span class="se">\n\n</span><span class="s2">&quot;</span>
             <span class="k">for</span> <span class="n">ref</span> <span class="ow">in</span> <span class="n">used_api_entries</span><span class="p">[</span><span class="n">entry</span><span class="p">]:</span>
-                <span class="n">source</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;  - :ref:`</span><span class="si">{</span><span class="n">ref</span><span class="si">}</span><span class="s2">`</span><span class="se">\n</span><span class="s2">&quot;</span>
-            <span class="n">source</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                <span class="n">out</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;  - :ref:`</span><span class="si">{</span><span class="n">ref</span><span class="si">}</span><span class="s2">`</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">out</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
 
         <span class="k">if</span> <span class="n">has_graphviz</span><span class="p">:</span>
             <span class="n">used_modules</span> <span class="o">=</span> <span class="p">{</span><span class="n">entry</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">used_api_entries</span><span class="p">}</span>
             <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">used_modules</span><span class="p">):</span>
-                <span class="n">source</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span>
+                <span class="n">out</span> <span class="o">+=</span> <span class="p">(</span>
                     <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">module</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;^&quot;</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">module</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
                     <span class="sa">f</span><span class="s2">&quot;.. graphviz:: ./</span><span class="si">{</span><span class="n">module</span><span class="si">}</span><span class="s2">_sg_api_used.dot</span><span class="se">\n</span><span class="s2">&quot;</span>
                     <span class="sa">f</span><span class="s2">&quot;    :alt: </span><span class="si">{</span><span class="n">module</span><span class="si">}</span><span class="s2"> usage graph</span><span class="se">\n</span><span class="s2">&quot;</span>
                     <span class="s2">&quot;    :layout: neato</span><span class="se">\n\n</span><span class="s2">&quot;</span>
                 <span class="p">)</span>
 
-            <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">used_modules</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">used_modules</span><span class="p">):</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Making API usage graph for </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">module</span><span class="p">)</span>
                 <span class="c1"># select and format entries for this module</span>
                 <span class="n">entries</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
@@ -1847,25 +1894,45 @@
                 <span class="n">_make_graph</span><span class="p">(</span>
                     <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">module</span><span class="si">}</span><span class="s2">_sg_api_used.dot&quot;</span><span class="p">),</span>
                     <span class="n">entries</span><span class="p">,</span>
-                    <span class="n">gallery_conf</span><span class="p">,</span>
-                <span class="p">)</span></div>
+                    <span class="n">api_entries</span><span class="p">,</span>
+                <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">out</span>
 
 
+<div class="viewcode-block" id="write_api_entry_usage">
+<a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.write_api_entry_usage">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">write_api_entry_usage</span><span class="p">(</span><span class="n">app</span><span class="p">:</span> <span class="n">Sphinx</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="n">BuildEnvironment</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Write ``sg_api_usage.rst`` and re-read it if it changed.</span>
 
-<div class="viewcode-block" id="clean_api_usage_files">
-<a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.clean_api_usage_files">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">clean_api_usage_files</span><span class="p">(</span><span class="n">app</span><span class="p">:</span> <span class="n">Sphinx</span><span class="p">,</span> <span class="n">exception</span><span class="p">:</span> <span class="ne">Exception</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove api usage .dot files.</span>
+<span class="sd">    To connect to the &#39;env-updated&#39; event, which is the first point at which every</span>
+<span class="sd">    ``autodoc-process-docstring`` has fired -- including those in parallel read</span>
+<span class="sd">    workers, whose entries have been merged back by then. Generating here rather</span>
+<span class="sd">    than at &#39;source-read&#39; means a build whose API usage is unchanged leaves the</span>
+<span class="sd">    file untouched, so Sphinx skips the document entirely on the next build.</span>
 
-<span class="sd">    To connect to &#39;build-finished&#39; event.</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    docnames : list of str</span>
+<span class="sd">        The documents that need to be written.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span> <span class="s2">&quot;sg_api_usage.rst&quot;</span><span class="p">)):</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span> <span class="s2">&quot;sg_api_usage.rst&quot;</span><span class="p">))</span>
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span> <span class="s2">&quot;sg_api_unused.dot&quot;</span><span class="p">)):</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span> <span class="s2">&quot;sg_api_unused.dot&quot;</span><span class="p">))</span>
-    <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">):</span>
-        <span class="k">if</span> <span class="s2">&quot;sg_api_used.dot&quot;</span> <span class="ow">in</span> <span class="n">file</span><span class="p">:</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span> <span class="n">file</span><span class="p">))</span></div>
+    <span class="n">gallery_conf</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span>
+    <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;show_api_usage&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[]</span>
+    <span class="n">docname</span> <span class="o">=</span> <span class="s2">&quot;sg_api_usage&quot;</span>
+    <span class="n">fname</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">docname</span><span class="si">}</span><span class="s2">.rst&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">fname</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>  <span class="c1"># _init_api_usage did not run, e.g. a fresh env</span>
+        <span class="k">return</span> <span class="p">[]</span>
+    <span class="n">fname_new</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">fname</span><span class="si">}</span><span class="s2">.new&quot;</span><span class="p">)</span>
+    <span class="n">fname_new</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">_api_usage_rst</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">_get_api_entries</span><span class="p">(</span><span class="n">env</span><span class="p">)),</span> <span class="o">**</span><span class="n">_W_KW</span><span class="p">)</span>
+    <span class="n">changed</span> <span class="o">=</span> <span class="n">_replace_md5</span><span class="p">(</span><span class="n">fname_new</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;t&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">changed</span> <span class="ow">and</span> <span class="n">docname</span> <span class="ow">in</span> <span class="n">env</span><span class="o">.</span><span class="n">all_docs</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[]</span>
+    <span class="c1"># re-read in-process so the page is current in *this* build rather than the next</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="s2">&quot;env-purge-doc&quot;</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">docname</span><span class="p">)</span>
+    <span class="n">env</span><span class="o">.</span><span class="n">clear_doc</span><span class="p">(</span><span class="n">docname</span><span class="p">)</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">read_doc</span><span class="p">(</span><span class="n">docname</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">docname</span><span class="p">]</span></div>
 
 
 
@@ -2251,7 +2318,10 @@
     <span class="k">if</span> <span class="s2">&quot;sphinx.ext.autodoc&quot;</span> <span class="ow">in</span> <span class="n">app</span><span class="o">.</span><span class="n">extensions</span><span class="p">:</span>
         <span class="n">app</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;autodoc-process-docstring&quot;</span><span class="p">,</span> <span class="n">touch_empty_backreferences</span><span class="p">)</span>
         <span class="n">app</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;autodoc-process-docstring&quot;</span><span class="p">,</span> <span class="n">write_api_entries</span><span class="p">)</span>
-        <span class="n">app</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;source-read&quot;</span><span class="p">,</span> <span class="n">write_api_entry_usage</span><span class="p">)</span>
+        <span class="n">app</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;env-purge-doc&quot;</span><span class="p">,</span> <span class="n">purge_api_entries</span><span class="p">)</span>
+        <span class="n">app</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;env-merge-info&quot;</span><span class="p">,</span> <span class="n">merge_api_entries</span><span class="p">)</span>
+        <span class="c1"># run early so that other env-updated handlers see the re-read page</span>
+        <span class="n">app</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;env-updated&quot;</span><span class="p">,</span> <span class="n">write_api_entry_usage</span><span class="p">,</span> <span class="n">priority</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
 
     <span class="c1"># Add the custom directive</span>
     <span class="n">app</span><span class="o">.</span><span class="n">add_directive</span><span class="p">(</span><span class="s2">&quot;minigallery&quot;</span><span class="p">,</span> <span class="n">MiniGallery</span><span class="p">)</span>
@@ -2267,7 +2337,6 @@
 
     <span class="n">app</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;build-finished&quot;</span><span class="p">,</span> <span class="n">summarize_failing_examples</span><span class="p">)</span>
     <span class="n">app</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;build-finished&quot;</span><span class="p">,</span> <span class="n">embed_code_links</span><span class="p">)</span>
-    <span class="n">app</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;build-finished&quot;</span><span class="p">,</span> <span class="n">clean_api_usage_files</span><span class="p">)</span>
 
     <span class="n">app</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;html-page-context&quot;</span><span class="p">,</span> <span class="n">setup_template_link_getters</span><span class="p">)</span>
 
@@ -2277,6 +2346,9 @@
         <span class="s2">&quot;parallel_read_safe&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
         <span class="s2">&quot;parallel_write_safe&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
         <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="n">_sg_version</span><span class="p">,</span>
+        <span class="c1"># bump whenever the schema of data stored on env changes (sg_api_entries),</span>
+        <span class="c1"># so that cached environments from other schemas are discarded</span>
+        <span class="s2">&quot;env_version&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="n">metadata</span></div>
 

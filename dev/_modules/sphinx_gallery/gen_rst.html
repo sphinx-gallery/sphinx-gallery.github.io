@@ -542,6 +542,7 @@
     <span class="n">_collect_gallery_files</span><span class="p">,</span>
     <span class="n">_combine_backreferences</span><span class="p">,</span>
     <span class="n">_format_toctree</span><span class="p">,</span>
+    <span class="n">_read_json</span><span class="p">,</span>
     <span class="n">_replace_md5</span><span class="p">,</span>
     <span class="n">_write_json</span><span class="p">,</span>
     <span class="n">get_md5sum</span><span class="p">,</span>
@@ -1950,6 +1951,61 @@
     <span class="k">return</span> <span class="n">script_blocks</span><span class="p">,</span> <span class="n">output_blocks</span>
 
 
+<span class="k">def</span><span class="w"> </span><span class="nf">_backrefs_from_codeobj</span><span class="p">(</span>
+    <span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span><span class="p">,</span> <span class="n">example_code_obj</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the backreference names of the code objects identified in an example.&quot;&quot;&quot;</span>
+    <span class="n">exclude_regex</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;exclude_implicit_doc_regex&quot;</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_normalize_name</span><span class="p">(</span><span class="n">cobj</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">full_name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{module}</span><span class="s2">.</span><span class="si">{name}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">cobj</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;prefer_full_module&quot;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">full_name</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">full_name</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{module_short}</span><span class="s2">.</span><span class="si">{name}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">cobj</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="n">_normalize_name</span><span class="p">(</span><span class="n">cobj</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">cobjs</span> <span class="ow">in</span> <span class="n">example_code_obj</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">cobj</span> <span class="ow">in</span> <span class="n">cobjs</span>
+        <span class="k">if</span> <span class="n">cobj</span><span class="p">[</span><span class="s2">&quot;module&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;doc_module&quot;</span><span class="p">])</span>
+        <span class="ow">and</span> <span class="p">(</span>
+            <span class="n">cobj</span><span class="p">[</span><span class="s2">&quot;is_explicit&quot;</span><span class="p">]</span>
+            <span class="ow">or</span> <span class="p">(</span><span class="ow">not</span> <span class="n">exclude_regex</span><span class="p">)</span>
+            <span class="ow">or</span> <span class="p">(</span><span class="ow">not</span> <span class="n">exclude_regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{module}</span><span class="s2">.</span><span class="si">{name}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">cobj</span><span class="p">)))</span>
+        <span class="p">)</span>
+    <span class="p">}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_write_cached_cost</span><span class="p">(</span><span class="n">target_file</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">cost</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Cache an example&#39;s ``(time_elapsed, memory_used)`` next to its md5.&quot;&quot;&quot;</span>
+    <span class="n">_write_json</span><span class="p">(</span><span class="n">target_file</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="n">cost</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;memory&quot;</span><span class="p">:</span> <span class="n">cost</span><span class="p">[</span><span class="mi">1</span><span class="p">]},</span> <span class="s2">&quot;.cost&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_read_cached_cost</span><span class="p">(</span><span class="n">target_file</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get an example&#39;s last measured ``(time_elapsed, memory_used)``, else zeros.&quot;&quot;&quot;</span>
+    <span class="n">cost_fname</span> <span class="o">=</span> <span class="n">target_file</span><span class="o">.</span><span class="n">with_name</span><span class="p">(</span><span class="n">target_file</span><span class="o">.</span><span class="n">stem</span> <span class="o">+</span> <span class="s2">&quot;.cost.json&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">cost_fname</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>  <span class="c1"># never run, or cached by an older Sphinx-Gallery</span>
+        <span class="k">return</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">cost</span> <span class="o">=</span> <span class="n">_read_json</span><span class="p">(</span><span class="n">cost_fname</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">cost</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="n">cost</span><span class="p">[</span><span class="s2">&quot;memory&quot;</span><span class="p">]))</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>  <span class="c1"># e.g. truncated by an interrupted build</span>
+        <span class="k">return</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_read_cached_backrefs</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span><span class="p">,</span> <span class="n">target_file</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the backreference names of an example from its cached ``.codeobj.json``.&quot;&quot;&quot;</span>
+    <span class="n">codeobj_fname</span> <span class="o">=</span> <span class="n">target_file</span><span class="o">.</span><span class="n">with_name</span><span class="p">(</span><span class="n">target_file</span><span class="o">.</span><span class="n">stem</span> <span class="o">+</span> <span class="s2">&quot;.codeobj.json&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">codeobj_fname</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>  <span class="c1"># no code objects were identified</span>
+        <span class="k">return</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">example_code_obj</span> <span class="o">=</span> <span class="n">_read_json</span><span class="p">(</span><span class="n">codeobj_fname</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>  <span class="c1"># e.g. truncated by an interrupted build</span>
+        <span class="k">return</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">_backrefs_from_codeobj</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">example_code_obj</span><span class="p">)</span>
+
+
 <span class="k">def</span><span class="w"> </span><span class="nf">_get_backreferences</span><span class="p">(</span>
     <span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span><span class="p">,</span>
     <span class="n">script_vars</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
@@ -1966,26 +2022,14 @@
     <span class="n">example_code_obj</span> <span class="o">=</span> <span class="n">identify_names</span><span class="p">(</span><span class="n">script_blocks</span><span class="p">,</span> <span class="n">ref_regex</span><span class="p">,</span> <span class="n">global_variables</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">example_code_obj</span><span class="p">:</span>
         <span class="n">_write_json</span><span class="p">(</span><span class="n">target_file</span><span class="p">,</span> <span class="n">example_code_obj</span><span class="p">,</span> <span class="s2">&quot;.codeobj&quot;</span><span class="p">)</span>
-    <span class="n">exclude_regex</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;exclude_implicit_doc_regex&quot;</span><span class="p">]</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">_normalize_name</span><span class="p">(</span><span class="n">cobj</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="n">full_name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{module}</span><span class="s2">.</span><span class="si">{name}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">cobj</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;prefer_full_module&quot;</span><span class="p">]:</span>
-            <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">full_name</span><span class="p">):</span>
-                <span class="k">return</span> <span class="n">full_name</span>
-        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{module_short}</span><span class="s2">.</span><span class="si">{name}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">cobj</span><span class="p">)</span>
-
-    <span class="n">backrefs</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="n">_normalize_name</span><span class="p">(</span><span class="n">cobj</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">cobjs</span> <span class="ow">in</span> <span class="n">example_code_obj</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">cobj</span> <span class="ow">in</span> <span class="n">cobjs</span>
-        <span class="k">if</span> <span class="n">cobj</span><span class="p">[</span><span class="s2">&quot;module&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;doc_module&quot;</span><span class="p">])</span>
-        <span class="ow">and</span> <span class="p">(</span>
-            <span class="n">cobj</span><span class="p">[</span><span class="s2">&quot;is_explicit&quot;</span><span class="p">]</span>
-            <span class="ow">or</span> <span class="p">(</span><span class="ow">not</span> <span class="n">exclude_regex</span><span class="p">)</span>
-            <span class="ow">or</span> <span class="p">(</span><span class="ow">not</span> <span class="n">exclude_regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{module}</span><span class="s2">.</span><span class="si">{name}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">cobj</span><span class="p">)))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># a stale .codeobj.json would resurrect this example&#39;s old backrefs via</span>
+        <span class="c1"># _read_cached_backrefs on every md5-skipped rebuild</span>
+        <span class="n">target_file</span><span class="o">.</span><span class="n">with_name</span><span class="p">(</span><span class="n">target_file</span><span class="o">.</span><span class="n">stem</span> <span class="o">+</span> <span class="s2">&quot;.codeobj.json&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span>
+            <span class="n">missing_ok</span><span class="o">=</span><span class="kc">True</span>
         <span class="p">)</span>
-    <span class="p">}</span>
+
+    <span class="n">backrefs</span> <span class="o">=</span> <span class="n">_backrefs_from_codeobj</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">example_code_obj</span><span class="p">)</span>
 
     <span class="c1"># This can help with garbage collection in some instances</span>
     <span class="k">if</span> <span class="n">global_variables</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s2">&quot;___&quot;</span> <span class="ow">in</span> <span class="n">global_variables</span><span class="p">:</span>
@@ -2060,7 +2104,11 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">out_vars</span><span class="p">[</span><span class="s2">&quot;stale&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">target_file</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">do_return</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">intro</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">out_vars</span>
+            <span class="c1"># the example is not re-run, so recover its backreferences and cost from</span>
+            <span class="c1"># the caches -- otherwise every rebuild empties backreferences_all.json and</span>
+            <span class="c1"># zeroes this example&#39;s row in sg_execution_times.rst</span>
+            <span class="n">out_vars</span><span class="p">[</span><span class="s2">&quot;backrefs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_read_cached_backrefs</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">target_file</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">intro</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">_read_cached_cost</span><span class="p">(</span><span class="n">target_file</span><span class="p">),</span> <span class="n">out_vars</span>
 
     <span class="n">image_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="s2">&quot;images&quot;</span><span class="p">)</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">image_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -2105,6 +2153,10 @@
     <span class="n">memory_used</span> <span class="o">=</span> <span class="n">memory_base</span> <span class="o">+</span> <span class="n">cast</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">[</span><span class="s2">&quot;memory_delta&quot;</span><span class="p">])</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">executable</span><span class="p">:</span>
         <span class="n">time_elapsed</span> <span class="o">=</span> <span class="n">memory_used</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># don&#39;t let the output change</span>
+    <span class="k">if</span> <span class="n">script_vars</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;passing&quot;</span><span class="p">):</span>
+        <span class="c1"># cached alongside the md5, so a build that skips this example can still</span>
+        <span class="c1"># report its last measured cost rather than zeros</span>
+        <span class="n">_write_cached_cost</span><span class="p">(</span><span class="n">target_file</span><span class="p">,</span> <span class="p">(</span><span class="n">time_elapsed</span><span class="p">,</span> <span class="n">memory_used</span><span class="p">))</span>
     <span class="n">save_rst_example</span><span class="p">(</span>
         <span class="n">example_rst</span><span class="p">,</span>
         <span class="n">target_file</span><span class="p">,</span>
