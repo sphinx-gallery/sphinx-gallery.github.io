@@ -496,7 +496,13 @@
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">sphinx.application</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">DocumentationOptions</span><span class="p">,</span> <span class="n">GalleryConfig</span><span class="p">,</span> <span class="n">IntersphinxInventory</span><span class="p">,</span> <span class="n">LinkType</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.typing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">DocumentationOptions</span><span class="p">,</span>
+    <span class="n">GalleryConfig</span><span class="p">,</span>
+    <span class="n">IntersphinxInventory</span><span class="p">,</span>
+    <span class="n">LinkType</span><span class="p">,</span>
+    <span class="n">PathLikeStr</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">_W_KW</span><span class="p">,</span> <span class="n">_read_json</span><span class="p">,</span> <span class="n">status_iterator</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">sphinx</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;sphinx-gallery&quot;</span><span class="p">)</span>
@@ -525,9 +531,9 @@
 
 <div class="viewcode-block" id="get_data">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.docs_resolv.html#sphinx_gallery.docs_resolv.get_data">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_data</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">gallery_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_data</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">gallery_dir</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Persistent dictionary usage to retrieve the search indexes.&quot;&quot;&quot;</span>
-    <span class="n">cached_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gallery_dir</span><span class="p">,</span> <span class="s2">&quot;searchindex&quot;</span><span class="p">)</span>
+    <span class="n">cached_file</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">gallery_dir</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;searchindex&quot;</span><span class="p">)</span>
     <span class="n">search_index</span> <span class="o">=</span> <span class="n">shelve</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">cached_file</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">search_index</span><span class="p">:</span>
         <span class="n">data</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">search_index</span><span class="p">[</span><span class="n">url</span><span class="p">]</span>
@@ -617,7 +623,7 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">config</span><span class="p">:</span> <span class="n">GalleryConfig</span><span class="p">,</span>
         <span class="n">doc_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span>
-        <span class="n">gallery_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">gallery_dir</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">,</span>
         <span class="n">relative</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
@@ -627,9 +633,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_link_cache</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">LinkType</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">doc_url</span><span class="p">,</span> <span class="n">Path</span><span class="p">):</span>
-            <span class="n">index_url</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">doc_url</span><span class="p">,</span> <span class="s2">&quot;index.html&quot;</span><span class="p">)</span>
-            <span class="n">searchindex_url</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">doc_url</span><span class="p">,</span> <span class="s2">&quot;searchindex.js&quot;</span><span class="p">)</span>
-            <span class="n">docopts_url</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">doc_url</span><span class="p">,</span> <span class="s2">&quot;_static&quot;</span><span class="p">,</span> <span class="s2">&quot;documentation_options.js&quot;</span><span class="p">)</span>
+            <span class="n">index_url</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">doc_url</span> <span class="o">/</span> <span class="s2">&quot;index.html&quot;</span><span class="p">)</span>
+            <span class="n">searchindex_url</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">doc_url</span> <span class="o">/</span> <span class="s2">&quot;searchindex.js&quot;</span><span class="p">)</span>
+            <span class="n">docopts_url</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">doc_url</span> <span class="o">/</span> <span class="s2">&quot;_static&quot;</span> <span class="o">/</span> <span class="s2">&quot;documentation_options.js&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">relative</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
@@ -716,7 +722,7 @@
             <span class="n">fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">fname</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">ext</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_windows</span><span class="p">:</span>
                 <span class="n">fname</span> <span class="o">=</span> <span class="n">fname</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">&quot;</span><span class="p">)</span>
-                <span class="n">link</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">doc_url</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
+                <span class="n">link</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">doc_url</span><span class="p">)</span> <span class="o">/</span> <span class="n">fname</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">link</span> <span class="o">=</span> <span class="n">posixpath</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">doc_url</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
 
@@ -735,7 +741,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">resolve</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">cobj</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
-        <span class="n">this_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">this_url</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LinkType</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Resolve the link to the documentation, returns None if not found.</span>
 
@@ -751,7 +757,7 @@
 <span class="sd">                - cobj[&#39;is_class&#39;] : whether object is class (bool)</span>
 <span class="sd">                - cobj[&#39;is_explicit&#39;] : whether object is an explicit</span>
 <span class="sd">                  backreference (referred to by sphinx markup) (bool)</span>
-<span class="sd">        this_url: str</span>
+<span class="sd">        this_url: str | pathlib.Path</span>
 <span class="sd">            URL of the current page. Needed to construct relative URLs</span>
 <span class="sd">            (only used if relative=True in constructor).</span>
 
@@ -835,12 +841,12 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">_embed_code_links</span><span class="p">(</span>
     <span class="n">app</span><span class="p">:</span> <span class="n">sphinx</span><span class="o">.</span><span class="n">application</span><span class="o">.</span><span class="n">Sphinx</span><span class="p">,</span>
     <span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span><span class="p">,</span>
-    <span class="n">gallery_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">gallery_dir</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Add resolvers for the packages for which we want to show links.&quot;&quot;&quot;</span>
     <span class="n">doc_resolvers</span> <span class="o">=</span> <span class="p">{}</span>
 
-    <span class="n">src_gallery_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span> <span class="n">gallery_dir</span><span class="p">)</span>
+    <span class="n">src_gallery_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">)</span> <span class="o">/</span> <span class="n">gallery_dir</span>
     <span class="k">for</span> <span class="n">this_module</span><span class="p">,</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;reference_url&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">url</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -858,7 +864,7 @@
         <span class="k">except</span> <span class="p">(</span><span class="n">URLError</span><span class="p">,</span> <span class="n">HTTPError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="n">_handle_http_url_error</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 
-    <span class="n">html_gallery_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">outdir</span><span class="p">,</span> <span class="n">gallery_dir</span><span class="p">))</span>
+    <span class="n">html_gallery_dir</span> <span class="o">=</span> <span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">outdir</span><span class="p">)</span> <span class="o">/</span> <span class="n">gallery_dir</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
 
     <span class="c1"># patterns for replacement</span>
     <span class="n">link_pattern</span> <span class="o">=</span> <span class="s1">&#39;&lt;a href=&quot;</span><span class="si">{link}</span><span class="s1">&quot; title=&quot;</span><span class="si">{title}</span><span class="s1">&quot; class=&quot;</span><span class="si">{css_class}</span><span class="s1">&quot;&gt;</span><span class="si">{text}</span><span class="s1">&lt;/a&gt;&#39;</span>
@@ -867,7 +873,7 @@
 
     <span class="c1"># This could be turned into a generator if necessary, but should be okay</span>
     <span class="n">flat</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="p">[</span><span class="n">dirpath</span><span class="p">,</span> <span class="n">filename</span><span class="p">]</span>
+        <span class="n">Path</span><span class="p">(</span><span class="n">dirpath</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">dirpath</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">filenames</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">html_gallery_dir</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">filenames</span>
         <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.html&quot;</span><span class="p">)</span>
@@ -877,19 +883,17 @@
         <span class="sa">f</span><span class="s2">&quot;embedding documentation hyperlinks for </span><span class="si">{</span><span class="n">gallery_dir</span><span class="si">}</span><span class="s2">... &quot;</span><span class="p">,</span>
         <span class="n">color</span><span class="o">=</span><span class="s2">&quot;fuchsia&quot;</span><span class="p">,</span>
         <span class="n">length</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">flat</span><span class="p">),</span>
-        <span class="n">stringify_func</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+        <span class="n">stringify_func</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">intersphinx_inv</span> <span class="o">=</span> <span class="n">_get_intersphinx_inventory</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">dirpath</span><span class="p">,</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">iterator</span><span class="p">:</span>
-        <span class="n">full_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">html_gallery_dir</span><span class="p">,</span> <span class="n">dirpath</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
-        <span class="n">subpath</span> <span class="o">=</span> <span class="n">dirpath</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">html_gallery_dir</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:]</span>
+    <span class="k">for</span> <span class="n">full_fname</span> <span class="ow">in</span> <span class="n">iterator</span><span class="p">:</span>
+        <span class="n">subpath</span> <span class="o">=</span> <span class="n">full_fname</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">relative_to</span><span class="p">(</span><span class="n">html_gallery_dir</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;dirhtml&quot;</span><span class="p">:</span>
-            <span class="n">json_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">src_gallery_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subpath</span><span class="si">}</span><span class="s2">.codeobj.json&quot;</span><span class="p">)</span>
+            <span class="c1"># the containing directory is the document name, the file is index.html</span>
+            <span class="n">json_fname</span> <span class="o">=</span> <span class="n">src_gallery_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subpath</span><span class="si">}</span><span class="s2">.codeobj.json&quot;</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">json_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-                <span class="n">src_gallery_dir</span><span class="p">,</span> <span class="n">subpath</span><span class="p">,</span> <span class="n">fname</span><span class="p">[:</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;.codeobj.json&quot;</span>
-            <span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">json_fname</span><span class="p">):</span>
+            <span class="n">json_fname</span> <span class="o">=</span> <span class="n">src_gallery_dir</span> <span class="o">/</span> <span class="n">subpath</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">full_fname</span><span class="o">.</span><span class="n">stem</span><span class="si">}</span><span class="s2">.codeobj.json&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">json_fname</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
             <span class="k">continue</span>
 
         <span class="c1"># we have a json file with the objects to embed links for</span>

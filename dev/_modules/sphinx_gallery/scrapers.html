@@ -497,7 +497,7 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">sphinx.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExtensionError</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">GalleryConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">GalleryConfig</span><span class="p">,</span> <span class="n">PathLikeStr</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">optipng</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
@@ -506,7 +506,7 @@
 
     <span class="kn">from</span><span class="w"> </span><span class="nn">.py_source_parser</span><span class="w"> </span><span class="kn">import</span> <span class="n">Block</span>
 
-<span class="n">SrcsetMap</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">float</span> <span class="o">|</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">PurePosixPath</span><span class="p">]</span>
+<span class="n">SrcsetMap</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">float</span> <span class="o">|</span> <span class="nb">int</span><span class="p">,</span> <span class="n">PathLikeStr</span> <span class="o">|</span> <span class="n">PurePosixPath</span><span class="p">]</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Mapping of image srcset multiplication factor to image path.</span>
 <span class="sd">The key 0 is reserved for the original image. Other keys are</span>
@@ -689,9 +689,9 @@
             <span class="k">raise</span>
 
         <span class="k">if</span> <span class="s2">&quot;images&quot;</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;compress_images&quot;</span><span class="p">]:</span>
-            <span class="n">optipng</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">image_path</span><span class="p">),</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;compress_images_args&quot;</span><span class="p">])</span>
-            <span class="k">for</span> <span class="n">hipath</span> <span class="ow">in</span> <span class="n">srcsetpaths</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="n">optipng</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">hipath</span><span class="p">),</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;compress_images_args&quot;</span><span class="p">])</span>
+            <span class="c1"># key 0 is image_path itself, so this covers it as well</span>
+            <span class="k">for</span> <span class="n">hipath</span> <span class="ow">in</span> <span class="n">srcsetpaths</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="n">optipng</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">hipath</span><span class="p">),</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;compress_images_args&quot;</span><span class="p">])</span>
 
         <span class="n">image_rsts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
             <span class="n">figure_rst</span><span class="p">(</span>
@@ -776,9 +776,7 @@
     <span class="n">dpi</span> <span class="o">=</span> <span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;savefig.dpi&quot;</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">dpi</span> <span class="o">==</span> <span class="s2">&quot;figure&quot;</span><span class="p">:</span>
         <span class="n">dpi</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">dpi</span>
-    <span class="c1"># relative_to doesn&#39;t work on windows</span>
-    <span class="c1"># video_uri = video.relative_to(gallery_conf[&quot;src_dir&quot;]).as_posix()</span>
-    <span class="n">video_uri</span> <span class="o">=</span> <span class="n">PurePosixPath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">video</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">]))</span>
+    <span class="n">video_uri</span> <span class="o">=</span> <span class="n">_as_relative_rst_path</span><span class="p">(</span><span class="n">video</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">])</span>
     <span class="n">html</span> <span class="o">=</span> <span class="n">_ANIMATION_VIDEO_RST</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
         <span class="n">video</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;/</span><span class="si">{</span><span class="n">video_uri</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
         <span class="n">width</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">fig_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">dpi</span><span class="p">),</span>
@@ -804,8 +802,8 @@
 <span class="sd">        The template image path.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">image_path</span> <span class="o">=</span> <span class="n">image_path</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image_path</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">paths</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_stop</span> <span class="o">=</span> <span class="mi">1000000</span>
 
@@ -860,16 +858,16 @@
 <span class="n">_KNOWN_IMG_EXTS</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;png&quot;</span><span class="p">,</span> <span class="s2">&quot;svg&quot;</span><span class="p">,</span> <span class="s2">&quot;jpg&quot;</span><span class="p">,</span> <span class="s2">&quot;gif&quot;</span><span class="p">,</span> <span class="s2">&quot;webp&quot;</span><span class="p">)</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_find_image_ext</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_find_image_ext</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Find an image, tolerant of different file extensions.&quot;&quot;&quot;</span>
-    <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">path</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">ext</span> <span class="ow">in</span> <span class="n">_KNOWN_IMG_EXTS</span><span class="p">:</span>
-        <span class="n">this_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">this_path</span><span class="p">):</span>
+        <span class="n">this_path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;.</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">this_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
             <span class="k">break</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">ext</span> <span class="o">=</span> <span class="s2">&quot;png&quot;</span>
-    <span class="k">return</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">ext</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;.</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)),</span> <span class="n">ext</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="save_figures">
@@ -910,7 +908,7 @@
             <span class="n">current_path</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_find_image_ext</span><span class="p">(</span>
                 <span class="n">image_path_iterator</span><span class="o">.</span><span class="n">paths</span><span class="p">[</span><span class="n">prev_count</span> <span class="o">+</span> <span class="n">ii</span><span class="p">]</span>
             <span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">current_path</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">current_path</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
                 <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
                     <span class="sa">f</span><span class="s2">&quot;Scraper </span><span class="si">{</span><span class="n">scraper</span><span class="si">}</span><span class="s2"> did not produce expected image:</span><span class="se">\n</span><span class="si">{</span><span class="n">current_path</span><span class="si">}</span><span class="s2">&quot;</span>
                 <span class="p">)</span>
@@ -919,11 +917,19 @@
 
 
 
+<span class="k">def</span><span class="w"> </span><span class="nf">_as_relative_rst_path</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">,</span> <span class="n">sources_dir</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return path relative to sources_dir as a normalized POSIX path.&quot;&quot;&quot;</span>
+    <span class="c1"># relative_to doesn&#39;t work on windows</span>
+    <span class="c1"># rel_path = path.relative_to(sources_dir).as_posix()</span>
+    <span class="n">rel_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">sources_dir</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="n">rel_path</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+
+
 <div class="viewcode-block" id="figure_rst">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.figure_rst">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">figure_rst</span><span class="p">(</span>
-    <span class="n">figure_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="n">PurePosixPath</span><span class="p">],</span>
-    <span class="n">sources_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">figure_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">PathLikeStr</span> <span class="o">|</span> <span class="n">PurePosixPath</span><span class="p">],</span>
+    <span class="n">sources_dir</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">,</span>
     <span class="n">fig_titles</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
     <span class="n">srcsetpaths</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">SrcsetMap</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -936,7 +942,7 @@
 <span class="sd">    ----------</span>
 <span class="sd">    figure_list : list</span>
 <span class="sd">        List of strings of the figures&#39; absolute paths.</span>
-<span class="sd">    sources_dir : str</span>
+<span class="sd">    sources_dir : str | pathlib.Path</span>
 <span class="sd">        absolute path of Sphinx documentation sources</span>
 <span class="sd">    fig_titles : str</span>
 <span class="sd">        Titles of figures, empty string if no titles found. Currently</span>
@@ -967,8 +973,7 @@
         <span class="n">srcsetpaths</span> <span class="o">=</span> <span class="p">[{</span><span class="mi">0</span><span class="p">:</span> <span class="n">fl</span><span class="p">}</span> <span class="k">for</span> <span class="n">fl</span> <span class="ow">in</span> <span class="n">figure_list</span><span class="p">]</span>
 
     <span class="n">figure_paths</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">figure_path</span><span class="p">,</span> <span class="n">sources_dir</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">figure_path</span> <span class="ow">in</span> <span class="n">figure_list</span>
+        <span class="n">_as_relative_rst_path</span><span class="p">(</span><span class="n">figure_path</span><span class="p">,</span> <span class="n">sources_dir</span><span class="p">)</span> <span class="k">for</span> <span class="n">figure_path</span> <span class="ow">in</span> <span class="n">figure_list</span>
     <span class="p">]</span>
 
     <span class="c1"># Get alt text</span>
@@ -976,9 +981,9 @@
     <span class="k">if</span> <span class="n">fig_titles</span><span class="p">:</span>
         <span class="n">alt</span> <span class="o">=</span> <span class="n">fig_titles</span>
     <span class="k">elif</span> <span class="n">figure_list</span><span class="p">:</span>
-        <span class="n">file_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">figure_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">file_name</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">figure_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">name</span>
         <span class="c1"># remove ext &amp; &#39;sphx_glr_&#39; from start &amp; n#&#39;s from end</span>
-        <span class="n">file_name_noext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">file_name</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">9</span><span class="p">:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span>
+        <span class="n">file_name_noext</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span><span class="o">.</span><span class="n">stem</span><span class="p">[</span><span class="mi">9</span><span class="p">:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span>
         <span class="c1"># replace - &amp; _ with \s</span>
         <span class="n">file_name_final</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[-,_]&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">file_name_noext</span><span class="p">)</span>
         <span class="n">alt</span> <span class="o">=</span> <span class="n">file_name_final</span>
@@ -1003,7 +1008,7 @@
 
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_get_srcset_st</span><span class="p">(</span><span class="n">sources_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">hinames</span><span class="p">:</span> <span class="n">SrcsetMap</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_srcset_st</span><span class="p">(</span><span class="n">sources_dir</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">,</span> <span class="n">hinames</span><span class="p">:</span> <span class="n">SrcsetMap</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create the srcset string for including on the rst line.</span>
 
 <span class="sd">    For example; `sources_dir` might be `/home/sample-proj/source`,</span>
@@ -1017,7 +1022,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">srcst</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">hinames</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">hinames</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">sources_dir</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">_as_relative_rst_path</span><span class="p">(</span><span class="n">hinames</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">sources_dir</span><span class="p">)</span>
         <span class="n">srcst</span> <span class="o">+=</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">path</span>
         <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">srcst</span> <span class="o">+=</span> <span class="s2">&quot;, &quot;</span>
@@ -1076,7 +1081,7 @@
 <span class="c1"># Module resetting</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_reset_matplotlib</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span><span class="p">,</span> <span class="n">fname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_reset_matplotlib</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span><span class="p">,</span> <span class="n">fname</span><span class="p">:</span> <span class="n">PathLikeStr</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Reset matplotlib.&quot;&quot;&quot;</span>
     <span class="n">mpl</span><span class="p">,</span> <span class="n">plt</span> <span class="o">=</span> <span class="n">_import_matplotlib</span><span class="p">()</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">rcdefaults</span><span class="p">()</span>
@@ -1085,7 +1090,7 @@
     <span class="n">importlib</span><span class="o">.</span><span class="n">reload</span><span class="p">(</span><span class="n">mpl</span><span class="o">.</span><span class="n">category</span><span class="p">)</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_reset_seaborn</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span><span class="p">,</span> <span class="n">fname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_reset_seaborn</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span><span class="p">,</span> <span class="n">fname</span><span class="p">:</span> <span class="n">PathLikeStr</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Reset seaborn.&quot;&quot;&quot;</span>
     <span class="n">seaborn_module</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;seaborn&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">seaborn_module</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -1100,7 +1105,9 @@
 
 <div class="viewcode-block" id="clean_modules">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.clean_modules">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">clean_modules</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span><span class="p">,</span> <span class="n">fname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">when</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">clean_modules</span><span class="p">(</span>
+    <span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span><span class="p">,</span> <span class="n">fname</span><span class="p">:</span> <span class="n">PathLikeStr</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">when</span><span class="p">:</span> <span class="nb">str</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove, unload, or reset modules.</span>
 
 <span class="sd">    After a script is executed it can load a variety of settings that one</span>
@@ -1110,7 +1117,7 @@
 <span class="sd">    ----------</span>
 <span class="sd">    gallery_conf : dict</span>
 <span class="sd">        The gallery configuration.</span>
-<span class="sd">    fname : str or None</span>
+<span class="sd">    fname : str | pathlib.Path | None</span>
 <span class="sd">        The example being run. Will be None when this is called entering</span>
 <span class="sd">        a directory of examples to be built.</span>
 <span class="sd">    when : str</span>

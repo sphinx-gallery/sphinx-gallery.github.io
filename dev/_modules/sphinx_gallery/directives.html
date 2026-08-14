@@ -494,6 +494,7 @@
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.gen_rst</span><span class="w"> </span><span class="kn">import</span> <span class="n">extract_intro_and_title</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.py_source_parser</span><span class="w"> </span><span class="kn">import</span> <span class="n">split_code_and_text_blocks</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">PathLikeStr</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">_read_json</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
@@ -540,7 +541,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_target_dir</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">config</span><span class="p">:</span> <span class="n">sphinx</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">Config</span><span class="p">,</span>
-        <span class="n">src_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">src_dir</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">,</span>
         <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
         <span class="n">obj</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
@@ -583,7 +584,7 @@
             <span class="p">)</span>
 
         <span class="c1"># Add subgallery path, if present</span>
-        <span class="n">subdir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">subdir</span><span class="p">:</span> <span class="n">PathLikeStr</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">ex_p</span> <span class="o">:=</span> <span class="n">ex_parents</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">!=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">):</span>
             <span class="n">subdir</span> <span class="o">=</span> <span class="n">ex_p</span>
         <span class="n">target_dir</span> <span class="o">=</span> <span class="n">target_dir</span> <span class="o">/</span> <span class="n">subdir</span>
@@ -829,31 +830,20 @@
 
     <span class="n">imagedir</span><span class="p">,</span> <span class="n">srcset</span> <span class="o">=</span> <span class="n">_copy_images</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span>
 
-    <span class="c1"># /doc/examples/subd/plot_1.rst</span>
-    <span class="n">docsource</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">document</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">]</span>
-    <span class="c1"># /doc/</span>
-    <span class="c1"># make sure to add the trailing slash:</span>
-    <span class="n">srctop</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-    <span class="c1"># examples/subd/plot_1.rst</span>
-    <span class="n">relsource</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">docsource</span><span class="p">,</span> <span class="n">srctop</span><span class="p">)</span>
-    <span class="c1"># /doc/build/html</span>
-    <span class="n">desttop</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">outdir</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-    <span class="c1"># /doc/build/html/examples/subd</span>
-    <span class="n">dest</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">desttop</span><span class="p">,</span> <span class="n">relsource</span><span class="p">)</span>
+    <span class="n">docsource</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">document</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">])</span>  <span class="c1"># /doc/examples/subd/plot_1.rst</span>
+    <span class="n">srctop</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">)</span>  <span class="c1"># /doc</span>
+    <span class="n">relsource</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">docsource</span><span class="p">,</span> <span class="n">srctop</span><span class="p">))</span>  <span class="c1"># examples/subd/plot_1.rst</span>
+    <span class="n">dest</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">outdir</span><span class="p">)</span> <span class="o">/</span> <span class="n">relsource</span>  <span class="c1"># /doc/build/html/examples/subd</span>
 
     <span class="c1"># ../../_images/ for dirhtml and ../_images/ for html</span>
-    <span class="n">imagerel</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">imagedir</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">dest</span><span class="p">))</span>
+    <span class="n">imagerel</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">imagedir</span><span class="p">,</span> <span class="n">dest</span><span class="o">.</span><span class="n">parent</span><span class="p">))</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;dirhtml&quot;</span><span class="p">:</span>
-        <span class="n">imagerel</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">,</span> <span class="n">imagerel</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>  <span class="c1"># html</span>
-        <span class="n">imagerel</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">imagerel</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">&quot;</span> <span class="ow">in</span> <span class="n">imagerel</span><span class="p">:</span>
-        <span class="n">imagerel</span> <span class="o">=</span> <span class="n">imagerel</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span><span class="p">)</span>
+        <span class="n">imagerel</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">)</span> <span class="o">/</span> <span class="n">imagerel</span>
+    <span class="n">imagerel</span> <span class="o">=</span> <span class="n">imagerel</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span>
     <span class="c1"># make srcset str.  Need to change all the prefixes!</span>
     <span class="n">srcsetst</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="k">for</span> <span class="n">mult</span> <span class="ow">in</span> <span class="n">srcset</span><span class="p">:</span>
-        <span class="n">nm</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">srcset</span><span class="p">[</span><span class="n">mult</span><span class="p">][</span><span class="mi">1</span><span class="p">:])</span>
+        <span class="n">nm</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">srcset</span><span class="p">[</span><span class="n">mult</span><span class="p">][</span><span class="mi">1</span><span class="p">:])</span><span class="o">.</span><span class="n">name</span>
         <span class="c1"># ../../_images/plot_1_2_0x.png</span>
         <span class="n">relpath</span> <span class="o">=</span> <span class="n">imagerel</span> <span class="o">+</span> <span class="n">nm</span>
         <span class="n">srcsetst</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">relpath</span><span class="si">}</span><span class="s2">&quot;</span>
@@ -865,7 +855,7 @@
     <span class="n">srcsetst</span> <span class="o">=</span> <span class="n">srcsetst</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
 
     <span class="c1"># make uri also be relative...</span>
-    <span class="n">nm</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">node</span><span class="p">[</span><span class="s2">&quot;uri&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">:])</span>
+    <span class="n">nm</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">node</span><span class="p">[</span><span class="s2">&quot;uri&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">:])</span><span class="o">.</span><span class="n">name</span>
     <span class="n">uri</span> <span class="o">=</span> <span class="n">imagerel</span> <span class="o">+</span> <span class="n">nm</span>
 
     <span class="n">alt</span> <span class="o">=</span> <span class="n">node</span><span class="p">[</span><span class="s2">&quot;alt&quot;</span><span class="p">]</span>
@@ -896,22 +886,22 @@
 
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_copy_images</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">imgsgnode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">PurePosixPath</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_copy_images</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">imgsgnode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
     <span class="n">srcset</span> <span class="o">=</span> <span class="n">_parse_srcset</span><span class="p">(</span><span class="n">node</span><span class="p">[</span><span class="s2">&quot;srcset&quot;</span><span class="p">])</span>
 
     <span class="c1"># where the sources are.  i.e. myproj/source</span>
-    <span class="n">srctop</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span>
+    <span class="n">srctop</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">)</span>
 
     <span class="c1"># copy image from source to imagedir.  This is</span>
     <span class="c1"># *probably* supposed to be done by a builder but...</span>
     <span class="c1"># ie myproj/build/html/_images</span>
-    <span class="n">imagedir</span> <span class="o">=</span> <span class="n">PurePosixPath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">outdir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">imagedir</span><span class="p">)</span>
+    <span class="n">imagedir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">outdir</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">imagedir</span>
 
-    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">imagedir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">imagedir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="c1"># copy all the sources to the imagedir:</span>
     <span class="k">for</span> <span class="n">mult</span> <span class="ow">in</span> <span class="n">srcset</span><span class="p">:</span>
-        <span class="n">abspath</span> <span class="o">=</span> <span class="n">PurePosixPath</span><span class="p">(</span><span class="n">srctop</span><span class="p">,</span> <span class="n">srcset</span><span class="p">[</span><span class="n">mult</span><span class="p">][</span><span class="mi">1</span><span class="p">:])</span>
+        <span class="n">abspath</span> <span class="o">=</span> <span class="n">srctop</span> <span class="o">/</span> <span class="n">srcset</span><span class="p">[</span><span class="n">mult</span><span class="p">]</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
         <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="n">abspath</span><span class="p">,</span> <span class="n">imagedir</span> <span class="o">/</span> <span class="n">abspath</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">imagedir</span><span class="p">,</span> <span class="n">srcset</span>

@@ -476,9 +476,9 @@
 <span class="c1"># Author: Óscar Nájera</span>
 <span class="c1"># License: 3-clause BSD</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">GalleryConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">GalleryConfig</span><span class="p">,</span> <span class="n">PathLikeStr</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">zip_files</span>
 
 <span class="n">CODE_ZIP_DOWNLOAD</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
@@ -502,7 +502,7 @@
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.downloads.html#sphinx_gallery.downloads.python_zip">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">python_zip</span><span class="p">(</span>
     <span class="n">file_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-    <span class="n">gallery_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">gallery_path</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">,</span>
     <span class="n">extension</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="s2">&quot;.py&quot;</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Store all files in file_list into an zip file.</span>
@@ -511,7 +511,7 @@
 <span class="sd">    ----------</span>
 <span class="sd">    file_list : list</span>
 <span class="sd">        Holds all the file names to be included in zip file</span>
-<span class="sd">    gallery_path : str</span>
+<span class="sd">    gallery_path : str | pathlib.Path</span>
 <span class="sd">        path to where the zipfile is stored</span>
 <span class="sd">    extension : str | None</span>
 <span class="sd">        In order to deal with downloads of plain source files and jupyter notebooks, if</span>
@@ -525,12 +525,14 @@
 <span class="sd">        zip file name, written as `target_dir_python.zip`, `target_dir_jupyter.zip`,</span>
 <span class="sd">        or `target_dir.zip` depending on the extension</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">zipname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">gallery_path</span><span class="p">))</span>
+    <span class="n">gallery_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">gallery_path</span><span class="p">)</span>
+
+    <span class="n">zipname</span> <span class="o">=</span> <span class="n">gallery_path</span><span class="o">.</span><span class="n">name</span>
     <span class="k">if</span> <span class="n">extension</span> <span class="o">==</span> <span class="s2">&quot;.py&quot;</span><span class="p">:</span>
         <span class="n">zipname</span> <span class="o">+=</span> <span class="s2">&quot;_python&quot;</span>
     <span class="k">elif</span> <span class="n">extension</span> <span class="o">==</span> <span class="s2">&quot;.ipynb&quot;</span><span class="p">:</span>
         <span class="n">zipname</span> <span class="o">+=</span> <span class="s2">&quot;_jupyter&quot;</span>
-    <span class="n">zipname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gallery_path</span><span class="p">,</span> <span class="n">zipname</span> <span class="o">+</span> <span class="s2">&quot;.zip&quot;</span><span class="p">)</span>
+    <span class="n">zipname</span> <span class="o">=</span> <span class="n">gallery_path</span> <span class="o">/</span> <span class="p">(</span><span class="n">zipname</span> <span class="o">+</span> <span class="s2">&quot;.zip&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">zip_files</span><span class="p">(</span><span class="n">file_list</span><span class="p">,</span> <span class="n">zipname</span><span class="p">,</span> <span class="n">gallery_path</span><span class="p">,</span> <span class="n">extension</span><span class="p">)</span></div>
 
 
@@ -538,14 +540,14 @@
 <div class="viewcode-block" id="list_downloadable_sources">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.downloads.html#sphinx_gallery.downloads.list_downloadable_sources">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">list_downloadable_sources</span><span class="p">(</span>
-    <span class="n">target_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">target_dir</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">,</span>
     <span class="n">extensions</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;.py&quot;</span><span class="p">,),</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a list of source files in target_dir.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    target_dir : str</span>
+<span class="sd">    target_dir : str | pathlib.Path</span>
 <span class="sd">        path to the directory where source file are</span>
 <span class="sd">    extensions : tuple[str]</span>
 <span class="sd">        tuple of file extensions to include</span>
@@ -556,10 +558,11 @@
 <span class="sd">        list of paths to all source files in `target_dir` ending with one of the</span>
 <span class="sd">        specified extensions</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">target_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">target_dir</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">[</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">target_dir</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">fname</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">extensions</span><span class="p">)</span>
+        <span class="nb">str</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">target_dir</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">entry</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="ow">and</span> <span class="n">entry</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">extensions</span><span class="p">)</span>
     <span class="p">]</span></div>
 
 
@@ -567,8 +570,8 @@
 <div class="viewcode-block" id="generate_zipfiles">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.downloads.html#sphinx_gallery.downloads.generate_zipfiles">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">generate_zipfiles</span><span class="p">(</span>
-    <span class="n">gallery_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">src_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">gallery_dir</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">,</span>
+    <span class="n">src_dir</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">,</span>
     <span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Collects downloadable sources and makes zipfiles of them.</span>
@@ -577,9 +580,9 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    gallery_dir : str</span>
+<span class="sd">    gallery_dir : str | pathlib.Path</span>
 <span class="sd">        path of the gallery to collect downloadable sources</span>
-<span class="sd">    src_dir : str</span>
+<span class="sd">    src_dir : str | pathlib.Path</span>
 <span class="sd">        The build source directory. Needed to make the reST paths relative.</span>
 <span class="sd">    gallery_conf : dict[str, Any]</span>
 <span class="sd">        Sphinx-Gallery configuration dictionary</span>
@@ -592,30 +595,33 @@
     <span class="c1"># .rst are plain sources which should not be available as zip.</span>
     <span class="n">src_ext</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">ext</span> <span class="k">for</span> <span class="n">ext</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;example_extensions&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">ext</span> <span class="o">!=</span> <span class="s2">&quot;.rst&quot;</span><span class="p">)</span>
     <span class="n">notebook_ext</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;notebook_extensions&quot;</span><span class="p">])</span>
+    <span class="n">gallery_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">gallery_dir</span><span class="p">)</span>
+    <span class="n">src_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">src_dir</span><span class="p">)</span>
+
     <span class="n">source_files</span> <span class="o">=</span> <span class="n">list_downloadable_sources</span><span class="p">(</span><span class="n">gallery_dir</span><span class="p">,</span> <span class="n">src_ext</span><span class="p">)</span>
     <span class="n">notebook_files</span> <span class="o">=</span> <span class="n">list_downloadable_sources</span><span class="p">(</span><span class="n">gallery_dir</span><span class="p">,</span> <span class="n">notebook_ext</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">directory</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">gallery_dir</span><span class="p">)):</span>
-        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gallery_dir</span><span class="p">,</span> <span class="n">directory</span><span class="p">)):</span>
-            <span class="n">target_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gallery_dir</span><span class="p">,</span> <span class="n">directory</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">directory</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">gallery_dir</span><span class="o">.</span><span class="n">iterdir</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">directory</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
+            <span class="n">target_dir</span> <span class="o">=</span> <span class="n">directory</span>
             <span class="n">source_files</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">list_downloadable_sources</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">src_ext</span><span class="p">))</span>
             <span class="n">notebook_files</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">list_downloadable_sources</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">notebook_ext</span><span class="p">))</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">rst_path</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
-        <span class="n">filepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">src_dir</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">filepath</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">rst_path</span><span class="p">(</span><span class="n">filepath</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">filepath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span><span class="o">.</span><span class="n">relative_to</span><span class="p">(</span><span class="n">src_dir</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">filepath</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
 
     <span class="n">all_python</span> <span class="o">=</span> <span class="nb">all</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.py&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">source_files</span><span class="p">)</span>
     <span class="n">py_zipfile</span> <span class="o">=</span> <span class="n">python_zip</span><span class="p">(</span><span class="n">source_files</span><span class="p">,</span> <span class="n">gallery_dir</span><span class="p">,</span> <span class="s2">&quot;.py&quot;</span> <span class="k">if</span> <span class="n">all_python</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
     <span class="n">dw_rst</span> <span class="o">=</span> <span class="n">CODE_ZIP_DOWNLOAD</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
         <span class="s2">&quot;in Python&quot;</span> <span class="k">if</span> <span class="n">all_python</span> <span class="k">else</span> <span class="s2">&quot;as&quot;</span><span class="p">,</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">py_zipfile</span><span class="p">),</span>
+        <span class="n">Path</span><span class="p">(</span><span class="n">py_zipfile</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
         <span class="n">rst_path</span><span class="p">(</span><span class="n">py_zipfile</span><span class="p">),</span>
     <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">notebook_files</span><span class="p">:</span>
         <span class="n">jy_zipfile</span> <span class="o">=</span> <span class="n">python_zip</span><span class="p">(</span><span class="n">notebook_files</span><span class="p">,</span> <span class="n">gallery_dir</span><span class="p">,</span> <span class="s2">&quot;.ipynb&quot;</span><span class="p">)</span>
         <span class="n">dw_rst</span> <span class="o">+=</span> <span class="n">NOTEBOOK_ZIP_DOWNLOAD</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">jy_zipfile</span><span class="p">),</span>
+            <span class="n">Path</span><span class="p">(</span><span class="n">jy_zipfile</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
             <span class="n">rst_path</span><span class="p">(</span><span class="n">jy_zipfile</span><span class="p">),</span>
         <span class="p">)</span>
 

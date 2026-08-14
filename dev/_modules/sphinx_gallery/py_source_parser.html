@@ -488,6 +488,8 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">sphinx.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExtensionError</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sphinx.util.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">getLogger</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">PathLikeStr</span>
+
 <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;sphinx-gallery&quot;</span><span class="p">)</span>
 
 <span class="n">SYNTAX_ERROR_DOCSTRING</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
@@ -520,7 +522,7 @@
 
 <div class="viewcode-block" id="parse_source_file">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.py_source_parser.html#sphinx_gallery.py_source_parser.parse_source_file">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">parse_source_file</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">ast</span><span class="o">.</span><span class="n">Module</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_source_file</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">ast</span><span class="o">.</span><span class="n">Module</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse source file into AST node.</span>
 
 <span class="sd">    Parameters</span>
@@ -638,21 +640,21 @@
 
 <span class="nd">@overload</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">split_code_and_text_blocks</span><span class="p">(</span>
-    <span class="n">source_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">source_file</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">,</span>
     <span class="n">return_node</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">True</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="nb">list</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Module</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]:</span> <span class="o">...</span>
 
 
 <span class="nd">@overload</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">split_code_and_text_blocks</span><span class="p">(</span>
-    <span class="n">source_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">source_file</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">,</span>
     <span class="n">return_node</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">False</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="nb">list</span><span class="p">]:</span> <span class="o">...</span>
 
 
 <div class="viewcode-block" id="split_code_and_text_blocks">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.py_source_parser.html#sphinx_gallery.py_source_parser.split_code_and_text_blocks">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">split_code_and_text_blocks</span><span class="p">(</span><span class="n">source_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span> <span class="n">return_node</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">split_code_and_text_blocks</span><span class="p">(</span><span class="n">source_file</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">,</span> <span class="n">return_node</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return list with source file separated into code and text blocks.</span>
 
 <span class="sd">    Parameters</span>

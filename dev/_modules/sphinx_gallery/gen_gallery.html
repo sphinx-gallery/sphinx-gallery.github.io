@@ -522,7 +522,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">.recommender</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExampleRecommender</span><span class="p">,</span> <span class="n">_write_recommendations</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.scrapers</span><span class="w"> </span><span class="kn">import</span> <span class="n">_import_matplotlib</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.sorting</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExplicitOrder</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">GalleryConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">GalleryConfig</span><span class="p">,</span> <span class="n">PathLikeStr</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">_W_KW</span><span class="p">,</span>
     <span class="n">_collect_gallery_files</span><span class="p">,</span>
@@ -659,14 +659,15 @@
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_update_gallery_conf_builder_inited</span><span class="p">(</span>
     <span class="n">sphinx_gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span><span class="p">,</span>
-    <span class="n">src_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">src_dir</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">,</span>
     <span class="n">plot_gallery</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">abort_on_example_error</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">builder_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;html&quot;</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">sphinx_gallery_conf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">plot_gallery</span><span class="o">=</span><span class="n">plot_gallery</span><span class="p">)</span>
     <span class="n">sphinx_gallery_conf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">abort_on_example_error</span><span class="o">=</span><span class="n">abort_on_example_error</span><span class="p">)</span>
-    <span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">src_dir</span>
+    <span class="c1"># scrapers and other user callables are handed this, so keep it a plain str</span>
+    <span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">src_dir</span><span class="p">)</span>
     <span class="c1"># Make it easy to know which builder we&#39;re in</span>
     <span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;builder_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">builder_name</span>
 
@@ -1013,8 +1014,8 @@
 <div class="viewcode-block" id="get_subsections">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.get_subsections">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_subsections</span><span class="p">(</span>
-    <span class="n">srcdir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">examples_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">srcdir</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">,</span>
+    <span class="n">examples_dir</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">,</span>
     <span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span><span class="p">,</span>
     <span class="n">check_for_header</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
@@ -1022,9 +1023,9 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    srcdir : str</span>
+<span class="sd">    srcdir : str | pathlib.Path</span>
 <span class="sd">        absolute path to directory containing conf.py</span>
-<span class="sd">    examples_dir : str</span>
+<span class="sd">    examples_dir : str | pathlib.Path</span>
 <span class="sd">        path to the examples directory relative to conf.py</span>
 <span class="sd">    gallery_conf : Dict[str, Any]</span>
 <span class="sd">        Sphinx-Gallery configuration dictionary.</span>
@@ -1043,32 +1044,26 @@
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">subsec_order</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
             <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;subsection_order&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ExplicitOrder</span><span class="p">(</span><span class="n">subsec_order</span><span class="p">)</span>
         <span class="p">(</span><span class="n">sortkey</span><span class="p">,)</span> <span class="o">=</span> <span class="n">_get_callables</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="s2">&quot;subsection_order&quot;</span><span class="p">)</span>
-    <span class="n">subfolders</span> <span class="o">=</span> <span class="p">[</span><span class="n">subfolder</span> <span class="k">for</span> <span class="n">subfolder</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">examples_dir</span><span class="p">)]</span>
+    <span class="n">srcdir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">srcdir</span><span class="p">)</span>
+    <span class="n">examples_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">examples_dir</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">check_for_header</span><span class="p">:</span>
         <span class="n">subfolders</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">subfolder</span>
-            <span class="k">for</span> <span class="n">subfolder</span> <span class="ow">in</span> <span class="n">subfolders</span>
+            <span class="n">subfolder</span><span class="o">.</span><span class="n">name</span>
+            <span class="k">for</span> <span class="n">subfolder</span> <span class="ow">in</span> <span class="n">examples_dir</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()</span>
             <span class="c1"># Return is not `None` only when a gallery head file is found</span>
-            <span class="k">if</span> <span class="n">_get_gallery_header</span><span class="p">(</span>
-                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">examples_dir</span><span class="p">,</span> <span class="n">subfolder</span><span class="p">),</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">raise_error</span><span class="o">=</span><span class="kc">False</span>
-            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">_get_gallery_header</span><span class="p">(</span><span class="n">subfolder</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">raise_error</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
             <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># just make sure its a directory, that is not `__pycache__`</span>
         <span class="n">subfolders</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">subfolder</span>
-            <span class="k">for</span> <span class="n">subfolder</span> <span class="ow">in</span> <span class="n">subfolders</span>
-            <span class="k">if</span> <span class="p">(</span>
-                <span class="n">subfolder</span> <span class="o">!=</span> <span class="s2">&quot;__pycache__&quot;</span>
-                <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">examples_dir</span><span class="p">,</span> <span class="n">subfolder</span><span class="p">))</span>
-            <span class="p">)</span>
+            <span class="n">subfolder</span><span class="o">.</span><span class="n">name</span>
+            <span class="k">for</span> <span class="n">subfolder</span> <span class="ow">in</span> <span class="n">examples_dir</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">subfolder</span><span class="o">.</span><span class="n">is_dir</span><span class="p">()</span> <span class="ow">and</span> <span class="n">subfolder</span><span class="o">.</span><span class="n">name</span> <span class="o">!=</span> <span class="s2">&quot;__pycache__&quot;</span>
         <span class="p">]</span>
 
-    <span class="n">base_examples_dir_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">examples_dir</span><span class="p">,</span> <span class="n">srcdir</span><span class="p">)</span>
-    <span class="n">subfolders_with_path</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_examples_dir_path</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">subfolders</span>
-    <span class="p">]</span>
+    <span class="n">base_examples_dir_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">examples_dir</span><span class="p">,</span> <span class="n">srcdir</span><span class="p">))</span>
+    <span class="n">subfolders_with_path</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">base_examples_dir_path</span> <span class="o">/</span> <span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">subfolders</span><span class="p">]</span>
     <span class="n">sorted_subfolders</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">subfolders_with_path</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">sortkey</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="p">[</span>
@@ -1079,7 +1074,7 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_prepare_sphx_glr_dirs</span><span class="p">(</span>
-    <span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span><span class="p">,</span> <span class="n">srcdir</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span><span class="p">,</span> <span class="n">srcdir</span><span class="p">:</span> <span class="n">PathLikeStr</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates necessary folders for sphinx_gallery files.&quot;&quot;&quot;</span>
     <span class="n">examples_dirs</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;examples_dirs&quot;</span><span class="p">]</span>
@@ -1098,8 +1093,8 @@
         <span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">bool</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;backreferences_dir&quot;</span><span class="p">]):</span>
-        <span class="n">backreferences_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">srcdir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;backreferences_dir&quot;</span><span class="p">])</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">backreferences_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">backreferences_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">srcdir</span><span class="p">)</span> <span class="o">/</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;backreferences_dir&quot;</span><span class="p">]</span>
+        <span class="n">backreferences_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">examples_dirs</span><span class="p">,</span> <span class="n">gallery_dirs</span><span class="p">))</span>
 
@@ -1124,7 +1119,7 @@
     <span class="n">indexst</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">sg_root_index</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
     <span class="n">subsection_index_files</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-    <span class="n">gallery_dir_abs_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">gallery_dir_abs_path</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Add toctree, download and signature, if req, to index and write file.&quot;&quot;&quot;</span>
     <span class="c1"># Generate toctree containing subsection index files</span>
@@ -1151,14 +1146,14 @@
         <span class="k">if</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;show_signature&quot;</span><span class="p">]:</span>
             <span class="n">indexst</span> <span class="o">+=</span> <span class="n">SPHX_GLR_SIG</span>
         <span class="c1"># Write index to file</span>
-        <span class="n">index_rst_new</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gallery_dir_abs_path</span><span class="p">,</span> <span class="s2">&quot;index.rst.new&quot;</span><span class="p">)</span>
+        <span class="n">index_rst_new</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">gallery_dir_abs_path</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;index.rst.new&quot;</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">index_rst_new</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fhindex</span><span class="p">:</span>
             <span class="n">fhindex</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">indexst</span><span class="p">)</span>
         <span class="n">_replace_md5</span><span class="p">(</span><span class="n">index_rst_new</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;t&quot;</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_build_recommender</span><span class="p">(</span>
-    <span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span><span class="p">,</span> <span class="n">gallery_dir_abs_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">subsecs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span><span class="p">,</span> <span class="n">gallery_dir_abs_path</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">,</span> <span class="n">subsecs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Build recommender and write recommendations.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;recommender&quot;</span><span class="p">][</span><span class="s2">&quot;enable&quot;</span><span class="p">]:</span>
@@ -1174,19 +1169,19 @@
 
         <span class="n">gallery_py_files</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="c1"># root and subsection directories containing python examples</span>
-        <span class="n">gallery_directories</span> <span class="o">=</span> <span class="p">[</span><span class="n">gallery_dir_abs_path</span><span class="p">]</span> <span class="o">+</span> <span class="n">subsecs</span>
-        <span class="k">for</span> <span class="n">current_dir</span> <span class="ow">in</span> <span class="n">gallery_directories</span><span class="p">:</span>
-            <span class="n">src_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gallery_dir_abs_path</span><span class="p">,</span> <span class="n">current_dir</span><span class="p">)</span>
+        <span class="n">gallery_dir_abs_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">gallery_dir_abs_path</span><span class="p">)</span>
+        <span class="n">gallery_directories</span> <span class="o">=</span> <span class="p">[</span><span class="n">Path</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="p">[</span><span class="n">gallery_dir_abs_path</span><span class="p">]</span> <span class="o">+</span> <span class="n">subsecs</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">src_dir</span> <span class="ow">in</span> <span class="n">gallery_directories</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">src_dir</span><span class="o">.</span><span class="n">is_absolute</span><span class="p">():</span>
+                <span class="n">src_dir</span> <span class="o">=</span> <span class="n">gallery_dir_abs_path</span> <span class="o">/</span> <span class="n">src_dir</span>
             <span class="c1"># sort python files to have a deterministic input across call</span>
             <span class="n">py_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
                 <span class="c1"># NOTE we don&#39;t take account of `ignore_pattern` and ignore</span>
                 <span class="c1"># ext in `example_extensions`</span>
-                <span class="p">[</span>
-                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
-                    <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">Path</span><span class="p">(</span><span class="n">src_dir</span><span class="p">)</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()</span>
-                    <span class="k">if</span> <span class="n">fname</span><span class="o">.</span><span class="n">suffix</span> <span class="o">==</span> <span class="s2">&quot;.py&quot;</span>
-                <span class="p">],</span>
-                <span class="n">key</span><span class="o">=</span><span class="n">_get_callables</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="s2">&quot;within_subsection_order&quot;</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span>
+                <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span> <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">src_dir</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()</span> <span class="k">if</span> <span class="n">fname</span><span class="o">.</span><span class="n">suffix</span> <span class="o">==</span> <span class="s2">&quot;.py&quot;</span><span class="p">],</span>
+                <span class="n">key</span><span class="o">=</span><span class="n">_get_callables</span><span class="p">(</span>
+                    <span class="n">gallery_conf</span><span class="p">,</span> <span class="s2">&quot;within_subsection_order&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">src_dir</span><span class="p">)</span>
+                <span class="p">)[</span><span class="mi">0</span><span class="p">],</span>
             <span class="p">)</span>
             <span class="n">gallery_py_files</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">py_files</span><span class="p">)</span>
 
@@ -1255,7 +1250,8 @@
     <span class="n">seen_backrefs</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
 
     <span class="n">costs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ExampleCost</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">workdirs</span> <span class="o">=</span> <span class="n">_prepare_sphx_glr_dirs</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">))</span>
+    <span class="n">src_root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">)</span>
+    <span class="n">workdirs</span> <span class="o">=</span> <span class="n">_prepare_sphx_glr_dirs</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">src_root</span><span class="p">)</span>
 
     <span class="c1"># Check for duplicate filenames to make sure linking works as expected</span>
     <span class="n">examples_dirs</span> <span class="o">=</span> <span class="p">[</span><span class="n">ex_dir</span> <span class="k">for</span> <span class="n">ex_dir</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">workdirs</span><span class="p">]</span>
@@ -1264,8 +1260,8 @@
     <span class="n">backrefs_all</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">Backreference</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="k">for</span> <span class="n">examples_dir</span><span class="p">,</span> <span class="n">gallery_dir</span> <span class="ow">in</span> <span class="n">workdirs</span><span class="p">:</span>
-        <span class="n">examples_dir_abs_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">),</span> <span class="n">examples_dir</span><span class="p">)</span>
-        <span class="n">gallery_dir_abs_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">),</span> <span class="n">gallery_dir</span><span class="p">)</span>
+        <span class="n">examples_dir_abs_path</span> <span class="o">=</span> <span class="n">src_root</span> <span class="o">/</span> <span class="n">examples_dir</span>
+        <span class="n">gallery_dir_abs_path</span> <span class="o">=</span> <span class="n">src_root</span> <span class="o">/</span> <span class="n">gallery_dir</span>
 
         <span class="c1"># Create example rst files for root gallery directory examples</span>
         <span class="c1"># (excl. sub-dir examples) and fetch gallery header for root index.rst</span>
@@ -1305,14 +1301,14 @@
         <span class="c1"># list all paths to subsection index files in this array</span>
         <span class="n">subsection_index_files</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">subsecs</span> <span class="o">=</span> <span class="n">get_subsections</span><span class="p">(</span>
-            <span class="nb">str</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">),</span>
+            <span class="n">src_root</span><span class="p">,</span>
             <span class="n">examples_dir_abs_path</span><span class="p">,</span>
             <span class="n">gallery_conf</span><span class="p">,</span>
             <span class="n">check_for_header</span><span class="o">=</span><span class="n">sg_root_index</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">for</span> <span class="n">subsection</span> <span class="ow">in</span> <span class="n">subsecs</span><span class="p">:</span>
-            <span class="n">src_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">examples_dir_abs_path</span><span class="p">,</span> <span class="n">subsection</span><span class="p">)</span>
-            <span class="n">target_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gallery_dir_abs_path</span><span class="p">,</span> <span class="n">subsection</span><span class="p">)</span>
+            <span class="n">src_dir</span> <span class="o">=</span> <span class="n">examples_dir_abs_path</span> <span class="o">/</span> <span class="n">subsection</span>
+            <span class="n">target_dir</span> <span class="o">=</span> <span class="n">gallery_dir_abs_path</span> <span class="o">/</span> <span class="n">subsection</span>
             <span class="n">subsection_index_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">gallery_dir</span><span class="p">,</span> <span class="n">subsection</span><span class="p">,</span> <span class="s2">&quot;index.rst&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
                     <span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span>
@@ -1428,7 +1424,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">_format_for_writing</span><span class="p">(</span>
     <span class="n">costs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ExampleCost</span><span class="p">],</span>
     <span class="o">*</span><span class="p">,</span>
-    <span class="n">src_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">src_dir</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">,</span>
     <span class="n">kind</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;rst&quot;</span><span class="p">,</span> <span class="s2">&quot;rst-full&quot;</span><span class="p">,</span> <span class="s2">&quot;console&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;rst&quot;</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Provide formatted computation summary text.</span>
@@ -1450,20 +1446,25 @@
 <span class="sd">        [example_file, time_elapsed, memory_used]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">lines</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="n">src_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">src_dir</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">cost</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">costs</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="n">c</span><span class="o">.</span><span class="n">sort_key</span><span class="p">()):</span>
-        <span class="n">rel_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">cost</span><span class="o">.</span><span class="n">src_file</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">)</span>
+        <span class="n">rel_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">cost</span><span class="o">.</span><span class="n">src_file</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">kind</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;rst&quot;</span><span class="p">,</span> <span class="s2">&quot;rst-full&quot;</span><span class="p">):</span>  <span class="c1"># like in sg_execution_times</span>
-            <span class="n">target_dir_clean</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">cost</span><span class="o">.</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
-                <span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span>
+            <span class="n">target_dir_clean</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">cost</span><span class="o">.</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">)</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
+            <span class="n">target_dir_clean</span> <span class="o">=</span> <span class="n">target_dir_clean</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
+            <span class="c1"># the reST is written to disk, so keep it identical across platforms</span>
+            <span class="n">paren</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">rel_path</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span> <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;rst-full&quot;</span> <span class="k">else</span> <span class="n">Path</span><span class="p">(</span><span class="n">cost</span><span class="o">.</span><span class="n">src_file</span><span class="p">)</span><span class="o">.</span><span class="n">name</span>
             <span class="p">)</span>
-            <span class="n">paren</span> <span class="o">=</span> <span class="n">rel_path</span> <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;rst-full&quot;</span> <span class="k">else</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">cost</span><span class="o">.</span><span class="n">src_file</span><span class="p">)</span>
             <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;:ref:`sphx_glr_</span><span class="si">{0}</span><span class="s2">_</span><span class="si">{1}</span><span class="s2">` (``</span><span class="si">{2}</span><span class="s2">``)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">target_dir_clean</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">cost</span><span class="o">.</span><span class="n">src_file</span><span class="p">),</span> <span class="n">paren</span>
+                <span class="n">target_dir_clean</span><span class="p">,</span> <span class="n">Path</span><span class="p">(</span><span class="n">cost</span><span class="o">.</span><span class="n">src_file</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">paren</span>
             <span class="p">)</span>
             <span class="n">t</span> <span class="o">=</span> <span class="n">_sec_to_readable</span><span class="p">(</span><span class="n">cost</span><span class="o">.</span><span class="n">execution_time</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>  <span class="c1"># like in generate_gallery</span>
             <span class="k">assert</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;console&quot;</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="n">rel_path</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">rel_path</span><span class="p">)</span>  <span class="c1"># native separators, this is read by a human</span>
             <span class="n">t</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cost</span><span class="o">.</span><span class="n">execution_time</span><span class="si">:</span><span class="s2">0.2f</span><span class="si">}</span><span class="s2"> sec&quot;</span>
         <span class="n">m</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cost</span><span class="o">.</span><span class="n">memory</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> MB&quot;</span>
         <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">name</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">m</span><span class="p">])</span>
@@ -1473,7 +1474,9 @@
 <div class="viewcode-block" id="write_computation_times">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.write_computation_times">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">write_computation_times</span><span class="p">(</span>
-    <span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">costs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ExampleCost</span><span class="p">]</span>
+    <span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span><span class="p">,</span>
+    <span class="n">target_dir</span><span class="p">:</span> <span class="n">PathLikeStr</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">costs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ExampleCost</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Write computation times to `sg_execution_times.rst`.</span>
 
@@ -1491,15 +1494,15 @@
     <span class="n">total_time</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">cost</span><span class="o">.</span><span class="n">execution_time</span> <span class="k">for</span> <span class="n">cost</span> <span class="ow">in</span> <span class="n">costs</span><span class="p">)</span>
     <span class="n">kind</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;rst&quot;</span><span class="p">,</span> <span class="s2">&quot;rst-full&quot;</span><span class="p">,</span> <span class="s2">&quot;console&quot;</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">target_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># all galleries together</span>
-        <span class="n">out_dir</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">]</span>
+        <span class="n">out_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">])</span>
         <span class="n">where</span> <span class="o">=</span> <span class="s2">&quot;all galleries&quot;</span>
         <span class="n">kind</span> <span class="o">=</span> <span class="s2">&quot;rst-full&quot;</span>
         <span class="n">ref_extra</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="k">else</span><span class="p">:</span>  <span class="c1"># a single gallery</span>
-        <span class="n">out_dir</span> <span class="o">=</span> <span class="n">target_dir</span>
-        <span class="n">where</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">])</span>
+        <span class="n">out_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">target_dir</span><span class="p">)</span>
+        <span class="n">where</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">]))</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
         <span class="n">kind</span> <span class="o">=</span> <span class="s2">&quot;rst&quot;</span>
-        <span class="n">ref_extra</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">where</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">_&quot;</span>
+        <span class="n">ref_extra</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">where</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">_&quot;</span>
     <span class="n">new_ref</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;sphx_glr_</span><span class="si">{</span><span class="n">ref_extra</span><span class="si">}</span><span class="s2">sg_execution_times&quot;</span>
     <span class="n">out_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">out_dir</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;sg_execution_times.rst&quot;</span>
     <span class="k">if</span> <span class="n">out_file</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="ow">and</span> <span class="n">total_time</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># nothing ran and nothing was cached</span>
@@ -1663,7 +1666,7 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_make_graph</span><span class="p">(</span>
-    <span class="n">fname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">fname</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">,</span>
     <span class="n">entries</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
     <span class="n">api_entries</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -1683,7 +1686,7 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    fname: str</span>
+<span class="sd">    fname : str | pathlib.Path</span>
 <span class="sd">        Path to &#39;*sg_api_unused.dot&#39; file.</span>
 <span class="sd">    entries: Dict[str, List] or List[str]</span>
 <span class="sd">        Used (List) or unused (Dict) API entries.</span>
@@ -1692,6 +1695,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">graphviz</span>
 
+    <span class="n">fname</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
     <span class="n">dg</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Digraph</span><span class="p">(</span>
         <span class="n">filename</span><span class="o">=</span><span class="n">fname</span><span class="p">,</span>
         <span class="n">graph_attr</span><span class="o">=</span><span class="p">{</span>
@@ -1767,8 +1771,9 @@
                 <span class="n">dg</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">API_COLORS</span><span class="p">[</span><span class="s2">&quot;edge&quot;</span><span class="p">])</span>
     <span class="c1"># graphviz records the .dot as a dependency of the page, so an unchanged graph</span>
     <span class="c1"># must keep its mtime or the page is re-read on every build</span>
-    <span class="n">dg</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">fname</span> <span class="o">+</span> <span class="s2">&quot;.new&quot;</span><span class="p">)</span>
-    <span class="n">_replace_md5</span><span class="p">(</span><span class="n">fname</span> <span class="o">+</span> <span class="s2">&quot;.new&quot;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;t&quot;</span><span class="p">)</span>
+    <span class="n">fname_new</span> <span class="o">=</span> <span class="n">fname</span><span class="o">.</span><span class="n">with_name</span><span class="p">(</span><span class="n">fname</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;.new&quot;</span><span class="p">)</span>
+    <span class="n">dg</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">fname_new</span><span class="p">)</span>
+    <span class="n">_replace_md5</span><span class="p">(</span><span class="n">fname_new</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;t&quot;</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_api_usage_rst</span><span class="p">(</span><span class="n">app</span><span class="p">:</span> <span class="n">Sphinx</span><span class="p">,</span> <span class="n">api_entries</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -1788,8 +1793,8 @@
     <span class="n">out</span> <span class="o">+=</span> <span class="n">title</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;^&quot;</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">title</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">api_entries</span> <span class="ow">or</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;backreferences_dir&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">out</span> <span class="o">+</span> <span class="s2">&quot;No API entries found, not computed.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
-    <span class="n">backreferences_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-        <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">],</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;backreferences_dir&quot;</span><span class="p">]</span>
+    <span class="n">backreferences_dir</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">Path</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">])</span> <span class="o">/</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;backreferences_dir&quot;</span><span class="p">]</span>
     <span class="p">)</span>
 
     <span class="n">example_files</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span><span class="o">.</span><span class="n">union</span><span class="p">(</span>
@@ -1816,7 +1821,7 @@
     <span class="n">unused_api_entries</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
     <span class="n">used_api_entries</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
     <span class="n">backreferences_all</span> <span class="o">=</span> <span class="n">_read_json</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">backreferences_dir</span><span class="p">,</span> <span class="s2">&quot;backreferences_all.json&quot;</span><span class="p">))</span>
-    <span class="n">src_dir</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">]</span>
+    <span class="n">src_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">])</span>
     <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">example_files</span><span class="p">):</span>
         <span class="c1"># don&#39;t include built-in methods etc.</span>
         <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;api_usage_ignore&quot;</span><span class="p">],</span> <span class="n">entry</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -1830,7 +1835,7 @@
             <span class="k">for</span> <span class="n">br</span> <span class="ow">in</span> <span class="n">backref_entry</span><span class="p">:</span>
                 <span class="c1"># br[2] = abs path to target directory</span>
                 <span class="n">example_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">br</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">br</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">relative_to</span><span class="p">(</span><span class="n">src_dir</span><span class="p">)</span>
-                <span class="n">ref_name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">example_path</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
+                <span class="n">ref_name</span> <span class="o">=</span> <span class="n">example_path</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
                 <span class="n">used_api_entries</span><span class="p">[</span><span class="n">entry</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;sphx_glr_</span><span class="si">{</span><span class="n">ref_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">unused_api_entries</span><span class="p">):</span>
@@ -1856,7 +1861,7 @@
 
     <span class="k">if</span> <span class="n">has_graphviz</span> <span class="ow">and</span> <span class="n">unused_api_entries</span><span class="p">:</span>
         <span class="n">_make_graph</span><span class="p">(</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span> <span class="s2">&quot;sg_api_unused.dot&quot;</span><span class="p">),</span>
+            <span class="n">Path</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;sg_api_unused.dot&quot;</span><span class="p">,</span>
             <span class="n">unused_api_entries</span><span class="p">,</span>
             <span class="n">api_entries</span><span class="p">,</span>
         <span class="p">)</span>
@@ -1892,7 +1897,7 @@
                             <span class="k">if</span> <span class="n">entry</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">target_dir</span><span class="p">):</span>
                                 <span class="n">entry</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">target_dir</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:]</span>
                 <span class="n">_make_graph</span><span class="p">(</span>
-                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">module</span><span class="si">}</span><span class="s2">_sg_api_used.dot&quot;</span><span class="p">),</span>
+                    <span class="n">Path</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">)</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">module</span><span class="si">}</span><span class="s2">_sg_api_used.dot&quot;</span><span class="p">,</span>
                     <span class="n">entries</span><span class="p">,</span>
                     <span class="n">api_entries</span><span class="p">,</span>
                 <span class="p">)</span>
@@ -1939,7 +1944,7 @@
 <div class="viewcode-block" id="write_junit_xml">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_gallery.html#sphinx_gallery.gen_gallery.write_junit_xml">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">write_junit_xml</span><span class="p">(</span>
-    <span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span> <span class="n">costs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ExampleCost</span><span class="p">]</span>
+    <span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">,</span> <span class="n">costs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ExampleCost</span><span class="p">]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Write JUnit XML file of example run times, successes, and failures.</span>
 
@@ -1947,7 +1952,7 @@
 <span class="sd">    ----------</span>
 <span class="sd">    gallery_conf : Dict[str, Any]</span>
 <span class="sd">        Sphinx-Gallery configuration dictionary.</span>
-<span class="sd">    target_dir : Union[str, pathlib.Path]</span>
+<span class="sd">    target_dir : str | pathlib.Path</span>
 <span class="sd">        Build directory.</span>
 <span class="sd">    costs: List[ExampleCost]</span>
 <span class="sd">        List of example run costs.</span>
@@ -1963,6 +1968,7 @@
     <span class="n">elapsed</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="n">src_dir</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">]</span>
     <span class="n">output</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">src_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">src_dir</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">cost</span> <span class="ow">in</span> <span class="n">costs</span><span class="p">:</span>
         <span class="n">fname</span> <span class="o">=</span> <span class="n">cost</span><span class="o">.</span><span class="n">src_file</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span>
@@ -1978,8 +1984,8 @@
         <span class="n">title</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;titles&quot;</span><span class="p">][</span><span class="n">fname</span><span class="p">]</span>
         <span class="n">output</span> <span class="o">+=</span> <span class="p">(</span>
             <span class="s1">&#39;&lt;testcase classname=</span><span class="si">{!s}</span><span class="s1"> file=</span><span class="si">{!s}</span><span class="s1"> line=&quot;1&quot; name=</span><span class="si">{!s}</span><span class="s1"> time=&quot;</span><span class="si">{!r}</span><span class="s1">&quot;&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">quoteattr</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">fname</span><span class="p">))[</span><span class="mi">0</span><span class="p">]),</span>
-                <span class="n">quoteattr</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">)),</span>
+                <span class="n">quoteattr</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span><span class="o">.</span><span class="n">stem</span><span class="p">),</span>
+                <span class="n">quoteattr</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">))</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()),</span>
                 <span class="n">quoteattr</span><span class="p">(</span><span class="n">title</span><span class="p">),</span>
                 <span class="n">cost</span><span class="o">.</span><span class="n">execution_time</span><span class="p">,</span>
             <span class="p">)</span>
@@ -2008,9 +2014,8 @@
         <span class="p">)</span>
     <span class="p">)</span> <span class="o">+</span> <span class="n">output</span>
     <span class="c1"># Actually write it</span>
-    <span class="n">fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;junit&quot;</span><span class="p">]))</span>
-    <span class="n">junit_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">junit_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">fname</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">target_dir</span><span class="p">)</span> <span class="o">/</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;junit&quot;</span><span class="p">]</span>
+    <span class="n">fname</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
         <span class="n">fid</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">output</span><span class="p">)</span></div>
 
@@ -2029,21 +2034,21 @@
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">bool</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;backreferences_dir&quot;</span><span class="p">]):</span>
         <span class="k">return</span>
 
-    <span class="n">examples_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-        <span class="n">app</span><span class="o">.</span><span class="n">srcdir</span><span class="p">,</span>
-        <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;backreferences_dir&quot;</span><span class="p">],</span>
-        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">.examples&quot;</span><span class="p">,</span>
+    <span class="n">examples_path</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">Path</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">srcdir</span><span class="p">)</span>
+        <span class="o">/</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;backreferences_dir&quot;</span><span class="p">]</span>
+        <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">.examples&quot;</span>
     <span class="p">)</span>
 
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">examples_path</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">examples_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
         <span class="c1"># touch file</span>
-        <span class="nb">open</span><span class="p">(</span><span class="n">examples_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+        <span class="n">examples_path</span><span class="o">.</span><span class="n">touch</span><span class="p">()</span></div>
 
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_expected_failing_examples</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
     <span class="k">return</span> <span class="p">{</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">],</span> <span class="n">path</span><span class="p">))</span>
+        <span class="nb">str</span><span class="p">((</span><span class="n">Path</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">])</span> <span class="o">/</span> <span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;expected_failing_examples&quot;</span><span class="p">]</span>
     <span class="p">}</span>
 
@@ -2203,7 +2208,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">update_gallery_conf_builder_inited</span><span class="p">(</span><span class="n">app</span><span class="p">:</span> <span class="n">Sphinx</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Update the the sphinx-gallery config at builder-inited.&quot;&quot;&quot;</span>
     <span class="n">plot_gallery</span> <span class="o">=</span> <span class="n">_bool_eval</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">plot_gallery</span><span class="p">)</span>
-    <span class="n">src_dir</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">)</span>
+    <span class="n">src_dir</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span>
     <span class="n">abort_on_example_error</span> <span class="o">=</span> <span class="n">_bool_eval</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">abort_on_example_error</span><span class="p">)</span>
     <span class="n">_update_gallery_conf_builder_inited</span><span class="p">(</span>
         <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">,</span>

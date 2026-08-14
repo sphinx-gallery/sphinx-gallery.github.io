@@ -536,7 +536,7 @@
     <span class="n">clean_modules</span><span class="p">,</span>
     <span class="n">save_figures</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">GalleryConfig</span><span class="p">,</span> <span class="n">Parser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">GalleryConfig</span><span class="p">,</span> <span class="n">Parser</span><span class="p">,</span> <span class="n">PathLikeStr</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">_W_KW</span><span class="p">,</span>
     <span class="n">_collect_gallery_files</span><span class="p">,</span>
@@ -598,7 +598,7 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">_LoggingTee</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A tee object to redirect streams to the logger.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src_filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src_filename</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">src_filename</span> <span class="o">=</span> <span class="n">src_filename</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger_buffer</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
@@ -839,7 +839,7 @@
 
 <div class="viewcode-block" id="extract_intro_and_title">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.extract_intro_and_title">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">extract_intro_and_title</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">docstring</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">extract_intro_and_title</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">,</span> <span class="n">docstring</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract and clean the first paragraph of module-level docstring.&quot;&quot;&quot;</span>
     <span class="c1"># lstrip is just in case docstring has a &#39;\n\n&#39; at the beginning</span>
     <span class="n">paragraphs</span> <span class="o">=</span> <span class="n">docstring</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -875,12 +875,12 @@
 
 <div class="viewcode-block" id="md5sum_is_current">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.md5sum_is_current">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">md5sum_is_current</span><span class="p">(</span><span class="n">src_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;t&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;b&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">md5sum_is_current</span><span class="p">(</span><span class="n">src_file</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;t&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;b&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Checks whether src_file has the same md5 hash as the one on disk.&quot;&quot;&quot;</span>
     <span class="n">src_md5</span> <span class="o">=</span> <span class="n">get_md5sum</span><span class="p">(</span><span class="n">src_file</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">)</span>
 
-    <span class="n">src_md5_file</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">src_file</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.md5&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">src_md5_file</span><span class="p">):</span>
+    <span class="n">src_md5_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">src_file</span><span class="si">}</span><span class="s2">.md5&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">src_md5_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
         <span class="k">return</span> <span class="kc">False</span>
 
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">src_md5_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_cs</span><span class="p">:</span>
@@ -893,8 +893,8 @@
 <div class="viewcode-block" id="save_thumbnail">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.save_thumbnail">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">save_thumbnail</span><span class="p">(</span>
-    <span class="n">image_path_template</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">src_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">image_path_template</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">,</span>
+    <span class="n">src_file</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">,</span>
     <span class="n">script_vars</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
     <span class="n">file_conf</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
     <span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span><span class="p">,</span>
@@ -903,9 +903,9 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    image_path_template : str</span>
+<span class="sd">    image_path_template : str | pathlib.Path</span>
 <span class="sd">        holds the template where to save and how to name the image</span>
-<span class="sd">    src_file : str</span>
+<span class="sd">    src_file : str | pathlib.Path</span>
 <span class="sd">        path to source python file</span>
 <span class="sd">    script_vars : dict</span>
 <span class="sd">        Configuration and run time variables</span>
@@ -915,8 +915,10 @@
 <span class="sd">    gallery_conf : dict</span>
 <span class="sd">        Sphinx-Gallery configuration dictionary</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">thumb_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">image_path_template</span><span class="p">),</span> <span class="s2">&quot;thumb&quot;</span><span class="p">)</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">thumb_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">image_path_template</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">image_path_template</span><span class="p">)</span>
+    <span class="n">src_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">src_file</span><span class="p">)</span>
+    <span class="n">thumb_dir</span> <span class="o">=</span> <span class="n">image_path_template</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;thumb&quot;</span>
+    <span class="n">thumb_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="c1"># read specification of the figure to display as thumbnail from main text</span>
     <span class="n">thumbnail_number</span> <span class="o">=</span> <span class="n">file_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;thumbnail_number&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
@@ -926,7 +928,7 @@
         <span class="c1"># If no number AND no path, set to default thumbnail_number</span>
         <span class="n">thumbnail_number</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="k">if</span> <span class="n">thumbnail_number</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">image_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">],</span> <span class="n">cast</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">thumbnail_path</span><span class="p">))</span>
+        <span class="n">image_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">])</span> <span class="o">/</span> <span class="n">cast</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">thumbnail_path</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">thumbnail_number</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
             <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
@@ -936,13 +938,13 @@
         <span class="c1"># negative index means counting from the last one</span>
         <span class="k">if</span> <span class="n">thumbnail_number</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">thumbnail_number</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">script_vars</span><span class="p">[</span><span class="s2">&quot;image_path_iterator&quot;</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span>
-        <span class="n">image_path</span> <span class="o">=</span> <span class="n">image_path_template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">thumbnail_number</span><span class="p">)</span>
+        <span class="n">image_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">image_path_template</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">thumbnail_number</span><span class="p">))</span>
     <span class="c1"># thumbnail_number wins above, so only blame thumbnail_path when it was used</span>
     <span class="n">thumbnail_path_used</span> <span class="o">=</span> <span class="n">thumbnail_number</span> <span class="ow">is</span> <span class="kc">None</span>
     <span class="k">del</span> <span class="n">thumbnail_number</span><span class="p">,</span> <span class="n">thumbnail_path</span><span class="p">,</span> <span class="n">image_path_template</span>
     <span class="n">thumbnail_image_path</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">_find_image_ext</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span>
     <span class="c1"># warn here rather than in the fallback below, which a cached thumb file skips</span>
-    <span class="k">if</span> <span class="n">thumbnail_path_used</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">thumbnail_image_path</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">thumbnail_path_used</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">thumbnail_image_path</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
             <span class="s2">&quot;sphinx_gallery_thumbnail_path &#39;</span><span class="si">%s</span><span class="s2">&#39; not found for &#39;</span><span class="si">%s</span><span class="s2">&#39;, &quot;</span>
             <span class="s2">&quot;using default thumbnail.&quot;</span><span class="p">,</span>
@@ -950,65 +952,64 @@
             <span class="n">src_file</span><span class="p">,</span>
         <span class="p">)</span>
 
-    <span class="n">base_image_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">src_file</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">thumb_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">thumb_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;sphx_glr_</span><span class="si">{</span><span class="n">base_image_name</span><span class="si">}</span><span class="s2">_thumb.</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">base_image_name</span> <span class="o">=</span> <span class="n">src_file</span><span class="o">.</span><span class="n">stem</span>
+    <span class="n">thumb_file</span> <span class="o">=</span> <span class="n">thumb_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;sphx_glr_</span><span class="si">{</span><span class="n">base_image_name</span><span class="si">}</span><span class="s2">_thumb.</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s2">&quot;</span>
 
     <span class="k">if</span> <span class="s2">&quot;formatted_exception&quot;</span> <span class="ow">in</span> <span class="n">script_vars</span> <span class="ow">and</span> <span class="n">file_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
         <span class="s2">&quot;failing_thumbnail&quot;</span><span class="p">,</span> <span class="kc">True</span>
     <span class="p">):</span>
-        <span class="n">img</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">glr_path_static</span><span class="p">(),</span> <span class="s2">&quot;broken_example.png&quot;</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">thumbnail_image_path</span><span class="p">):</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">glr_path_static</span><span class="p">())</span> <span class="o">/</span> <span class="s2">&quot;broken_example.png&quot;</span>
+    <span class="k">elif</span> <span class="n">Path</span><span class="p">(</span><span class="n">thumbnail_image_path</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
         <span class="n">img</span> <span class="o">=</span> <span class="n">thumbnail_image_path</span>
-    <span class="k">elif</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">thumb_file</span><span class="p">):</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="n">thumb_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
         <span class="c1"># create something to replace the thumbnail</span>
         <span class="n">default_thumb_path</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;default_thumb_file&quot;</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">default_thumb_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">default_thumb_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-                <span class="n">glr_path_static</span><span class="p">(),</span>
-                <span class="s2">&quot;no_image.png&quot;</span><span class="p">,</span>
-            <span class="p">)</span>
+            <span class="n">default_thumb_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">glr_path_static</span><span class="p">())</span> <span class="o">/</span> <span class="s2">&quot;no_image.png&quot;</span>
         <span class="n">img</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">_find_image_ext</span><span class="p">(</span><span class="n">default_thumb_path</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span>
     <span class="c1"># update extension, since gallery_conf setting can be different</span>
     <span class="c1"># from file_conf</span>
     <span class="c1"># Here we have to do .new.ext so that optipng and PIL behave well</span>
-    <span class="n">thumb_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">thumb_file</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">.new.</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">thumb_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">thumb_file</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">.new.</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">ext</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;svg&quot;</span><span class="p">,</span> <span class="s2">&quot;gif&quot;</span><span class="p">):</span>
         <span class="n">copyfile</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">thumb_file</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">scale_image</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">thumb_file</span><span class="p">,</span> <span class="o">*</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;thumbnail_size&quot;</span><span class="p">])</span>
         <span class="k">if</span> <span class="s2">&quot;thumbnails&quot;</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;compress_images&quot;</span><span class="p">]:</span>
             <span class="n">optipng</span><span class="p">(</span><span class="n">thumb_file</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;compress_images_args&quot;</span><span class="p">])</span>
-    <span class="n">fname_old</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">thumb_file</span><span class="p">)[</span><span class="mi">0</span><span class="p">][:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="si">}{</span><span class="n">ext</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">fname_old</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">thumb_file</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">fname_old</span> <span class="o">=</span> <span class="n">fname_old</span><span class="o">.</span><span class="n">with_name</span><span class="p">(</span><span class="n">fname_old</span><span class="o">.</span><span class="n">name</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="n">ext</span><span class="p">)</span>
     <span class="n">_replace_md5</span><span class="p">(</span><span class="n">thumb_file</span><span class="p">,</span> <span class="n">fname_old</span><span class="o">=</span><span class="n">fname_old</span><span class="p">)</span></div>
 
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_get_gallery_header</span><span class="p">(</span>
-    <span class="n">dir_</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span><span class="p">,</span> <span class="n">raise_error</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">dir_</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span><span class="p">,</span> <span class="n">raise_error</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get gallery header from GALLERY_HEADER.[ext] or README.[ext] file.</span>
 
 <span class="sd">    Returns `None` if user supplied an index.rst or no gallery header file</span>
 <span class="sd">    found and `raise_error=False`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dir_</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">dir_</span><span class="p">)</span>
     <span class="c1"># First check if user supplies an index.rst and that index.rst is in the</span>
     <span class="c1"># copyfile regexp:</span>
     <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;copyfile_regex&quot;</span><span class="p">],</span> <span class="s2">&quot;index.rst&quot;</span><span class="p">):</span>
-        <span class="n">fpth</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dir_</span><span class="p">,</span> <span class="s2">&quot;index.rst&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">fpth</span><span class="p">):</span>
+        <span class="n">fpth</span> <span class="o">=</span> <span class="n">dir_</span> <span class="o">/</span> <span class="s2">&quot;index.rst&quot;</span>
+        <span class="k">if</span> <span class="n">fpth</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
             <span class="k">return</span> <span class="kc">None</span>
     <span class="c1"># Next look for GALLERY_HEADER.[ext] (and for backward-compatibility README.[ext]</span>
     <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">iter_gallery_header_filenames</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">):</span>
-        <span class="n">fpth</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dir_</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">fpth</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">fpth</span>
+        <span class="n">fpth</span> <span class="o">=</span> <span class="n">dir_</span> <span class="o">/</span> <span class="n">fname</span>
+        <span class="k">if</span> <span class="n">fpth</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">fpth</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">raise_error</span><span class="p">:</span>
         <span class="n">extensions</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
             <span class="nb">sorted</span><span class="p">(</span>
                 <span class="nb">set</span><span class="p">(</span>
-                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">fname</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">Path</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span><span class="o">.</span><span class="n">suffix</span>
                     <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">iter_gallery_header_filenames</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">)</span>
                 <span class="p">)</span>
             <span class="p">)</span>
@@ -1025,7 +1026,7 @@
     <span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span><span class="p">,</span>
     <span class="n">user_index_rst</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
     <span class="n">is_subsection</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
-    <span class="n">target_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">target_dir</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">,</span>
     <span class="n">index_content</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">toctree_filenames</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
@@ -1036,12 +1037,11 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">index_path</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;nested_sections&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">user_index_rst</span> <span class="ow">and</span> <span class="n">is_subsection</span><span class="p">:</span>
-        <span class="n">index_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="s2">&quot;index.rst.new&quot;</span><span class="p">)</span>
-        <span class="n">head_ref</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">])</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">index_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">_W_KW</span><span class="p">)</span> <span class="k">as</span> <span class="n">findex</span><span class="p">:</span>
-            <span class="n">findex</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
-                <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">.. _sphx_glr_</span><span class="si">{}</span><span class="s2">:</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">head_ref</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">))</span>
-            <span class="p">)</span>
+        <span class="n">target_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">target_dir</span><span class="p">)</span>
+        <span class="n">index_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">target_dir</span> <span class="o">/</span> <span class="s2">&quot;index.rst.new&quot;</span><span class="p">)</span>
+        <span class="n">head_ref</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">]))</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">index_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">_W_KW</span><span class="p">)</span> <span class="k">as</span> <span class="n">findex</span><span class="p">:</span>  <span class="c1"># type: ignore [call-overload]</span>
+            <span class="n">findex</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">.. _sphx_glr_</span><span class="si">{}</span><span class="s2">:</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">head_ref</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)))</span>
             <span class="n">findex</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">index_content</span><span class="p">)</span>
             <span class="c1"># Create toctree with all gallery examples and add to index file</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">toctree_filenames</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -1053,25 +1053,29 @@
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_copy_non_example_files</span><span class="p">(</span>
     <span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span><span class="p">,</span>
-    <span class="n">src_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">header_fname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">target_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">src_dir</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">,</span>
+    <span class="n">header_fname</span><span class="p">:</span> <span class="n">PathLikeStr</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">target_dir</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Copy non-example files to `target_dir`.&quot;&quot;&quot;</span>
+    <span class="n">src_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">src_dir</span><span class="p">)</span>
+    <span class="n">target_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">target_dir</span><span class="p">)</span>
     <span class="n">copyregex</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;copyfile_regex&quot;</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">copyregex</span><span class="p">:</span>
-        <span class="n">listdir</span> <span class="o">=</span> <span class="p">[</span><span class="n">fname</span> <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">src_dir</span><span class="p">)</span> <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">copyregex</span><span class="p">,</span> <span class="n">fname</span><span class="p">)]</span>
+        <span class="n">listdir</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">fname</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">src_dir</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()</span> <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">copyregex</span><span class="p">,</span> <span class="n">fname</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="p">]</span>
         <span class="k">if</span> <span class="n">header_fname</span><span class="p">:</span>
             <span class="c1"># Don&#39;t copy over the gallery_header file</span>
             <span class="n">listdir</span> <span class="o">=</span> <span class="p">[</span><span class="n">fname</span> <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">listdir</span> <span class="k">if</span> <span class="n">fname</span> <span class="o">!=</span> <span class="n">Path</span><span class="p">(</span><span class="n">header_fname</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">listdir</span><span class="p">:</span>
-            <span class="n">src_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">))</span>
-            <span class="n">target_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
+            <span class="n">src_file</span> <span class="o">=</span> <span class="n">src_dir</span> <span class="o">/</span> <span class="n">fname</span>
+            <span class="n">target_file</span> <span class="o">=</span> <span class="n">target_dir</span> <span class="o">/</span> <span class="n">fname</span>
             <span class="n">_replace_md5</span><span class="p">(</span><span class="n">src_file</span><span class="p">,</span> <span class="n">fname_old</span><span class="o">=</span><span class="n">target_file</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;copy&quot;</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_split_parallel</span><span class="p">(</span>
-    <span class="n">sorted_listdir</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">src_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span>
+    <span class="n">sorted_listdir</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">src_dir</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Split examples into those that opt out of parallel execution, and the rest.</span>
 
@@ -1081,7 +1085,7 @@
     <span class="n">parallel_listdir</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">sorted_listdir</span><span class="p">:</span>
         <span class="n">parser</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_get_parser</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
-        <span class="n">src_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">))</span>
+        <span class="n">src_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">))</span>
         <span class="c1"># full parse rather than a cheaper regex over the file, so that we see exactly</span>
         <span class="c1"># the same file_conf as `generate_file_rst` (e.g. docstrings are excluded)</span>
         <span class="n">file_conf</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">split_code_and_text_blocks</span><span class="p">(</span><span class="n">src_file</span><span class="p">,</span> <span class="n">return_node</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
@@ -1100,8 +1104,8 @@
 <div class="viewcode-block" id="generate_dir_rst">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.generate_dir_rst">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">generate_dir_rst</span><span class="p">(</span>
-    <span class="n">src_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">target_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">src_dir</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">,</span>
+    <span class="n">target_dir</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">,</span>
     <span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span><span class="p">,</span>
     <span class="n">seen_backrefs</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
     <span class="n">is_subsection</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -1116,9 +1120,9 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    src_dir: str,</span>
+<span class="sd">    src_dir : str | pathlib.Path</span>
 <span class="sd">        Path to root or sub gallery directory containing example files</span>
-<span class="sd">    target_dir: str,</span>
+<span class="sd">    target_dir : str | pathlib.Path</span>
 <span class="sd">        Path where parsed examples (rst, python files, etc) will be outputted</span>
 <span class="sd">    gallery_conf : Dict[str, Any]</span>
 <span class="sd">        Gallery configurations.</span>
@@ -1147,6 +1151,8 @@
 <span class="sd">        full path to example target directory, intro, title.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">src_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">src_dir</span><span class="p">)</span>
+    <span class="n">target_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">target_dir</span><span class="p">)</span>
     <span class="n">index_content</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="c1"># `_get_gallery_header` returns `None` if user supplied `index.rst`</span>
     <span class="n">header_fname</span> <span class="o">=</span> <span class="n">_get_gallery_header</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
@@ -1166,11 +1172,9 @@
     <span class="n">index_content</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
 
     <span class="c1"># Make all dirs ahead of time to avoid collisions in parallel processing</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">image_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="s2">&quot;images&quot;</span><span class="p">)</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">image_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">thumb_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">image_dir</span><span class="p">,</span> <span class="s2">&quot;thumb&quot;</span><span class="p">)</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">thumb_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">image_dir</span> <span class="o">=</span> <span class="n">target_dir</span> <span class="o">/</span> <span class="s2">&quot;images&quot;</span>
+    <span class="n">thumb_dir</span> <span class="o">=</span> <span class="n">image_dir</span> <span class="o">/</span> <span class="s2">&quot;thumb&quot;</span>
+    <span class="n">thumb_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;jupyterlite&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">_add_jupyterlite_badge_logo</span><span class="p">(</span><span class="n">image_dir</span><span class="p">)</span>
 
@@ -1227,7 +1231,7 @@
     <span class="n">results_by_fname</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">serial_listdir</span> <span class="o">+</span> <span class="n">parallel_listdir</span><span class="p">,</span> <span class="n">results</span><span class="p">))</span>
     <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">sorted_listdir</span><span class="p">:</span>
         <span class="n">intro</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">mem</span><span class="p">),</span> <span class="n">out_vars</span> <span class="o">=</span> <span class="n">results_by_fname</span><span class="p">[</span><span class="n">fname</span><span class="p">]</span>
-        <span class="n">src_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">))</span>
+        <span class="n">src_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">))</span>
         <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;titles&quot;</span><span class="p">][</span><span class="n">src_file</span><span class="p">]</span> <span class="o">=</span> <span class="n">title</span>
         <span class="c1"># n.b. non-executable files have none of these three variables defined,</span>
         <span class="c1"># so the last conditional must be &quot;elif&quot; not just &quot;else&quot;</span>
@@ -1242,7 +1246,10 @@
             <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;stale_examples&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">out_vars</span><span class="p">[</span><span class="s2">&quot;stale&quot;</span><span class="p">])</span>
         <span class="n">costs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
             <span class="n">ExampleCost</span><span class="p">(</span>
-                <span class="n">execution_time</span><span class="o">=</span><span class="n">t</span><span class="p">,</span> <span class="n">memory</span><span class="o">=</span><span class="n">mem</span><span class="p">,</span> <span class="n">src_file</span><span class="o">=</span><span class="n">src_file</span><span class="p">,</span> <span class="n">target_dir</span><span class="o">=</span><span class="n">target_dir</span>
+                <span class="n">execution_time</span><span class="o">=</span><span class="n">t</span><span class="p">,</span>
+                <span class="n">memory</span><span class="o">=</span><span class="n">mem</span><span class="p">,</span>
+                <span class="n">src_file</span><span class="o">=</span><span class="n">src_file</span><span class="p">,</span>
+                <span class="n">target_dir</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">target_dir</span><span class="p">),</span>
             <span class="p">)</span>
         <span class="p">)</span>
         <span class="n">gallery_item_filename</span> <span class="o">=</span> <span class="p">(</span>
@@ -1305,7 +1312,7 @@
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.handle_exception">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">handle_exception</span><span class="p">(</span>
     <span class="n">exc_info</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">type</span><span class="p">[</span><span class="ne">BaseException</span><span class="p">],</span> <span class="ne">BaseException</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
-    <span class="n">src_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">src_file</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">,</span>
     <span class="n">script_vars</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
     <span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -1332,12 +1339,12 @@
     <span class="c1"># so we inspect the traceback to find the start and stop points.</span>
     <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">stop</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">stack</span><span class="p">)</span>
-    <span class="n">root</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span>
+    <span class="n">this_file</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;gen_rst.py&quot;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">ii</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
         <span class="c1"># Trim our internal stack</span>
         <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_sg_call_memory&quot;</span><span class="p">):</span>
             <span class="n">start</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">ii</span><span class="p">,</span> <span class="n">start</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">s</span><span class="o">.</span><span class="n">filename</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">root</span> <span class="o">+</span> <span class="s2">&quot;gen_rst.py&quot;</span><span class="p">):</span>
+        <span class="k">elif</span> <span class="n">s</span><span class="o">.</span><span class="n">filename</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">this_file</span><span class="p">):</span>
             <span class="c1"># SyntaxError</span>
             <span class="k">if</span> <span class="p">(</span>
                 <span class="n">s</span><span class="o">.</span><span class="n">line</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
@@ -1455,9 +1462,10 @@
     <span class="k">return</span> <span class="n">memory_base</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_get_parser</span><span class="p">(</span><span class="n">fname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Parser</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_parser</span><span class="p">(</span><span class="n">fname</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Parser</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get parser and language.&quot;&quot;&quot;</span>
     <span class="n">parser</span><span class="p">:</span> <span class="n">Parser</span>
+    <span class="n">fname</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">fname</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.py&quot;</span><span class="p">):</span>
         <span class="n">parser</span> <span class="o">=</span> <span class="n">py_source_parser</span>
         <span class="n">language</span> <span class="o">=</span> <span class="s2">&quot;Python&quot;</span>
@@ -1470,7 +1478,7 @@
     <span class="k">return</span> <span class="n">parser</span><span class="p">,</span> <span class="n">language</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_check_reset_logging_tee</span><span class="p">(</span><span class="n">src_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_LoggingTee</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_check_reset_logging_tee</span><span class="p">(</span><span class="n">src_file</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_LoggingTee</span><span class="p">:</span>
     <span class="c1"># Helper to deal with our tests not necessarily calling execute_script</span>
     <span class="c1"># but rather execute_code_block directly</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">_LoggingTee</span><span class="p">):</span>
@@ -1689,7 +1697,7 @@
 
     <span class="c1"># First cd in the original example dir, so that any file</span>
     <span class="c1"># created by the example get created in this directory</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">src_file</span><span class="p">))</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">src_file</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="p">)</span>
 
     <span class="n">sys_path</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
     <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span>
@@ -1775,12 +1783,12 @@
 
 <div class="viewcode-block" id="executable_script">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.executable_script">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">executable_script</span><span class="p">(</span><span class="n">src_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">executable_script</span><span class="p">(</span><span class="n">src_file</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate if script has to be run according to gallery configuration.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    src_file : str</span>
+<span class="sd">    src_file : str | pathlib.Path</span>
 <span class="sd">        path to python script</span>
 
 <span class="sd">    gallery_conf : dict</span>
@@ -1793,7 +1801,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">filename_pattern</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;filename_pattern&quot;</span><span class="p">]</span>
     <span class="n">execute</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span>
-        <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">filename_pattern</span><span class="p">,</span> <span class="n">src_file</span><span class="p">)</span> <span class="ow">and</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;plot_gallery&quot;</span><span class="p">]</span>
+        <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">filename_pattern</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">src_file</span><span class="p">))</span> <span class="ow">and</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;plot_gallery&quot;</span><span class="p">]</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">execute</span></div>
 
@@ -1925,9 +1933,9 @@
                 <span class="p">)</span>
 
             <span class="n">image_path_iterator</span> <span class="o">=</span> <span class="n">script_vars</span><span class="p">[</span><span class="s2">&quot;image_path_iterator&quot;</span><span class="p">]</span>
-            <span class="n">stock_img</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">glr_path_static</span><span class="p">(),</span> <span class="s2">&quot;no_image.png&quot;</span><span class="p">)</span>
+            <span class="n">stock_img</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">glr_path_static</span><span class="p">(),</span> <span class="s2">&quot;no_image.png&quot;</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">path</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">dummy_image</span><span class="p">),</span> <span class="n">image_path_iterator</span><span class="p">):</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
                     <span class="n">copyfile</span><span class="p">(</span><span class="n">stock_img</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
 
 
@@ -2052,17 +2060,20 @@
 <div class="viewcode-block" id="generate_file_rst">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.generate_file_rst">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">generate_file_rst</span><span class="p">(</span>
-    <span class="n">fname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span>
+    <span class="n">fname</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">,</span>
+    <span class="n">target_dir</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">,</span>
+    <span class="n">src_dir</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">,</span>
+    <span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate the rst file for a given example.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    fname : str</span>
+<span class="sd">    fname : str | pathlib.Path</span>
 <span class="sd">        Filename of python script.</span>
-<span class="sd">    target_dir : str</span>
+<span class="sd">    target_dir : str | pathlib.Path</span>
 <span class="sd">        Absolute path to directory in documentation where examples are saved.</span>
-<span class="sd">    src_dir : str</span>
+<span class="sd">    src_dir : str | pathlib.Path</span>
 <span class="sd">        Absolute path to directory where source examples are stored.</span>
 <span class="sd">    gallery_conf : dict</span>
 <span class="sd">        Contains the configuration of Sphinx-Gallery.</span>
@@ -2088,9 +2099,10 @@
 <span class="sd">        &quot;formatted_exception&quot;</span>
 <span class="sd">            Formatted string of the exception.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">src_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">))</span>
+    <span class="n">target_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">target_dir</span><span class="p">)</span>
+    <span class="n">src_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">fname</span><span class="p">))</span>
     <span class="n">out_vars</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-    <span class="n">target_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">target_dir</span><span class="p">)</span> <span class="o">/</span> <span class="n">fname</span>
+    <span class="n">target_file</span> <span class="o">=</span> <span class="n">target_dir</span> <span class="o">/</span> <span class="n">fname</span>
     <span class="n">_replace_md5</span><span class="p">(</span><span class="n">src_file</span><span class="p">,</span> <span class="n">target_file</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;copy&quot;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;t&quot;</span><span class="p">)</span>
 
     <span class="n">parser</span><span class="p">,</span> <span class="n">language</span> <span class="o">=</span> <span class="n">_get_parser</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
@@ -2120,12 +2132,12 @@
             <span class="n">out_vars</span><span class="p">[</span><span class="s2">&quot;backrefs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_read_cached_backrefs</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">target_file</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">intro</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">_read_cached_cost</span><span class="p">(</span><span class="n">target_file</span><span class="p">),</span> <span class="n">out_vars</span>
 
-    <span class="n">image_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="s2">&quot;images&quot;</span><span class="p">)</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">image_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">image_dir</span> <span class="o">=</span> <span class="n">target_dir</span> <span class="o">/</span> <span class="s2">&quot;images&quot;</span>
+    <span class="n">image_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="n">base_image_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">fname</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">base_image_name</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span><span class="o">.</span><span class="n">stem</span>
     <span class="n">image_fname</span> <span class="o">=</span> <span class="s2">&quot;sphx_glr_&quot;</span> <span class="o">+</span> <span class="n">base_image_name</span> <span class="o">+</span> <span class="s2">&quot;_</span><span class="si">{0:03}</span><span class="s2">.png&quot;</span>
-    <span class="n">image_path_template</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">image_dir</span><span class="p">,</span> <span class="n">image_fname</span><span class="p">)</span>
+    <span class="n">image_path_template</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">image_dir</span> <span class="o">/</span> <span class="n">image_fname</span><span class="p">)</span>
 
     <span class="n">script_vars</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;execute_script&quot;</span><span class="p">:</span> <span class="n">executable</span><span class="p">,</span>
@@ -2188,7 +2200,7 @@
         <span class="n">files_to_zip</span> <span class="o">+=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">target_file</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">&quot;.ipynb&quot;</span><span class="p">))]</span>
 
     <span class="c1"># Produce the zip file of all sources</span>
-    <span class="n">zip_files</span><span class="p">(</span><span class="n">files_to_zip</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">target_file</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">&quot;.zip&quot;</span><span class="p">)),</span> <span class="n">target_dir</span><span class="p">)</span>
+    <span class="n">zip_files</span><span class="p">(</span><span class="n">files_to_zip</span><span class="p">,</span> <span class="n">target_file</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">&quot;.zip&quot;</span><span class="p">),</span> <span class="n">target_dir</span><span class="p">)</span>
 
     <span class="c1"># Get names</span>
     <span class="n">out_vars</span><span class="p">[</span><span class="s2">&quot;backrefs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_get_backreferences</span><span class="p">(</span>
@@ -2323,7 +2335,7 @@
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.save_rst_example">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">save_rst_example</span><span class="p">(</span>
     <span class="n">example_rst</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">example_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">,</span>
+    <span class="n">example_file</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">,</span>
     <span class="n">time_elapsed</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="n">memory_used</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span><span class="p">,</span>
@@ -2337,7 +2349,7 @@
 <span class="sd">    ----------</span>
 <span class="sd">    example_rst : str</span>
 <span class="sd">        rst containing the executed file content</span>
-<span class="sd">    example_file : str | os.PathLike</span>
+<span class="sd">    example_file : str | pathlib.Path</span>
 <span class="sd">        Filename with full path of python example file in documentation folder</span>
 <span class="sd">    language : str</span>
 <span class="sd">        Name of the programming language the example is in</span>
@@ -2351,8 +2363,9 @@
 <span class="sd">        The file conf options</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">example_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">example_file</span><span class="p">)</span>
-    <span class="n">example_fname</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">example_file</span><span class="o">.</span><span class="n">relative_to</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">]))</span>
-    <span class="n">ref_fname</span> <span class="o">=</span> <span class="n">example_fname</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
+    <span class="n">example_path</span> <span class="o">=</span> <span class="n">example_file</span><span class="o">.</span><span class="n">relative_to</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">])</span>
+    <span class="n">example_fname</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">example_path</span><span class="p">)</span>
+    <span class="n">ref_fname</span> <span class="o">=</span> <span class="n">example_path</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
 
     <span class="n">binder_conf</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;binder&quot;</span><span class="p">]</span>
     <span class="n">is_binder_enabled</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">binder_conf</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
@@ -2413,7 +2426,7 @@
 
     <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;recommender&quot;</span><span class="p">][</span><span class="s2">&quot;enable&quot;</span><span class="p">]:</span>
         <span class="c1"># extract the filename without the extension</span>
-        <span class="n">recommend_fname</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">example_fname</span><span class="p">)</span><span class="o">.</span><span class="n">stem</span>
+        <span class="n">recommend_fname</span> <span class="o">=</span> <span class="n">example_path</span><span class="o">.</span><span class="n">stem</span>
         <span class="n">example_rst</span> <span class="o">+=</span> <span class="n">RECOMMENDATIONS_INCLUDE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">recommend_fname</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;show_signature&quot;</span><span class="p">]:</span>
@@ -2433,7 +2446,7 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_get_callables</span><span class="p">(</span>
-    <span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">src_dir</span><span class="p">:</span> <span class="n">PathLikeStr</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="o">...</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get callables for the given conf key, returning tuple of callable(s).</span>
 
