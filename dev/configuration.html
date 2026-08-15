@@ -656,6 +656,8 @@ For example, to remove the specific Matplotlib agg warning, you can add:</p>
 </div>
 <p>to your <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file.</p>
 <p>Note that the above Matplotlib warning is removed by default.</p>
+<p>This section is about warnings raised by your example code. To silence warnings
+raised by Sphinx-Gallery itself, see <a class="reference internal" href="#suppressing-warnings"><span class="std std-ref">Suppressing Sphinx-Gallery warnings</span></a>.</p>
 </section>
 <section id="importing-callables">
 <span id="id3"></span><h2>Importing callables<a class="headerlink" href="#importing-callables" title="Link to this heading">#</a></h2>
@@ -1835,6 +1837,49 @@ The log level can be set with:</p>
 </div>
 <p>The only valid key currently is <code class="docutils literal notranslate"><span class="pre">backreference_missing</span></code>.
 The valid values are <code class="docutils literal notranslate"><span class="pre">'debug'</span></code>, <code class="docutils literal notranslate"><span class="pre">'info'</span></code>, <code class="docutils literal notranslate"><span class="pre">'warning'</span></code>, and <code class="docutils literal notranslate"><span class="pre">'error'</span></code>.</p>
+</section>
+<section id="suppressing-sphinx-gallery-warnings">
+<span id="suppressing-warnings"></span><h2>Suppressing Sphinx-Gallery warnings<a class="headerlink" href="#suppressing-sphinx-gallery-warnings" title="Link to this heading">#</a></h2>
+<p>Every warning Sphinx-Gallery emits is tagged with the warning type
+<code class="docutils literal notranslate"><span class="pre">sphinx_gallery</span></code> and a subtype naming the kind of problem, so Sphinx’s
+<a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-suppress_warnings" title="(in Sphinx v9.1.1)"><code class="docutils literal notranslate"><span class="pre">suppress_warnings</span></code></a> can silence them by category. This is most
+useful when building with <code class="docutils literal notranslate"><span class="pre">-W</span></code>, where an unwanted warning otherwise fails the
+whole build. For example, to keep building when an example file name is
+duplicated across galleries:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">suppress_warnings</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;sphinx_gallery.duplicate_filename&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Giving the type on its own silences all Sphinx-Gallery warnings:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">suppress_warnings</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;sphinx_gallery&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>The subtypes, and what each one warns about, are:</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">backreference_missing</span></code></dt><dd><p>A backreference file that was not written, usually because the filesystem
+is not case sensitive (see <a class="reference internal" href="#log-level"><span class="std std-ref">Setting log level</span></a>).</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">config</span></code></dt><dd><p>A configuration value that could not be honoured, and was ignored or
+overridden.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">dependency</span></code></dt><dd><p>An optional dependency that is not installed, such as <code class="docutils literal notranslate"><span class="pre">optipng</span></code>,
+<code class="docutils literal notranslate"><span class="pre">pypandoc</span></code> or <code class="docutils literal notranslate"><span class="pre">memory_profiler</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">duplicate_filename</span></code></dt><dd><p>Example files sharing a name across gallery directories, which breaks some
+links.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">example_error</span></code></dt><dd><p>An example that failed to execute (see <a class="reference internal" href="#warning-on-error"><span class="std std-ref">Never fail the build on error</span></a>).</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">file_conf</span></code></dt><dd><p>An invalid <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">sphinx_gallery_*</span></code> setting in an example file.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">space_in_filename</span></code></dt><dd><p>Example file names containing spaces, which breaks some links.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">thumbnail</span></code></dt><dd><p>A <code class="docutils literal notranslate"><span class="pre">sphinx_gallery_thumbnail_path</span></code> that does not exist (see
+<a class="reference internal" href="#providing-thumbnail"><span class="std std-ref">Providing an image for the thumbnail image</span></a>).</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">url_fetch</span></code></dt><dd><p>A documentation inventory that could not be fetched (see
+<a class="reference internal" href="#link-to-documentation"><span class="std std-ref">Add intersphinx links to your examples</span></a>).</p>
+</dd>
+</dl>
 </section>
 <section id="disabling-download-button-of-all-scripts">
 <span id="disable-all-scripts-download"></span><h2>Disabling download button of all scripts<a class="headerlink" href="#disabling-download-button-of-all-scripts" title="Link to this heading">#</a></h2>
@@ -3286,6 +3331,7 @@ in HTML documents might not render correctly, specifically <code class="docutils
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setting-log-level">Setting log level</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#suppressing-sphinx-gallery-warnings">Suppressing Sphinx-Gallery warnings</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#disabling-download-button-of-all-scripts">Disabling download button of all scripts</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#choosing-the-thumbnail-image">Choosing the thumbnail image</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#providing-an-image-for-the-thumbnail-image">Providing an image for the thumbnail image</a></li>

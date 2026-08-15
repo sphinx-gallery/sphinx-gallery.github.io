@@ -495,7 +495,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">.gen_rst</span><span class="w"> </span><span class="kn">import</span> <span class="n">extract_intro_and_title</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.py_source_parser</span><span class="w"> </span><span class="kn">import</span> <span class="n">split_code_and_text_blocks</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">PathLikeStr</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">_read_json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">WARNING_TYPE</span><span class="p">,</span> <span class="n">_read_json</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">sphinx.application</span>
@@ -612,7 +612,9 @@
         <span class="k">if</span> <span class="n">backreferences_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
                 <span class="s2">&quot;&#39;backreferences_dir&#39; config is None, minigallery &quot;</span>
-                <span class="s2">&quot;directive will resolve all inputs as file paths or globs.&quot;</span>
+                <span class="s2">&quot;directive will resolve all inputs as file paths or globs.&quot;</span><span class="p">,</span>
+                <span class="nb">type</span><span class="o">=</span><span class="n">WARNING_TYPE</span><span class="p">,</span>
+                <span class="n">subtype</span><span class="o">=</span><span class="s2">&quot;config&quot;</span><span class="p">,</span>
             <span class="p">)</span>
 
         <span class="c1"># Retrieve source directory</span>

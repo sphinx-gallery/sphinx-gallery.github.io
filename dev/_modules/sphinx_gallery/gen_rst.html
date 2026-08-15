@@ -539,6 +539,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">GalleryConfig</span><span class="p">,</span> <span class="n">Parser</span><span class="p">,</span> <span class="n">PathLikeStr</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">_W_KW</span><span class="p">,</span>
+    <span class="n">WARNING_TYPE</span><span class="p">,</span>
     <span class="n">_collect_gallery_files</span><span class="p">,</span>
     <span class="n">_combine_backreferences</span><span class="p">,</span>
     <span class="n">_format_toctree</span><span class="p">,</span>
@@ -950,6 +951,8 @@
             <span class="s2">&quot;using default thumbnail.&quot;</span><span class="p">,</span>
             <span class="n">image_path</span><span class="p">,</span>
             <span class="n">src_file</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="n">WARNING_TYPE</span><span class="p">,</span>
+            <span class="n">subtype</span><span class="o">=</span><span class="s2">&quot;thumbnail&quot;</span><span class="p">,</span>
         <span class="p">)</span>
 
     <span class="n">base_image_name</span> <span class="o">=</span> <span class="n">src_file</span><span class="o">.</span><span class="n">stem</span>
@@ -1095,6 +1098,8 @@
                 <span class="s2">&quot;sphinx_gallery_parallel setting is not a boolean, got </span><span class="si">%r</span><span class="s2"> in file </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
                 <span class="n">run_parallel</span><span class="p">,</span>
                 <span class="n">fname</span><span class="p">,</span>
+                <span class="nb">type</span><span class="o">=</span><span class="n">WARNING_TYPE</span><span class="p">,</span>
+                <span class="n">subtype</span><span class="o">=</span><span class="s2">&quot;file_conf&quot;</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="n">run_parallel</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="p">(</span><span class="n">parallel_listdir</span> <span class="k">if</span> <span class="n">run_parallel</span> <span class="k">else</span> <span class="n">serial_listdir</span><span class="p">)</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
@@ -1377,6 +1382,8 @@
             <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">bold</span><span class="p">(</span><span class="n">red</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">))</span><span class="si">}</span><span class="s2"> unexpectedly failed to execute correctly:</span><span class="se">\n\n</span><span class="s2">%s&quot;</span><span class="p">,</span>
             <span class="n">src_file_rel</span><span class="p">,</span>
             <span class="n">red</span><span class="p">(</span><span class="n">indent</span><span class="p">(</span><span class="n">formatted_exception</span><span class="p">,</span> <span class="s2">&quot;    &quot;</span><span class="p">)),</span>
+            <span class="nb">type</span><span class="o">=</span><span class="n">WARNING_TYPE</span><span class="p">,</span>
+            <span class="n">subtype</span><span class="o">=</span><span class="s2">&quot;example_error&quot;</span><span class="p">,</span>
         <span class="p">)</span>
 
     <span class="n">except_rst</span> <span class="o">=</span> <span class="n">codestr2rst</span><span class="p">(</span><span class="n">formatted_exception</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;pytb&quot;</span><span class="p">)</span>
@@ -2554,7 +2561,9 @@
             <span class="k">if</span> <span class="n">update</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
                     <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;show_memory&#39;</span><span class="p">]</span><span class="si">=}</span><span class="s2"> disabled due to &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;parallel&#39;</span><span class="p">]</span><span class="si">=}</span><span class="s2">.&quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">&#39;parallel&#39;</span><span class="p">]</span><span class="si">=}</span><span class="s2">.&quot;</span><span class="p">,</span>
+                    <span class="nb">type</span><span class="o">=</span><span class="n">WARNING_TYPE</span><span class="p">,</span>
+                    <span class="n">subtype</span><span class="o">=</span><span class="s2">&quot;config&quot;</span><span class="p">,</span>
                 <span class="p">)</span>
                 <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;show_memory&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">else</span><span class="p">:</span>
@@ -2588,7 +2597,9 @@
         <span class="kn">from</span><span class="w"> </span><span class="nn">memory_profiler</span><span class="w"> </span><span class="kn">import</span> <span class="n">memory_usage</span>  <span class="c1"># noqa</span>
     <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-            <span class="s2">&quot;Please install &#39;memory_profiler&#39; to enable peak memory measurements.&quot;</span>
+            <span class="s2">&quot;Please install &#39;memory_profiler&#39; to enable peak memory measurements.&quot;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="n">WARNING_TYPE</span><span class="p">,</span>
+            <span class="n">subtype</span><span class="o">=</span><span class="s2">&quot;dependency&quot;</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="kc">None</span>
     <span class="k">else</span><span class="p">:</span>

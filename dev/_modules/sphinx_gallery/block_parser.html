@@ -486,6 +486,7 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">.py_source_parser</span><span class="w"> </span><span class="kn">import</span> <span class="n">FLAG_BODY</span><span class="p">,</span> <span class="n">Block</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">GalleryConfig</span><span class="p">,</span> <span class="n">PathLikeStr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">WARNING_TYPE</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;sphinx-gallery&quot;</span><span class="p">)</span>
 
@@ -821,7 +822,11 @@
                 <span class="n">value</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
             <span class="k">except</span> <span class="p">(</span><span class="ne">SyntaxError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                    <span class="s2">&quot;Sphinx-gallery option </span><span class="si">%s</span><span class="s2"> was passed invalid value </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span>
+                    <span class="s2">&quot;Sphinx-gallery option </span><span class="si">%s</span><span class="s2"> was passed invalid value </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="n">name</span><span class="p">,</span>
+                    <span class="n">value</span><span class="p">,</span>
+                    <span class="nb">type</span><span class="o">=</span><span class="n">WARNING_TYPE</span><span class="p">,</span>
+                    <span class="n">subtype</span><span class="o">=</span><span class="s2">&quot;file_conf&quot;</span><span class="p">,</span>
                 <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">file_conf</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>

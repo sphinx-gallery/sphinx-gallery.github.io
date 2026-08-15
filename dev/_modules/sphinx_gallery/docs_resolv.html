@@ -503,7 +503,7 @@
     <span class="n">LinkType</span><span class="p">,</span>
     <span class="n">PathLikeStr</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">_W_KW</span><span class="p">,</span> <span class="n">_read_json</span><span class="p">,</span> <span class="n">status_iterator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">_W_KW</span><span class="p">,</span> <span class="n">WARNING_TYPE</span><span class="p">,</span> <span class="n">_read_json</span><span class="p">,</span> <span class="n">status_iterator</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">sphinx</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;sphinx-gallery&quot;</span><span class="p">)</span>
 
@@ -799,7 +799,9 @@
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">URLError</span><span class="p">):</span>
         <span class="n">error_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">msg</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-        <span class="s2">&quot;The following </span><span class="si">{}</span><span class="s2"> has occurred </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">error_msg</span><span class="p">)</span>
+        <span class="s2">&quot;The following </span><span class="si">{}</span><span class="s2"> has occurred </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">error_msg</span><span class="p">),</span>
+        <span class="nb">type</span><span class="o">=</span><span class="n">WARNING_TYPE</span><span class="p">,</span>
+        <span class="n">subtype</span><span class="o">=</span><span class="s2">&quot;url_fetch&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
 
