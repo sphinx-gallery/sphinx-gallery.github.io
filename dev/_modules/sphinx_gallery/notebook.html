@@ -471,10 +471,10 @@
                 <article class="bd-article">
                   
   <h1>Source code for sphinx_gallery.notebook</h1><div class="highlight"><pre>
-<span></span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Parser for Jupyter notebooks.</span>
+<span></span><span class="sa">r</span><span class="sd">"""Parser for Jupyter notebooks.</span>
 
 <span class="sd">Class that holds the Jupyter notebook information</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="c1"># Author: Óscar Nájera</span>
 <span class="c1"># License: 3-clause BSD</span>
@@ -500,39 +500,39 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">.py_source_parser</span><span class="w"> </span><span class="kn">import</span> <span class="n">Block</span><span class="p">,</span> <span class="n">split_code_and_text_blocks</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">GalleryConfig</span><span class="p">,</span> <span class="n">PathLikeStr</span>
 
-<span class="n">logger</span> <span class="o">=</span> <span class="n">sphinx</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;sphinx-gallery&quot;</span><span class="p">)</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">sphinx</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">"sphinx-gallery"</span><span class="p">)</span>
 
 <span class="n">NotebookContent</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="sd">A hierarchical mapping mirroring the JSON structure of a Jupyter notebook.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 
 <div class="viewcode-block" id="jupyter_notebook_skeleton">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.notebook.html#sphinx_gallery.notebook.jupyter_notebook_skeleton">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">jupyter_notebook_skeleton</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">NotebookContent</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a dictionary with the elements of a Jupyter notebook.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Returns a dictionary with the elements of a Jupyter notebook."""</span>
     <span class="n">py_version</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span>
     <span class="n">notebook_skeleton</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;cells&quot;</span><span class="p">:</span> <span class="p">[],</span>
-        <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;kernelspec&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;display_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Python &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">py_version</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
-                <span class="s2">&quot;language&quot;</span><span class="p">:</span> <span class="s2">&quot;python&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;python&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">py_version</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+        <span class="s2">"cells"</span><span class="p">:</span> <span class="p">[],</span>
+        <span class="s2">"metadata"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"kernelspec"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"display_name"</span><span class="p">:</span> <span class="s2">"Python "</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">py_version</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+                <span class="s2">"language"</span><span class="p">:</span> <span class="s2">"python"</span><span class="p">,</span>
+                <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"python"</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">py_version</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
             <span class="p">},</span>
-            <span class="s2">&quot;language_info&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;codemirror_mode&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;ipython&quot;</span><span class="p">,</span> <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="n">py_version</span><span class="p">[</span><span class="mi">0</span><span class="p">]},</span>
-                <span class="s2">&quot;file_extension&quot;</span><span class="p">:</span> <span class="s2">&quot;.py&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;mimetype&quot;</span><span class="p">:</span> <span class="s2">&quot;text/x-python&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;python&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;nbconvert_exporter&quot;</span><span class="p">:</span> <span class="s2">&quot;python&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;pygments_lexer&quot;</span><span class="p">:</span> <span class="s2">&quot;ipython&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">py_version</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
-                <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">.</span><span class="si">{}</span><span class="s2">.</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[:</span><span class="mi">3</span><span class="p">]),</span>
+            <span class="s2">"language_info"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"codemirror_mode"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"ipython"</span><span class="p">,</span> <span class="s2">"version"</span><span class="p">:</span> <span class="n">py_version</span><span class="p">[</span><span class="mi">0</span><span class="p">]},</span>
+                <span class="s2">"file_extension"</span><span class="p">:</span> <span class="s2">".py"</span><span class="p">,</span>
+                <span class="s2">"mimetype"</span><span class="p">:</span> <span class="s2">"text/x-python"</span><span class="p">,</span>
+                <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"python"</span><span class="p">,</span>
+                <span class="s2">"nbconvert_exporter"</span><span class="p">:</span> <span class="s2">"python"</span><span class="p">,</span>
+                <span class="s2">"pygments_lexer"</span><span class="p">:</span> <span class="s2">"ipython"</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">py_version</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+                <span class="s2">"version"</span><span class="p">:</span> <span class="s2">"</span><span class="si">{}</span><span class="s2">.</span><span class="si">{}</span><span class="s2">.</span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[:</span><span class="mi">3</span><span class="p">]),</span>
             <span class="p">},</span>
         <span class="p">},</span>
-        <span class="s2">&quot;nbformat&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
-        <span class="s2">&quot;nbformat_minor&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">"nbformat"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="s2">"nbformat_minor"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="n">notebook_skeleton</span></div>
 
@@ -541,9 +541,9 @@
 <div class="viewcode-block" id="directive_fun">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.notebook.html#sphinx_gallery.notebook.directive_fun">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">directive_fun</span><span class="p">(</span><span class="n">match</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">Match</span><span class="p">,</span> <span class="n">directive</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper to fill in directives.&quot;&quot;&quot;</span>
-    <span class="n">directive_to_alert</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">note</span><span class="o">=</span><span class="s2">&quot;info&quot;</span><span class="p">,</span> <span class="n">warning</span><span class="o">=</span><span class="s2">&quot;danger&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="s1">&#39;&lt;div class=&quot;alert alert-</span><span class="si">{}</span><span class="s1">&quot;&gt;&lt;h4&gt;</span><span class="si">{}</span><span class="s1">&lt;/h4&gt;&lt;p&gt;</span><span class="si">{}</span><span class="s1">&lt;/p&gt;&lt;/div&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">"""Helper to fill in directives."""</span>
+    <span class="n">directive_to_alert</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">note</span><span class="o">=</span><span class="s2">"info"</span><span class="p">,</span> <span class="n">warning</span><span class="o">=</span><span class="s2">"danger"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s1">'&lt;div class="alert alert-</span><span class="si">{}</span><span class="s1">"&gt;&lt;h4&gt;</span><span class="si">{}</span><span class="s1">&lt;/h4&gt;&lt;p&gt;</span><span class="si">{}</span><span class="s1">&lt;/p&gt;&lt;/div&gt;'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
         <span class="n">directive_to_alert</span><span class="p">[</span><span class="n">directive</span><span class="p">],</span> <span class="n">directive</span><span class="o">.</span><span class="n">capitalize</span><span class="p">(),</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
     <span class="p">)</span></div>
 
@@ -552,7 +552,7 @@
 <div class="viewcode-block" id="convert_code_to_md">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.notebook.html#sphinx_gallery.notebook.convert_code_to_md">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">convert_code_to_md</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Rewrite code blocks to use Markdown&#39;s preferred backtick notation.</span>
+<span class="w">    </span><span class="sd">"""Rewrite code blocks to use Markdown's preferred backtick notation.</span>
 
 <span class="sd">    Backtick notation preserves syntax highlighting.</span>
 
@@ -561,8 +561,8 @@
 <span class="sd">    text: str</span>
 <span class="sd">        A mostly converted string of markdown text. May contain zero, one,</span>
 <span class="sd">        or multiple code blocks in code-block format.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">code_regex</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;[ \t]*\.\. code-block::[ \t]*(\S*)\n[ \t]*\n([ \t]+)&quot;</span>
+<span class="sd">    """</span>
+    <span class="n">code_regex</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">"[ \t]*\.\. code-block::[ \t]*(\S*)\n[ \t]*\n([ \t]+)"</span>
     <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
         <span class="n">code_block</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">code_regex</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">code_block</span><span class="p">:</span>
@@ -571,12 +571,12 @@
         <span class="n">start_index</span> <span class="o">=</span> <span class="n">code_block</span><span class="o">.</span><span class="n">span</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">indent</span><span class="p">)</span>
 
         <span class="c1"># Find first non-empty, non-indented line</span>
-        <span class="n">end</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">rf</span><span class="s2">&quot;^(?!</span><span class="si">{</span><span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">indent</span><span class="p">)</span><span class="si">}</span><span class="s2">)[ \t]*\S+&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span><span class="p">)</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">rf</span><span class="s2">"^(?!</span><span class="si">{</span><span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">indent</span><span class="p">)</span><span class="si">}</span><span class="s2">)[ \t]*\S+"</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span><span class="p">)</span>
         <span class="n">code_end_match</span> <span class="o">=</span> <span class="n">end</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">start_index</span><span class="p">)</span>
         <span class="n">end_index</span> <span class="o">=</span> <span class="n">code_end_match</span><span class="o">.</span><span class="n">start</span><span class="p">()</span> <span class="k">if</span> <span class="n">code_end_match</span> <span class="k">else</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
 
         <span class="n">contents</span> <span class="o">=</span> <span class="n">textwrap</span><span class="o">.</span><span class="n">dedent</span><span class="p">(</span><span class="n">text</span><span class="p">[</span><span class="n">start_index</span><span class="p">:</span><span class="n">end_index</span><span class="p">])</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span>
-        <span class="n">new_code</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;```</span><span class="si">{</span><span class="n">code_block</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">contents</span><span class="si">}</span><span class="se">\n</span><span class="s2">```</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">new_code</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"```</span><span class="si">{</span><span class="n">code_block</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">contents</span><span class="si">}</span><span class="se">\n</span><span class="s2">```</span><span class="se">\n</span><span class="s2">"</span>
         <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="p">[:</span> <span class="n">code_block</span><span class="o">.</span><span class="n">span</span><span class="p">()[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">+</span> <span class="n">new_code</span> <span class="o">+</span> <span class="n">text</span><span class="p">[</span><span class="n">end_index</span><span class="p">:]</span>
     <span class="k">return</span> <span class="n">text</span></div>
 
@@ -590,7 +590,7 @@
     <span class="n">target_dir</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">,</span>
     <span class="n">heading_levels</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="nb">int</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts reST from docstrings and text blocks to markdown for Jupyter notebooks.</span>
+<span class="w">    </span><span class="sd">"""Converts reST from docstrings and text blocks to markdown for Jupyter notebooks.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -604,67 +604,67 @@
 <span class="sd">    heading_levels: dict</span>
 <span class="sd">        Mapping of heading style ``(over_char, under_char)`` to heading level.</span>
 <span class="sd">        Note that ``over_char`` is `None` when only underline is present.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Characters recommended for use with headings</span>
     <span class="c1"># https://docutils.readthedocs.io/en/sphinx-docs/user/rst/quickstart.html#sections</span>
-    <span class="n">adornment_characters</span> <span class="o">=</span> <span class="s2">&quot;=`:.&#39;</span><span class="se">\&quot;</span><span class="s2">~^_*+#&lt;&gt;-&quot;</span>
+    <span class="n">adornment_characters</span> <span class="o">=</span> <span class="s2">"=`:.'</span><span class="se">\"</span><span class="s2">~^_*+#&lt;&gt;-"</span>
     <span class="n">headings</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
         <span class="c1"># Start of string or blank line</span>
-        <span class="sa">r</span><span class="s2">&quot;(?P&lt;pre&gt;\A|^[ \t]*\n)&quot;</span>
+        <span class="sa">r</span><span class="s2">"(?P&lt;pre&gt;\A|^[ \t]*\n)"</span>
         <span class="c1"># Optional over characters, allowing leading space on heading text</span>
-        <span class="sa">r</span><span class="s2">&quot;(?:(?P&lt;over&gt;[</span><span class="si">{0}</span><span class="s2">])(?P=over)*\n[ \t]*)?&quot;</span>
+        <span class="sa">r</span><span class="s2">"(?:(?P&lt;over&gt;[</span><span class="si">{0}</span><span class="s2">])(?P=over)*\n[ \t]*)?"</span>
         <span class="c1"># The heading itself, with at least one non-white space character</span>
-        <span class="sa">r</span><span class="s2">&quot;(?P&lt;heading&gt;\S[^\n]*)\n&quot;</span>
+        <span class="sa">r</span><span class="s2">"(?P&lt;heading&gt;\S[^\n]*)\n"</span>
         <span class="c1"># Under character, setting to same character if over present.</span>
-        <span class="sa">r</span><span class="s2">&quot;(?P&lt;under&gt;(?(over)(?P=over)|[</span><span class="si">{0}</span><span class="s2">]))(?P=under)*$&quot;</span>
-        <span class="sa">r</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">adornment_characters</span><span class="p">),</span>
+        <span class="sa">r</span><span class="s2">"(?P&lt;under&gt;(?(over)(?P=over)|[</span><span class="si">{0}</span><span class="s2">]))(?P=under)*$"</span>
+        <span class="sa">r</span><span class="s2">""</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">adornment_characters</span><span class="p">),</span>
         <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">M</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span>
         <span class="n">headings</span><span class="p">,</span>
-        <span class="k">lambda</span> <span class="n">match</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{1}{0}</span><span class="s2"> </span><span class="si">{2}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-            <span class="s2">&quot;#&quot;</span> <span class="o">*</span> <span class="n">heading_levels</span><span class="p">[(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;over&quot;</span><span class="p">),</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;under&quot;</span><span class="p">))],</span>
-            <span class="o">*</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;pre&quot;</span><span class="p">,</span> <span class="s2">&quot;heading&quot;</span><span class="p">),</span>
+        <span class="k">lambda</span> <span class="n">match</span><span class="p">:</span> <span class="s2">"</span><span class="si">{1}{0}</span><span class="s2"> </span><span class="si">{2}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="s2">"#"</span> <span class="o">*</span> <span class="n">heading_levels</span><span class="p">[(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">"over"</span><span class="p">),</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">"under"</span><span class="p">))],</span>
+            <span class="o">*</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">"pre"</span><span class="p">,</span> <span class="s2">"heading"</span><span class="p">),</span>
         <span class="p">),</span>
         <span class="n">text</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="n">math_eq</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^\.\. math::((?:.+)?(?:\n+^  .+)*)&quot;</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">M</span><span class="p">)</span>
+    <span class="n">math_eq</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">"^\.\. math::((?:.+)?(?:\n+^  .+)*)"</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">M</span><span class="p">)</span>
     <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span>
         <span class="n">math_eq</span><span class="p">,</span>
-        <span class="k">lambda</span> <span class="n">match</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;\begin{{align}}</span><span class="si">{0}</span><span class="s2">\end{{align}}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()),</span>
+        <span class="k">lambda</span> <span class="n">match</span><span class="p">:</span> <span class="sa">r</span><span class="s2">"\begin{{align}}</span><span class="si">{0}</span><span class="s2">\end{{align}}"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()),</span>
         <span class="n">text</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">inline_math</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;:math:`(.+?)`&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">DOTALL</span><span class="p">)</span>
-    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">inline_math</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$\1$&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="n">inline_math</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">":math:`(.+?)`"</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">DOTALL</span><span class="p">)</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">inline_math</span><span class="p">,</span> <span class="sa">r</span><span class="s2">"$\1$"</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
 
-    <span class="n">directives</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;warning&quot;</span><span class="p">,</span> <span class="s2">&quot;note&quot;</span><span class="p">)</span>
+    <span class="n">directives</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"warning"</span><span class="p">,</span> <span class="s2">"note"</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">directive</span> <span class="ow">in</span> <span class="n">directives</span><span class="p">:</span>
         <span class="n">directive_re</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
-            <span class="sa">r</span><span class="s2">&quot;^\.\. </span><span class="si">%s</span><span class="s2">::((?:.+)?(?:\n+^  .+)*)&quot;</span> <span class="o">%</span> <span class="n">directive</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">M</span>
+            <span class="sa">r</span><span class="s2">"^\.\. </span><span class="si">%s</span><span class="s2">::((?:.+)?(?:\n+^  .+)*)"</span> <span class="o">%</span> <span class="n">directive</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">M</span>
         <span class="p">)</span>
         <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">directive_re</span><span class="p">,</span> <span class="n">partial</span><span class="p">(</span><span class="n">directive_fun</span><span class="p">,</span> <span class="n">directive</span><span class="o">=</span><span class="n">directive</span><span class="p">),</span> <span class="n">text</span><span class="p">)</span>
 
-    <span class="n">footnote_links</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^ *\.\. _.*:.*$\n&quot;</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">M</span><span class="p">)</span>
-    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">footnote_links</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="n">footnote_links</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">"^ *\.\. _.*:.*$\n"</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">M</span><span class="p">)</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">footnote_links</span><span class="p">,</span> <span class="s2">""</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
 
-    <span class="n">embedded_uris</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;`([^`]*?)\s*&lt;([^`]*)&gt;`_&quot;</span><span class="p">)</span>
-    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">embedded_uris</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;[\1](\2)&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="n">embedded_uris</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">"`([^`]*?)\s*&lt;([^`]*)&gt;`_"</span><span class="p">)</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">embedded_uris</span><span class="p">,</span> <span class="sa">r</span><span class="s2">"[\1](\2)"</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
 
-    <span class="n">refs</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;:ref:`&quot;</span><span class="p">)</span>
-    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">refs</span><span class="p">,</span> <span class="s2">&quot;`&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="n">refs</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">":ref:`"</span><span class="p">)</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">refs</span><span class="p">,</span> <span class="s2">"`"</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
 
-    <span class="n">contents</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^\s*\.\. contents::.*$(\n +:\S+: *$)*\n&quot;</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">M</span><span class="p">)</span>
-    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">contents</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="n">contents</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">"^\s*\.\. contents::.*$(\n +:\S+: *$)*\n"</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">M</span><span class="p">)</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">contents</span><span class="p">,</span> <span class="s2">""</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
 
-    <span class="n">images</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^\.\. image::(.*$)((?:\n +:\S+:.*$)*)\n&quot;</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">M</span><span class="p">)</span>
-    <span class="n">image_opts</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\n +:(\S+): +(.*)$&quot;</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">M</span><span class="p">)</span>
+    <span class="n">images</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">"^\.\. image::(.*$)((?:\n +:\S+:.*$)*)\n"</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">M</span><span class="p">)</span>
+    <span class="n">image_opts</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">"\n +:(\S+): +(.*)$"</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">M</span><span class="p">)</span>
     <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span>
         <span class="n">images</span><span class="p">,</span>
-        <span class="k">lambda</span> <span class="n">match</span><span class="p">:</span> <span class="s1">&#39;&lt;img src=&quot;</span><span class="si">{}</span><span class="s1">&quot;</span><span class="si">{}</span><span class="s1">&gt;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="n">match</span><span class="p">:</span> <span class="s1">'&lt;img src="</span><span class="si">{}</span><span class="s1">"</span><span class="si">{}</span><span class="s1">&gt;</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="n">generate_image_src</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">),</span>
-            <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">image_opts</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39; \1=&quot;\2&quot;&#39;</span><span class="p">,</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
+            <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">image_opts</span><span class="p">,</span> <span class="sa">r</span><span class="s1">' \1="\2"'</span><span class="p">,</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">""</span><span class="p">),</span>
         <span class="p">),</span>
         <span class="n">text</span><span class="p">,</span>
     <span class="p">)</span>
@@ -680,42 +680,42 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">generate_image_src</span><span class="p">(</span>
     <span class="n">image_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">:</span> <span class="n">PathLikeStr</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Modify image path for notebook, according to &quot;notebook_images&quot; config.</span>
+<span class="w">    </span><span class="sd">"""Modify image path for notebook, according to "notebook_images" config.</span>
 
 <span class="sd">    URLs are unchanged.</span>
-<span class="sd">    If &quot;notebook_images&quot; config is a str, it is used as a prefix to image path, relative</span>
-<span class="sd">    to &quot;src_dir&quot;. If &quot;notebook_images&quot; is `True`, image is embedded as URI. If</span>
-<span class="sd">    &quot;notebook_images&quot; is `False`, &quot;file://&quot; is prepended.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;https?://&quot;</span><span class="p">,</span> <span class="n">image_path</span><span class="p">):</span>
+<span class="sd">    If "notebook_images" config is a str, it is used as a prefix to image path, relative</span>
+<span class="sd">    to "src_dir". If "notebook_images" is `True`, image is embedded as URI. If</span>
+<span class="sd">    "notebook_images" is `False`, "file://" is prepended.</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">"https?://"</span><span class="p">,</span> <span class="n">image_path</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">image_path</span>
 
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;notebook_images&quot;</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="s2">&quot;file://&quot;</span> <span class="o">+</span> <span class="n">image_path</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">"notebook_images"</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="s2">"file://"</span> <span class="o">+</span> <span class="n">image_path</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">"/"</span><span class="p">)</span>
 
     <span class="c1"># If absolute path from source directory given</span>
-    <span class="k">if</span> <span class="n">image_path</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">image_path</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"/"</span><span class="p">):</span>
         <span class="c1"># Path should now be relative to source dir, not target dir</span>
-        <span class="n">target_dir</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">]</span>
-        <span class="n">image_path</span> <span class="o">=</span> <span class="n">image_path</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+        <span class="n">target_dir</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">"src_dir"</span><span class="p">]</span>
+        <span class="n">image_path</span> <span class="o">=</span> <span class="n">image_path</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">"/"</span><span class="p">)</span>
     <span class="n">full_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">target_dir</span><span class="p">)</span> <span class="o">/</span> <span class="n">image_path</span>
 
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;notebook_images&quot;</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">"notebook_images"</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
         <span class="c1"># Use as prefix e.g. URL</span>
-        <span class="n">prefix</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;notebook_images&quot;</span><span class="p">]</span>
-        <span class="n">rel_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">full_path</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">]))</span>
+        <span class="n">prefix</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">"notebook_images"</span><span class="p">]</span>
+        <span class="n">rel_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">full_path</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">"src_dir"</span><span class="p">]))</span>
         <span class="k">return</span> <span class="n">prefix</span> <span class="o">+</span> <span class="n">rel_path</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># True, but not string. Embed as data URI.</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">full_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">image_file</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">full_path</span><span class="p">,</span> <span class="s2">"rb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">image_file</span><span class="p">:</span>
                 <span class="n">data</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">image_file</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
         <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Unable to open </span><span class="si">{</span><span class="n">full_path</span><span class="si">}</span><span class="s2"> to generate notebook data URI&quot;</span>
+                <span class="sa">f</span><span class="s2">"Unable to open </span><span class="si">{</span><span class="n">full_path</span><span class="si">}</span><span class="s2"> to generate notebook data URI"</span>
             <span class="p">)</span>
         <span class="n">mime_type</span> <span class="o">=</span> <span class="n">mimetypes</span><span class="o">.</span><span class="n">guess_type</span><span class="p">(</span><span class="n">full_path</span><span class="p">)</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;data:</span><span class="si">{</span><span class="n">mime_type</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">;base64,</span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span></div>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"data:</span><span class="si">{</span><span class="n">mime_type</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">;base64,</span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">'ascii'</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span></div>
 
 
 
@@ -724,7 +724,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">jupyter_notebook</span><span class="p">(</span>
     <span class="n">script_blocks</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Block</span><span class="p">],</span> <span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">:</span> <span class="n">PathLikeStr</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NotebookContent</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a Jupyter notebook file cell-by-cell.</span>
+<span class="w">    </span><span class="sd">"""Generate a Jupyter notebook file cell-by-cell.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -735,9 +735,9 @@
 <span class="sd">    target_dir : str | pathlib.Path</span>
 <span class="sd">        Path that notebook is intended for. Used where relative paths</span>
 <span class="sd">        may be required.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">first_cell</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;first_notebook_cell&quot;</span><span class="p">]</span>
-    <span class="n">last_cell</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;last_notebook_cell&quot;</span><span class="p">]</span>
+<span class="sd">    """</span>
+    <span class="n">first_cell</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">"first_notebook_cell"</span><span class="p">]</span>
+    <span class="n">last_cell</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">"last_notebook_cell"</span><span class="p">]</span>
     <span class="n">work_notebook</span> <span class="o">=</span> <span class="n">jupyter_notebook_skeleton</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">first_cell</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">add_code_cell</span><span class="p">(</span><span class="n">work_notebook</span><span class="p">,</span> <span class="n">first_cell</span><span class="p">)</span>
@@ -752,43 +752,43 @@
 <div class="viewcode-block" id="add_code_cell">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.notebook.html#sphinx_gallery.notebook.add_code_cell">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">add_code_cell</span><span class="p">(</span><span class="n">work_notebook</span><span class="p">:</span> <span class="n">NotebookContent</span><span class="p">,</span> <span class="n">code</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a code cell to the notebook.</span>
+<span class="w">    </span><span class="sd">"""Add a code cell to the notebook.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    code : str</span>
 <span class="sd">        Cell content</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">code_cell</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;cell_type&quot;</span><span class="p">:</span> <span class="s2">&quot;code&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;execution_count&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;collapsed&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
-        <span class="s2">&quot;outputs&quot;</span><span class="p">:</span> <span class="p">[],</span>
-        <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">code</span><span class="o">.</span><span class="n">strip</span><span class="p">()],</span>
+        <span class="s2">"cell_type"</span><span class="p">:</span> <span class="s2">"code"</span><span class="p">,</span>
+        <span class="s2">"execution_count"</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">"metadata"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"collapsed"</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
+        <span class="s2">"outputs"</span><span class="p">:</span> <span class="p">[],</span>
+        <span class="s2">"source"</span><span class="p">:</span> <span class="p">[</span><span class="n">code</span><span class="o">.</span><span class="n">strip</span><span class="p">()],</span>
     <span class="p">}</span>
-    <span class="n">work_notebook</span><span class="p">[</span><span class="s2">&quot;cells&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">code_cell</span><span class="p">)</span></div>
+    <span class="n">work_notebook</span><span class="p">[</span><span class="s2">"cells"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">code_cell</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="add_markdown_cell">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.notebook.html#sphinx_gallery.notebook.add_markdown_cell">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">add_markdown_cell</span><span class="p">(</span><span class="n">work_notebook</span><span class="p">:</span> <span class="n">NotebookContent</span><span class="p">,</span> <span class="n">markdown</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a markdown cell to the notebook.</span>
+<span class="w">    </span><span class="sd">"""Add a markdown cell to the notebook.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    markdown : str</span>
 <span class="sd">        Markdown cell content.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">markdown_cell</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cell_type&quot;</span><span class="p">:</span> <span class="s2">&quot;markdown&quot;</span><span class="p">,</span> <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{},</span> <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">markdown</span><span class="p">]}</span>
-    <span class="n">work_notebook</span><span class="p">[</span><span class="s2">&quot;cells&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">markdown_cell</span><span class="p">)</span></div>
+<span class="sd">    """</span>
+    <span class="n">markdown_cell</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"cell_type"</span><span class="p">:</span> <span class="s2">"markdown"</span><span class="p">,</span> <span class="s2">"metadata"</span><span class="p">:</span> <span class="p">{},</span> <span class="s2">"source"</span><span class="p">:</span> <span class="p">[</span><span class="n">markdown</span><span class="p">]}</span>
+    <span class="n">work_notebook</span><span class="p">[</span><span class="s2">"cells"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">markdown_cell</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="promote_jupyter_cell_magic">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.notebook.html#sphinx_gallery.notebook.promote_jupyter_cell_magic">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">promote_jupyter_cell_magic</span><span class="p">(</span><span class="n">work_notebook</span><span class="p">:</span> <span class="n">NotebookContent</span><span class="p">,</span> <span class="n">markdown</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Promote Jupyter cell magic in text blocks to code block in notebooks.</span>
+<span class="w">    </span><span class="sd">"""Promote Jupyter cell magic in text blocks to code block in notebooks.</span>
 
 <span class="sd">    Parses a block of markdown text looking for code blocks starting with a</span>
 <span class="sd">    Jupyter cell magic (e.g. %%bash). Whenever one is found, the text before it</span>
@@ -799,9 +799,9 @@
 <span class="sd">    ----------</span>
 <span class="sd">    markdown : str</span>
 <span class="sd">        Markdown cell content.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Regex detects all code blocks that use %% Jupyter cell magic</span>
-    <span class="n">cell_magic_regex</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;\n?```\s*[a-z]*\n(</span><span class="si">%%</span><span class="s2">(?:[\s\S]*?))\n?```\n?&quot;</span>
+    <span class="n">cell_magic_regex</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">"\n?```\s*[a-z]*\n(</span><span class="si">%%</span><span class="s2">(?:[\s\S]*?))\n?```\n?"</span>
 
     <span class="n">text_cell_start</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">for</span> <span class="n">magic_cell</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="n">cell_magic_regex</span><span class="p">,</span> <span class="n">markdown</span><span class="p">):</span>
@@ -827,7 +827,7 @@
     <span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span><span class="p">,</span>
     <span class="n">target_dir</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Writes the Jupyter notebook cells.</span>
+<span class="w">    </span><span class="sd">"""Writes the Jupyter notebook cells.</span>
 
 <span class="sd">    If available, uses pypandoc to convert rst to markdown.</span>
 
@@ -835,28 +835,28 @@
 <span class="sd">    ----------</span>
 <span class="sd">    script_blocks : list</span>
 <span class="sd">        Each list element should be a tuple of (label, content, lineno).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">heading_level_counter</span> <span class="o">=</span> <span class="n">count</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">heading_levels</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span>
         <span class="k">lambda</span><span class="p">:</span> <span class="nb">next</span><span class="p">(</span><span class="n">heading_level_counter</span><span class="p">)</span>
     <span class="p">)</span>
     <span class="k">for</span> <span class="n">blabel</span><span class="p">,</span> <span class="n">bcontent</span><span class="p">,</span> <span class="n">lineno</span> <span class="ow">in</span> <span class="n">script_blocks</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">blabel</span> <span class="o">==</span> <span class="s2">&quot;code&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">blabel</span> <span class="o">==</span> <span class="s2">"code"</span><span class="p">:</span>
             <span class="n">add_code_cell</span><span class="p">(</span><span class="n">work_notebook</span><span class="p">,</span> <span class="n">bcontent</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;pypandoc&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">"pypandoc"</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
                 <span class="n">markdown</span> <span class="o">=</span> <span class="n">rst2md</span><span class="p">(</span>
-                    <span class="n">bcontent</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">heading_levels</span>
+                    <span class="n">bcontent</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">heading_levels</span>
                 <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="kn">import</span><span class="w"> </span><span class="nn">pypandoc</span>
 
                 <span class="c1"># pandoc automatically adds \n to the end</span>
                 <span class="n">markdown</span> <span class="o">=</span> <span class="n">pypandoc</span><span class="o">.</span><span class="n">convert_text</span><span class="p">(</span>
-                    <span class="n">bcontent</span><span class="p">,</span> <span class="n">to</span><span class="o">=</span><span class="s2">&quot;md&quot;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;rst&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;pypandoc&quot;</span><span class="p">]</span>
+                    <span class="n">bcontent</span><span class="p">,</span> <span class="n">to</span><span class="o">=</span><span class="s2">"md"</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">"rst"</span><span class="p">,</span> <span class="o">**</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">"pypandoc"</span><span class="p">]</span>
                 <span class="p">)</span>
 
-            <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;promote_jupyter_magic&quot;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">"promote_jupyter_magic"</span><span class="p">]:</span>
                 <span class="n">remaining</span> <span class="o">=</span> <span class="n">promote_jupyter_cell_magic</span><span class="p">(</span><span class="n">work_notebook</span><span class="p">,</span> <span class="n">markdown</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">remaining</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">remaining</span><span class="o">.</span><span class="n">isspace</span><span class="p">():</span>
                     <span class="n">add_markdown_cell</span><span class="p">(</span><span class="n">work_notebook</span><span class="p">,</span> <span class="n">remaining</span><span class="p">)</span>
@@ -868,8 +868,8 @@
 <div class="viewcode-block" id="save_notebook">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.notebook.html#sphinx_gallery.notebook.save_notebook">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">save_notebook</span><span class="p">(</span><span class="n">work_notebook</span><span class="p">:</span> <span class="n">NotebookContent</span><span class="p">,</span> <span class="n">write_file</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Saves the Jupyter work_notebook to write_file.&quot;&quot;&quot;</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">write_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">out_nb</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Saves the Jupyter work_notebook to write_file."""</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">write_file</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">out_nb</span><span class="p">:</span>
         <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">work_notebook</span><span class="p">,</span> <span class="n">out_nb</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span></div>
 
 
@@ -881,20 +881,20 @@
 <div class="viewcode-block" id="python_to_jupyter_cli">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.notebook.html#sphinx_gallery.notebook.python_to_jupyter_cli">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">python_to_jupyter_cli</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">namespace</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sphinx_gallery_conf</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Exposes the jupyter notebook renderer to the command line.</span>
+<span class="w">    </span><span class="sd">"""Exposes the jupyter notebook renderer to the command line.</span>
 
 <span class="sd">    Takes the same arguments as ArgumentParser.parse_args.</span>
 <span class="sd">    `sphinx_gallery_conf` functions same as in `conf.py`.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">gen_gallery</span>  <span class="c1"># To avoid circular import</span>
 
-    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Sphinx-Gallery Notebook converter&quot;</span><span class="p">)</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">"Sphinx-Gallery Notebook converter"</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;python_src_file&quot;</span><span class="p">,</span>
-        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;+&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Input Python file script to convert. &quot;</span>
-        <span class="s2">&quot;Supports multiple files and shell wildcards&quot;</span>
-        <span class="s2">&quot; (e.g. *.py)&quot;</span><span class="p">,</span>
+        <span class="s2">"python_src_file"</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s2">"+"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"Input Python file script to convert. "</span>
+        <span class="s2">"Supports multiple files and shell wildcards"</span>
+        <span class="s2">" (e.g. *.py)"</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">namespace</span><span class="p">)</span>
 
@@ -906,10 +906,10 @@
     <span class="c1"># run script</span>
     <span class="k">for</span> <span class="n">src_file</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">python_src_file</span><span class="p">:</span>
         <span class="n">file_conf</span><span class="p">,</span> <span class="n">blocks</span> <span class="o">=</span> <span class="n">split_code_and_text_blocks</span><span class="p">(</span><span class="n">src_file</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Converting </span><span class="si">{</span><span class="n">src_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Converting </span><span class="si">{</span><span class="n">src_file</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="n">target_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">src_file</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span>
         <span class="n">example_nb</span> <span class="o">=</span> <span class="n">jupyter_notebook</span><span class="p">(</span><span class="n">blocks</span><span class="p">,</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">),</span> <span class="n">target_dir</span><span class="p">)</span>
-        <span class="n">save_notebook</span><span class="p">(</span><span class="n">example_nb</span><span class="p">,</span> <span class="n">Path</span><span class="p">(</span><span class="n">src_file</span><span class="p">)</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">&quot;.ipynb&quot;</span><span class="p">))</span></div>
+        <span class="n">save_notebook</span><span class="p">(</span><span class="n">example_nb</span><span class="p">,</span> <span class="n">Path</span><span class="p">(</span><span class="n">src_file</span><span class="p">)</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">".ipynb"</span><span class="p">))</span></div>
 
 </pre></div>
 

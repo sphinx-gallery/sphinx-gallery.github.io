@@ -648,10 +648,10 @@ documentation, you can use the package <code class="docutils literal notranslate
 For example, to remove the specific Matplotlib agg warning, you can add:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 
-<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">,</span>
-                        <span class="n">message</span><span class="o">=</span><span class="s1">&#39;Matplotlib is currently using agg, which is a&#39;</span>
-                                <span class="s1">&#39; non-GUI backend, so cannot show the figure.&#39;</span>
-                                <span class="s1">&#39;|(</span><span class="se">\n</span><span class="s1">|.)*is non-interactive, and thus cannot be shown&#39;</span><span class="p">)</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">"ignore"</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">,</span>
+                        <span class="n">message</span><span class="o">=</span><span class="s1">'Matplotlib is currently using agg, which is a'</span>
+                                <span class="s1">' non-GUI backend, so cannot show the figure.'</span>
+                                <span class="s1">'|(</span><span class="se">\n</span><span class="s1">|.)*is non-interactive, and thus cannot be shown'</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>to your <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file.</p>
@@ -670,7 +670,7 @@ The object needs to be importable by Sphinx-Gallery.</p>
 <code class="docutils literal notranslate"><span class="pre">def</span> <span class="pre">my_sorter</span></code> and put it in <code class="docutils literal notranslate"><span class="pre">mymod/utils.py</span></code>, then use:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
 <span class="c1">#...,</span>
-<span class="s2">&quot;minigallery_sort_order&quot;</span><span class="p">:</span> <span class="s2">&quot;mymod.utils.my_sorter&quot;</span><span class="p">,</span>
+<span class="s2">"minigallery_sort_order"</span><span class="p">:</span> <span class="s2">"mymod.utils.my_sorter"</span><span class="p">,</span>
 <span class="c1">#...</span>
 <span class="p">}</span>
 </pre></div>
@@ -681,7 +681,7 @@ you can add documentation-specific stuff in a different path and ensure
 that it can be resolved at build time. For example, you could create a file
 <code class="docutils literal notranslate"><span class="pre">doc/sphinxext.py</span></code> and define your function:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">plotted_sorter</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
-    <span class="k">return</span> <span class="ow">not</span> <span class="n">fname</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;plot_&quot;</span><span class="p">),</span> <span class="n">fname</span>
+    <span class="k">return</span> <span class="ow">not</span> <span class="n">fname</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"plot_"</span><span class="p">),</span> <span class="n">fname</span>
 </pre></div>
 </div>
 <p>And set in your configuration:</p>
@@ -689,7 +689,7 @@ that it can be resolved at build time. For example, you could create a file
 
 <span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
 <span class="c1">#...,</span>
-<span class="s2">&quot;minigallery_sort_order&quot;</span><span class="p">:</span> <span class="s2">&quot;sphinxext.plotted_sorter&quot;</span><span class="p">,</span>
+<span class="s2">"minigallery_sort_order"</span><span class="p">:</span> <span class="s2">"sphinxext.plotted_sorter"</span><span class="p">,</span>
 <span class="c1">#...</span>
 <span class="p">}</span>
 </pre></div>
@@ -728,14 +728,14 @@ within (sub)sections (passed filenames)</p></li>
 string. For example, this function puts all filenames starting with <code class="docutils literal notranslate"><span class="pre">plot_</span></code> before
 all other filenames:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">plotted_sorter</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">(</span><span class="ow">not</span> <span class="n">fname</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;plot_&quot;</span><span class="p">),</span> <span class="n">fname</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="ow">not</span> <span class="n">fname</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"plot_"</span><span class="p">),</span> <span class="n">fname</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Then make sure it is importable (see <a class="reference internal" href="#importing-callables"><span class="std std-ref">Importing callables</span></a>) and set your
 configuration:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
 <span class="c1">#...,</span>
-<span class="s2">&quot;minigallery_sort_order&quot;</span><span class="p">:</span> <span class="s2">&quot;sphinxext.plotted_sorter&quot;</span><span class="p">,</span>
+<span class="s2">"minigallery_sort_order"</span><span class="p">:</span> <span class="s2">"sphinxext.plotted_sorter"</span><span class="p">,</span>
 <span class="c1">#...</span>
 <span class="p">}</span>
 </pre></div>
@@ -753,7 +753,7 @@ function. For example, the following <code class="docutils literal notranslate">
 (which sorts on paths) will sort using the first 10 letters of each filename:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
 <span class="c1">#...,</span>
-<span class="s2">&quot;minigallery_sort_order&quot;</span><span class="p">:</span> <span class="n">FunctionSortKey</span><span class="p">(</span>
+<span class="s2">"minigallery_sort_order"</span><span class="p">:</span> <span class="n">FunctionSortKey</span><span class="p">(</span>
     <span class="k">lambda</span> <span class="n">filename</span><span class="p">:</span> <span class="n">filename</span><span class="p">[:</span><span class="mi">10</span><span class="p">]),</span>
 <span class="c1">#...</span>
 <span class="p">}</span>
@@ -775,7 +775,7 @@ changes in each build.</p>
 For example, <a class="reference internal" href="gen_modules/sphinx_gallery.sorting.html#sphinx_gallery.sorting.ExplicitOrder" title="sphinx_gallery.sorting.ExplicitOrder"><code class="xref py py-class docutils literal notranslate"><span class="pre">sphinx_gallery.sorting.ExplicitOrder</span></code></a> stability is
 ensured via the custom <code class="docutils literal notranslate"><span class="pre">__repr__</span></code>:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="k">return</span> <span class="s1">&#39;&lt;</span><span class="si">%s</span><span class="s1">: </span><span class="si">%s</span><span class="s1">&gt;&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ordered_list</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s1">'&lt;</span><span class="si">%s</span><span class="s1">: </span><span class="si">%s</span><span class="s1">&gt;'</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ordered_list</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Therefore, the files are only all rebuilt when the specified ordered list
@@ -793,8 +793,8 @@ Sphinx-Gallery configuration dictionary keys:</p>
 They can be set in your Sphinx <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;examples_dirs&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;../examples&#39;</span><span class="p">,</span> <span class="s1">&#39;../tutorials&#39;</span><span class="p">],</span>
-    <span class="s1">&#39;gallery_dirs&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;auto_examples&#39;</span><span class="p">,</span> <span class="s1">&#39;tutorials&#39;</span><span class="p">],</span>
+    <span class="s1">'examples_dirs'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'../examples'</span><span class="p">,</span> <span class="s1">'../tutorials'</span><span class="p">],</span>
+    <span class="s1">'gallery_dirs'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'auto_examples'</span><span class="p">,</span> <span class="s1">'tutorials'</span><span class="p">],</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -824,9 +824,9 @@ These behaviors are controlled by the <code class="docutils literal notranslate"
 and <code class="docutils literal notranslate"><span class="pre">example_extensions</span></code> entries, which have the default values:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;filename_pattern&#39;</span><span class="p">:</span> <span class="s1">&#39;/plot_&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;ignore_pattern&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;__init__\.py&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;example_extensions&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;.py&#39;</span><span class="p">}</span>
+    <span class="s1">'filename_pattern'</span><span class="p">:</span> <span class="s1">'/plot_'</span><span class="p">,</span>
+    <span class="s1">'ignore_pattern'</span><span class="p">:</span> <span class="sa">r</span><span class="s1">'__init__\.py'</span><span class="p">,</span>
+    <span class="s1">'example_extensions'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'.py'</span><span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -836,7 +836,7 @@ To choose which of the parsed and added Python scripts are actually
 executed, you can modify <code class="docutils literal notranslate"><span class="pre">filename_pattern</span></code>. For example:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;filename_pattern&#39;</span><span class="p">:</span> <span class="s1">&#39;/plot_compute_&#39;</span><span class="p">,</span>
+    <span class="s1">'filename_pattern'</span><span class="p">:</span> <span class="s1">'/plot_compute_'</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -851,7 +851,7 @@ want to build only one example so that you can link it in the documentation.
 In that case, you would do:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;filename_pattern&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;plot_awesome_example\.py&#39;</span><span class="p">,</span>
+    <span class="s1">'filename_pattern'</span><span class="p">:</span> <span class="sa">r</span><span class="s1">'plot_awesome_example\.py'</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -867,7 +867,7 @@ md5 hash). See <a class="reference internal" href="#run-stale-examples"><span cl
 <p>Similarly, to build only examples in a specific directory, you can do:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;filename_pattern&#39;</span><span class="p">:</span> <span class="s1">&#39;/directory/plot_&#39;</span><span class="p">,</span>
+    <span class="s1">'filename_pattern'</span><span class="p">:</span> <span class="s1">'/directory/plot_'</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -875,7 +875,7 @@ md5 hash). See <a class="reference internal" href="#run-stale-examples"><span cl
 building examples starting with <code class="docutils literal notranslate"><span class="pre">plot_long_examples_</span></code>, you would do:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;filename_pattern&#39;</span><span class="p">:</span> <span class="s1">&#39;/plot_(?!long_examples)&#39;</span><span class="p">,</span>
+    <span class="s1">'filename_pattern'</span><span class="p">:</span> <span class="s1">'/plot_(?!long_examples)'</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -895,7 +895,7 @@ extensions to <code class="docutils literal notranslate"><span class="pre">examp
 include examples in Python, Julia, and C++:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;example_extensions&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;.py&#39;</span><span class="p">,</span> <span class="s1">&#39;.jl&#39;</span><span class="p">,</span> <span class="s1">&#39;.cpp&#39;</span><span class="p">}</span>
+    <span class="s1">'example_extensions'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'.py'</span><span class="p">,</span> <span class="s1">'.jl'</span><span class="p">,</span> <span class="s1">'.cpp'</span><span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -905,7 +905,7 @@ determined by the file extension. To override Pygments’ default file associati
 extensions in <code class="docutils literal notranslate"><span class="pre">example_extensions</span></code> to any of the <a class="reference external" href="https://pygments.org/languages/">pygments language names</a>. For example:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;filetype_parsers&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;.m&#39;</span><span class="p">:</span> <span class="s1">&#39;Matlab&#39;</span><span class="p">}</span>
+    <span class="s1">'filetype_parsers'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'.m'</span><span class="p">:</span> <span class="s1">'Matlab'</span><span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -932,7 +932,7 @@ a newline) to your example or delete the <code class="docutils literal notransla
 to rebuild the example. Instead, you can use the configuration value:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;run_stale_examples&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s1">'run_stale_examples'</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -941,7 +941,7 @@ be rebuilt, even if their MD5 hash shows that the example did not change.
 You can combine this with <a class="reference internal" href="#build-pattern"><span class="std std-ref">filename/ignore patterns</span></a>
 to repeatedly rerun a single example.
 This could be done from the command line, for example:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>make<span class="w"> </span>html<span class="w"> </span><span class="nv">SPHINXOPTS</span><span class="o">=</span><span class="s2">&quot;-D sphinx_gallery_conf.run_stale_examples=True -D sphinx_gallery_conf.filename_pattern=&#39;my_example_name&#39;&quot;</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>make<span class="w"> </span>html<span class="w"> </span><span class="nv">SPHINXOPTS</span><span class="o">=</span><span class="s2">"-D sphinx_gallery_conf.run_stale_examples=True -D sphinx_gallery_conf.filename_pattern='my_example_name'"</span>
 </pre></div>
 </div>
 <p>This command will cause any examples matching the filename pattern
@@ -959,11 +959,11 @@ additional command line arguments to the interpreter.</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">reset_argv</span><span class="p">(</span><span class="n">sphinx_gallery_conf</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">):</span>
-    <span class="n">src_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;src_file&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">name</span>
-    <span class="k">if</span> <span class="n">src_file</span> <span class="o">==</span> <span class="s1">&#39;example1.py&#39;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">[</span><span class="s1">&#39;-a&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">]</span>
-    <span class="k">elif</span> <span class="n">src_file</span> <span class="o">==</span> <span class="s1">&#39;example2.py&#39;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">[</span><span class="s1">&#39;-a&#39;</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">]</span>
+    <span class="n">src_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">script_vars</span><span class="p">[</span><span class="s1">'src_file'</span><span class="p">])</span><span class="o">.</span><span class="n">name</span>
+    <span class="k">if</span> <span class="n">src_file</span> <span class="o">==</span> <span class="s1">'example1.py'</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s1">'-a'</span><span class="p">,</span> <span class="s1">'1'</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">src_file</span> <span class="o">==</span> <span class="s1">'example2.py'</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s1">'-a'</span><span class="p">,</span> <span class="s1">'2'</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">[]</span>
 </pre></div>
@@ -973,13 +973,13 @@ additional command line arguments to the interpreter.</p>
 <p>This can be included in the configuration dictionary as:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;reset_argv&#39;</span><span class="p">:</span> <span class="s2">&quot;sphinxext.reset_argv&quot;</span><span class="p">,</span>
+    <span class="s1">'reset_argv'</span><span class="p">:</span> <span class="s2">"sphinxext.reset_argv"</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <p>which is then resolved by Sphinx-Gallery to the callable <code class="docutils literal notranslate"><span class="pre">reset_argv</span></code> and used as:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
-<span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">script_vars</span><span class="p">[</span><span class="s1">&#39;src_file&#39;</span><span class="p">]</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">script_vars</span><span class="p">[</span><span class="s1">'src_file'</span><span class="p">]</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="n">reset_argv</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -999,10 +999,10 @@ names. Alternatively, you can specify the order via the config value
 relative to <code class="file docutils literal notranslate"><span class="pre">conf.py</span></code> in the desired order:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;examples_dirs&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;../examples&#39;</span><span class="p">,</span><span class="s1">&#39;../tutorials&#39;</span><span class="p">],</span>
-    <span class="s1">&#39;subsection_order&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;../examples/sin_func&#39;</span><span class="p">,</span>
-                         <span class="s1">&#39;../examples/no_output&#39;</span><span class="p">,</span>
-                         <span class="s1">&#39;../tutorials/seaborn&#39;</span><span class="p">],</span>
+    <span class="s1">'examples_dirs'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'../examples'</span><span class="p">,</span><span class="s1">'../tutorials'</span><span class="p">],</span>
+    <span class="s1">'subsection_order'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'../examples/sin_func'</span><span class="p">,</span>
+                         <span class="s1">'../examples/no_output'</span><span class="p">,</span>
+                         <span class="s1">'../tutorials/seaborn'</span><span class="p">],</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -1023,7 +1023,7 @@ above list is a convenience shortcut and it is internally wrapped in
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sphinx_gallery.sorting</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExplicitOrder</span>
 <span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;subsection_order&#39;</span><span class="p">:</span> <span class="n">ExplicitOrder</span><span class="p">([</span><span class="o">...</span><span class="p">])</span>
+    <span class="s1">'subsection_order'</span><span class="p">:</span> <span class="n">ExplicitOrder</span><span class="p">([</span><span class="o">...</span><span class="p">])</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -1045,7 +1045,7 @@ set to
 which sorts the files based on the number of code lines:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;within_subsection_order&#39;</span><span class="p">:</span> <span class="s2">&quot;NumberOfCodeLinesSortKey&quot;</span><span class="p">,</span>
+    <span class="s1">'within_subsection_order'</span><span class="p">:</span> <span class="s2">"NumberOfCodeLinesSortKey"</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -1097,9 +1097,9 @@ value is the URL to the module’s documentation directory page, containing
 <p>To link the local module, use <code class="docutils literal notranslate"><span class="pre">None</span></code> as the value, as shown below:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;reference_url&#39;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s1">'reference_url'</span><span class="p">:</span> <span class="p">{</span>
          <span class="c1"># The module you locally document uses None</span>
-        <span class="s1">&#39;sphinx_gallery&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s1">'sphinx_gallery'</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
@@ -1127,8 +1127,8 @@ for more context.</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
     <span class="c1"># Regexes to match the fully qualified names of objects where the full</span>
-    <span class="c1"># module name should be used. To use full names for all objects use: &#39;.*&#39;</span>
-    <span class="s1">&#39;prefer_full_module&#39;</span><span class="p">:</span> <span class="p">{</span><span class="sa">r</span><span class="s1">&#39;module\.submodule&#39;</span><span class="p">}</span>
+    <span class="c1"># module name should be used. To use full names for all objects use: '.*'</span>
+    <span class="s1">'prefer_full_module'</span><span class="p">:</span> <span class="p">{</span><span class="sa">r</span><span class="s1">'module\.submodule'</span><span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -1270,13 +1270,13 @@ backreferences, as set of string regexes.</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
     <span class="c1"># directory where function/class granular galleries are stored</span>
-    <span class="s1">&#39;backreferences_dir&#39;</span>  <span class="p">:</span> <span class="s1">&#39;gen_modules/backreferences&#39;</span><span class="p">,</span>
+    <span class="s1">'backreferences_dir'</span>  <span class="p">:</span> <span class="s1">'gen_modules/backreferences'</span><span class="p">,</span>
 
     <span class="c1"># here we want to create backreferences for sphinx_gallery and numpy</span>
-    <span class="s1">&#39;doc_module&#39;</span>          <span class="p">:</span> <span class="p">(</span><span class="s1">&#39;sphinx_gallery&#39;</span><span class="p">,</span> <span class="s1">&#39;numpy&#39;</span><span class="p">),</span>
+    <span class="s1">'doc_module'</span>          <span class="p">:</span> <span class="p">(</span><span class="s1">'sphinx_gallery'</span><span class="p">,</span> <span class="s1">'numpy'</span><span class="p">),</span>
 
     <span class="c1"># Regexes to match objects to exclude from implicit backreferences.</span>
-    <span class="s1">&#39;exclude_implicit_doc&#39;</span><span class="p">:</span> <span class="p">{</span><span class="sa">r</span><span class="s1">&#39;pyplot\.show&#39;</span><span class="p">},</span>
+    <span class="s1">'exclude_implicit_doc'</span><span class="p">:</span> <span class="p">{</span><span class="sa">r</span><span class="s1">'pyplot\.show'</span><span class="p">},</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -1335,14 +1335,14 @@ sorting all minigalleries.</p>
 we could define the function below in <code class="docutils literal notranslate"><span class="pre">doc/sphinxext.py</span></code> (note <code class="docutils literal notranslate"><span class="pre">False</span></code> gets sorted
 ahead of <code class="docutils literal notranslate"><span class="pre">True</span></code> as 0 is less than 1):</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">function_sorter</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">(</span><span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">starts_with</span><span class="p">(</span><span class="s2">&quot;plot_numpy_&quot;</span><span class="p">),</span> <span class="n">x</span><span class="p">)::</span>
+    <span class="k">return</span> <span class="p">(</span><span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">starts_with</span><span class="p">(</span><span class="s2">"plot_numpy_"</span><span class="p">),</span> <span class="n">x</span><span class="p">)::</span>
 </pre></div>
 </div>
 <p>We can then set the configuration to be (ensuring the function is
 <a class="reference internal" href="#importing-callables"><span class="std std-ref">importable</span></a>):</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="c1">#...,</span>
-    <span class="s2">&quot;minigallery_sort_order&quot;</span><span class="p">:</span> <span class="s2">&quot;sphinxext.function_sorter&quot;</span><span class="p">,</span>
+    <span class="s2">"minigallery_sort_order"</span><span class="p">:</span> <span class="s2">"sphinxext.function_sorter"</span><span class="p">,</span>
     <span class="c1">#...</span>
 <span class="p">}</span>
 </pre></div>
@@ -1361,9 +1361,9 @@ First enable them in your <code class="docutils literal notranslate"><span class
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">sphinx_gallery</span>
 <span class="n">extensions</span> <span class="o">=</span> <span class="p">[</span>
     <span class="o">...</span>
-    <span class="s1">&#39;sphinx.ext.autodoc&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;sphinx.ext.autosummary&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;sphinx_gallery.gen_gallery&#39;</span><span class="p">,</span>
+    <span class="s1">'sphinx.ext.autodoc'</span><span class="p">,</span>
+    <span class="s1">'sphinx.ext.autosummary'</span><span class="p">,</span>
+    <span class="s1">'sphinx_gallery.gen_gallery'</span><span class="p">,</span>
     <span class="p">]</span>
 
 <span class="c1"># generate autosummary even if no references</span>
@@ -1534,7 +1534,7 @@ different classes, it will break.</p>
 key:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;inspect_global_variables&#39;</span>  <span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s1">'inspect_global_variables'</span>  <span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -1586,11 +1586,11 @@ different links are decorated. For example, using CSS selectors you could
 choose to avoid highlighting any <code class="docutils literal notranslate"><span class="pre">sphx-glr-backref-*</span></code> links except for ones
 that you allowlist (e.g., those from your own module). For example, the
 following css prevents any module except for matplotlib from being decorated:</p>
-<div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="nt">a</span><span class="o">[</span><span class="nt">class</span><span class="o">^=</span><span class="s2">&quot;sphx-glr-backref-module-&quot;</span><span class="o">]</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="nt">a</span><span class="o">[</span><span class="nt">class</span><span class="o">^=</span><span class="s2">"sphx-glr-backref-module-"</span><span class="o">]</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">text-decoration</span><span class="p">:</span><span class="w"> </span><span class="kc">none</span><span class="p">;</span>
 <span class="w">    </span><span class="k">color</span><span class="p">:</span><span class="w"> </span><span class="kc">inherit</span><span class="p">;</span>
 <span class="p">}</span>
-<span class="nt">a</span><span class="o">[</span><span class="nt">class</span><span class="o">^=</span><span class="s2">&quot;sphx-glr-backref-module-matplotlib&quot;</span><span class="o">]</span><span class="w"> </span><span class="p">{</span>
+<span class="nt">a</span><span class="o">[</span><span class="nt">class</span><span class="o">^=</span><span class="s2">"sphx-glr-backref-module-matplotlib"</span><span class="o">]</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">text-decoration</span><span class="p">:</span><span class="w"> </span><span class="kc">underline</span><span class="p">;</span>
 <span class="p">}</span>
 </pre></div>
@@ -1610,7 +1610,7 @@ file. You need to add to the configuration dictionary a key called
 <cite>default_thumb_file</cite>. For example:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;default_thumb_file&#39;</span><span class="p">:</span> <span class="s1">&#39;path/to/thumb/file.png&#39;</span><span class="p">,</span>
+    <span class="s1">'default_thumb_file'</span><span class="p">:</span> <span class="s1">'path/to/thumb/file.png'</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -1621,7 +1621,7 @@ file. You need to add to the configuration dictionary a key called
 setting:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;line_numbers&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s1">'line_numbers'</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -1640,7 +1640,7 @@ the comment will appear in the example.</p>
 <p>To remove the comment from the rendered example set the option:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;remove_config_comments&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s1">'remove_config_comments'</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -1666,8 +1666,8 @@ the following first cell:</p>
 <p>Which is achieved by the following configuration:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;first_notebook_cell&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;# This cell is added by Sphinx-Gallery</span><span class="se">\n</span><span class="s2">&quot;</span>
-                            <span class="s2">&quot;# It can be customized to whatever you like</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="s1">'first_notebook_cell'</span><span class="p">:</span> <span class="p">(</span><span class="s2">"# This cell is added by Sphinx-Gallery</span><span class="se">\n</span><span class="s2">"</span>
+                            <span class="s2">"# It can be customized to whatever you like</span><span class="se">\n</span><span class="s2">"</span>
                             <span class="p">)</span>
 <span class="p">}</span>
 </pre></div>
@@ -1676,10 +1676,10 @@ the following first cell:</p>
 parameter:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;first_notebook_cell&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;# This cell is added by Sphinx-Gallery</span><span class="se">\n</span><span class="s2">&quot;</span>
-                            <span class="s2">&quot;# It can be customized to whatever you like</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="s1">'first_notebook_cell'</span><span class="p">:</span> <span class="p">(</span><span class="s2">"# This cell is added by Sphinx-Gallery</span><span class="se">\n</span><span class="s2">"</span>
+                            <span class="s2">"# It can be customized to whatever you like</span><span class="se">\n</span><span class="s2">"</span>
                             <span class="p">),</span>
-    <span class="s1">&#39;last_notebook_cell&#39;</span><span class="p">:</span> <span class="s2">&quot;# This is the last cell&quot;</span><span class="p">,</span>
+    <span class="s1">'last_notebook_cell'</span><span class="p">:</span> <span class="s2">"# This is the last cell"</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -1703,10 +1703,10 @@ e.g. the root URL of where your documentation is hosted. So for example the
 following configuration:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;examples_dirs&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;../examples&#39;</span><span class="p">],</span>
-    <span class="s1">&#39;gallery_dirs&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;auto_examples&#39;</span><span class="p">],</span>
+    <span class="s1">'examples_dirs'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'../examples'</span><span class="p">],</span>
+    <span class="s1">'gallery_dirs'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'auto_examples'</span><span class="p">],</span>
     <span class="o">...</span>
-    <span class="s1">&#39;notebook_images&#39;</span><span class="p">:</span> <span class="s1">&#39;https://project.example.com/en/latest/&#39;</span><span class="p">,</span>
+    <span class="s1">'notebook_images'</span><span class="p">:</span> <span class="s1">'https://project.example.com/en/latest/'</span><span class="p">,</span>
     <span class="o">...</span>
 <span class="p">}</span>
 </pre></div>
@@ -1733,7 +1733,7 @@ command line option to ensure links point to the correct version. For
 example:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sphinx-build<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-b<span class="w"> </span>html<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>-D<span class="w"> </span>sphinx_gallery_conf.notebook_images<span class="o">=</span><span class="s2">&quot;https://project.example.com/docs/</span><span class="si">${</span><span class="nv">VERSION</span><span class="si">}</span><span class="s2">/&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-D<span class="w"> </span>sphinx_gallery_conf.notebook_images<span class="o">=</span><span class="s2">"https://project.example.com/docs/</span><span class="si">${</span><span class="nv">VERSION</span><span class="si">}</span><span class="s2">/"</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>source_dir<span class="w"> </span>build_dir
 </pre></div>
 </div>
@@ -1753,7 +1753,7 @@ produce better results. By default, the ‘pypandoc’ configuration is set to
 <p>To use <code class="docutils literal notranslate"><span class="pre">pypandoc</span></code> you can set:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;pypandoc&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s1">'pypandoc'</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -1762,8 +1762,8 @@ parameters <code class="docutils literal notranslate"><span class="pre">extra_ar
 ‘pypandoc’ configuration to be a dictionary of keyword argument(s):</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;pypandoc&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;extra_args&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;--mathjax&#39;</span><span class="p">,],</span>
-                 <span class="s1">&#39;filters&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;pandoc-citeproc&#39;</span><span class="p">,],</span>
+    <span class="s1">'pypandoc'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'extra_args'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'--mathjax'</span><span class="p">,],</span>
+                 <span class="s1">'filters'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'pandoc-citeproc'</span><span class="p">,],</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -1782,7 +1782,7 @@ For example, assuming output directory is the default, the configuration below c
 a file <code class="docutils literal notranslate"><span class="pre">junit.xml</span></code> in <code class="docutils literal notranslate"><span class="pre">doc/_build/test-results/sphinx-gallery/</span></code>:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;junit&#39;</span><span class="p">:</span> <span class="s1">&#39;../test-results/sphinx-gallery/junit.xml&#39;</span><span class="p">,</span>
+    <span class="s1">'junit'</span><span class="p">:</span> <span class="s1">'../test-results/sphinx-gallery/junit.xml'</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -1812,10 +1812,10 @@ code block parses the XML file to create a list of test case dictionaries with
 the execution time(s).</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">xml.etree.ElementTree</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse</span>
 
-<span class="n">xml_path</span> <span class="o">=</span>  <span class="s2">&quot;doc/_build/html/sphinx-gallery/junit-results.xml&quot;</span>
-<span class="n">test_cases</span> <span class="o">=</span> <span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="n">case</span><span class="o">.</span><span class="n">attrib</span><span class="p">)</span> <span class="k">for</span> <span class="n">case</span> <span class="ow">in</span> <span class="n">parse</span><span class="p">(</span><span class="n">xml_path</span><span class="p">)</span><span class="o">.</span><span class="n">getroot</span><span class="p">()</span><span class="o">.</span><span class="n">iterfind</span><span class="p">(</span><span class="s2">&quot;testcase&quot;</span><span class="p">)]</span>
+<span class="n">xml_path</span> <span class="o">=</span>  <span class="s2">"doc/_build/html/sphinx-gallery/junit-results.xml"</span>
+<span class="n">test_cases</span> <span class="o">=</span> <span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="n">case</span><span class="o">.</span><span class="n">attrib</span><span class="p">)</span> <span class="k">for</span> <span class="n">case</span> <span class="ow">in</span> <span class="n">parse</span><span class="p">(</span><span class="n">xml_path</span><span class="p">)</span><span class="o">.</span><span class="n">getroot</span><span class="p">()</span><span class="o">.</span><span class="n">iterfind</span><span class="p">(</span><span class="s2">"testcase"</span><span class="p">)]</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="n">test_cases</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;time&quot;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">test_cases</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">"time"</span><span class="p">])</span>
 <span class="mf">0.10358190536499023</span>
 </pre></div>
 </div>
@@ -1831,7 +1831,7 @@ emitted, which will lead to a build failure when building with <code class="docu
 The log level can be set with:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;log_level&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;backreference_missing&#39;</span><span class="p">:</span> <span class="s1">&#39;warning&#39;</span><span class="p">},</span>
+    <span class="s1">'log_level'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'backreference_missing'</span><span class="p">:</span> <span class="s1">'warning'</span><span class="p">},</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -1846,11 +1846,11 @@ The valid values are <code class="docutils literal notranslate"><span class="pre
 useful when building with <code class="docutils literal notranslate"><span class="pre">-W</span></code>, where an unwanted warning otherwise fails the
 whole build. For example, to keep building when an example file name is
 duplicated across galleries:</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">suppress_warnings</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;sphinx_gallery.duplicate_filename&#39;</span><span class="p">]</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">suppress_warnings</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'sphinx_gallery.duplicate_filename'</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>Giving the type on its own silences all Sphinx-Gallery warnings:</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">suppress_warnings</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;sphinx_gallery&#39;</span><span class="p">]</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">suppress_warnings</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'sphinx_gallery'</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>The subtypes, and what each one warns about, are:</p>
@@ -1889,7 +1889,7 @@ download at the bottom of each gallery. To disable this behavior add to the
 configuration dictionary in your <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;download_all_examples&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s1">'download_all_examples'</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -1925,7 +1925,7 @@ below the docstring (ideally in a code block, see
 <a class="reference internal" href="#removing-config-comments"><span class="std std-ref">Removing config comments</span></a>).</p>
 <p>For example, the following defines that the image <code class="docutils literal notranslate"><span class="pre">demo.png</span></code> in the folder
 <code class="docutils literal notranslate"><span class="pre">_static/</span></code> should be used to create the thumbnail:</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># sphinx_gallery_thumbnail_path = &#39;_static/demo.png&#39;</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># sphinx_gallery_thumbnail_path = '_static/demo.png'</span>
 </pre></div>
 </div>
 <p>If the image cannot be found, a warning is emitted and the default thumbnail is
@@ -1974,17 +1974,17 @@ a few pieces of information in <code class="docutils literal notranslate"><span 
 dictionary following the pattern below:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
   <span class="o">...</span>
-  <span class="s1">&#39;binder&#39;</span><span class="p">:</span> <span class="p">{</span>
+  <span class="s1">'binder'</span><span class="p">:</span> <span class="p">{</span>
      <span class="c1"># Required keys</span>
-     <span class="s1">&#39;org&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;github_org&gt;&#39;</span><span class="p">,</span>
-     <span class="s1">&#39;repo&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;github_repo&gt;&#39;</span><span class="p">,</span>
-     <span class="s1">&#39;branch&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;github_branch&gt;&#39;</span><span class="p">,</span> <span class="c1"># Can be any branch, tag, or commit hash. Use a branch that hosts your docs.</span>
-     <span class="s1">&#39;binderhub_url&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;binder_url&gt;&#39;</span><span class="p">,</span> <span class="c1"># Any URL of a binderhub deployment. Must be full URL (e.g. https://mybinder.org).</span>
-     <span class="s1">&#39;dependencies&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;list_of_paths_to_dependency_files&gt;&#39;</span><span class="p">,</span>
+     <span class="s1">'org'</span><span class="p">:</span> <span class="s1">'&lt;github_org&gt;'</span><span class="p">,</span>
+     <span class="s1">'repo'</span><span class="p">:</span> <span class="s1">'&lt;github_repo&gt;'</span><span class="p">,</span>
+     <span class="s1">'branch'</span><span class="p">:</span> <span class="s1">'&lt;github_branch&gt;'</span><span class="p">,</span> <span class="c1"># Can be any branch, tag, or commit hash. Use a branch that hosts your docs.</span>
+     <span class="s1">'binderhub_url'</span><span class="p">:</span> <span class="s1">'&lt;binder_url&gt;'</span><span class="p">,</span> <span class="c1"># Any URL of a binderhub deployment. Must be full URL (e.g. https://mybinder.org).</span>
+     <span class="s1">'dependencies'</span><span class="p">:</span> <span class="s1">'&lt;list_of_paths_to_dependency_files&gt;'</span><span class="p">,</span>
      <span class="c1"># Optional keys</span>
-     <span class="s1">&#39;filepath_prefix&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;prefix&gt;&#39;</span> <span class="c1"># A prefix to prepend to any filepaths in Binder links.</span>
-     <span class="s1">&#39;notebooks_dir&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;notebooks-directory-name&gt;&#39;</span> <span class="c1"># Jupyter notebooks for Binder will be copied to this directory (relative to built documentation root).</span>
-     <span class="s1">&#39;use_jupyter_lab&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">bool</span><span class="o">&gt;</span> <span class="c1"># Whether Binder links should start Jupyter Lab instead of the Jupyter Notebook interface.</span>
+     <span class="s1">'filepath_prefix'</span><span class="p">:</span> <span class="s1">'&lt;prefix&gt;'</span> <span class="c1"># A prefix to prepend to any filepaths in Binder links.</span>
+     <span class="s1">'notebooks_dir'</span><span class="p">:</span> <span class="s1">'&lt;notebooks-directory-name&gt;'</span> <span class="c1"># Jupyter notebooks for Binder will be copied to this directory (relative to built documentation root).</span>
+     <span class="s1">'use_jupyter_lab'</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">bool</span><span class="o">&gt;</span> <span class="c1"># Whether Binder links should start Jupyter Lab instead of the Jupyter Notebook interface.</span>
      <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
@@ -2097,7 +2097,7 @@ that you are using or planning to use.</p>
 <code class="docutils literal notranslate"><span class="pre">conf.py</span></code>:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">extensions</span> <span class="o">=</span> <span class="p">[</span>
     <span class="o">...</span><span class="p">,</span>
-    <span class="s1">&#39;jupyterlite_sphinx&#39;</span><span class="p">,</span>
+    <span class="s1">'jupyterlite_sphinx'</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
 </div>
@@ -2105,10 +2105,10 @@ that you are using or planning to use.</p>
 <code class="docutils literal notranslate"><span class="pre">sphinx_gallery_conf['jupyterlite']</span></code> in <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> like this:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
   <span class="o">...</span>
-  <span class="s1">&#39;jupyterlite&#39;</span><span class="p">:</span> <span class="p">{</span>
-     <span class="s1">&#39;use_jupyter_lab&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">bool</span><span class="o">&gt;</span><span class="p">,</span> <span class="c1"># Whether JupyterLite links should start Jupyter Lab instead of the Notebook interface.</span>
-     <span class="s1">&#39;notebook_modification_function&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">str</span><span class="o">&gt;</span><span class="p">,</span> <span class="c1"># fully qualified name of a function that implements JupyterLite-specific modifications of notebooks</span>
-     <span class="s1">&#39;jupyterlite_contents&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">str</span><span class="o">&gt;</span><span class="p">,</span> <span class="c1"># where to copy the example notebooks (relative to Sphinx source directory)</span>
+  <span class="s1">'jupyterlite'</span><span class="p">:</span> <span class="p">{</span>
+     <span class="s1">'use_jupyter_lab'</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">bool</span><span class="o">&gt;</span><span class="p">,</span> <span class="c1"># Whether JupyterLite links should start Jupyter Lab instead of the Notebook interface.</span>
+     <span class="s1">'notebook_modification_function'</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">str</span><span class="o">&gt;</span><span class="p">,</span> <span class="c1"># fully qualified name of a function that implements JupyterLite-specific modifications of notebooks</span>
+     <span class="s1">'jupyterlite_contents'</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">str</span><span class="o">&gt;</span><span class="p">,</span> <span class="c1"># where to copy the example notebooks (relative to Sphinx source directory)</span>
      <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
@@ -2166,7 +2166,7 @@ but not use Sphinx-Gallery Jupyterlite integration you can do:</p>
 
 <span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
   <span class="o">...</span>
-  <span class="s1">&#39;jupyterlite&#39;</span><span class="p">:</span> <span class="kc">None</span>
+  <span class="s1">'jupyterlite'</span><span class="p">:</span> <span class="kc">None</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -2180,7 +2180,7 @@ enabled) are shown only for Python examples. If parsing other file extensions ha
 enabled (using the <code class="docutils literal notranslate"><span class="pre">example_extensions</span></code> option; see <a class="reference internal" href="#build-pattern"><span class="std std-ref">Parsing and executing examples via matching patterns</span></a>), notebook
 downloads can be enabled using the <code class="docutils literal notranslate"><span class="pre">notebook_extensions</span></code> option. For example:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;notebook_extensions&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;.py&quot;</span><span class="p">,</span> <span class="s2">&quot;.jl&quot;</span><span class="p">}</span>
+    <span class="s2">"notebook_extensions"</span><span class="p">:</span> <span class="p">{</span><span class="s2">".py"</span><span class="p">,</span> <span class="s2">".jl"</span><span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -2212,7 +2212,7 @@ those dependencies installed, and will not work without running the bash code.</
 <p>To fix this, we can set the <code class="docutils literal notranslate"><span class="pre">promote_jupyter_magic</span></code> flag in <code class="docutils literal notranslate"><span class="pre">conf.py</span></code>:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;promote_jupyter_magic&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s1">'promote_jupyter_magic'</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -2250,7 +2250,7 @@ website to display, or any use you can imagine for it.</p>
 <code class="docutils literal notranslate"><span class="pre">sphinx_gallery_conf</span></code> dictionary inside your <code class="docutils literal notranslate"><span class="pre">conf.py</span></code>:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;plot_gallery&#39;</span><span class="p">:</span> <span class="s1">&#39;False&#39;</span><span class="p">,</span>
+    <span class="s1">'plot_gallery'</span><span class="p">:</span> <span class="s1">'False'</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -2260,7 +2260,7 @@ which can be used to add a ‘no-plot’ target to your <code class="docutils li
 <div class="highlight-Makefile notranslate"><div class="highlight"><pre><span></span><span class="nf">html-noplot</span><span class="o">:</span>
 <span class="w">    </span><span class="k">$(</span>SPHINXBUILD<span class="k">)</span><span class="w"> </span>-D<span class="w"> </span><span class="nv">plot_gallery</span><span class="o">=</span><span class="m">0</span><span class="w"> </span>-b<span class="w"> </span>html<span class="w"> </span><span class="k">$(</span>ALLSPHINXOPTS<span class="k">)</span><span class="w"> </span><span class="k">$(</span>SOURCEDIR<span class="k">)</span><span class="w"> </span><span class="k">$(</span>BUILDDIR<span class="k">)</span>/html
 <span class="w">    </span>@echo
-<span class="w">    </span>@echo<span class="w"> </span><span class="s2">&quot;Build finished. The HTML pages are in </span><span class="k">$(</span>BUILDDIR<span class="k">)</span><span class="s2">/html.&quot;</span>
+<span class="w">    </span>@echo<span class="w"> </span><span class="s2">"Build finished. The HTML pages are in </span><span class="k">$(</span>BUILDDIR<span class="k">)</span><span class="s2">/html."</span>
 </pre></div>
 </div>
 <p>Remember that for <code class="docutils literal notranslate"><span class="pre">Makefile</span></code> white space is significant and the indentation are tabs
@@ -2286,7 +2286,7 @@ time. The allowed values are <code class="docutils literal notranslate"><span cl
 tuple/list (to optimize both), such as:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;compress_images&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;images&#39;</span><span class="p">,</span> <span class="s1">&#39;thumbnails&#39;</span><span class="p">),</span>
+    <span class="s1">'compress_images'</span><span class="p">:</span> <span class="p">(</span><span class="s1">'images'</span><span class="p">,</span> <span class="s1">'thumbnails'</span><span class="p">),</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -2296,7 +2296,7 @@ additional command-line options (starting with <code class="docutils literal not
 optimize less but speed up the build time you could do:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;compress_images&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;images&#39;</span><span class="p">,</span> <span class="s1">&#39;thumbnails&#39;</span><span class="p">,</span> <span class="s1">&#39;-o1&#39;</span><span class="p">),</span>
+    <span class="s1">'compress_images'</span><span class="p">:</span> <span class="p">(</span><span class="s1">'images'</span><span class="p">,</span> <span class="s1">'thumbnails'</span><span class="p">,</span> <span class="s1">'-o1'</span><span class="p">),</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -2310,7 +2310,7 @@ for hi-dpi/retina displays. Sphinx Gallery supports this via the
 <code class="docutils literal notranslate"><span class="pre">image_srcset</span></code> parameter:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;image_srcset&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;2x&quot;</span><span class="p">],</span>
+    <span class="s1">'image_srcset'</span><span class="p">:</span> <span class="p">[</span><span class="s2">"2x"</span><span class="p">],</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -2327,8 +2327,8 @@ rst file:</p>
 </pre></div>
 </div>
 <p>This is converted to html by the custom directive as:</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="o">..</span> <span class="o">&lt;</span><span class="n">img</span> <span class="n">src</span><span class="o">=</span><span class="s2">&quot;../_images/sphx_glr_test_001.png&quot;</span> <span class="n">alt</span><span class="o">=</span><span class="s2">&quot;test&quot;</span><span class="p">,</span> <span class="n">class</span><span class="o">=</span><span class="s2">&quot;sphx-glr-single-img&quot;</span><span class="p">,</span>
-    <span class="n">srcset</span><span class="o">=</span><span class="s2">&quot;../_images/sphx_glr_test_001.png, ../_images/sphx_glr_test_001_2_0x.png 2.0x&gt;</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="o">..</span> <span class="o">&lt;</span><span class="n">img</span> <span class="n">src</span><span class="o">=</span><span class="s2">"../_images/sphx_glr_test_001.png"</span> <span class="n">alt</span><span class="o">=</span><span class="s2">"test"</span><span class="p">,</span> <span class="n">class</span><span class="o">=</span><span class="s2">"sphx-glr-single-img"</span><span class="p">,</span>
+    <span class="n">srcset</span><span class="o">=</span><span class="s2">"../_images/sphx_glr_test_001.png, ../_images/sphx_glr_test_001_2_0x.png 2.0x&gt;</span>
 </pre></div>
 </div>
 <p>This leads to a larger website, but clients that support the <code class="docutils literal notranslate"><span class="pre">srcset</span></code> tag will only
@@ -2346,7 +2346,7 @@ Scrapers can be activated by appending scraper names to the
 to scrape matplotlib images you can do:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;image_scrapers&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;matplotlib&#39;</span><span class="p">,),</span>
+    <span class="s1">'image_scrapers'</span><span class="p">:</span> <span class="p">(</span><span class="s1">'matplotlib'</span><span class="p">,),</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -2361,7 +2361,7 @@ than a single static image of the animation figure, you should use the
 animations should be enabled, or a tuple of the format: (enabled: bool, format: str):</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;matplotlib_animations&#39;</span><span class="p">:</span> <span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;mp4&#39;</span><span class="p">),</span>
+    <span class="s1">'matplotlib_animations'</span><span class="p">:</span> <span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="s1">'mp4'</span><span class="p">),</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -2491,13 +2491,13 @@ optional variables:</p>
 causes figures to be stacked side-by-side. Setting these variables to <code class="docutils literal notranslate"><span class="pre">&quot;single&quot;</span></code> will
 allow figures produced from a code block to be displayed as a single column.</p>
 <p>For instance, adding:</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># sphinx_gallery_multi_image = &quot;single&quot;</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># sphinx_gallery_multi_image = "single"</span>
 </pre></div>
 </div>
 <p>somewhere in an example file will cause images from all code blocks where multiple
 figures are produced to be displayed in a single column.</p>
 <p>Alternatively, adding:</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># sphinx_gallery_multi_image_block = &quot;single&quot;</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># sphinx_gallery_multi_image_block = "single"</span>
 </pre></div>
 </div>
 <p>to a code block will cause multiple figures from only that code block to be displayed in
@@ -2596,7 +2596,7 @@ reloading submodules that populate the units registry) and <code class="docutils
 following configuration:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;reset_modules&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;matplotlib&#39;</span><span class="p">,</span> <span class="s1">&#39;seaborn&#39;</span><span class="p">),</span>
+    <span class="s1">'reset_modules'</span><span class="p">:</span> <span class="p">(</span><span class="s1">'matplotlib'</span><span class="p">,</span> <span class="s1">'seaborn'</span><span class="p">),</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -2614,7 +2614,7 @@ other parts of the Sphinx build process. For example, set <code class="docutils 
 to <code class="docutils literal notranslate"><span class="pre">both</span></code> in the configuration:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;reset_modules_order&#39;</span><span class="p">:</span> <span class="s1">&#39;both&#39;</span><span class="p">,</span>
+    <span class="s1">'reset_modules_order'</span><span class="p">:</span> <span class="s1">'both'</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -2649,7 +2649,7 @@ occurs in the execution of the examples scripts. This can by activated via the
 dictionary inside your <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> configuration file:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;abort_on_example_error&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s1">'abort_on_example_error'</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -2659,7 +2659,7 @@ which can be used to add a ‘abort_on_example_error’ target to your <code cla
 <div class="highlight-makefile notranslate"><div class="highlight"><pre><span></span><span class="nf">html_abort_on_example_error</span><span class="o">:</span>
 <span class="w">    </span><span class="k">$(</span>SPHINXBUILD<span class="k">)</span><span class="w"> </span>-D<span class="w"> </span><span class="nv">abort_on_example_error</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>-b<span class="w"> </span>html<span class="w"> </span><span class="k">$(</span>ALLSPHINXOPTS<span class="k">)</span><span class="w"> </span><span class="k">$(</span>BUILDDIR<span class="k">)</span>/html
 <span class="w">    </span>@echo
-<span class="w">    </span>@echo<span class="w"> </span><span class="s2">&quot;Build finished. The HTML pages are in </span><span class="k">$(</span>BUILDDIR<span class="k">)</span><span class="s2">/html.&quot;</span>
+<span class="w">    </span>@echo<span class="w"> </span><span class="s2">"Build finished. The HTML pages are in </span><span class="k">$(</span>BUILDDIR<span class="k">)</span><span class="s2">/html."</span>
 </pre></div>
 </div>
 <p>Remember that for <code class="docutils literal notranslate"><span class="pre">Makefile</span></code> white space is significant and the indentation
@@ -2677,7 +2677,7 @@ you need to list all the examples you want to allow to fail during
 build. Change your <cite>conf.py</cite> accordingly:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;expected_failing_examples&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;../examples/plot_raise.py&#39;</span><span class="p">]</span>
+    <span class="s1">'expected_failing_examples'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'../examples/plot_raise.py'</span><span class="p">]</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -2697,7 +2697,7 @@ This means that sphinx will only exit with a non-zero exit code if the <code cla
 flag is passed to <code class="docutils literal notranslate"><span class="pre">sphinx-build</span></code>. This can be enabled by setting:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;only_warn_on_example_error&#39;</span><span class="p">:</span> <span class="kc">True</span>
+    <span class="s1">'only_warn_on_example_error'</span><span class="p">:</span> <span class="kc">True</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -2708,7 +2708,7 @@ flag is passed to <code class="docutils literal notranslate"><span class="pre">s
 <a class="reference external" href="https://joblib.readthedocs.io/en/latest/index.html#module-joblib" title="(in joblib v1.6)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">joblib</span></code></a>. This can be enabled by setting:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;parallel&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s1">'parallel'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -2803,7 +2803,7 @@ of each example as a set of thumbnails.</p>
 configure it, pass a dictionary to the <code class="docutils literal notranslate"><span class="pre">sphinx_gallery_conf</span></code>, e.g.:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s2">&quot;recommender&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;enable&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;n_examples&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;min_df&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;max_df&quot;</span><span class="p">:</span> <span class="mf">0.9</span><span class="p">},</span>
+    <span class="s2">"recommender"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"enable"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"n_examples"</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s2">"min_df"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">"max_df"</span><span class="p">:</span> <span class="mf">0.9</span><span class="p">},</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -2846,7 +2846,7 @@ maintain the original aspect ratio. The default <code class="docutils literal no
 configuration, e.g.:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;thumbnail_size&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">250</span><span class="p">,</span> <span class="mi">250</span><span class="p">),</span>
+    <span class="s1">'thumbnail_size'</span><span class="p">:</span> <span class="p">(</span><span class="mi">250</span><span class="p">,</span> <span class="mi">250</span><span class="p">),</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -2909,7 +2909,7 @@ memory during the run of an example. After installing <code class="docutils lite
 you can do:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;show_memory&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s1">'show_memory'</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -2925,7 +2925,7 @@ tuple containing:</p>
 <p>A version of this that would always report 0 memory used would be:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;show_memory&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">func</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="n">func</span><span class="p">()),</span>
+    <span class="s1">'show_memory'</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">func</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="n">func</span><span class="p">()),</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -2974,7 +2974,7 @@ global or file setting:</p>
 <p>The default setting is:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;capture_repr&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;_repr_html_&#39;</span><span class="p">,</span> <span class="s1">&#39;__repr__&#39;</span><span class="p">),</span>
+    <span class="s1">'capture_repr'</span><span class="p">:</span> <span class="p">(</span><span class="s1">'_repr_html_'</span><span class="p">,</span> <span class="s1">'__repr__'</span><span class="p">),</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -2989,7 +2989,7 @@ captured. For several examples, see <a class="reference internal" href="auto_exa
 to be an empty tuple: <code class="docutils literal notranslate"><span class="pre">'capture_repr':</span> <span class="pre">()</span></code>. This will imitate the behaviour
 of Sphinx-Gallery prior to v0.5.0.</p>
 <p>From another perspective, take for example the following code block:</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Hello world&#39;</span><span class="p">)</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">'Hello world'</span><span class="p">)</span>
 <span class="n">a</span><span class="o">=</span><span class="mi">2</span>
 <span class="n">a</span>  <span class="c1"># this is an expression</span>
 </pre></div>
@@ -3068,8 +3068,8 @@ etc. Similarly subclasses of ‘matplotlib.axes’ (e.g. ‘matplotlib.axes.Axes
 ‘matplotlib.axes.Axes.plot’ etc.) will also not be captured.</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-    <span class="s1">&#39;capture_repr&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;__repr__&#39;</span><span class="p">),</span>
-    <span class="s1">&#39;ignore_repr_types&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;matplotlib\.(text|axes)&#39;</span><span class="p">,</span>
+    <span class="s1">'capture_repr'</span><span class="p">:</span> <span class="p">(</span><span class="s1">'__repr__'</span><span class="p">),</span>
+    <span class="s1">'ignore_repr_types'</span><span class="p">:</span> <span class="sa">r</span><span class="s1">'matplotlib\.(text|axes)'</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -3132,7 +3132,7 @@ but is easier to write as reST.  To accommodate this, you may set
 across reST files.</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
-   <span class="s1">&#39;copyfile_regex&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;.*\.rst&#39;</span><span class="p">,</span>
+   <span class="s1">'copyfile_regex'</span><span class="p">:</span> <span class="sa">r</span><span class="s1">'.*\.rst'</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -3222,7 +3222,7 @@ desirable to document if they are used in examples.</p>
 <section id="tagging-examples-and-filtering">
 <span id="tagging-examples"></span><h3>Tagging Examples and Filtering<a class="headerlink" href="#tagging-examples-and-filtering" title="Link to this heading">#</a></h3>
 <p>You can tag examples with the:</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># sphinx_gallery_tags = [&quot;tag1&quot;, &quot;tag2&quot;]</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># sphinx_gallery_tags = ["tag1", "tag2"]</span>
 </pre></div>
 </div>
 <p>syntax.</p>

@@ -473,7 +473,7 @@
   <h1>Source code for sphinx_gallery.scrapers</h1><div class="highlight"><pre>
 <span></span><span class="c1"># Author: Óscar Nájera</span>
 <span class="c1"># License: 3-clause BSD</span>
-<span class="sd">&quot;&quot;&quot;Scrapers for embedding images.</span>
+<span class="sd">"""Scrapers for embedding images.</span>
 
 <span class="sd">Collect images that have been produced by code blocks.</span>
 
@@ -481,7 +481,7 @@
 <span class="sd">live in modules that will support them (e.g., PyVista, Plotly).  Scraped</span>
 <span class="sd">images are injected as rst ``image-sg`` directives into the ``.rst``</span>
 <span class="sd">file generated for each example script.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -507,22 +507,22 @@
     <span class="kn">from</span><span class="w"> </span><span class="nn">.py_source_parser</span><span class="w"> </span><span class="kn">import</span> <span class="n">Block</span>
 
 <span class="n">SrcsetMap</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">float</span> <span class="o">|</span> <span class="nb">int</span><span class="p">,</span> <span class="n">PathLikeStr</span> <span class="o">|</span> <span class="n">PurePosixPath</span><span class="p">]</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="sd">Mapping of image srcset multiplication factor to image path.</span>
 <span class="sd">The key 0 is reserved for the original image. Other keys are</span>
 <span class="sd">multiplication factors, e.g. 2 for 2x.</span>
 
 <span class="sd">Example:</span>
 
-<span class="sd">{0: &quot;/images/image.png&quot;, 2.0: &quot;/images/image_2_00x.png&quot;}</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">{0: "/images/image.png", 2.0: "/images/image_2_00x.png"}</span>
+<span class="sd">"""</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;save_figures&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;figure_rst&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ImagePathIterator&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;clean_modules&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;matplotlib_scraper&quot;</span><span class="p">,</span>
+    <span class="s2">"save_figures"</span><span class="p">,</span>
+    <span class="s2">"figure_rst"</span><span class="p">,</span>
+    <span class="s2">"ImagePathIterator"</span><span class="p">,</span>
+    <span class="s2">"clean_modules"</span><span class="p">,</span>
+    <span class="s2">"matplotlib_scraper"</span><span class="p">,</span>
 <span class="p">]</span>
 
 
@@ -531,33 +531,33 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_import_matplotlib</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Import matplotlib safely.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Import matplotlib safely."""</span>
     <span class="c1"># make sure that the Agg backend is set before importing any</span>
     <span class="c1"># matplotlib</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
 
-    <span class="n">matplotlib</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">&quot;agg&quot;</span><span class="p">)</span>
+    <span class="n">matplotlib</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">"agg"</span><span class="p">)</span>
     <span class="n">matplotlib_backend</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">get_backend</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
 
     <span class="n">filterwarnings</span><span class="p">(</span>
-        <span class="s2">&quot;ignore&quot;</span><span class="p">,</span>
+        <span class="s2">"ignore"</span><span class="p">,</span>
         <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">,</span>
-        <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Matplotlib is currently using agg, which is a&quot;</span>
-        <span class="s2">&quot; non-GUI backend, so cannot show the figure.&quot;</span>
-        <span class="s2">&quot;|(</span><span class="se">\n</span><span class="s2">|.)*is non-interactive, and thus cannot be&quot;</span>
-        <span class="s2">&quot; shown&quot;</span><span class="p">,</span>
+        <span class="n">message</span><span class="o">=</span><span class="s2">"Matplotlib is currently using agg, which is a"</span>
+        <span class="s2">" non-GUI backend, so cannot show the figure."</span>
+        <span class="s2">"|(</span><span class="se">\n</span><span class="s2">|.)*is non-interactive, and thus cannot be"</span>
+        <span class="s2">" shown"</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">matplotlib_backend</span> <span class="o">!=</span> <span class="s2">&quot;agg&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">matplotlib_backend</span> <span class="o">!=</span> <span class="s2">"agg"</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
-            <span class="s2">&quot;Sphinx-Gallery relies on the matplotlib &#39;agg&#39; backend to &quot;</span>
-            <span class="s2">&quot;render figures and write them to files. You are &quot;</span>
-            <span class="s2">&quot;currently using the </span><span class="si">{}</span><span class="s2"> backend. Sphinx-Gallery will &quot;</span>
-            <span class="s2">&quot;terminate the build now, because changing backends is &quot;</span>
-            <span class="s2">&quot;not well supported by matplotlib. We advise you to move &quot;</span>
-            <span class="s2">&quot;sphinx_gallery imports before any matplotlib-dependent &quot;</span>
-            <span class="s2">&quot;import. Moving sphinx_gallery imports at the top of &quot;</span>
-            <span class="s2">&quot;your conf.py file should fix this issue&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">matplotlib_backend</span><span class="p">)</span>
+            <span class="s2">"Sphinx-Gallery relies on the matplotlib 'agg' backend to "</span>
+            <span class="s2">"render figures and write them to files. You are "</span>
+            <span class="s2">"currently using the </span><span class="si">{}</span><span class="s2"> backend. Sphinx-Gallery will "</span>
+            <span class="s2">"terminate the build now, because changing backends is "</span>
+            <span class="s2">"not well supported by matplotlib. We advise you to move "</span>
+            <span class="s2">"sphinx_gallery imports before any matplotlib-dependent "</span>
+            <span class="s2">"import. Moving sphinx_gallery imports at the top of "</span>
+            <span class="s2">"your conf.py file should fix this issue"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">matplotlib_backend</span><span class="p">)</span>
         <span class="p">)</span>
 
     <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
@@ -568,34 +568,34 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">_matplotlib_fig_titles</span><span class="p">(</span><span class="n">fig</span><span class="p">:</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">Figure</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="n">titles</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="c1"># get supertitle if exists</span>
-    <span class="n">suptitle</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="s2">&quot;_suptitle&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">suptitle</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="s2">"_suptitle"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">suptitle</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">titles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">suptitle</span><span class="o">.</span><span class="n">get_text</span><span class="p">())</span>
     <span class="c1"># get titles from all axes, for all locs</span>
-    <span class="n">title_locs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="s2">&quot;right&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="s2">&quot;right&quot;</span><span class="p">]</span>
+    <span class="n">title_locs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Literal</span><span class="p">[</span><span class="s2">"left"</span><span class="p">,</span> <span class="s2">"center"</span><span class="p">,</span> <span class="s2">"right"</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"left"</span><span class="p">,</span> <span class="s2">"center"</span><span class="p">,</span> <span class="s2">"right"</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">fig</span><span class="o">.</span><span class="n">axes</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">loc</span> <span class="ow">in</span> <span class="n">title_locs</span><span class="p">:</span>
             <span class="n">text</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_title</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">loc</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">text</span><span class="p">:</span>
                 <span class="n">titles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-    <span class="n">fig_titles</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">titles</span><span class="p">)</span>
+    <span class="n">fig_titles</span> <span class="o">=</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">titles</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">fig_titles</span>
 
 
-<span class="n">_ANIMATION_RST</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="n">_ANIMATION_RST</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">.. container:: sphx-glr-animation</span>
 
 <span class="s2">    .. raw:: html</span>
 
 <span class="s2">        </span><span class="si">{0}</span>
-<span class="s2">&quot;&quot;&quot;</span>
-<span class="n">_ANIMATION_VIDEO_RST</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">"""</span>
+<span class="n">_ANIMATION_VIDEO_RST</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">.. video:: </span><span class="si">{video}</span>
 <span class="s2">   :class: sphx-glr-single-img</span>
 <span class="s2">   :height: </span><span class="si">{height}</span>
 <span class="s2">   :width: </span><span class="si">{width}</span>
 <span class="si">{options}</span>
-<span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">"""</span>
 
 
 <div class="viewcode-block" id="matplotlib_scraper">
@@ -603,7 +603,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">matplotlib_scraper</span><span class="p">(</span>
     <span class="n">block</span><span class="p">:</span> <span class="n">Block</span><span class="p">,</span> <span class="n">block_vars</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Scrape Matplotlib images.</span>
+<span class="w">    </span><span class="sd">"""Scrape Matplotlib images.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -615,10 +615,10 @@
 <span class="sd">        Contains the configuration of Sphinx-Gallery</span>
 <span class="sd">    **kwargs : dict</span>
 <span class="sd">        Additional keyword arguments to pass to</span>
-<span class="sd">        :meth:`~matplotlib.figure.Figure.savefig`, e.g. ``format=&#39;svg&#39;``. The</span>
+<span class="sd">        :meth:`~matplotlib.figure.Figure.savefig`, e.g. ``format='svg'``. The</span>
 <span class="sd">        ``format`` keyword argument in particular is used to set the file</span>
-<span class="sd">        extension of the output file (currently only &#39;png&#39;, &#39;jpg&#39;, &#39;svg&#39;,</span>
-<span class="sd">        &#39;gif&#39;, and &#39;webp&#39; are supported).</span>
+<span class="sd">        extension of the output file (currently only 'png', 'jpg', 'svg',</span>
+<span class="sd">        'gif', and 'webp' are supported).</span>
 
 <span class="sd">        This is not used internally, but intended for use when overriding the scraper.</span>
 
@@ -627,27 +627,27 @@
 <span class="sd">    rst : str</span>
 <span class="sd">        The reStructuredText that will be rendered to HTML containing</span>
 <span class="sd">        the images. This is often produced by :func:`figure_rst`.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Do not use _import_matplotlib() to avoid potentially changing the backend</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.animation</span><span class="w"> </span><span class="kn">import</span> <span class="n">Animation</span>
 
-    <span class="n">image_path_iterator</span> <span class="o">=</span> <span class="n">block_vars</span><span class="p">[</span><span class="s2">&quot;image_path_iterator&quot;</span><span class="p">]</span>
+    <span class="n">image_path_iterator</span> <span class="o">=</span> <span class="n">block_vars</span><span class="p">[</span><span class="s2">"image_path_iterator"</span><span class="p">]</span>
     <span class="n">image_rsts</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">srcset</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;image_srcset&quot;</span><span class="p">]</span>
+    <span class="n">srcset</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">"image_srcset"</span><span class="p">]</span>
 
     <span class="c1"># Check for animations</span>
     <span class="n">anims</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;matplotlib_animations&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]:</span>
-        <span class="k">for</span> <span class="n">ani</span> <span class="ow">in</span> <span class="n">block_vars</span><span class="p">[</span><span class="s2">&quot;example_globals&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">"matplotlib_animations"</span><span class="p">][</span><span class="mi">0</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">ani</span> <span class="ow">in</span> <span class="n">block_vars</span><span class="p">[</span><span class="s2">"example_globals"</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ani</span><span class="p">,</span> <span class="n">Animation</span><span class="p">):</span>
                 <span class="n">anims</span><span class="p">[</span><span class="n">ani</span><span class="o">.</span><span class="n">_fig</span><span class="p">]</span> <span class="o">=</span> <span class="n">ani</span>
     <span class="c1"># Then standard images</span>
     <span class="k">for</span> <span class="n">fig_num</span><span class="p">,</span> <span class="n">image_path</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">get_fignums</span><span class="p">(),</span> <span class="n">image_path_iterator</span><span class="p">):</span>
         <span class="n">image_path</span> <span class="o">=</span> <span class="n">PurePosixPath</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span>
-        <span class="k">if</span> <span class="s2">&quot;format&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
-            <span class="n">image_path</span> <span class="o">=</span> <span class="n">image_path</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;format&quot;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="s2">"format"</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">image_path</span> <span class="o">=</span> <span class="n">image_path</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">"."</span> <span class="o">+</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">"format"</span><span class="p">])</span>
         <span class="c1"># Convert figure number to Figure.</span>
         <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">fig_num</span><span class="p">)</span>
         <span class="c1"># Deal with animations</span>
@@ -658,45 +658,45 @@
         <span class="n">fig_titles</span> <span class="o">=</span> <span class="n">_matplotlib_fig_titles</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
         <span class="n">to_rgba</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">colorConverter</span><span class="o">.</span><span class="n">to_rgba</span>
         <span class="c1"># shallow copy should be fine here, just want to avoid changing</span>
-        <span class="c1"># &quot;kwargs&quot; for subsequent figures processed by the loop</span>
+        <span class="c1"># "kwargs" for subsequent figures processed by the loop</span>
         <span class="n">these_kwargs</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;facecolor&quot;</span><span class="p">,</span> <span class="s2">&quot;edgecolor&quot;</span><span class="p">]:</span>
-            <span class="n">fig_attr</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="s2">&quot;get_&quot;</span> <span class="o">+</span> <span class="n">attr</span><span class="p">)()</span>
-            <span class="n">default_attr</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.&quot;</span> <span class="o">+</span> <span class="n">attr</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"facecolor"</span><span class="p">,</span> <span class="s2">"edgecolor"</span><span class="p">]:</span>
+            <span class="n">fig_attr</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="s2">"get_"</span> <span class="o">+</span> <span class="n">attr</span><span class="p">)()</span>
+            <span class="n">default_attr</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">"figure."</span> <span class="o">+</span> <span class="n">attr</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">to_rgba</span><span class="p">(</span><span class="n">fig_attr</span><span class="p">)</span> <span class="o">!=</span> <span class="n">to_rgba</span><span class="p">(</span><span class="n">default_attr</span><span class="p">)</span> <span class="ow">and</span> <span class="n">attr</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
                 <span class="n">these_kwargs</span><span class="p">[</span><span class="n">attr</span><span class="p">]</span> <span class="o">=</span> <span class="n">fig_attr</span>
 
         <span class="c1"># save the figures, and populate the srcsetpaths</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="o">**</span><span class="n">these_kwargs</span><span class="p">)</span>
-            <span class="n">dpi0</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;savefig.dpi&quot;</span><span class="p">]</span>
-            <span class="k">if</span> <span class="n">dpi0</span> <span class="o">==</span> <span class="s2">&quot;figure&quot;</span><span class="p">:</span>
+            <span class="n">dpi0</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">"savefig.dpi"</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">dpi0</span> <span class="o">==</span> <span class="s2">"figure"</span><span class="p">:</span>
                 <span class="n">dpi0</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">dpi</span>
-            <span class="n">dpi0</span> <span class="o">=</span> <span class="n">these_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dpi&quot;</span><span class="p">,</span> <span class="n">dpi0</span><span class="p">)</span>
+            <span class="n">dpi0</span> <span class="o">=</span> <span class="n">these_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"dpi"</span><span class="p">,</span> <span class="n">dpi0</span><span class="p">)</span>
             <span class="n">srcsetpaths_dict</span><span class="p">:</span> <span class="n">SrcsetMap</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="n">image_path</span><span class="p">}</span>
 
             <span class="c1"># save other srcset paths, keyed by multiplication factor:</span>
             <span class="k">for</span> <span class="n">mult</span> <span class="ow">in</span> <span class="n">srcset</span><span class="p">:</span>
-                <span class="n">multst</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mult</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
-                <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">image_path</span><span class="o">.</span><span class="n">stem</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">multst</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">image_path</span><span class="o">.</span><span class="n">suffix</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="n">multst</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">mult</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"."</span><span class="p">,</span> <span class="s2">"_"</span><span class="p">)</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">image_path</span><span class="o">.</span><span class="n">stem</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">multst</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">image_path</span><span class="o">.</span><span class="n">suffix</span><span class="si">}</span><span class="s2">"</span>
                 <span class="n">this_hipath</span> <span class="o">=</span> <span class="n">image_path</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="n">PurePosixPath</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-                <span class="n">hikwargs</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">these_kwargs</span><span class="p">,</span> <span class="s2">&quot;dpi&quot;</span><span class="p">:</span> <span class="n">mult</span> <span class="o">*</span> <span class="n">dpi0</span><span class="p">}</span>
+                <span class="n">hikwargs</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">these_kwargs</span><span class="p">,</span> <span class="s2">"dpi"</span><span class="p">:</span> <span class="n">mult</span> <span class="o">*</span> <span class="n">dpi0</span><span class="p">}</span>
                 <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">this_hipath</span><span class="p">,</span> <span class="o">**</span><span class="n">hikwargs</span><span class="p">)</span>
                 <span class="n">srcsetpaths_dict</span><span class="p">[</span><span class="n">mult</span><span class="p">]</span> <span class="o">=</span> <span class="n">this_hipath</span>
             <span class="n">srcsetpaths</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">SrcsetMap</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">srcsetpaths_dict</span><span class="p">]</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-            <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="s2">&quot;all&quot;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="s2">"all"</span><span class="p">)</span>
             <span class="k">raise</span>
 
-        <span class="k">if</span> <span class="s2">&quot;images&quot;</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;compress_images&quot;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="s2">"images"</span> <span class="ow">in</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">"compress_images"</span><span class="p">]:</span>
             <span class="c1"># key 0 is image_path itself, so this covers it as well</span>
             <span class="k">for</span> <span class="n">hipath</span> <span class="ow">in</span> <span class="n">srcsetpaths</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-                <span class="n">optipng</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">hipath</span><span class="p">),</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;compress_images_args&quot;</span><span class="p">])</span>
+                <span class="n">optipng</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">hipath</span><span class="p">),</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">"compress_images_args"</span><span class="p">])</span>
 
         <span class="n">image_rsts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
             <span class="n">figure_rst</span><span class="p">(</span>
                 <span class="p">[</span><span class="n">image_path</span><span class="p">],</span>
-                <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">],</span>
+                <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">"src_dir"</span><span class="p">],</span>
                 <span class="n">fig_titles</span><span class="p">,</span>
                 <span class="n">srcsetpaths</span><span class="o">=</span><span class="n">srcsetpaths</span><span class="p">,</span>
             <span class="p">)</span>
@@ -704,27 +704,27 @@
 
     <span class="c1"># Determine whether single-img should be converted to multi-img</span>
     <span class="n">convert_to_multi_image</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># default is to convert</span>
-    <span class="k">if</span> <span class="n">block_vars</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;multi_image&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># block setting takes precedence</span>
-        <span class="n">convert_to_multi_image</span> <span class="o">=</span> <span class="n">block_vars</span><span class="p">[</span><span class="s2">&quot;multi_image&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;single&quot;</span>
-    <span class="k">elif</span> <span class="n">block_vars</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;file_conf&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># then file setting</span>
-        <span class="n">convert_to_multi_image</span> <span class="o">=</span> <span class="n">block_vars</span><span class="p">[</span><span class="s2">&quot;file_conf&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;multi_image&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;single&quot;</span>
+    <span class="k">if</span> <span class="n">block_vars</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"multi_image"</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># block setting takes precedence</span>
+        <span class="n">convert_to_multi_image</span> <span class="o">=</span> <span class="n">block_vars</span><span class="p">[</span><span class="s2">"multi_image"</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">"single"</span>
+    <span class="k">elif</span> <span class="n">block_vars</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"file_conf"</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># then file setting</span>
+        <span class="n">convert_to_multi_image</span> <span class="o">=</span> <span class="n">block_vars</span><span class="p">[</span><span class="s2">"file_conf"</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"multi_image"</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">"single"</span>
 
-    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="s2">&quot;all&quot;</span><span class="p">)</span>
-    <span class="n">rst</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="s2">"all"</span><span class="p">)</span>
+    <span class="n">rst</span> <span class="o">=</span> <span class="s2">""</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">image_rsts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">rst</span> <span class="o">=</span> <span class="n">image_rsts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">image_rsts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">convert_to_multi_image</span><span class="p">:</span>
             <span class="n">image_rsts</span> <span class="o">=</span> <span class="p">[</span>
                 <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span>
-                    <span class="sa">r</span><span class="s2">&quot;:class: sphx-glr-single-img&quot;</span><span class="p">,</span> <span class="s2">&quot;:class: sphx-glr-multi-img&quot;</span><span class="p">,</span> <span class="n">image</span>
+                    <span class="sa">r</span><span class="s2">":class: sphx-glr-single-img"</span><span class="p">,</span> <span class="s2">":class: sphx-glr-multi-img"</span><span class="p">,</span> <span class="n">image</span>
                 <span class="p">)</span>
                 <span class="k">for</span> <span class="n">image</span> <span class="ow">in</span> <span class="n">image_rsts</span>
             <span class="p">]</span>
         <span class="n">image_rsts</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">HLIST_IMAGE_MATPLOTLIB</span> <span class="o">+</span> <span class="n">indent</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="mi">6</span><span class="p">)</span> <span class="k">for</span> <span class="n">image</span> <span class="ow">in</span> <span class="n">image_rsts</span>
+            <span class="n">HLIST_IMAGE_MATPLOTLIB</span> <span class="o">+</span> <span class="n">indent</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="s2">" "</span> <span class="o">*</span> <span class="mi">6</span><span class="p">)</span> <span class="k">for</span> <span class="n">image</span> <span class="ow">in</span> <span class="n">image_rsts</span>
         <span class="p">]</span>
-        <span class="n">rst</span> <span class="o">=</span> <span class="n">HLIST_HEADER</span> <span class="o">+</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">image_rsts</span><span class="p">)</span>
+        <span class="n">rst</span> <span class="o">=</span> <span class="n">HLIST_HEADER</span> <span class="o">+</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">image_rsts</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">rst</span></div>
 
 
@@ -738,50 +738,50 @@
     <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.animation</span><span class="w"> </span><span class="kn">import</span> <span class="n">FFMpegWriter</span><span class="p">,</span> <span class="n">ImageMagickWriter</span>
 
     <span class="c1"># output the thumbnail as the image, as it will just be copied</span>
-    <span class="c1"># if it&#39;s the file thumbnail</span>
+    <span class="c1"># if it's the file thumbnail</span>
     <span class="n">fig</span> <span class="o">=</span> <span class="n">anim</span><span class="o">.</span><span class="n">_fig</span>
-    <span class="n">gif_image_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">&quot;.gif&quot;</span><span class="p">)</span>
+    <span class="n">gif_image_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">".gif"</span><span class="p">)</span>
     <span class="n">fig_size</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">get_size_inches</span><span class="p">()</span>
-    <span class="n">thumb_size</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;thumbnail_size&quot;</span><span class="p">]</span>
+    <span class="n">thumb_size</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">"thumbnail_size"</span><span class="p">]</span>
     <span class="n">use_dpi</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">t_s</span> <span class="o">/</span> <span class="n">f_s</span> <span class="k">for</span> <span class="n">t_s</span><span class="p">,</span> <span class="n">f_s</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">thumb_size</span><span class="p">,</span> <span class="n">fig_size</span><span class="p">)))</span>
     <span class="k">if</span> <span class="n">FFMpegWriter</span><span class="o">.</span><span class="n">isAvailable</span><span class="p">():</span>
-        <span class="n">writer</span> <span class="o">=</span> <span class="s2">&quot;ffmpeg&quot;</span>
+        <span class="n">writer</span> <span class="o">=</span> <span class="s2">"ffmpeg"</span>
     <span class="k">elif</span> <span class="n">ImageMagickWriter</span><span class="o">.</span><span class="n">isAvailable</span><span class="p">():</span>
-        <span class="n">writer</span> <span class="o">=</span> <span class="s2">&quot;imagemagick&quot;</span>
+        <span class="n">writer</span> <span class="o">=</span> <span class="s2">"imagemagick"</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">writer</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">anim</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">gif_image_path</span><span class="p">,</span> <span class="n">writer</span><span class="o">=</span><span class="n">writer</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">use_dpi</span><span class="p">)</span>
 
-    <span class="n">_</span><span class="p">,</span> <span class="n">fmt</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;matplotlib_animations&quot;</span><span class="p">]</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">fmt</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">"matplotlib_animations"</span><span class="p">]</span>
     <span class="c1"># Formats that are embedded in rst</span>
     <span class="n">html</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="n">fmt</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">html</span> <span class="o">=</span> <span class="n">anim</span><span class="o">.</span><span class="n">_repr_html_</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">html</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># plt.rcParams[&#39;animation.html&#39;] == &#39;none&#39;</span>
+        <span class="k">if</span> <span class="n">html</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># plt.rcParams['animation.html'] == 'none'</span>
             <span class="n">html</span> <span class="o">=</span> <span class="n">anim</span><span class="o">.</span><span class="n">to_jshtml</span><span class="p">()</span>
-    <span class="k">elif</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s2">&quot;html5&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s2">"html5"</span><span class="p">:</span>
         <span class="n">html</span> <span class="o">=</span> <span class="n">anim</span><span class="o">.</span><span class="n">to_html5_video</span><span class="p">()</span>
-    <span class="k">elif</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s2">&quot;jshtml&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">fmt</span> <span class="o">==</span> <span class="s2">"jshtml"</span><span class="p">:</span>
         <span class="n">html</span> <span class="o">=</span> <span class="n">anim</span><span class="o">.</span><span class="n">to_jshtml</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">html</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">html</span> <span class="o">=</span> <span class="n">indent</span><span class="p">(</span><span class="n">html</span><span class="p">,</span> <span class="s2">&quot;     &quot;</span><span class="p">)</span>
+        <span class="n">html</span> <span class="o">=</span> <span class="n">indent</span><span class="p">(</span><span class="n">html</span><span class="p">,</span> <span class="s2">"     "</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">_ANIMATION_RST</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">html</span><span class="p">)</span>
 
     <span class="c1"># Formats that are saved and use `video` directive</span>
-    <span class="n">video</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;.</span><span class="si">{</span><span class="n">fmt</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">video</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="sa">f</span><span class="s2">".</span><span class="si">{</span><span class="n">fmt</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="n">anim</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">video</span><span class="p">)</span>
-    <span class="n">options</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;autoplay&quot;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">anim</span><span class="p">,</span> <span class="s2">&quot;_repeat&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
-        <span class="n">options</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;loop&quot;</span><span class="p">)</span>
-    <span class="n">dpi</span> <span class="o">=</span> <span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;savefig.dpi&quot;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="n">dpi</span> <span class="o">==</span> <span class="s2">&quot;figure&quot;</span><span class="p">:</span>
+    <span class="n">options</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"autoplay"</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">anim</span><span class="p">,</span> <span class="s2">"_repeat"</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="n">options</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"loop"</span><span class="p">)</span>
+    <span class="n">dpi</span> <span class="o">=</span> <span class="n">rcParams</span><span class="p">[</span><span class="s2">"savefig.dpi"</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">dpi</span> <span class="o">==</span> <span class="s2">"figure"</span><span class="p">:</span>
         <span class="n">dpi</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">dpi</span>
-    <span class="n">video_uri</span> <span class="o">=</span> <span class="n">_as_relative_rst_path</span><span class="p">(</span><span class="n">video</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">])</span>
+    <span class="n">video_uri</span> <span class="o">=</span> <span class="n">_as_relative_rst_path</span><span class="p">(</span><span class="n">video</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">"src_dir"</span><span class="p">])</span>
     <span class="n">html</span> <span class="o">=</span> <span class="n">_ANIMATION_VIDEO_RST</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-        <span class="n">video</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;/</span><span class="si">{</span><span class="n">video_uri</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="n">video</span><span class="o">=</span><span class="sa">f</span><span class="s2">"/</span><span class="si">{</span><span class="n">video_uri</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
         <span class="n">width</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">fig_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">dpi</span><span class="p">),</span>
         <span class="n">height</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">fig_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">dpi</span><span class="p">),</span>
-        <span class="n">options</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   :</span><span class="si">{</span><span class="n">opt</span><span class="si">}</span><span class="s2">:</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">opt</span> <span class="ow">in</span> <span class="n">options</span><span class="p">),</span>
+        <span class="n">options</span><span class="o">=</span><span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">"   :</span><span class="si">{</span><span class="n">opt</span><span class="si">}</span><span class="s2">:</span><span class="se">\n</span><span class="s2">"</span> <span class="k">for</span> <span class="n">opt</span> <span class="ow">in</span> <span class="n">options</span><span class="p">),</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">html</span>
 
@@ -794,13 +794,13 @@
 <div class="viewcode-block" id="ImagePathIterator">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.ImagePathIterator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ImagePathIterator</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Iterate over image paths for a given example.</span>
+<span class="w">    </span><span class="sd">"""Iterate over image paths for a given example.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    image_path : str</span>
 <span class="sd">        The template image path.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image_path</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">image_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span>
@@ -808,17 +808,17 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_stop</span> <span class="o">=</span> <span class="mi">1000000</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the number of image paths used.</span>
+<span class="w">        </span><span class="sd">"""Return the number of image paths used.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        n_paths : int</span>
 <span class="sd">            The number of paths.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">paths</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Iterate over paths.</span>
+<span class="w">        </span><span class="sd">"""Iterate over paths.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -831,17 +831,17 @@
 
 <span class="sd">        Where ``epoch`` is given by successive outputs of</span>
 <span class="sd">        :func:`mne.Epochs.next`.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># we should really never have 1e6, let&#39;s prevent some user pain</span>
+<span class="sd">        """</span>
+        <span class="c1"># we should really never have 1e6, let's prevent some user pain</span>
         <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stop</span><span class="p">):</span>
             <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generated over </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_stop</span><span class="si">}</span><span class="s2"> images&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Generated over </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_stop</span><span class="si">}</span><span class="s2"> images"</span><span class="p">)</span>
 
 <div class="viewcode-block" id="ImagePathIterator.next">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.scrapers.html#sphinx_gallery.scrapers.ImagePathIterator.next">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">next</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the next image path, with numbering starting at 1.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Return the next image path, with numbering starting at 1."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__next__</span><span class="p">()</span></div>
 
 
@@ -855,19 +855,19 @@
 
 <span class="c1"># For now, these are what we support</span>
 <span class="c1"># Update advanced.rst if this list is changed</span>
-<span class="n">_KNOWN_IMG_EXTS</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;png&quot;</span><span class="p">,</span> <span class="s2">&quot;svg&quot;</span><span class="p">,</span> <span class="s2">&quot;jpg&quot;</span><span class="p">,</span> <span class="s2">&quot;gif&quot;</span><span class="p">,</span> <span class="s2">&quot;webp&quot;</span><span class="p">)</span>
+<span class="n">_KNOWN_IMG_EXTS</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"png"</span><span class="p">,</span> <span class="s2">"svg"</span><span class="p">,</span> <span class="s2">"jpg"</span><span class="p">,</span> <span class="s2">"gif"</span><span class="p">,</span> <span class="s2">"webp"</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_find_image_ext</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Find an image, tolerant of different file extensions.&quot;&quot;&quot;</span>
-    <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">"""Find an image, tolerant of different file extensions."""</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">ext</span> <span class="ow">in</span> <span class="n">_KNOWN_IMG_EXTS</span><span class="p">:</span>
-        <span class="n">this_path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;.</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">this_path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="sa">f</span><span class="s2">".</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">this_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
             <span class="k">break</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">ext</span> <span class="o">=</span> <span class="s2">&quot;png&quot;</span>
-    <span class="k">return</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;.</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)),</span> <span class="n">ext</span><span class="p">)</span>
+        <span class="n">ext</span> <span class="o">=</span> <span class="s2">"png"</span>
+    <span class="k">return</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="sa">f</span><span class="s2">".</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s2">"</span><span class="p">)),</span> <span class="n">ext</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="save_figures">
@@ -875,7 +875,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">save_figures</span><span class="p">(</span>
     <span class="n">block</span><span class="p">:</span> <span class="n">Block</span><span class="p">,</span> <span class="n">block_vars</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Save all open figures of the example code-block.</span>
+<span class="w">    </span><span class="sd">"""Save all open figures of the example code-block.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -890,18 +890,18 @@
 <span class="sd">    -------</span>
 <span class="sd">    images_rst : str</span>
 <span class="sd">        rst code to embed the images in the document.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">.gen_rst</span><span class="w"> </span><span class="kn">import</span> <span class="n">_get_callables</span>
 
-    <span class="n">image_path_iterator</span> <span class="o">=</span> <span class="n">block_vars</span><span class="p">[</span><span class="s2">&quot;image_path_iterator&quot;</span><span class="p">]</span>
-    <span class="n">all_rst</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">image_path_iterator</span> <span class="o">=</span> <span class="n">block_vars</span><span class="p">[</span><span class="s2">"image_path_iterator"</span><span class="p">]</span>
+    <span class="n">all_rst</span> <span class="o">=</span> <span class="s2">""</span>
     <span class="n">prev_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">image_path_iterator</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">scraper</span> <span class="ow">in</span> <span class="n">_get_callables</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="s2">&quot;image_scrapers&quot;</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">scraper</span> <span class="ow">in</span> <span class="n">_get_callables</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="s2">"image_scrapers"</span><span class="p">):</span>
         <span class="n">rst</span> <span class="o">=</span> <span class="n">scraper</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">block_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rst</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;rst from scraper </span><span class="si">{</span><span class="n">scraper</span><span class="si">!r}</span><span class="s2"> was not a &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;string, got type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">rst</span><span class="p">)</span><span class="si">}</span><span class="s2">:</span><span class="se">\n</span><span class="si">{</span><span class="n">rst</span><span class="si">!r}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">"rst from scraper </span><span class="si">{</span><span class="n">scraper</span><span class="si">!r}</span><span class="s2"> was not a "</span>
+                <span class="sa">f</span><span class="s2">"string, got type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">rst</span><span class="p">)</span><span class="si">}</span><span class="s2">:</span><span class="se">\n</span><span class="si">{</span><span class="n">rst</span><span class="si">!r}</span><span class="s2">"</span>
             <span class="p">)</span>
         <span class="n">n_new</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">image_path_iterator</span><span class="p">)</span> <span class="o">-</span> <span class="n">prev_count</span>
         <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_new</span><span class="p">):</span>
@@ -910,7 +910,7 @@
             <span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">current_path</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
                 <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Scraper </span><span class="si">{</span><span class="n">scraper</span><span class="si">}</span><span class="s2"> did not produce expected image:</span><span class="se">\n</span><span class="si">{</span><span class="n">current_path</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="sa">f</span><span class="s2">"Scraper </span><span class="si">{</span><span class="n">scraper</span><span class="si">}</span><span class="s2"> did not produce expected image:</span><span class="se">\n</span><span class="si">{</span><span class="n">current_path</span><span class="si">}</span><span class="s2">"</span>
                 <span class="p">)</span>
         <span class="n">all_rst</span> <span class="o">+=</span> <span class="n">rst</span>
     <span class="k">return</span> <span class="n">all_rst</span></div>
@@ -918,11 +918,11 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_as_relative_rst_path</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">,</span> <span class="n">sources_dir</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return path relative to sources_dir as a normalized POSIX path.&quot;&quot;&quot;</span>
-    <span class="c1"># relative_to doesn&#39;t work on windows</span>
+<span class="w">    </span><span class="sd">"""Return path relative to sources_dir as a normalized POSIX path."""</span>
+    <span class="c1"># relative_to doesn't work on windows</span>
     <span class="c1"># rel_path = path.relative_to(sources_dir).as_posix()</span>
     <span class="n">rel_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">sources_dir</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="n">rel_path</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="n">rel_path</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">"/"</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="figure_rst">
@@ -930,23 +930,23 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">figure_rst</span><span class="p">(</span>
     <span class="n">figure_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">PathLikeStr</span> <span class="o">|</span> <span class="n">PurePosixPath</span><span class="p">],</span>
     <span class="n">sources_dir</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">,</span>
-    <span class="n">fig_titles</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="n">fig_titles</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span>
     <span class="n">srcsetpaths</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">SrcsetMap</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate reST for a list of image filenames.</span>
+<span class="w">    </span><span class="sd">"""Generate reST for a list of image filenames.</span>
 
 <span class="sd">    Depending on whether we have one or more figures, we use a</span>
-<span class="sd">    single rst call to &#39;image&#39; or a horizontal list.</span>
+<span class="sd">    single rst call to 'image' or a horizontal list.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    figure_list : list</span>
-<span class="sd">        List of strings of the figures&#39; absolute paths.</span>
+<span class="sd">        List of strings of the figures' absolute paths.</span>
 <span class="sd">    sources_dir : str | pathlib.Path</span>
 <span class="sd">        absolute path of Sphinx documentation sources</span>
 <span class="sd">    fig_titles : str</span>
 <span class="sd">        Titles of figures, empty string if no titles found. Currently</span>
-<span class="sd">        only supported for matplotlib figures, default = &#39;&#39;.</span>
+<span class="sd">        only supported for matplotlib figures, default = ''.</span>
 <span class="sd">    srcsetpaths : list or None</span>
 <span class="sd">        List of dictionaries containing absolute paths.  If</span>
 <span class="sd">        empty, then srcset field is populated with the figure path.</span>
@@ -966,7 +966,7 @@
 <span class="sd">    ``:srcset: /plot_types/imgs/img_001.png,</span>
 <span class="sd">      /plot_types/imgs/img_2_00x.png 2.00x``</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">srcsetpaths</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># this should never happen, but figure_rst is public, so</span>
         <span class="c1"># this has to be a kwarg...</span>
@@ -977,19 +977,19 @@
     <span class="p">]</span>
 
     <span class="c1"># Get alt text</span>
-    <span class="n">alt</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">alt</span> <span class="o">=</span> <span class="s2">""</span>
     <span class="k">if</span> <span class="n">fig_titles</span><span class="p">:</span>
         <span class="n">alt</span> <span class="o">=</span> <span class="n">fig_titles</span>
     <span class="k">elif</span> <span class="n">figure_list</span><span class="p">:</span>
         <span class="n">file_name</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">figure_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">name</span>
-        <span class="c1"># remove ext &amp; &#39;sphx_glr_&#39; from start &amp; n#&#39;s from end</span>
+        <span class="c1"># remove ext &amp; 'sphx_glr_' from start &amp; n#'s from end</span>
         <span class="n">file_name_noext</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span><span class="o">.</span><span class="n">stem</span><span class="p">[</span><span class="mi">9</span><span class="p">:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span>
         <span class="c1"># replace - &amp; _ with \s</span>
-        <span class="n">file_name_final</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[-,_]&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">file_name_noext</span><span class="p">)</span>
+        <span class="n">file_name_final</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"[-,_]"</span><span class="p">,</span> <span class="s2">" "</span><span class="p">,</span> <span class="n">file_name_noext</span><span class="p">)</span>
         <span class="n">alt</span> <span class="o">=</span> <span class="n">file_name_final</span>
     <span class="n">alt</span> <span class="o">=</span> <span class="n">_single_line_sanitize</span><span class="p">(</span><span class="n">alt</span><span class="p">)</span>
 
-    <span class="n">images_rst</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">images_rst</span> <span class="o">=</span> <span class="s2">""</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">figure_paths</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">figure_name</span> <span class="o">=</span> <span class="n">figure_paths</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">hinames</span> <span class="o">=</span> <span class="n">srcsetpaths</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -1009,7 +1009,7 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_get_srcset_st</span><span class="p">(</span><span class="n">sources_dir</span><span class="p">:</span> <span class="n">PathLikeStr</span><span class="p">,</span> <span class="n">hinames</span><span class="p">:</span> <span class="n">SrcsetMap</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create the srcset string for including on the rst line.</span>
+<span class="w">    </span><span class="sd">"""Create the srcset string for including on the rst line.</span>
 
 <span class="sd">    For example; `sources_dir` might be `/home/sample-proj/source`,</span>
 <span class="sd">    hinames posix paths:</span>
@@ -1017,72 +1017,72 @@
 <span class="sd">    2.0: /home/sample-proj/source/plot_types/images/img1_2_00x.png,</span>
 
 <span class="sd">    The result would be:</span>
-<span class="sd">    &#39;/plot_types/basic/images/sphx_glr_pie_001.png,</span>
-<span class="sd">    /plot_types/basic/images/sphx_glr_pie_001_2_00x.png 2.00x&#39;</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">srcst</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+<span class="sd">    '/plot_types/basic/images/sphx_glr_pie_001.png,</span>
+<span class="sd">    /plot_types/basic/images/sphx_glr_pie_001_2_00x.png 2.00x'</span>
+<span class="sd">    """</span>
+    <span class="n">srcst</span> <span class="o">=</span> <span class="s2">""</span>
     <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">hinames</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
         <span class="n">path</span> <span class="o">=</span> <span class="n">_as_relative_rst_path</span><span class="p">(</span><span class="n">hinames</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">sources_dir</span><span class="p">)</span>
-        <span class="n">srcst</span> <span class="o">+=</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">path</span>
+        <span class="n">srcst</span> <span class="o">+=</span> <span class="s2">"/"</span> <span class="o">+</span> <span class="n">path</span>
         <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">srcst</span> <span class="o">+=</span> <span class="s2">&quot;, &quot;</span>
+            <span class="n">srcst</span> <span class="o">+=</span> <span class="s2">", "</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">srcst</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="n">k</span><span class="si">:</span><span class="s2">1.2f</span><span class="si">}</span><span class="s2">x, &quot;</span>
-    <span class="k">if</span> <span class="n">srcst</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span> <span class="o">==</span> <span class="s2">&quot;, &quot;</span><span class="p">:</span>
+            <span class="n">srcst</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">" </span><span class="si">{</span><span class="n">k</span><span class="si">:</span><span class="s2">1.2f</span><span class="si">}</span><span class="s2">x, "</span>
+    <span class="k">if</span> <span class="n">srcst</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span> <span class="o">==</span> <span class="s2">", "</span><span class="p">:</span>
         <span class="n">srcst</span> <span class="o">=</span> <span class="n">srcst</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
-    <span class="n">srcst</span> <span class="o">+=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">srcst</span> <span class="o">+=</span> <span class="s2">""</span>
 
     <span class="k">return</span> <span class="n">srcst</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_single_line_sanitize</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove problematic newlines.&quot;&quot;&quot;</span>
-    <span class="c1"># For example, when setting a :alt: for an image, it shouldn&#39;t have \n</span>
+<span class="w">    </span><span class="sd">"""Remove problematic newlines."""</span>
+    <span class="c1"># For example, when setting a :alt: for an image, it shouldn't have \n</span>
     <span class="c1"># This is a function in case we end up finding other things to replace</span>
-    <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <span class="s2">" "</span><span class="p">)</span>
 
 
 <span class="c1"># The following strings are used when we have several pictures: we use</span>
 <span class="c1"># an html div tag that our CSS uses to turn the lists into horizontal</span>
 <span class="c1"># lists.</span>
-<span class="n">HLIST_HEADER</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="n">HLIST_HEADER</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">.. rst-class:: sphx-glr-horizontal</span>
 
-<span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">"""</span>
 
-<span class="n">HLIST_IMAGE_MATPLOTLIB</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="n">HLIST_IMAGE_MATPLOTLIB</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    *</span>
-<span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">"""</span>
 
-<span class="n">HLIST_SG_TEMPLATE</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="n">HLIST_SG_TEMPLATE</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    *</span>
 
 <span class="s2">      .. image-sg:: /</span><span class="si">%s</span>
 <span class="s2">          :alt: </span><span class="si">%s</span>
 <span class="s2">          :srcset: </span><span class="si">%s</span>
 <span class="s2">          :class: sphx-glr-multi-img</span>
-<span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">"""</span>
 
-<span class="n">SG_IMAGE</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="n">SG_IMAGE</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">.. image-sg:: /</span><span class="si">%s</span>
 <span class="s2">   :alt: </span><span class="si">%s</span>
 <span class="s2">   :srcset: </span><span class="si">%s</span>
 <span class="s2">   :class: sphx-glr-single-img</span>
-<span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">"""</span>
 
 <span class="c1"># keep around for back-compat:</span>
-<span class="n">SINGLE_IMAGE</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="n">SINGLE_IMAGE</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2"> .. image:: /</span><span class="si">%s</span>
 <span class="s2">     :alt: </span><span class="si">%s</span>
 <span class="s2">     :class: sphx-glr-single-img</span>
-<span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">"""</span>
 
 <span class="c1">###############################################################################</span>
 <span class="c1"># Module resetting</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_reset_matplotlib</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span><span class="p">,</span> <span class="n">fname</span><span class="p">:</span> <span class="n">PathLikeStr</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reset matplotlib.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Reset matplotlib."""</span>
     <span class="n">mpl</span><span class="p">,</span> <span class="n">plt</span> <span class="o">=</span> <span class="n">_import_matplotlib</span><span class="p">()</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">rcdefaults</span><span class="p">()</span>
     <span class="n">importlib</span><span class="o">.</span><span class="n">reload</span><span class="p">(</span><span class="n">mpl</span><span class="o">.</span><span class="n">units</span><span class="p">)</span>
@@ -1091,15 +1091,15 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_reset_seaborn</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span><span class="p">,</span> <span class="n">fname</span><span class="p">:</span> <span class="n">PathLikeStr</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reset seaborn.&quot;&quot;&quot;</span>
-    <span class="n">seaborn_module</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;seaborn&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">"""Reset seaborn."""</span>
+    <span class="n">seaborn_module</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"seaborn"</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">seaborn_module</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">seaborn_module</span><span class="o">.</span><span class="n">reset_defaults</span><span class="p">()</span>
 
 
 <span class="n">_reset_dict</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;matplotlib&quot;</span><span class="p">:</span> <span class="n">_reset_matplotlib</span><span class="p">,</span>
-    <span class="s2">&quot;seaborn&quot;</span><span class="p">:</span> <span class="n">_reset_seaborn</span><span class="p">,</span>
+    <span class="s2">"matplotlib"</span><span class="p">:</span> <span class="n">_reset_matplotlib</span><span class="p">,</span>
+    <span class="s2">"seaborn"</span><span class="p">:</span> <span class="n">_reset_seaborn</span><span class="p">,</span>
 <span class="p">}</span>
 
 
@@ -1108,7 +1108,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">clean_modules</span><span class="p">(</span>
     <span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span><span class="p">,</span> <span class="n">fname</span><span class="p">:</span> <span class="n">PathLikeStr</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">when</span><span class="p">:</span> <span class="nb">str</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove, unload, or reset modules.</span>
+<span class="w">    </span><span class="sd">"""Remove, unload, or reset modules.</span>
 
 <span class="sd">    After a script is executed it can load a variety of settings that one</span>
 <span class="sd">    does not want to influence in other examples in the gallery.</span>
@@ -1125,19 +1125,19 @@
 
 <span class="sd">        This parameter is only forwarded when the callables accept 3</span>
 <span class="sd">        parameters.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">.gen_rst</span><span class="w"> </span><span class="kn">import</span> <span class="n">_get_callables</span>
 
-    <span class="k">for</span> <span class="n">reset_module</span> <span class="ow">in</span> <span class="n">_get_callables</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="s2">&quot;reset_modules&quot;</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">reset_module</span> <span class="ow">in</span> <span class="n">_get_callables</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="s2">"reset_modules"</span><span class="p">):</span>
         <span class="n">sig</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">reset_module</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sig</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
             <span class="n">third_param</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">sig</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">2</span><span class="p">]</span>
-            <span class="k">if</span> <span class="n">third_param</span> <span class="o">!=</span> <span class="s2">&quot;when&quot;</span><span class="p">:</span>
-                <span class="n">name</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">reset_module</span><span class="p">,</span> <span class="s2">&quot;__name__&quot;</span><span class="p">,</span> <span class="nb">repr</span><span class="p">(</span><span class="n">reset_module</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">third_param</span> <span class="o">!=</span> <span class="s2">"when"</span><span class="p">:</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">reset_module</span><span class="p">,</span> <span class="s2">"__name__"</span><span class="p">,</span> <span class="nb">repr</span><span class="p">(</span><span class="n">reset_module</span><span class="p">))</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;3rd parameter in </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> &quot;</span>
-                    <span class="s2">&quot;function signature must be &#39;when&#39;, &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;got </span><span class="si">{</span><span class="n">third_param</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="sa">f</span><span class="s2">"3rd parameter in </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> "</span>
+                    <span class="s2">"function signature must be 'when', "</span>
+                    <span class="sa">f</span><span class="s2">"got </span><span class="si">{</span><span class="n">third_param</span><span class="si">}</span><span class="s2">"</span>
                 <span class="p">)</span>
             <span class="n">reset_module</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">when</span><span class="o">=</span><span class="n">when</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>

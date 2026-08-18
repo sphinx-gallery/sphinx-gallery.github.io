@@ -471,7 +471,7 @@
                 <article class="bd-article">
                   
   <h1>Source code for sphinx_gallery.directives</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Custom Sphinx directives.&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Custom Sphinx directives."""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -501,13 +501,13 @@
     <span class="kn">import</span><span class="w"> </span><span class="nn">sphinx.application</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">sphinx.config</span>
 
-<span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;sphinx-gallery&quot;</span><span class="p">)</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span><span class="s2">"sphinx-gallery"</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="MiniGallery">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.directives.html#sphinx_gallery.directives.MiniGallery">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">MiniGallery</span><span class="p">(</span><span class="n">Directive</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Custom directive to insert a mini-gallery.</span>
+<span class="w">    </span><span class="sd">"""Custom directive to insert a mini-gallery.</span>
 
 <span class="sd">    The required argument is one or more of the following:</span>
 
@@ -526,16 +526,16 @@
 <span class="sd">      provided, it uses that text for the heading.  Otherwise, it uses</span>
 <span class="sd">      default text.</span>
 <span class="sd">    * `heading-level` specifies the heading level of the heading as a single</span>
-<span class="sd">      character.  If omitted, the default heading level is `&#39;^&#39;`.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">      character.  If omitted, the default heading level is `'^'`.</span>
+<span class="sd">    """</span>
 
     <span class="n">required_arguments</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">has_content</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">optional_arguments</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">final_argument_whitespace</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">option_spec</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;add-heading&quot;</span><span class="p">:</span> <span class="n">directives</span><span class="o">.</span><span class="n">unchanged</span><span class="p">,</span>
-        <span class="s2">&quot;heading-level&quot;</span><span class="p">:</span> <span class="n">directives</span><span class="o">.</span><span class="n">single_char_or_unicode</span><span class="p">,</span>
+        <span class="s2">"add-heading"</span><span class="p">:</span> <span class="n">directives</span><span class="o">.</span><span class="n">unchanged</span><span class="p">,</span>
+        <span class="s2">"heading-level"</span><span class="p">:</span> <span class="n">directives</span><span class="o">.</span><span class="n">single_char_or_unicode</span><span class="p">,</span>
     <span class="p">}</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_target_dir</span><span class="p">(</span>
@@ -545,11 +545,11 @@
         <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
         <span class="n">obj</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get thumbnail target directory, errors when not in example dir.&quot;&quot;&quot;</span>
-        <span class="n">examples_dirs</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;examples_dirs&quot;</span><span class="p">]</span>
+<span class="w">        </span><span class="sd">"""Get thumbnail target directory, errors when not in example dir."""</span>
+        <span class="n">examples_dirs</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">"examples_dirs"</span><span class="p">]</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">examples_dirs</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
             <span class="n">examples_dirs</span> <span class="o">=</span> <span class="p">[</span><span class="n">examples_dirs</span><span class="p">]</span>
-        <span class="n">gallery_dirs</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;gallery_dirs&quot;</span><span class="p">]</span>
+        <span class="n">gallery_dirs</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">"gallery_dirs"</span><span class="p">]</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gallery_dirs</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
             <span class="n">gallery_dirs</span> <span class="o">=</span> <span class="p">[</span><span class="n">gallery_dirs</span><span class="p">]</span>
 
@@ -578,14 +578,14 @@
         <span class="c1"># `path` is not inside a `examples_dirs`</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;minigallery directive error: path input &#39;</span><span class="si">{</span><span class="n">obj</span><span class="si">}</span><span class="s2">&#39; found file:&quot;</span>
-                <span class="sa">f</span><span class="s2">&quot; &#39;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&#39; but this does not live inside any examples_dirs: &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">examples_dirs</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">"minigallery directive error: path input '</span><span class="si">{</span><span class="n">obj</span><span class="si">}</span><span class="s2">' found file:"</span>
+                <span class="sa">f</span><span class="s2">" '</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">' but this does not live inside any examples_dirs: "</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">examples_dirs</span><span class="si">}</span><span class="s2">"</span>
             <span class="p">)</span>
 
         <span class="c1"># Add subgallery path, if present</span>
-        <span class="n">subdir</span><span class="p">:</span> <span class="n">PathLikeStr</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">ex_p</span> <span class="o">:=</span> <span class="n">ex_parents</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">!=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">):</span>
+        <span class="n">subdir</span><span class="p">:</span> <span class="n">PathLikeStr</span> <span class="o">=</span> <span class="s2">""</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">ex_p</span> <span class="o">:=</span> <span class="n">ex_parents</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">!=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">):</span>
             <span class="n">subdir</span> <span class="o">=</span> <span class="n">ex_p</span>
         <span class="n">target_dir</span> <span class="o">=</span> <span class="n">target_dir</span> <span class="o">/</span> <span class="n">subdir</span>
         <span class="k">return</span> <span class="n">target_dir</span>
@@ -593,32 +593,32 @@
 <div class="viewcode-block" id="MiniGallery.run">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.directives.html#sphinx_gallery.directives.MiniGallery.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate mini-gallery from backreference and example files.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Generate mini-gallery from backreference and example files."""</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">.gen_rst</span><span class="w"> </span><span class="kn">import</span> <span class="n">_get_callables</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arguments</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">content</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span><span class="s2">&quot;No arguments passed to &#39;minigallery&#39;&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span><span class="s2">"No arguments passed to 'minigallery'"</span><span class="p">)</span>
 
         <span class="c1"># Respect the same disabling options as the `raw` directive</span>
         <span class="k">if</span> <span class="p">(</span>
             <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">document</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">raw_enabled</span>
             <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">document</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">file_insertion_enabled</span>
         <span class="p">):</span>
-            <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&quot; directive disabled.&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">'"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">" directive disabled.'</span><span class="p">)</span>
 
         <span class="c1"># Retrieve the backreferences directory</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">document</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">config</span>
-        <span class="n">backreferences_dir</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;backreferences_dir&quot;</span><span class="p">]</span>
+        <span class="n">backreferences_dir</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">"backreferences_dir"</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">backreferences_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                <span class="s2">&quot;&#39;backreferences_dir&#39; config is None, minigallery &quot;</span>
-                <span class="s2">&quot;directive will resolve all inputs as file paths or globs.&quot;</span><span class="p">,</span>
+                <span class="s2">"'backreferences_dir' config is None, minigallery "</span>
+                <span class="s2">"directive will resolve all inputs as file paths or globs."</span><span class="p">,</span>
                 <span class="nb">type</span><span class="o">=</span><span class="n">WARNING_TYPE</span><span class="p">,</span>
-                <span class="n">subtype</span><span class="o">=</span><span class="s2">&quot;config&quot;</span><span class="p">,</span>
+                <span class="n">subtype</span><span class="o">=</span><span class="s2">"config"</span><span class="p">,</span>
             <span class="p">)</span>
 
         <span class="c1"># Retrieve source directory</span>
-        <span class="n">src_dir</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;src_dir&quot;</span><span class="p">]</span>
+        <span class="n">src_dir</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">"src_dir"</span><span class="p">]</span>
 
         <span class="c1"># Parse the argument into the individual args</span>
         <span class="n">arg_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
@@ -631,22 +631,22 @@
         <span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="c1"># Add a heading if requested</span>
-        <span class="k">if</span> <span class="s2">&quot;add-heading&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">:</span>
-            <span class="n">heading</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;add-heading&quot;</span><span class="p">]</span>
-            <span class="k">if</span> <span class="n">heading</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">"add-heading"</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">:</span>
+            <span class="n">heading</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s2">"add-heading"</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">heading</span> <span class="o">==</span> <span class="s2">""</span><span class="p">:</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">arg_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-                    <span class="n">heading</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Examples using ``</span><span class="si">{</span><span class="n">arg_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">``&quot;</span>
+                    <span class="n">heading</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"Examples using ``</span><span class="si">{</span><span class="n">arg_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">``"</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">heading</span> <span class="o">=</span> <span class="s2">&quot;Examples using one of multiple objects&quot;</span>
+                    <span class="n">heading</span> <span class="o">=</span> <span class="s2">"Examples using one of multiple objects"</span>
             <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">heading</span><span class="p">)</span>
-            <span class="n">heading_level</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;heading-level&quot;</span><span class="p">,</span> <span class="s2">&quot;^&quot;</span><span class="p">)</span>
+            <span class="n">heading_level</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"heading-level"</span><span class="p">,</span> <span class="s2">"^"</span><span class="p">)</span>
             <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">heading_level</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">heading</span><span class="p">))</span>
 
-        <span class="n">ExampleInfo</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s2">&quot;ExampleInfo&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;target_dir&quot;</span><span class="p">,</span> <span class="s2">&quot;intro&quot;</span><span class="p">,</span> <span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="s2">&quot;arg&quot;</span><span class="p">])</span>
+        <span class="n">ExampleInfo</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s2">"ExampleInfo"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"target_dir"</span><span class="p">,</span> <span class="s2">"intro"</span><span class="p">,</span> <span class="s2">"title"</span><span class="p">,</span> <span class="s2">"arg"</span><span class="p">])</span>
         <span class="n">backreferences_all</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">backreferences_dir</span><span class="p">:</span>
             <span class="n">backreferences_all</span> <span class="o">=</span> <span class="n">_read_json</span><span class="p">(</span>
-                <span class="n">Path</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">backreferences_dir</span><span class="p">,</span> <span class="s2">&quot;backreferences_all.json&quot;</span><span class="p">)</span>
+                <span class="n">Path</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">backreferences_dir</span><span class="p">,</span> <span class="s2">"backreferences_all.json"</span><span class="p">)</span>
             <span class="p">)</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">has_backrefs</span><span class="p">(</span><span class="n">arg</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
@@ -670,7 +670,7 @@
             <span class="c1"># Glob path arg input</span>
             <span class="k">elif</span> <span class="n">paths</span> <span class="o">:=</span> <span class="n">Path</span><span class="p">(</span><span class="n">src_dir</span><span class="p">)</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
                 <span class="c1"># Glob paths require extra parsing to get the intro and title</span>
-                <span class="c1"># so we don&#39;t want to override a duplicate backreference arg input</span>
+                <span class="c1"># so we don't want to override a duplicate backreference arg input</span>
                 <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
                     <span class="n">path_resolved</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
                     <span class="k">if</span> <span class="n">path_resolved</span> <span class="ow">in</span> <span class="n">file_paths</span><span class="p">:</span>
@@ -684,11 +684,11 @@
         <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">THUMBNAIL_PARENT_DIV</span><span class="p">)</span>
 
         <span class="c1"># sort on the file path</span>
-        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">&quot;minigallery_sort_order&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">[</span><span class="s2">"minigallery_sort_order"</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">sortkey</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="p">(</span><span class="n">sortkey</span><span class="p">,)</span> <span class="o">=</span> <span class="n">_get_callables</span><span class="p">(</span>
-                <span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">,</span> <span class="s2">&quot;minigallery_sort_order&quot;</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">sphinx_gallery_conf</span><span class="p">,</span> <span class="s2">"minigallery_sort_order"</span>
             <span class="p">)</span>
         <span class="k">if</span> <span class="n">sortkey</span><span class="p">:</span>
             <span class="n">sorted_items</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
@@ -723,7 +723,7 @@
             <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">thumbnail</span><span class="p">)</span>
 
         <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">THUMBNAIL_PARENT_DIV_CLOSE</span><span class="p">)</span>
-        <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
         <span class="n">include_lines</span> <span class="o">=</span> <span class="n">statemachine</span><span class="o">.</span><span class="n">string2lines</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">convert_whitespace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">state_machine</span><span class="o">.</span><span class="n">insert_input</span><span class="p">(</span><span class="n">include_lines</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
 
@@ -732,15 +732,15 @@
 
 
 
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="sd">Image sg for responsive images</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 
 <div class="viewcode-block" id="imgsgnode">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.directives.html#sphinx_gallery.directives.imgsgnode">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">imgsgnode</span><span class="p">(</span><span class="n">nodes</span><span class="o">.</span><span class="n">General</span><span class="p">,</span> <span class="n">nodes</span><span class="o">.</span><span class="n">Element</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sphinx Gallery image node class.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Sphinx Gallery image node class."""</span>
 
     <span class="k">pass</span></div>
 
@@ -749,7 +749,7 @@
 <div class="viewcode-block" id="ImageSg">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.directives.html#sphinx_gallery.directives.ImageSg">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ImageSg</span><span class="p">(</span><span class="n">images</span><span class="o">.</span><span class="n">Image</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Implements a directive to allow an optional hidpi image.</span>
+<span class="w">    </span><span class="sd">"""Implements a directive to allow an optional hidpi image.</span>
 
 <span class="sd">    Meant to be used with the `image_srcset` configuration option.</span>
 
@@ -763,39 +763,39 @@
 
 <span class="sd">    The resulting html is::</span>
 
-<span class="sd">        &lt;img src=&quot;sphx_glr_bar_001_hidpi.png&quot;</span>
-<span class="sd">            srcset=&quot;_images/sphx_glr_bar_001.png,</span>
-<span class="sd">                    _images/sphx_glr_bar_001_2_00x.png 2x&quot;,</span>
-<span class="sd">            alt=&quot;bar&quot;</span>
-<span class="sd">            class=&quot;sphx-glr-single-img&quot; /&gt;</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">        &lt;img src="sphx_glr_bar_001_hidpi.png"</span>
+<span class="sd">            srcset="_images/sphx_glr_bar_001.png,</span>
+<span class="sd">                    _images/sphx_glr_bar_001_2_00x.png 2x",</span>
+<span class="sd">            alt="bar"</span>
+<span class="sd">            class="sphx-glr-single-img" /&gt;</span>
+<span class="sd">    """</span>
 
     <span class="n">has_content</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">required_arguments</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">optional_arguments</span> <span class="o">=</span> <span class="mi">3</span>
     <span class="n">final_argument_whitespace</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">option_spec</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;srcset&quot;</span><span class="p">:</span> <span class="n">directives</span><span class="o">.</span><span class="n">unchanged</span><span class="p">,</span>
-        <span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="n">directives</span><span class="o">.</span><span class="n">class_option</span><span class="p">,</span>
-        <span class="s2">&quot;alt&quot;</span><span class="p">:</span> <span class="n">directives</span><span class="o">.</span><span class="n">unchanged</span><span class="p">,</span>
+        <span class="s2">"srcset"</span><span class="p">:</span> <span class="n">directives</span><span class="o">.</span><span class="n">unchanged</span><span class="p">,</span>
+        <span class="s2">"class"</span><span class="p">:</span> <span class="n">directives</span><span class="o">.</span><span class="n">class_option</span><span class="p">,</span>
+        <span class="s2">"alt"</span><span class="p">:</span> <span class="n">directives</span><span class="o">.</span><span class="n">unchanged</span><span class="p">,</span>
     <span class="p">}</span>
 
 <div class="viewcode-block" id="ImageSg.run">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.directives.html#sphinx_gallery.directives.ImageSg.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">nodes</span><span class="o">.</span><span class="n">Node</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update node contents.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Update node contents."""</span>
         <span class="n">image_node</span> <span class="o">=</span> <span class="n">imgsgnode</span><span class="p">()</span>
 
         <span class="n">imagenm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">arguments</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">image_node</span><span class="p">[</span><span class="s2">&quot;alt&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;alt&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-        <span class="n">image_node</span><span class="p">[</span><span class="s2">&quot;class&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">image_node</span><span class="p">[</span><span class="s2">"alt"</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"alt"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
+        <span class="n">image_node</span><span class="p">[</span><span class="s2">"class"</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"class"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
         <span class="c1"># we would like uri to be the highest dpi version so that</span>
         <span class="c1"># latex etc will use that.  But for now, lets just make</span>
         <span class="c1"># imagenm</span>
 
-        <span class="n">image_node</span><span class="p">[</span><span class="s2">&quot;uri&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">imagenm</span>
-        <span class="n">image_node</span><span class="p">[</span><span class="s2">&quot;srcset&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;srcset&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">image_node</span><span class="p">[</span><span class="s2">"uri"</span><span class="p">]</span> <span class="o">=</span> <span class="n">imagenm</span>
+        <span class="n">image_node</span><span class="p">[</span><span class="s2">"srcset"</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"srcset"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="p">[</span><span class="n">image_node</span><span class="p">]</span></div>
 </div>
@@ -803,71 +803,71 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_parse_srcset</span><span class="p">(</span><span class="n">st</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse st.&quot;&quot;&quot;</span>
-    <span class="n">entries</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">"""Parse st."""</span>
+    <span class="n">entries</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">","</span><span class="p">)</span>
     <span class="n">srcset</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">entries</span><span class="p">:</span>
-        <span class="n">spl</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+        <span class="n">spl</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">" "</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">spl</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">srcset</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">spl</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">spl</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
             <span class="n">mult</span> <span class="o">=</span> <span class="n">spl</span><span class="p">[</span><span class="mi">1</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
             <span class="n">srcset</span><span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">mult</span><span class="p">)]</span> <span class="o">=</span> <span class="n">spl</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span><span class="s1">&#39;srcset argument &quot;</span><span class="si">{entry}</span><span class="s1">&quot; is invalid.&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span><span class="s1">'srcset argument "</span><span class="si">{entry}</span><span class="s1">" is invalid.'</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">srcset</span>
 
 
 <div class="viewcode-block" id="visit_imgsg_html">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.directives.html#sphinx_gallery.directives.visit_imgsg_html">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">visit_imgsg_html</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">imgsgnode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Handle HTML image tag depending on &#39;srcset&#39; configuration.</span>
+<span class="w">    </span><span class="sd">"""Handle HTML image tag depending on 'srcset' configuration.</span>
 
-<span class="sd">    If &#39;srcset&#39; is not `None`, copy images, generate image html tag with &#39;srcset&#39;</span>
-<span class="sd">    and add to HTML `body`. If &#39;srcset&#39; is `None` run `visit_image` on `node`.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">node</span><span class="p">[</span><span class="s2">&quot;srcset&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+<span class="sd">    If 'srcset' is not `None`, copy images, generate image html tag with 'srcset'</span>
+<span class="sd">    and add to HTML `body`. If 'srcset' is `None` run `visit_image` on `node`.</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">node</span><span class="p">[</span><span class="s2">"srcset"</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">visit_image</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
         <span class="k">return</span>
 
     <span class="n">imagedir</span><span class="p">,</span> <span class="n">srcset</span> <span class="o">=</span> <span class="n">_copy_images</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span>
 
-    <span class="n">docsource</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">document</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">])</span>  <span class="c1"># /doc/examples/subd/plot_1.rst</span>
+    <span class="n">docsource</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">document</span><span class="p">[</span><span class="s2">"source"</span><span class="p">])</span>  <span class="c1"># /doc/examples/subd/plot_1.rst</span>
     <span class="n">srctop</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">)</span>  <span class="c1"># /doc</span>
     <span class="n">relsource</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">docsource</span><span class="p">,</span> <span class="n">srctop</span><span class="p">))</span>  <span class="c1"># examples/subd/plot_1.rst</span>
     <span class="n">dest</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">outdir</span><span class="p">)</span> <span class="o">/</span> <span class="n">relsource</span>  <span class="c1"># /doc/build/html/examples/subd</span>
 
     <span class="c1"># ../../_images/ for dirhtml and ../_images/ for html</span>
     <span class="n">imagerel</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">imagedir</span><span class="p">,</span> <span class="n">dest</span><span class="o">.</span><span class="n">parent</span><span class="p">))</span>
-    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;dirhtml&quot;</span><span class="p">:</span>
-        <span class="n">imagerel</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">)</span> <span class="o">/</span> <span class="n">imagerel</span>
-    <span class="n">imagerel</span> <span class="o">=</span> <span class="n">imagerel</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">"dirhtml"</span><span class="p">:</span>
+        <span class="n">imagerel</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">".."</span><span class="p">)</span> <span class="o">/</span> <span class="n">imagerel</span>
+    <span class="n">imagerel</span> <span class="o">=</span> <span class="n">imagerel</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">"/"</span><span class="p">)</span> <span class="o">+</span> <span class="s2">"/"</span>
     <span class="c1"># make srcset str.  Need to change all the prefixes!</span>
-    <span class="n">srcsetst</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">srcsetst</span> <span class="o">=</span> <span class="s2">""</span>
     <span class="k">for</span> <span class="n">mult</span> <span class="ow">in</span> <span class="n">srcset</span><span class="p">:</span>
         <span class="n">nm</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">srcset</span><span class="p">[</span><span class="n">mult</span><span class="p">][</span><span class="mi">1</span><span class="p">:])</span><span class="o">.</span><span class="n">name</span>
         <span class="c1"># ../../_images/plot_1_2_0x.png</span>
         <span class="n">relpath</span> <span class="o">=</span> <span class="n">imagerel</span> <span class="o">+</span> <span class="n">nm</span>
-        <span class="n">srcsetst</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">relpath</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">srcsetst</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">relpath</span><span class="si">}</span><span class="s2">"</span>
         <span class="k">if</span> <span class="n">mult</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">srcsetst</span> <span class="o">+=</span> <span class="s2">&quot;, &quot;</span>
+            <span class="n">srcsetst</span> <span class="o">+=</span> <span class="s2">", "</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">srcsetst</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="n">mult</span><span class="si">:</span><span class="s2">1.2f</span><span class="si">}</span><span class="s2">x, &quot;</span>
+            <span class="n">srcsetst</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">" </span><span class="si">{</span><span class="n">mult</span><span class="si">:</span><span class="s2">1.2f</span><span class="si">}</span><span class="s2">x, "</span>
     <span class="c1"># trim trailing comma and space...</span>
     <span class="n">srcsetst</span> <span class="o">=</span> <span class="n">srcsetst</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
 
     <span class="c1"># make uri also be relative...</span>
-    <span class="n">nm</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">node</span><span class="p">[</span><span class="s2">&quot;uri&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">:])</span><span class="o">.</span><span class="n">name</span>
+    <span class="n">nm</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">node</span><span class="p">[</span><span class="s2">"uri"</span><span class="p">][</span><span class="mi">1</span><span class="p">:])</span><span class="o">.</span><span class="n">name</span>
     <span class="n">uri</span> <span class="o">=</span> <span class="n">imagerel</span> <span class="o">+</span> <span class="n">nm</span>
 
-    <span class="n">alt</span> <span class="o">=</span> <span class="n">node</span><span class="p">[</span><span class="s2">&quot;alt&quot;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="n">node</span><span class="p">[</span><span class="s2">&quot;class&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">classst</span> <span class="o">=</span> <span class="n">node</span><span class="p">[</span><span class="s2">&quot;class&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">classst</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;class = &quot;</span><span class="si">{</span><span class="n">classst</span><span class="si">}</span><span class="s1">&quot;&#39;</span>
+    <span class="n">alt</span> <span class="o">=</span> <span class="n">node</span><span class="p">[</span><span class="s2">"alt"</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">node</span><span class="p">[</span><span class="s2">"class"</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">classst</span> <span class="o">=</span> <span class="n">node</span><span class="p">[</span><span class="s2">"class"</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">classst</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'class = "</span><span class="si">{</span><span class="n">classst</span><span class="si">}</span><span class="s1">"'</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">classst</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">classst</span> <span class="o">=</span> <span class="s2">""</span>
 
-    <span class="n">html_block</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&lt;img src=&quot;</span><span class="si">{</span><span class="n">uri</span><span class="si">}</span><span class="s1">&quot; srcset=&quot;</span><span class="si">{</span><span class="n">srcsetst</span><span class="si">}</span><span class="s1">&quot; alt=&quot;</span><span class="si">{</span><span class="n">alt</span><span class="si">}</span><span class="s1">&quot;&#39;</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="n">classst</span><span class="si">}</span><span class="s2">/&gt;&quot;</span>
+    <span class="n">html_block</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'&lt;img src="</span><span class="si">{</span><span class="n">uri</span><span class="si">}</span><span class="s1">" srcset="</span><span class="si">{</span><span class="n">srcsetst</span><span class="si">}</span><span class="s1">" alt="</span><span class="si">{</span><span class="n">alt</span><span class="si">}</span><span class="s1">"'</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">" </span><span class="si">{</span><span class="n">classst</span><span class="si">}</span><span class="s2">/&gt;"</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">html_block</span><span class="p">)</span></div>
 
 
@@ -875,21 +875,21 @@
 <div class="viewcode-block" id="visit_imgsg_latex">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.directives.html#sphinx_gallery.directives.visit_imgsg_latex">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">visit_imgsg_latex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">imgsgnode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Copy images, set node[uri] to highest resolution image and call `visit_image`.&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">node</span><span class="p">[</span><span class="s2">&quot;srcset&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Copy images, set node[uri] to highest resolution image and call `visit_image`."""</span>
+    <span class="k">if</span> <span class="n">node</span><span class="p">[</span><span class="s2">"srcset"</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">imagedir</span><span class="p">,</span> <span class="n">srcset</span> <span class="o">=</span> <span class="n">_copy_images</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span>
         <span class="n">maxmult</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
         <span class="c1"># choose the highest res version for latex:</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">srcset</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="n">maxmult</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxmult</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
-        <span class="n">node</span><span class="p">[</span><span class="s2">&quot;uri&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">PurePosixPath</span><span class="p">(</span><span class="n">srcset</span><span class="p">[</span><span class="n">maxmult</span><span class="p">])</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">node</span><span class="p">[</span><span class="s2">"uri"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">PurePosixPath</span><span class="p">(</span><span class="n">srcset</span><span class="p">[</span><span class="n">maxmult</span><span class="p">])</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
     <span class="bp">self</span><span class="o">.</span><span class="n">visit_image</span><span class="p">(</span><span class="n">node</span><span class="p">)</span></div>
 
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_copy_images</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">imgsgnode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
-    <span class="n">srcset</span> <span class="o">=</span> <span class="n">_parse_srcset</span><span class="p">(</span><span class="n">node</span><span class="p">[</span><span class="s2">&quot;srcset&quot;</span><span class="p">])</span>
+    <span class="n">srcset</span> <span class="o">=</span> <span class="n">_parse_srcset</span><span class="p">(</span><span class="n">node</span><span class="p">[</span><span class="s2">"srcset"</span><span class="p">])</span>
 
     <span class="c1"># where the sources are.  i.e. myproj/source</span>
     <span class="n">srctop</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">)</span>
@@ -903,7 +903,7 @@
 
     <span class="c1"># copy all the sources to the imagedir:</span>
     <span class="k">for</span> <span class="n">mult</span> <span class="ow">in</span> <span class="n">srcset</span><span class="p">:</span>
-        <span class="n">abspath</span> <span class="o">=</span> <span class="n">srctop</span> <span class="o">/</span> <span class="n">srcset</span><span class="p">[</span><span class="n">mult</span><span class="p">]</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+        <span class="n">abspath</span> <span class="o">=</span> <span class="n">srctop</span> <span class="o">/</span> <span class="n">srcset</span><span class="p">[</span><span class="n">mult</span><span class="p">]</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">"/"</span><span class="p">)</span>
         <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="n">abspath</span><span class="p">,</span> <span class="n">imagedir</span> <span class="o">/</span> <span class="n">abspath</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">imagedir</span><span class="p">,</span> <span class="n">srcset</span>
@@ -912,7 +912,7 @@
 <div class="viewcode-block" id="depart_imgsg_html">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.directives.html#sphinx_gallery.directives.depart_imgsg_html">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">depart_imgsg_html</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">imgsgnode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;HTML depart node visitor function.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""HTML depart node visitor function."""</span>
     <span class="k">pass</span></div>
 
 
@@ -920,7 +920,7 @@
 <div class="viewcode-block" id="depart_imgsg_latex">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.directives.html#sphinx_gallery.directives.depart_imgsg_latex">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">depart_imgsg_latex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">imgsgnode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;LaTeX depart node visitor function.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""LaTeX depart node visitor function."""</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">depart_image</span><span class="p">(</span><span class="n">node</span><span class="p">)</span></div>
 
 
@@ -928,7 +928,7 @@
 <div class="viewcode-block" id="imagesg_addnode">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.directives.html#sphinx_gallery.directives.imagesg_addnode">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">imagesg_addnode</span><span class="p">(</span><span class="n">app</span><span class="p">:</span> <span class="n">sphinx</span><span class="o">.</span><span class="n">application</span><span class="o">.</span><span class="n">Sphinx</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add `imgsgnode` to Sphinx app with visitor functions for HTML and LaTeX.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Add `imgsgnode` to Sphinx app with visitor functions for HTML and LaTeX."""</span>
     <span class="n">app</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span>
         <span class="n">imgsgnode</span><span class="p">,</span>
         <span class="n">html</span><span class="o">=</span><span class="p">(</span><span class="n">visit_imgsg_html</span><span class="p">,</span> <span class="n">depart_imgsg_html</span><span class="p">),</span>
