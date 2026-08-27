@@ -27,8 +27,8 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
-<link href="_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+  <link href="_static/styles/theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
@@ -43,10 +43,10 @@
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
   <!-- So that users can add custom icons -->
-  <script defer src="_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <script defer src="_static/scripts/fontawesome.js?digest=cb8930eaaf36d9849b67"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
-<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
     <script src="_static/documentation_options.js?v=d72d45e9"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
@@ -56,7 +56,7 @@
     <script src="_static/design-tabs.js?v=f930bc37"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'configuration';</script>
     <script>
-        DOCUMENTATION_OPTIONS.theme_version = '0.20.0';
+        DOCUMENTATION_OPTIONS.theme_version = '0.21.0';
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://sphinx-gallery.github.io/dev/_static/switcher.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'dev';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
@@ -544,7 +544,7 @@ Consider using these options sparingly as it could lead to confusion or sub-opti
 </div>
 <p><strong>Cross-referencing</strong></p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">reference_url</span></code>, <code class="docutils literal notranslate"><span class="pre">prefer_full_module</span></code> (<a class="reference internal" href="#link-to-documentation"><span class="std std-ref">Add intersphinx links to your examples</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">prefer_full_module</span></code> (<a class="reference internal" href="#link-to-documentation"><span class="std std-ref">Add intersphinx links to your examples</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">backreferences_dir</span></code>, <code class="docutils literal notranslate"><span class="pre">doc_module</span></code>, <code class="docutils literal notranslate"><span class="pre">exclude_implicit_doc</span></code>,
 and <code class="docutils literal notranslate"><span class="pre">inspect_global_variables</span></code> (<a class="reference internal" href="#minigalleries-to-examples"><span class="std std-ref">Add mini-galleries</span></a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">minigallery_sort_order</span></code> (<a class="reference internal" href="#minigallery-order"><span class="std std-ref">Sort mini-gallery thumbnails from files</span></a>)</p></li>
@@ -1087,22 +1087,20 @@ depend on your Sphinx setup. If your project uses <a class="reference external" 
 hyperlinks to external modules will be added to text blocks, similar to a normal
 Sphinx reST documentation file.</p>
 </div>
-<p>If you use the Sphinx extension <a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html#module-sphinx.ext.intersphinx" title="(in Sphinx v9.1.1)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sphinx.ext.intersphinx</span></code></a>, entries in
-the <code class="docutils literal notranslate"><span class="pre">intersphinx</span></code> inventory will automatically be used for linking inside
-code blocks. If you wish to add or over-ride any <code class="docutils literal notranslate"><span class="pre">intersphinx</span></code> module, you can
-use the Sphinx-Gallery <code class="docutils literal notranslate"><span class="pre">reference_url</span></code> configuration.
-<code class="docutils literal notranslate"><span class="pre">reference_url</span></code> accepts a dictionary where the key is the module name string and
-value is the URL to the module’s documentation directory page, containing
-<code class="docutils literal notranslate"><span class="pre">searchindex.js</span></code>, such as <code class="docutils literal notranslate"><span class="pre">'matplotlib':</span> <span class="pre">'https://matplotlib.org'</span></code>.</p>
-<p>To link the local module, use <code class="docutils literal notranslate"><span class="pre">None</span></code> as the value, as shown below:</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="o">...</span>
-    <span class="s1">'reference_url'</span><span class="p">:</span> <span class="p">{</span>
-         <span class="c1"># The module you locally document uses None</span>
-        <span class="s1">'sphinx_gallery'</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</pre></div>
+<p>This works automatically, with no configuration needed:</p>
+<ul class="simple">
+<li><p>Objects documented in the project being built are resolved through Sphinx’s
+own cross-reference machinery (the Python domain), for any HTML builder.</p></li>
+<li><p>Objects from external packages are resolved through the
+<a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html#module-sphinx.ext.intersphinx" title="(in Sphinx v9.1.1)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sphinx.ext.intersphinx</span></code></a> inventories, so link any external package by
+adding it to <code class="docutils literal notranslate"><span class="pre">intersphinx_mapping</span></code> in your <code class="docutils literal notranslate"><span class="pre">conf.py</span></code>.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">reference_url</span></code> option is deprecated and ignored. Links to the
+project being documented (previously <code class="docutils literal notranslate"><span class="pre">'mymodule':</span> <span class="pre">None</span></code> entries)
+are now automatic, and external entries should be replaced by
+<code class="docutils literal notranslate"><span class="pre">intersphinx_mapping</span></code> entries in <code class="docutils literal notranslate"><span class="pre">conf.py</span></code>.</p>
 </div>
 <p>To add links to code blocks in plain reST example files inside galleries,
 see <a class="reference internal" href="syntax.html#plain-rst"><span class="std std-ref">Plain reST examples</span></a>.</p>
@@ -1406,7 +1404,6 @@ documentation is done at the module level. We first start with the
    scrapers
    py_source_parser
    block_parser
-   docs_resolv
    notebook
    downloads
    sorting
@@ -1875,9 +1872,6 @@ links.</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">thumbnail</span></code></dt><dd><p>A <code class="docutils literal notranslate"><span class="pre">sphinx_gallery_thumbnail_path</span></code> that does not exist (see
 <a class="reference internal" href="#providing-thumbnail"><span class="std std-ref">Providing an image for the thumbnail image</span></a>).</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">url_fetch</span></code></dt><dd><p>A documentation inventory that could not be fetched (see
-<a class="reference internal" href="#link-to-documentation"><span class="std std-ref">Add intersphinx links to your examples</span></a>).</p>
 </dd>
 </dl>
 </section>
@@ -3403,8 +3397,8 @@ in HTML documents might not render correctly, specifically <code class="docutils
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
-<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+  <script defer src="_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -3438,7 +3432,7 @@ in HTML documents might not render correctly, specifically <code class="docutils
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.20.0.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.21.0.
 </p></div>
       
     </div>
