@@ -1290,7 +1290,10 @@ Each .rst file will contain a reduced version of the
 gallery, containing examples where that “object” that is used.
 ‘&lt;object&gt;.examples’ files will be generated for all objects to prevent inclusion
 errors. Empty ‘&lt;object&gt;.examples’ files are created for objects not used in any
-example.</p>
+example. Characters that cannot appear in a filename (<code class="docutils literal notranslate"><span class="pre">&lt;&gt;:&quot;/\|?*</span></code>) are replaced
+with an underscore, so that a name picked up from markup that carries an
+intersphinx inventory prefix (<code class="docutils literal notranslate"><span class="pre">:obj:`inventory:package.object`</span></code>) still yields a
+usable filename on every platform.</p>
 <section id="exclude-implicit-doc">
 <span id="id4"></span><h4><code class="docutils literal notranslate"><span class="pre">exclude_implicit_doc</span></code><a class="headerlink" href="#exclude-implicit-doc" title="Link to this heading">#</a></h4>
 <p>Sometimes, there are functions that are being used in practically every example
