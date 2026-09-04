@@ -804,9 +804,13 @@
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_sanitize_rst</span><span class="p">(</span><span class="n">string</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Use regex to remove at least some sphinx directives."""</span>
-    <span class="c1"># :class:`a.b.c &lt;thing here&gt;`, :ref:`abc &lt;thing here&gt;` --&gt; thing here</span>
-    <span class="n">p</span><span class="p">,</span> <span class="n">e</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">"(\s|^):[^:\s]+:`"</span><span class="p">,</span> <span class="sa">r</span><span class="s2">"`(\W|$)"</span>
-    <span class="n">string</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">p</span> <span class="o">+</span> <span class="sa">r</span><span class="s2">"\S+\s*&lt;([^&gt;`]+)&gt;"</span> <span class="o">+</span> <span class="n">e</span><span class="p">,</span> <span class="sa">r</span><span class="s2">"\1\2\3"</span><span class="p">,</span> <span class="n">string</span><span class="p">)</span>
+    <span class="c1"># :class:`title &lt;a.b.c&gt;`, :ref:`title &lt;thing here&gt;` --&gt; title</span>
+    <span class="c1"># Sphinx renders the explicit title, not the target, so keep the title.</span>
+    <span class="c1"># The role name is `(?:[^:\s`]+:)+` rather than a single segment so that a</span>
+    <span class="c1"># domain-qualified role (:py:class:, :std:doc:) is consumed whole -- matching</span>
+    <span class="c1"># from its inner colon would strand the ":py" as literal text (gh-1644).</span>
+    <span class="n">p</span><span class="p">,</span> <span class="n">e</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">"(\s|^):(?:[^:\s`]+:)+`"</span><span class="p">,</span> <span class="sa">r</span><span class="s2">"`(\W|$)"</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">p</span> <span class="o">+</span> <span class="sa">r</span><span class="s2">"([^`&lt;&gt;]+?)\s*&lt;[^&gt;`]+&gt;"</span> <span class="o">+</span> <span class="n">e</span><span class="p">,</span> <span class="sa">r</span><span class="s2">"\1\2\3"</span><span class="p">,</span> <span class="n">string</span><span class="p">)</span>
     <span class="c1"># :class:`~a.b.c` --&gt; c</span>
     <span class="n">string</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">p</span> <span class="o">+</span> <span class="sa">r</span><span class="s2">"~([^`]+)"</span> <span class="o">+</span> <span class="n">e</span><span class="p">,</span> <span class="n">_regroup</span><span class="p">,</span> <span class="n">string</span><span class="p">)</span>
     <span class="c1"># :class:`a.b.c` --&gt; a.b.c</span>
@@ -830,7 +834,7 @@
     <span class="n">string</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"`([^`&lt;&gt;]+) &lt;[^`&lt;&gt;]+&gt;`\_\_?"</span><span class="p">,</span> <span class="sa">r</span><span class="s2">"\1"</span><span class="p">,</span> <span class="n">string</span><span class="p">)</span>
 
     <span class="c1"># :anchor:`the term` --&gt; the term</span>
-    <span class="n">string</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">":[a-z]+:`([^`&lt;&gt;]+)( &lt;[^`&lt;&gt;]+&gt;)?`"</span><span class="p">,</span> <span class="sa">r</span><span class="s2">"\1"</span><span class="p">,</span> <span class="n">string</span><span class="p">)</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">":(?:[a-z]+:)+`([^`&lt;&gt;]+)( &lt;[^`&lt;&gt;]+&gt;)?`"</span><span class="p">,</span> <span class="sa">r</span><span class="s2">"\1"</span><span class="p">,</span> <span class="n">string</span><span class="p">)</span>
 
     <span class="c1"># r'\\dfrac' --&gt; r'\dfrac'</span>
     <span class="n">string</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"</span><span class="se">\\\\</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"</span><span class="se">\\</span><span class="s2">"</span><span class="p">)</span>
