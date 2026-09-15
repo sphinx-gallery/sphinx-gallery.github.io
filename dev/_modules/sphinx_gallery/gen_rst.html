@@ -2157,8 +2157,16 @@
         <span class="s2">"target_file"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">target_file</span><span class="p">),</span>
     <span class="p">}</span>
 
-    <span class="k">if</span> <span class="n">executable</span> <span class="ow">and</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">"reset_modules_order"</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"before"</span><span class="p">,</span> <span class="s2">"both"</span><span class="p">]:</span>
-        <span class="n">clean_modules</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="s2">"before"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">executable</span><span class="p">:</span>
+        <span class="c1"># Resolve the scrapers before the example runs rather than when it is</span>
+        <span class="c1"># scraped afterwards. Resolving a scraper named by string (e.g.</span>
+        <span class="c1"># `"plotly"`) imports the library, which may rely on that import to</span>
+        <span class="c1"># set itself up for the build; the worker processes of a parallel</span>
+        <span class="c1"># build never read conf.py, so this is their only chance to do so</span>
+        <span class="c1"># before the example runs.</span>
+        <span class="n">_get_callables</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="s2">"image_scrapers"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">"reset_modules_order"</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"before"</span><span class="p">,</span> <span class="s2">"both"</span><span class="p">]:</span>
+            <span class="n">clean_modules</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="s2">"before"</span><span class="p">)</span>
     <span class="n">output_blocks</span><span class="p">,</span> <span class="n">time_elapsed</span> <span class="o">=</span> <span class="n">execute_script</span><span class="p">(</span>
         <span class="n">script_blocks</span><span class="p">,</span> <span class="n">script_vars</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">file_conf</span>
     <span class="p">)</span>
@@ -2461,7 +2469,8 @@
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="o">...</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""Get callables for the given conf key, returning tuple of callable(s).</span>
 
-<span class="sd">    If value is a string, import, with the following exceptions:</span>
+<span class="sd">    A string containing a `.` is imported as a fully qualified name, for any</span>
+<span class="sd">    key. A string without one is resolved per key:</span>
 
 <span class="sd">    * `within_subsection_order` - add full path if value is a built-in aliases,</span>
 <span class="sd">      instantiate if value is a class</span>

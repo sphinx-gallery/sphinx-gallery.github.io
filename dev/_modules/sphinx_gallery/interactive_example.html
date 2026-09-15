@@ -731,7 +731,7 @@
     <span class="c1"># Return an empty configuration in case of None</span>
     <span class="n">binder_conf</span> <span class="o">=</span> <span class="p">{}</span> <span class="k">if</span> <span class="n">binder_conf</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">binder_conf</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">binder_conf</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s2">"`binder_conf` must be a dictionary or None."</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s2">"sphinx_gallery_conf['binder'] must be a dictionary or None."</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">binder_conf</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">binder_conf</span>
 
@@ -744,7 +744,9 @@
             <span class="n">missing_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">missing_values</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"binder_conf is missing values for: </span><span class="si">{</span><span class="n">missing_values</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"sphinx_gallery_conf['binder'] is missing values for: </span><span class="si">{</span><span class="n">missing_values</span><span class="si">}</span><span class="s2">"</span>
+        <span class="p">)</span>
 
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">binder_conf</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="n">req_values</span> <span class="o">+</span> <span class="n">optional_values</span><span class="p">):</span>
@@ -985,7 +987,7 @@
         <span class="k">return</span> <span class="kc">None</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">jupyterlite_conf</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s2">"`jupyterlite_conf` must be a dictionary"</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s2">"sphinx_gallery_conf['jupyterlite'] must be a dictionary"</span><span class="p">)</span>
 
     <span class="n">conf_defaults</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">"jupyterlite_contents"</span><span class="p">:</span> <span class="s2">"jupyterlite_contents"</span><span class="p">,</span>
