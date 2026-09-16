@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Contribute &#8212; Sphinx-Gallery 0.22.0.dev40+g326f74723-git documentation</title>
+    <title>Contribute &#8212; Sphinx-Gallery 0.23.0.dev1+g983633297-git documentation</title>
   
   
   
@@ -48,7 +48,7 @@
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
-    <script src="_static/documentation_options.js?v=1d4dc71d"></script>
+    <script src="_static/documentation_options.js?v=e200eb80"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/sg-tags.js?v=d80f6fa4"></script>
@@ -69,7 +69,7 @@
     <link rel="prev" title="Ray Tracing" href="auto_pyvista_examples/plot_ray_trace.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.22.0.dev40+g326f74723" />
+  <meta name="docsearch:version" content="0.23.0.dev1+g983633297" />
   
     
     <script src="_static/searchtools.js"></script>
@@ -578,6 +578,23 @@ code and documentation. To set up pre-commit hooks:</p>
 <span id="code-contrib-testing"></span><h3>Testing<a class="headerlink" href="#testing" title="Link to this heading">#</a></h3>
 <p>All code contributions should be tested. We use the <a class="reference external" href="https://docs.pytest.org/">pytest</a> testing framework and <code class="docutils literal notranslate"><span class="pre">tinybuild</span></code> to build test
 pages. Tests can be found in <code class="file docutils literal notranslate"><span class="pre">sphinx_gallery/tests</span></code>.</p>
+<section id="running-the-tests-in-parallel">
+<span id="testing-parallel"></span><h4>Running the tests in parallel<a class="headerlink" href="#running-the-tests-in-parallel" title="Link to this heading">#</a></h4>
+<p>The suite spends most of its time building miniature Sphinx projects, so it
+parallelizes well with <a class="reference external" href="https://pytest-xdist.readthedocs.io/">pytest-xdist</a>:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python -m pytest sphinx_gallery -n 4</span>
+</pre></div>
+</div>
+<p><code class="file docutils literal notranslate"><span class="pre">pyproject.toml</span></code> already sets <code class="docutils literal notranslate"><span class="pre">--dist=loadgroup</span></code>, which only takes effect
+once you pass <code class="docutils literal notranslate"><span class="pre">-n</span></code>. Tests that must stay together on one worker – currently
+those in <code class="file docutils literal notranslate"><span class="pre">tests/test_full.py</span></code>, which share a single mutated <code class="docutils literal notranslate"><span class="pre">tinybuild</span></code>
+build – declare that with a module-level
+<code class="docutils literal notranslate"><span class="pre">pytestmark</span> <span class="pre">=</span> <span class="pre">pytest.mark.xdist_group(...)</span></code>; everything else is load balanced
+test by test. Add such a mark to any new module that relies on a module-scoped
+fixture or on tests running in order.</p>
+<p>Because that group is a single unit of work, it bounds how fast the suite can
+finish: past roughly four workers there is nothing left to gain.</p>
+</section>
 <section id="tinybuild">
 <span id="testing-tinybuild"></span><h4>tinybuild<a class="headerlink" href="#tinybuild" title="Link to this heading">#</a></h4>
 <p><code class="docutils literal notranslate"><span class="pre">tinybuild</span></code> is designed as the minimal full sphinx doc build that you can run
@@ -650,6 +667,7 @@ files.</p>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#guidelines">Guidelines</a><ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#testing">Testing</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#running-the-tests-in-parallel">Running the tests in parallel</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tinybuild">tinybuild</a></li>
 </ul>
 </li>
