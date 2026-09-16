@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Changelog &#8212; Sphinx-Gallery 0.22.dev0-git documentation</title>
+    <title>Changelog &#8212; Sphinx-Gallery 0.22.0.dev40+g326f74723-git documentation</title>
   
   
   
@@ -48,7 +48,7 @@
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
-    <script src="_static/documentation_options.js?v=d72d45e9"></script>
+    <script src="_static/documentation_options.js?v=1d4dc71d"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/sg-tags.js?v=d80f6fa4"></script>
@@ -68,7 +68,7 @@
     <link rel="prev" title="Contribute" href="contribute.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.22.dev0" />
+  <meta name="docsearch:version" content="0.22.0.dev40+g326f74723" />
   
     
     <script src="_static/searchtools.js"></script>
@@ -490,6 +490,71 @@
                   
   <section id="changelog">
 <h1>Changelog<a class="headerlink" href="#changelog" title="Link to this heading">#</a></h1>
+<section id="v0-22-0">
+<h2>v0.22.0<a class="headerlink" href="#v0-22-0" title="Link to this heading">#</a></h2>
+<p>Two changes in this release are worth calling out:</p>
+<ul class="simple">
+<li><p>Code links in example code blocks are now built as doctree nodes by a Sphinx
+post-transform, instead of by rewriting the generated HTML with a regex. Many
+names that previously went unlinked are now linked, and a few that resolved to
+the wrong object are corrected. The <code class="docutils literal notranslate"><span class="pre">reference_url</span></code> option is deprecated and
+ignored as a result.</p></li>
+<li><p>Image scrapers named by string (e.g. <code class="docutils literal notranslate"><span class="pre">&quot;plotly&quot;</span></code>) are now resolved before each
+example runs rather than after it. Libraries that configure themselves on import
+are therefore set up in time, which fixes them in parallel builds, whose workers
+never read <code class="docutils literal notranslate"><span class="pre">conf.py</span></code>.</p></li>
+</ul>
+<p><strong>Implemented enhancements:</strong></p>
+<ul class="simple">
+<li><p>ENH: Use Sphinx transform mechanic for backreferences <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/1638">#1638</a> (<a class="reference external" href="https://github.com/larsoner">larsoner</a>)</p></li>
+<li><p>ENH: Allow examples to opt out of parallel execution <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/1634">#1634</a> (<a class="reference external" href="https://github.com/larsoner">larsoner</a>)</p></li>
+<li><p>Emit warning when thumbnail not found <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/1587">#1587</a> (<a class="reference external" href="https://github.com/AdamRJensen">AdamRJensen</a>)</p></li>
+</ul>
+<p><strong>Fixed bugs:</strong></p>
+<ul class="simple">
+<li><p>Report binder/jupyterlite config errors against the real conf key <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/1649">#1649</a> (<a class="reference external" href="https://github.com/hxperl">hxperl</a>)</p></li>
+<li><p>Remove spacing of empty tag lists <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/1647">#1647</a> (<a class="reference external" href="https://github.com/PAUL-BERNARD">PAUL-BERNARD</a>)</p></li>
+<li><p>Fix backref <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/1646">#1646</a> (<a class="reference external" href="https://github.com/larsoner">larsoner</a>)</p></li>
+<li><p>Keep the title of an explicit-title cross-reference in tooltips <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/1645">#1645</a> (<a class="reference external" href="https://github.com/bjlittle">bjlittle</a>)</p></li>
+<li><p>Run the duplicate checks and tag warnings with a type and subtype <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/1637">#1637</a> (<a class="reference external" href="https://github.com/larsoner">larsoner</a>)</p></li>
+<li><p>Fix parallelization deadlock with recommender <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/1633">#1633</a> (<a class="reference external" href="https://github.com/larsoner">larsoner</a>)</p></li>
+<li><p>BUG: Fix API usage and execution time generation <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/1629">#1629</a> (<a class="reference external" href="https://github.com/larsoner">larsoner</a>)</p></li>
+<li><p>Fix docs and reqs for API usage <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/1617">#1617</a> (<a class="reference external" href="https://github.com/larsoner">larsoner</a>)</p></li>
+</ul>
+<p><strong>Documentation</strong></p>
+<ul class="simple">
+<li><p>docs: point GALLERY_HEADER suffix at Sphinx’s source_suffix (#1493) <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/1648">#1648</a> (<a class="reference external" href="https://github.com/hxperl">hxperl</a>)</p></li>
+<li><p>Document modern plotly scraper usage <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/1635">#1635</a> (<a class="reference external" href="https://github.com/larsoner">larsoner</a>)</p></li>
+<li><p>Update description of Plotly examples <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/1626">#1626</a> (<a class="reference external" href="https://github.com/FPC0401">FPC0401</a>)</p></li>
+<li><p>Add pvlib link to README <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/1618">#1618</a> (<a class="reference external" href="https://github.com/mikofski">mikofski</a>)</p></li>
+</ul>
+<p><strong>Project maintenance</strong></p>
+<ul class="simple">
+<li><p>[pre-commit.ci] pre-commit autoupdate <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/1643">#1643</a> (<a class="reference external" href="https://github.com/apps/pre-commit-ci">pre-commit-ci[bot]</a>)</p></li>
+<li><p>Sanitize backref filenames <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/1642">#1642</a> (<a class="reference external" href="https://github.com/larsoner">larsoner</a>)</p></li>
+<li><p>[pre-commit.ci] pre-commit autoupdate <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/1641">#1641</a> (<a class="reference external" href="https://github.com/apps/pre-commit-ci">pre-commit-ci[bot]</a>)</p></li>
+<li><p>Pre commit ci update config <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/1640">#1640</a> (<a class="reference external" href="https://github.com/larsoner">larsoner</a>)</p></li>
+<li><p>Fix flaky tests <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/1631">#1631</a> (<a class="reference external" href="https://github.com/larsoner">larsoner</a>)</p></li>
+<li><p>[pre-commit.ci] pre-commit autoupdate <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/1630">#1630</a> (<a class="reference external" href="https://github.com/apps/pre-commit-ci">pre-commit-ci[bot]</a>)</p></li>
+<li><p>MNT Fix ty errors <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/1628">#1628</a> (<a class="reference external" href="https://github.com/lucyleeow">lucyleeow</a>)</p></li>
+<li><p>Bump actions/setup-python from 6 to 7 in the actions group <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/1627">#1627</a> (<a class="reference external" href="https://github.com/apps/dependabot">dependabot[bot]</a>)</p></li>
+<li><p>Switch to ty for type checking <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/1624">#1624</a> (<a class="reference external" href="https://github.com/larsoner">larsoner</a>)</p></li>
+<li><p>[pre-commit.ci] pre-commit autoupdate <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/1623">#1623</a> (<a class="reference external" href="https://github.com/apps/pre-commit-ci">pre-commit-ci[bot]</a>)</p></li>
+<li><p>MNT: Systematically support pathlib.Path <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/1622">#1622</a> (<a class="reference external" href="https://github.com/timhoffm">timhoffm</a>)</p></li>
+<li><p>[pre-commit.ci] pre-commit autoupdate <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/1619">#1619</a> (<a class="reference external" href="https://github.com/apps/pre-commit-ci">pre-commit-ci[bot]</a>)</p></li>
+<li><p>[pre-commit.ci] pre-commit autoupdate <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/1616">#1616</a> (<a class="reference external" href="https://github.com/apps/pre-commit-ci">pre-commit-ci[bot]</a>)</p></li>
+<li><p>Install and build docs for latest sklearn release <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/1615">#1615</a> (<a class="reference external" href="https://github.com/larsoner">larsoner</a>)</p></li>
+<li><p>Bump actions/checkout from 6 to 7 in the actions group <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/1614">#1614</a> (<a class="reference external" href="https://github.com/apps/dependabot">dependabot[bot]</a>)</p></li>
+<li><p>[pre-commit.ci] pre-commit autoupdate <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/1613">#1613</a> (<a class="reference external" href="https://github.com/apps/pre-commit-ci">pre-commit-ci[bot]</a>)</p></li>
+<li><p>[pre-commit.ci] pre-commit autoupdate <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/1610">#1610</a> (<a class="reference external" href="https://github.com/apps/pre-commit-ci">pre-commit-ci[bot]</a>)</p></li>
+<li><p>Bump codecov/codecov-action from 6 to 7 in the actions group <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/1609">#1609</a> (<a class="reference external" href="https://github.com/apps/dependabot">dependabot[bot]</a>)</p></li>
+<li><p>[pre-commit.ci] pre-commit autoupdate <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/1608">#1608</a> (<a class="reference external" href="https://github.com/apps/pre-commit-ci">pre-commit-ci[bot]</a>)</p></li>
+<li><p>[pre-commit.ci] pre-commit autoupdate <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/1607">#1607</a> (<a class="reference external" href="https://github.com/apps/pre-commit-ci">pre-commit-ci[bot]</a>)</p></li>
+<li><p>[pre-commit.ci] pre-commit autoupdate <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/1606">#1606</a> (<a class="reference external" href="https://github.com/apps/pre-commit-ci">pre-commit-ci[bot]</a>)</p></li>
+<li><p>[pre-commit.ci] pre-commit autoupdate <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/1605">#1605</a> (<a class="reference external" href="https://github.com/apps/pre-commit-ci">pre-commit-ci[bot]</a>)</p></li>
+<li><p>[pre-commit.ci] pre-commit autoupdate <a class="reference external" href="https://github.com/sphinx-gallery/sphinx-gallery/pull/1604">#1604</a> (<a class="reference external" href="https://github.com/apps/pre-commit-ci">pre-commit-ci[bot]</a>)</p></li>
+</ul>
+</section>
 <section id="v0-21-0">
 <h2>v0.21.0<a class="headerlink" href="#v0-21-0" title="Link to this heading">#</a></h2>
 <p>Support for Sphinx 5 dropped in this release. Requirement is now Sphinx &gt;= 6.</p>
@@ -2275,6 +2340,7 @@ particular function. <a class="reference external" href="https://github.com/sphi
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#v0-22-0">v0.22.0</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#v0-21-0">v0.21.0</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#v0-20-0">v0.20.0</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#v0-19-0">v0.19.0</a></li>
