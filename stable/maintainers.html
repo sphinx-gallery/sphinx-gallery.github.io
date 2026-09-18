@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Maintaining Sphinx Gallery &#8212; Sphinx-Gallery 0.22.0-git documentation</title>
+    <title>Maintaining Sphinx Gallery &#8212; Sphinx-Gallery 0.22.1-git documentation</title>
   
   
   
@@ -48,7 +48,7 @@
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
-    <script src="_static/documentation_options.js?v=13848ffc"></script>
+    <script src="_static/documentation_options.js?v=eef4b0ba"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/sg-tags.js?v=d80f6fa4"></script>
@@ -67,7 +67,7 @@
     <link rel="search" title="Search" href="search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.22.0" />
+  <meta name="docsearch:version" content="0.22.1" />
   
     
     <script src="_static/searchtools.js"></script>
@@ -494,10 +494,11 @@
 <li><p>Use <a class="reference external" href="https://github.com/github-changelog-generator/github-changelog-generator#installation">github_changelog_generator</a> to
 gather all merged pull requests and closed issues during the development
 cycle. You will likely need to <a class="reference external" href="https://github.com/settings/tokens/new?description=GitHub%20Changelog%20Generator%20token">generate a Github token</a>
-as Github only allows 50 unauthenticated requests per hour. In the
-command below <code class="docutils literal notranslate"><span class="pre">&lt;version&gt;</span></code> is the current (not development) version of
-the package, e.g., <code class="docutils literal notranslate"><span class="pre">0.6.0</span></code>. The changelog can generated with the following:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">github_changelog_generator --since-tag=v&lt;version&gt; --token &lt;your-40-digit-token&gt;</span>
+as Github only allows 50 unauthenticated requests per hour. In the command
+below, <code class="docutils literal notranslate"><span class="pre">&lt;previous&gt;</span></code> is the most recent release (e.g., <code class="docutils literal notranslate"><span class="pre">0.6.0</span></code>) and <code class="docutils literal notranslate"><span class="pre">&lt;new&gt;</span></code>
+is the one being made (e.g., <code class="docutils literal notranslate"><span class="pre">0.6.1</span></code>), which <code class="docutils literal notranslate"><span class="pre">--future-release</span></code> uses to
+label the new section instead of <code class="docutils literal notranslate"><span class="pre">Unreleased</span></code>:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">github_changelog_generator --since-tag=v&lt;previous&gt; --future-release=v&lt;new&gt; --token &lt;your-40-digit-token&gt;</span>
 </pre></div>
 </div>
 <p>To avoid the need to pass <code class="docutils literal notranslate"><span class="pre">--token</span></code>, you can use <code class="docutils literal notranslate"><span class="pre">export</span> <span class="pre">CHANGELOG_GITHUB_TOKEN=&lt;your-40-digit-token&gt;</span></code> instead.</p>

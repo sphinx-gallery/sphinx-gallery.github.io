@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Configuration &#8212; Sphinx-Gallery 0.22.0-git documentation</title>
+    <title>Configuration &#8212; Sphinx-Gallery 0.22.1-git documentation</title>
   
   
   
@@ -48,7 +48,7 @@
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
-    <script src="_static/documentation_options.js?v=13848ffc"></script>
+    <script src="_static/documentation_options.js?v=eef4b0ba"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/sg-tags.js?v=d80f6fa4"></script>
@@ -69,7 +69,7 @@
     <link rel="prev" title="Structuring Python scripts for Sphinx-Gallery" href="syntax.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.22.0" />
+  <meta name="docsearch:version" content="0.22.1" />
   
     
     <script src="_static/searchtools.js"></script>
@@ -1750,6 +1750,9 @@ of each example.</p>
 complex reST syntax. If your examples have more complex reST, <code class="docutils literal notranslate"><span class="pre">pypandoc</span></code> may
 produce better results. By default, the ‘pypandoc’ configuration is set to
 <code class="docutils literal notranslate"><span class="pre">False</span></code> and <code class="docutils literal notranslate"><span class="pre">pypandoc</span></code> is not used.</p>
+<p>With either converter, hyperlink targets defined in the Sphinx <code class="docutils literal notranslate"><span class="pre">rst_prolog</span></code>
+and <code class="docutils literal notranslate"><span class="pre">rst_epilog</span></code> configuration values are available to example text blocks, so
+references to them (e.g., <code class="docutils literal notranslate"><span class="pre">`mylink`_</span></code>) become links in the notebooks.</p>
 <p>To use <code class="docutils literal notranslate"><span class="pre">pypandoc</span></code> you can set:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">sphinx_gallery_conf</span> <span class="o">=</span> <span class="p">{</span>
     <span class="o">...</span>
@@ -2734,7 +2737,9 @@ is considered <strong>experimental</strong>!</p>
 properly set up and torn down. Parallelism is achieved through the Loky backend of
 joblib, see <a class="reference external" href="https://joblib.readthedocs.io/en/latest/user_guide/parallel.html#parallel" title="(in joblib v1.7)"><span>Embarrassingly parallel for loops</span></a> for documentation of many relevant conisderations
 (e.g., pickling, oversubscription of CPU resources, etc.).</p>
-<p>Using parallel building will also disable memory measurements.</p>
+<p>Using parallel building will also disable memory measurements, with a warning
+that <code class="docutils literal notranslate"><span class="pre">sphinx-build</span> <span class="pre">-W</span></code> turns into a build error. Drop <code class="docutils literal notranslate"><span class="pre">show_memory</span></code> from your
+configuration rather than setting both.</p>
 </div>
 <section id="excluding-individual-examples-from-parallel-execution">
 <h4>Excluding individual examples from parallel execution<a class="headerlink" href="#excluding-individual-examples-from-parallel-execution" title="Link to this heading">#</a></h4>
