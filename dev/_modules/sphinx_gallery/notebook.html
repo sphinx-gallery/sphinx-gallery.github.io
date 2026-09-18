@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>sphinx_gallery.notebook &#8212; Sphinx-Gallery 0.23.0.dev3+g391988636-git documentation</title>
+    <title>sphinx_gallery.notebook &#8212; Sphinx-Gallery 0.23.0.dev4+g30f69c7a1-git documentation</title>
   
   
   
@@ -47,7 +47,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
-    <script src="../../_static/documentation_options.js?v=38d38245"></script>
+    <script src="../../_static/documentation_options.js?v=5bc5f500"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/sg-tags.js?v=d80f6fa4"></script>
@@ -66,7 +66,7 @@
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.23.0.dev3+g391988636" />
+  <meta name="docsearch:version" content="0.23.0.dev4+g30f69c7a1" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -588,6 +588,68 @@
 
 
 
+<span class="c1"># ``.. _name: uri`` and ``.. _`name`: uri``; anonymous (``.. __: uri``) and indirect</span>
+<span class="c1"># (``.. _a: b_``) targets, and URIs continued on the next line, are not supported</span>
+<span class="n">_LINK_TARGET_RE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+    <span class="sa">r</span><span class="s2">"^ *\.\. _(?!_)(?P&lt;name&gt;`[^`]+`|[^`:\n]+):(?P&lt;uri&gt;.*)$"</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">M</span>
+<span class="p">)</span>
+<span class="c1"># Only names of known targets are replaced, so these can be loose</span>
+<span class="n">_REF_RE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+    <span class="c1"># inline literals and indented blocks after ``::`` are left alone</span>
+    <span class="sa">r</span><span class="s2">"(?P&lt;literal&gt;``[^`]+``|::.*(?:\n(?:[ \t]+.*)?)+)"</span>
+    <span class="sa">r</span><span class="s2">"|`(?P&lt;label&gt;[^`&lt;]+)&lt;(?P&lt;embedded&gt;[^`&gt;]+)_&gt;`_"</span>  <span class="c1"># `label &lt;name_&gt;`_</span>
+    <span class="sa">r</span><span class="s2">"|`(?P&lt;phrase&gt;[^`]+)`_"</span>  <span class="c1"># `name`_</span>
+    <span class="sa">r</span><span class="s2">"|(?&lt;![\w.])(?P&lt;simple&gt;\w+)_\b"</span>  <span class="c1"># name_ (but not est.coef_)</span>
+<span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_normalize_target_name</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Normalize a hyperlink name the way reST matches references to targets."""</span>
+    <span class="k">return</span> <span class="s2">" "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">"`"</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">())</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_parse_link_targets</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""Get the ``{name: URI}`` external hyperlink targets defined in reST ``text``.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    text : str</span>
+<span class="sd">        reST to scan for hyperlink target definitions.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    targets : dict</span>
+<span class="sd">        Mapping of normalized (whitespace-collapsed, lower-cased) target names to URIs.</span>
+<span class="sd">    """</span>
+    <span class="n">targets</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">_normalize_target_name</span><span class="p">(</span><span class="n">match</span><span class="p">[</span><span class="s2">"name"</span><span class="p">]):</span> <span class="n">match</span><span class="p">[</span><span class="s2">"uri"</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">_LINK_TARGET_RE</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="c1"># internal (no URI) and indirect targets have no URI to link to</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">uri</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">uri</span> <span class="ow">in</span> <span class="n">targets</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">uri</span> <span class="ow">and</span> <span class="n">uri</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">"_"</span><span class="p">}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_link_targets_to_rst</span><span class="p">(</span><span class="n">targets</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Render ``targets`` back to reST target definitions."""</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">targets</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">""</span>
+    <span class="k">return</span> <span class="s2">"</span><span class="se">\n\n</span><span class="s2">"</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">".. _`</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">`: </span><span class="si">{</span><span class="n">uri</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">uri</span> <span class="ow">in</span> <span class="n">targets</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_resolve_link_targets</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">targets</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Turn reST references to ``targets`` into markdown links."""</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_sub</span><span class="p">(</span><span class="n">match</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">Match</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">match</span><span class="p">[</span><span class="s2">"embedded"</span><span class="p">]</span> <span class="ow">or</span> <span class="n">match</span><span class="p">[</span><span class="s2">"phrase"</span><span class="p">]</span> <span class="ow">or</span> <span class="n">match</span><span class="p">[</span><span class="s2">"simple"</span><span class="p">]</span>
+        <span class="n">uri</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">match</span><span class="p">[</span><span class="s2">"literal"</span><span class="p">]</span> <span class="k">else</span> <span class="n">targets</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">_normalize_target_name</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">uri</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">match</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">label</span> <span class="o">=</span> <span class="n">match</span><span class="p">[</span><span class="s2">"label"</span><span class="p">]</span> <span class="ow">or</span> <span class="n">name</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"[</span><span class="si">{</span><span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">label</span><span class="o">.</span><span class="n">split</span><span class="p">())</span><span class="si">}</span><span class="s2">](</span><span class="si">{</span><span class="n">uri</span><span class="si">}</span><span class="s2">)"</span>
+
+    <span class="k">return</span> <span class="n">_REF_RE</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">_sub</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+
+
 <div class="viewcode-block" id="rst2md">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.notebook.html#sphinx_gallery.notebook.rst2md">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">rst2md</span><span class="p">(</span>
@@ -652,8 +714,13 @@
         <span class="p">)</span>
         <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">directive_re</span><span class="p">,</span> <span class="n">partial</span><span class="p">(</span><span class="n">directive_fun</span><span class="p">,</span> <span class="n">directive</span><span class="o">=</span><span class="n">directive</span><span class="p">),</span> <span class="n">text</span><span class="p">)</span>
 
+    <span class="c1"># targets defined in the block itself take precedence over the ones from conf.py</span>
+    <span class="n">targets</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">gallery_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"rst_link_targets"</span><span class="p">,</span> <span class="p">{}),</span> <span class="o">**</span><span class="n">_parse_link_targets</span><span class="p">(</span><span class="n">text</span><span class="p">)}</span>
+
     <span class="n">footnote_links</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">"^ *\.\. _.*:.*$\n"</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">M</span><span class="p">)</span>
     <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">footnote_links</span><span class="p">,</span> <span class="s2">""</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+
+    <span class="n">text</span> <span class="o">=</span> <span class="n">_resolve_link_targets</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">targets</span><span class="p">)</span>
 
     <span class="n">embedded_uris</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">"`([^`]*?)\s*&lt;([^`]*)&gt;`_"</span><span class="p">)</span>
     <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">embedded_uris</span><span class="p">,</span> <span class="sa">r</span><span class="s2">"[\1](\2)"</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
@@ -846,6 +913,7 @@
     <span class="n">heading_levels</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span>
         <span class="k">lambda</span><span class="p">:</span> <span class="nb">next</span><span class="p">(</span><span class="n">heading_level_counter</span><span class="p">)</span>
     <span class="p">)</span>
+    <span class="n">conf_targets</span> <span class="o">=</span> <span class="n">gallery_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"rst_link_targets"</span><span class="p">,</span> <span class="p">{})</span>
     <span class="k">for</span> <span class="n">blabel</span><span class="p">,</span> <span class="n">bcontent</span><span class="p">,</span> <span class="n">lineno</span> <span class="ow">in</span> <span class="n">script_blocks</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">blabel</span> <span class="o">==</span> <span class="s2">"code"</span><span class="p">:</span>
             <span class="n">add_code_cell</span><span class="p">(</span><span class="n">work_notebook</span><span class="p">,</span> <span class="n">bcontent</span><span class="p">)</span>
@@ -857,6 +925,13 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="kn">import</span><span class="w"> </span><span class="nn">pypandoc</span>
 
+                <span class="c1"># pandoc resolves references itself, it just needs to be told about the</span>
+                <span class="c1"># targets from conf.py (unused definitions produce no output); the ones</span>
+                <span class="c1"># the block defines itself take precedence, so they are left out</span>
+                <span class="n">block_targets</span> <span class="o">=</span> <span class="n">_parse_link_targets</span><span class="p">(</span><span class="n">bcontent</span><span class="p">)</span>
+                <span class="n">bcontent</span> <span class="o">+=</span> <span class="n">_link_targets_to_rst</span><span class="p">(</span>
+                    <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">conf_targets</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">block_targets</span><span class="p">}</span>
+                <span class="p">)</span>
                 <span class="c1"># pandoc automatically adds \n to the end</span>
                 <span class="n">markdown</span> <span class="o">=</span> <span class="n">pypandoc</span><span class="o">.</span><span class="n">convert_text</span><span class="p">(</span>
                     <span class="n">bcontent</span><span class="p">,</span> <span class="n">to</span><span class="o">=</span><span class="s2">"md"</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">"rst"</span><span class="p">,</span> <span class="o">**</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">"pypandoc"</span><span class="p">]</span>
