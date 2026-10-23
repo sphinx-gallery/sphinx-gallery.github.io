@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>sphinx_gallery.notebook &#8212; Sphinx-Gallery 0.23.0.dev2+ga7f3bac58-git documentation</title>
+    <title>sphinx_gallery.notebook &#8212; Sphinx-Gallery 0.23.0.dev3+ga32548f46-git documentation</title>
   
   
   
@@ -46,7 +46,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
 
-    <script src="../../_static/documentation_options.js?v=837e7db2"></script>
+    <script src="../../_static/documentation_options.js?v=ef4f3183"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/sg-tags.js?v=d80f6fa4"></script>
@@ -66,7 +66,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.23.0.dev2+ga7f3bac58" />
+  <meta name="docsearch:version" content="0.23.0.dev3+ga32548f46" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -582,7 +582,8 @@
         <span class="n">end_index</span> <span class="o">=</span> <span class="n">code_end_match</span><span class="o">.</span><span class="n">start</span><span class="p">()</span> <span class="k">if</span> <span class="n">code_end_match</span> <span class="k">else</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
 
         <span class="n">contents</span> <span class="o">=</span> <span class="n">textwrap</span><span class="o">.</span><span class="n">dedent</span><span class="p">(</span><span class="n">text</span><span class="p">[</span><span class="n">start_index</span><span class="p">:</span><span class="n">end_index</span><span class="p">])</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span>
-        <span class="n">new_code</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"```</span><span class="si">{</span><span class="n">code_block</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">contents</span><span class="si">}</span><span class="se">\n</span><span class="s2">```</span><span class="se">\n</span><span class="s2">"</span>
+        <span class="n">fence</span> <span class="o">=</span> <span class="s2">"`"</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">len</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s2">"`+"</span><span class="p">,</span> <span class="n">contents</span><span class="p">)),</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">new_code</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">fence</span><span class="si">}{</span><span class="n">code_block</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">contents</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">fence</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span>
         <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="p">[:</span> <span class="n">code_block</span><span class="o">.</span><span class="n">span</span><span class="p">()[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">+</span> <span class="n">new_code</span> <span class="o">+</span> <span class="n">text</span><span class="p">[</span><span class="n">end_index</span><span class="p">:]</span>
     <span class="k">return</span> <span class="n">text</span></div>
 
@@ -874,7 +875,7 @@
 <span class="sd">        Markdown cell content.</span>
 <span class="sd">    """</span>
     <span class="c1"># Regex detects all code blocks that use %% Jupyter cell magic</span>
-    <span class="n">cell_magic_regex</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">"\n?```\s*[a-z]*\n(</span><span class="si">%%</span><span class="s2">(?:[\s\S]*?))\n?```\n?"</span>
+    <span class="n">cell_magic_regex</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">"\n?(`{3,})\s*[a-z]*\n(</span><span class="si">%%</span><span class="s2">(?:[\s\S]*?))\n?\1\n?"</span>
 
     <span class="n">text_cell_start</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">for</span> <span class="n">magic_cell</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="n">cell_magic_regex</span><span class="p">,</span> <span class="n">markdown</span><span class="p">):</span>
@@ -884,7 +885,7 @@
             <span class="n">add_markdown_cell</span><span class="p">(</span><span class="n">work_notebook</span><span class="p">,</span> <span class="n">text_block</span><span class="p">)</span>
         <span class="n">text_cell_start</span> <span class="o">=</span> <span class="n">magic_cell</span><span class="o">.</span><span class="n">span</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
 
-        <span class="n">code_block</span> <span class="o">=</span> <span class="n">magic_cell</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">code_block</span> <span class="o">=</span> <span class="n">magic_cell</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
         <span class="n">add_code_cell</span><span class="p">(</span><span class="n">work_notebook</span><span class="p">,</span> <span class="n">code_block</span><span class="p">)</span>
 
     <span class="c1"># Return remaining text (which equals markdown if no magic cells exist)</span>
@@ -1042,7 +1043,7 @@
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.2.0.
   </p>
 </div>
       

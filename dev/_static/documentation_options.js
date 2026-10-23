@@ -1,5 +1,5 @@
 const DOCUMENTATION_OPTIONS = {
-    VERSION: '0.23.0.dev2+ga7f3bac58-git',
+    VERSION: '0.23.0.dev3+ga32548f46-git',
     LANGUAGE: 'en',
     COLLAPSE_INDEX: false,
     BUILDER: 'html',
