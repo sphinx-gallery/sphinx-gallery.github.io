@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>sphinx_gallery.gen_gallery &#8212; Sphinx-Gallery 0.23.0.dev5+ga0beb25bb-git documentation</title>
+    <title>sphinx_gallery.gen_gallery &#8212; Sphinx-Gallery 0.23.0.dev6+g3a15653fc-git documentation</title>
   
   
   
@@ -46,7 +46,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../_static/documentation_options.js?v=f7744c1f"></script>
+    <script src="../../_static/documentation_options.js?v=52052589"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/sg-tags.js?v=d80f6fa4"></script>
@@ -66,7 +66,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.23.0.dev5+ga0beb25bb" />
+  <meta name="docsearch:version" content="0.23.0.dev6+g3a15653fc" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -513,6 +513,7 @@
     <span class="n">_get_call_memory_and_base</span><span class="p">,</span>
     <span class="n">_get_callables</span><span class="p">,</span>
     <span class="n">_get_gallery_header</span><span class="p">,</span>
+    <span class="n">_shutdown_parallel_executor</span><span class="p">,</span>
     <span class="n">generate_dir_rst</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.interactive_example</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
@@ -1274,151 +1275,158 @@
         <span class="n">extra</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">" (with parallel=</span><span class="si">{</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s1">'parallel'</span><span class="p">]</span><span class="si">}</span><span class="s2">)"</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"generating gallery</span><span class="si">{</span><span class="n">extra</span><span class="si">}</span><span class="s2">..."</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"white"</span><span class="p">)</span>
 
-    <span class="n">seen_backrefs</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">seen_backrefs</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
 
-    <span class="n">costs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ExampleCost</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">src_root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">)</span>
-    <span class="n">workdirs</span> <span class="o">=</span> <span class="n">_prepare_sphx_glr_dirs</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">src_root</span><span class="p">)</span>
+        <span class="n">costs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ExampleCost</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">src_root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">)</span>
+        <span class="n">workdirs</span> <span class="o">=</span> <span class="n">_prepare_sphx_glr_dirs</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">src_root</span><span class="p">)</span>
 
-    <span class="c1"># Check for duplicate filenames to make sure linking works as expected.</span>
-    <span class="c1"># `examples_dirs` is relative to `src_root`, and resolving it against the cwd</span>
-    <span class="c1"># instead would silently collect nothing.</span>
-    <span class="n">examples_dirs</span> <span class="o">=</span> <span class="p">[</span><span class="n">src_root</span> <span class="o">/</span> <span class="n">ex_dir</span> <span class="k">for</span> <span class="n">ex_dir</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">workdirs</span><span class="p">]</span>
-    <span class="n">_collect_gallery_files</span><span class="p">(</span><span class="n">examples_dirs</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">check_filenames</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># Check for duplicate filenames to make sure linking works as expected.</span>
+        <span class="c1"># `examples_dirs` is relative to `src_root`, and resolving it against the cwd</span>
+        <span class="c1"># instead would silently collect nothing.</span>
+        <span class="n">examples_dirs</span> <span class="o">=</span> <span class="p">[</span><span class="n">src_root</span> <span class="o">/</span> <span class="n">ex_dir</span> <span class="k">for</span> <span class="n">ex_dir</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">workdirs</span><span class="p">]</span>
+        <span class="n">_collect_gallery_files</span><span class="p">(</span><span class="n">examples_dirs</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">check_filenames</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="n">backrefs_all</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">Backreference</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">backrefs_all</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">Backreference</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
 
-    <span class="k">for</span> <span class="n">examples_dir</span><span class="p">,</span> <span class="n">gallery_dir</span> <span class="ow">in</span> <span class="n">workdirs</span><span class="p">:</span>
-        <span class="n">examples_dir_abs_path</span> <span class="o">=</span> <span class="n">src_root</span> <span class="o">/</span> <span class="n">examples_dir</span>
-        <span class="n">gallery_dir_abs_path</span> <span class="o">=</span> <span class="n">src_root</span> <span class="o">/</span> <span class="n">gallery_dir</span>
+        <span class="k">for</span> <span class="n">examples_dir</span><span class="p">,</span> <span class="n">gallery_dir</span> <span class="ow">in</span> <span class="n">workdirs</span><span class="p">:</span>
+            <span class="n">examples_dir_abs_path</span> <span class="o">=</span> <span class="n">src_root</span> <span class="o">/</span> <span class="n">examples_dir</span>
+            <span class="n">gallery_dir_abs_path</span> <span class="o">=</span> <span class="n">src_root</span> <span class="o">/</span> <span class="n">gallery_dir</span>
 
-        <span class="c1"># Create example rst files for root gallery directory examples</span>
-        <span class="c1"># (excl. sub-dir examples) and fetch gallery header for root index.rst</span>
-        <span class="p">(</span>
-            <span class="n">_</span><span class="p">,</span>
-            <span class="n">this_content</span><span class="p">,</span>
-            <span class="n">this_costs</span><span class="p">,</span>
-            <span class="n">this_toctree_items</span><span class="p">,</span>
-            <span class="n">backrefs_root</span><span class="p">,</span>
-        <span class="p">)</span> <span class="o">=</span> <span class="n">generate_dir_rst</span><span class="p">(</span>
-            <span class="n">examples_dir_abs_path</span><span class="p">,</span>
-            <span class="n">gallery_dir_abs_path</span><span class="p">,</span>
-            <span class="n">gallery_conf</span><span class="p">,</span>
-            <span class="n">seen_backrefs</span><span class="p">,</span>
-            <span class="n">is_subsection</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="p">)</span>
-
-        <span class="n">_combine_backreferences</span><span class="p">(</span><span class="n">backrefs_all</span><span class="p">,</span> <span class="n">backrefs_root</span><span class="p">)</span>
-
-        <span class="c1"># `this_content` is None when user provides own index.rst</span>
-        <span class="n">sg_root_index</span> <span class="o">=</span> <span class="n">this_content</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-        <span class="n">costs</span> <span class="o">+=</span> <span class="n">this_costs</span>
-        <span class="n">write_computation_times</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">gallery_dir_abs_path</span><span class="p">,</span> <span class="n">this_costs</span><span class="p">)</span>
-
-        <span class="c1"># `indexst` variable must exist, as passed to `_finish_index_rst`</span>
-        <span class="n">indexst</span> <span class="o">=</span> <span class="s2">""</span>
-        <span class="c1"># Create root gallery index.rst</span>
-        <span class="k">if</span> <span class="n">sg_root_index</span><span class="p">:</span>
-            <span class="k">assert</span> <span class="n">this_content</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>  <span class="c1"># for type narrowing</span>
-            <span class="c1"># :orphan: to suppress "not included in TOCTREE" sphinx warnings</span>
-            <span class="n">indexst</span> <span class="o">=</span> <span class="s2">":orphan:</span><span class="se">\n\n</span><span class="s2">"</span> <span class="o">+</span> <span class="n">this_content</span>
-            <span class="c1"># Write toctree with gallery items from gallery root folder</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">this_toctree_items</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">this_toctree</span> <span class="o">=</span> <span class="n">_format_toctree</span><span class="p">(</span><span class="n">this_toctree_items</span><span class="p">)</span>
-                <span class="n">indexst</span> <span class="o">+=</span> <span class="n">this_toctree</span>
-
-        <span class="c1"># list all paths to subsection index files in this array</span>
-        <span class="n">subsection_index_files</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">subsecs</span> <span class="o">=</span> <span class="n">get_subsections</span><span class="p">(</span>
-            <span class="n">src_root</span><span class="p">,</span>
-            <span class="n">examples_dir_abs_path</span><span class="p">,</span>
-            <span class="n">gallery_conf</span><span class="p">,</span>
-            <span class="n">check_for_header</span><span class="o">=</span><span class="n">sg_root_index</span><span class="p">,</span>
-        <span class="p">)</span>
-        <span class="k">for</span> <span class="n">subsection</span> <span class="ow">in</span> <span class="n">subsecs</span><span class="p">:</span>
-            <span class="n">src_dir</span> <span class="o">=</span> <span class="n">examples_dir_abs_path</span> <span class="o">/</span> <span class="n">subsection</span>
-            <span class="n">target_dir</span> <span class="o">=</span> <span class="n">gallery_dir_abs_path</span> <span class="o">/</span> <span class="n">subsection</span>
-            <span class="n">subsection_index_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                <span class="s2">"/"</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">""</span><span class="p">,</span> <span class="n">gallery_dir</span><span class="p">,</span> <span class="n">subsection</span><span class="p">,</span> <span class="s2">"index.rst"</span><span class="p">])</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
-                    <span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s2">"/"</span>
-                <span class="p">)</span>  <span class="c1"># fwd slashes needed in rst</span>
+            <span class="c1"># Create example rst files for root gallery directory examples</span>
+            <span class="c1"># (excl. sub-dir examples) and fetch gallery header for root index.rst</span>
+            <span class="p">(</span>
+                <span class="n">_</span><span class="p">,</span>
+                <span class="n">this_content</span><span class="p">,</span>
+                <span class="n">this_costs</span><span class="p">,</span>
+                <span class="n">this_toctree_items</span><span class="p">,</span>
+                <span class="n">backrefs_root</span><span class="p">,</span>
+            <span class="p">)</span> <span class="o">=</span> <span class="n">generate_dir_rst</span><span class="p">(</span>
+                <span class="n">examples_dir_abs_path</span><span class="p">,</span>
+                <span class="n">gallery_dir_abs_path</span><span class="p">,</span>
+                <span class="n">gallery_conf</span><span class="p">,</span>
+                <span class="n">seen_backrefs</span><span class="p">,</span>
+                <span class="n">is_subsection</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
             <span class="p">)</span>
 
-            <span class="p">(</span>
-                <span class="n">subsection_index_path</span><span class="p">,</span>
-                <span class="n">subsection_index_content</span><span class="p">,</span>
-                <span class="n">subsection_costs</span><span class="p">,</span>
-                <span class="n">subsection_toctree_filenames</span><span class="p">,</span>
-                <span class="n">backrefs_subsec</span><span class="p">,</span>
-            <span class="p">)</span> <span class="o">=</span> <span class="n">generate_dir_rst</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">seen_backrefs</span><span class="p">)</span>
+            <span class="n">_combine_backreferences</span><span class="p">(</span><span class="n">backrefs_all</span><span class="p">,</span> <span class="n">backrefs_root</span><span class="p">)</span>
 
-            <span class="n">_combine_backreferences</span><span class="p">(</span><span class="n">backrefs_all</span><span class="p">,</span> <span class="n">backrefs_subsec</span><span class="p">)</span>
+            <span class="c1"># `this_content` is None when user provides own index.rst</span>
+            <span class="n">sg_root_index</span> <span class="o">=</span> <span class="n">this_content</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="n">costs</span> <span class="o">+=</span> <span class="n">this_costs</span>
+            <span class="n">write_computation_times</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">gallery_dir_abs_path</span><span class="p">,</span> <span class="n">this_costs</span><span class="p">)</span>
 
-            <span class="n">has_subsection_header</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="k">if</span> <span class="n">subsection_index_content</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">"nested_sections"</span><span class="p">]:</span>
-                    <span class="c1"># Filter tags to prevent tag duplication as subsection headers</span>
-                    <span class="c1"># are included in both root index and subsection index files</span>
-                    <span class="n">indexst</span> <span class="o">+=</span> <span class="n">_filter_tags</span><span class="p">(</span><span class="n">subsection_index_content</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">indexst</span> <span class="o">+=</span> <span class="n">subsection_index_content</span>
-                <span class="n">has_subsection_header</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="c1"># `indexst` variable must exist, as passed to `_finish_index_rst`</span>
+            <span class="n">indexst</span> <span class="o">=</span> <span class="s2">""</span>
+            <span class="c1"># Create root gallery index.rst</span>
+            <span class="k">if</span> <span class="n">sg_root_index</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="n">this_content</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>  <span class="c1"># for type narrowing</span>
+                <span class="c1"># :orphan: to suppress "not included in TOCTREE" sphinx warnings</span>
+                <span class="n">indexst</span> <span class="o">=</span> <span class="s2">":orphan:</span><span class="se">\n\n</span><span class="s2">"</span> <span class="o">+</span> <span class="n">this_content</span>
+                <span class="c1"># Write toctree with gallery items from gallery root folder</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">this_toctree_items</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">this_toctree</span> <span class="o">=</span> <span class="n">_format_toctree</span><span class="p">(</span><span class="n">this_toctree_items</span><span class="p">)</span>
+                    <span class="n">indexst</span> <span class="o">+=</span> <span class="n">this_toctree</span>
 
-            <span class="c1"># Write subsection toctree containing all filenames, if req.</span>
-            <span class="k">if</span> <span class="p">(</span>
-                <span class="n">sg_root_index</span>
-                <span class="ow">and</span> <span class="ow">not</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">"nested_sections"</span><span class="p">]</span>
-                <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">subsection_toctree_filenames</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
-            <span class="p">):</span>
-                <span class="n">subsection_index_toctree</span> <span class="o">=</span> <span class="n">_format_toctree</span><span class="p">(</span><span class="n">subsection_toctree_filenames</span><span class="p">)</span>
-                <span class="n">indexst</span> <span class="o">+=</span> <span class="n">subsection_index_toctree</span>
-            <span class="c1"># Otherwise, for the conditions below, a new subsection index.rst.new</span>
-            <span class="c1"># file should have been created and it needs to be parsed</span>
-            <span class="k">elif</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">"nested_sections"</span><span class="p">]</span> <span class="ow">and</span> <span class="n">has_subsection_header</span><span class="p">:</span>
-                <span class="k">assert</span> <span class="n">subsection_index_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>  <span class="c1"># for type narrowing</span>
-                <span class="n">_replace_md5</span><span class="p">(</span><span class="n">subsection_index_path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">"t"</span><span class="p">)</span>
+            <span class="c1"># list all paths to subsection index files in this array</span>
+            <span class="n">subsection_index_files</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">subsecs</span> <span class="o">=</span> <span class="n">get_subsections</span><span class="p">(</span>
+                <span class="n">src_root</span><span class="p">,</span>
+                <span class="n">examples_dir_abs_path</span><span class="p">,</span>
+                <span class="n">gallery_conf</span><span class="p">,</span>
+                <span class="n">check_for_header</span><span class="o">=</span><span class="n">sg_root_index</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">subsection</span> <span class="ow">in</span> <span class="n">subsecs</span><span class="p">:</span>
+                <span class="n">src_dir</span> <span class="o">=</span> <span class="n">examples_dir_abs_path</span> <span class="o">/</span> <span class="n">subsection</span>
+                <span class="n">target_dir</span> <span class="o">=</span> <span class="n">gallery_dir_abs_path</span> <span class="o">/</span> <span class="n">subsection</span>
+                <span class="n">subsection_index_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="s2">"/"</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">""</span><span class="p">,</span> <span class="n">gallery_dir</span><span class="p">,</span> <span class="n">subsection</span><span class="p">,</span> <span class="s2">"index.rst"</span><span class="p">])</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s2">"/"</span>
+                    <span class="p">)</span>  <span class="c1"># fwd slashes needed in rst</span>
+                <span class="p">)</span>
 
-            <span class="n">costs</span> <span class="o">+=</span> <span class="n">subsection_costs</span>
-            <span class="n">write_computation_times</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">subsection_costs</span><span class="p">)</span>
+                <span class="p">(</span>
+                    <span class="n">subsection_index_path</span><span class="p">,</span>
+                    <span class="n">subsection_index_content</span><span class="p">,</span>
+                    <span class="n">subsection_costs</span><span class="p">,</span>
+                    <span class="n">subsection_toctree_filenames</span><span class="p">,</span>
+                    <span class="n">backrefs_subsec</span><span class="p">,</span>
+                <span class="p">)</span> <span class="o">=</span> <span class="n">generate_dir_rst</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">,</span> <span class="n">seen_backrefs</span><span class="p">)</span>
 
-        <span class="c1"># Per gallery - items below run once per gallery</span>
-        <span class="c1"># Finish index.rst and write to file</span>
-        <span class="n">_finish_index_rst</span><span class="p">(</span>
-            <span class="n">app</span><span class="p">,</span>
-            <span class="n">gallery_conf</span><span class="p">,</span>
-            <span class="n">indexst</span><span class="p">,</span>
-            <span class="n">sg_root_index</span><span class="p">,</span>
-            <span class="n">subsection_index_files</span><span class="p">,</span>
-            <span class="n">gallery_dir_abs_path</span><span class="p">,</span>
-        <span class="p">)</span>
-        <span class="c1"># Build recommendation system</span>
-        <span class="n">_build_recommender</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">gallery_dir_abs_path</span><span class="p">,</span> <span class="n">subsecs</span><span class="p">)</span>
+                <span class="n">_combine_backreferences</span><span class="p">(</span><span class="n">backrefs_all</span><span class="p">,</span> <span class="n">backrefs_subsec</span><span class="p">)</span>
 
-    <span class="c1"># Per project - items below run once only (for all galleries)</span>
-    <span class="c1"># Write a single global sg_execution_times</span>
-    <span class="n">write_computation_times</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">costs</span><span class="p">)</span>
+                <span class="n">has_subsection_header</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">if</span> <span class="n">subsection_index_content</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">"nested_sections"</span><span class="p">]:</span>
+                        <span class="c1"># Filter tags to prevent tag duplication as subsection headers</span>
+                        <span class="c1"># are included in both root index and subsection index files</span>
+                        <span class="n">indexst</span> <span class="o">+=</span> <span class="n">_filter_tags</span><span class="p">(</span><span class="n">subsection_index_content</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">indexst</span> <span class="o">+=</span> <span class="n">subsection_index_content</span>
+                    <span class="n">has_subsection_header</span> <span class="o">=</span> <span class="kc">True</span>
 
-    <span class="c1"># Write backreferences_all to file</span>
-    <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">"backreferences_dir"</span><span class="p">]:</span>
-        <span class="n">_write_json</span><span class="p">(</span>
-            <span class="n">Path</span><span class="p">(</span>
-                <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">"src_dir"</span><span class="p">],</span>
-                <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">"backreferences_dir"</span><span class="p">],</span>
-                <span class="s2">"backreferences_all"</span><span class="p">,</span>
-            <span class="p">),</span>
-            <span class="n">backrefs_all</span><span class="p">,</span>
-        <span class="p">)</span>
+                <span class="c1"># Write subsection toctree containing all filenames, if req.</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="n">sg_root_index</span>
+                    <span class="ow">and</span> <span class="ow">not</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">"nested_sections"</span><span class="p">]</span>
+                    <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">subsection_toctree_filenames</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+                <span class="p">):</span>
+                    <span class="n">subsection_index_toctree</span> <span class="o">=</span> <span class="n">_format_toctree</span><span class="p">(</span>
+                        <span class="n">subsection_toctree_filenames</span>
+                    <span class="p">)</span>
+                    <span class="n">indexst</span> <span class="o">+=</span> <span class="n">subsection_index_toctree</span>
+                <span class="c1"># Otherwise, for the conditions below, a new subsection index.rst.new</span>
+                <span class="c1"># file should have been created and it needs to be parsed</span>
+                <span class="k">elif</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">"nested_sections"</span><span class="p">]</span> <span class="ow">and</span> <span class="n">has_subsection_header</span><span class="p">:</span>
+                    <span class="k">assert</span> <span class="n">subsection_index_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>  <span class="c1"># for type narrowing</span>
+                    <span class="n">_replace_md5</span><span class="p">(</span><span class="n">subsection_index_path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">"t"</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">"show_api_usage"</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">False</span><span class="p">:</span>
-        <span class="n">_init_api_usage</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">))</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">_remove_api_usage</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">))</span>
-    <span class="n">_finalize_backreferences</span><span class="p">(</span><span class="n">seen_backrefs</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
+                <span class="n">costs</span> <span class="o">+=</span> <span class="n">subsection_costs</span>
+                <span class="n">write_computation_times</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">subsection_costs</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">"plot_gallery"</span><span class="p">]:</span>
-        <span class="n">_log_costs</span><span class="p">(</span><span class="n">costs</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
-        <span class="c1"># Also create a junit.xml file, useful e.g. on CircleCI</span>
-        <span class="n">write_junit_xml</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">outdir</span><span class="p">,</span> <span class="n">costs</span><span class="p">)</span></div>
+            <span class="c1"># Per gallery - items below run once per gallery</span>
+            <span class="c1"># Finish index.rst and write to file</span>
+            <span class="n">_finish_index_rst</span><span class="p">(</span>
+                <span class="n">app</span><span class="p">,</span>
+                <span class="n">gallery_conf</span><span class="p">,</span>
+                <span class="n">indexst</span><span class="p">,</span>
+                <span class="n">sg_root_index</span><span class="p">,</span>
+                <span class="n">subsection_index_files</span><span class="p">,</span>
+                <span class="n">gallery_dir_abs_path</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="c1"># Build recommendation system</span>
+            <span class="n">_build_recommender</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">gallery_dir_abs_path</span><span class="p">,</span> <span class="n">subsecs</span><span class="p">)</span>
+
+        <span class="c1"># Per project - items below run once only (for all galleries)</span>
+        <span class="c1"># Write a single global sg_execution_times</span>
+        <span class="n">write_computation_times</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">costs</span><span class="p">)</span>
+
+        <span class="c1"># Write backreferences_all to file</span>
+        <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">"backreferences_dir"</span><span class="p">]:</span>
+            <span class="n">_write_json</span><span class="p">(</span>
+                <span class="n">Path</span><span class="p">(</span>
+                    <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">"src_dir"</span><span class="p">],</span>
+                    <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">"backreferences_dir"</span><span class="p">],</span>
+                    <span class="s2">"backreferences_all"</span><span class="p">,</span>
+                <span class="p">),</span>
+                <span class="n">backrefs_all</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">"show_api_usage"</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="n">_init_api_usage</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">_remove_api_usage</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">srcdir</span><span class="p">))</span>
+        <span class="n">_finalize_backreferences</span><span class="p">(</span><span class="n">seen_backrefs</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">"plot_gallery"</span><span class="p">]:</span>
+            <span class="n">_log_costs</span><span class="p">(</span><span class="n">costs</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">)</span>
+            <span class="c1"># Also create a junit.xml file, useful e.g. on CircleCI</span>
+            <span class="n">write_junit_xml</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">,</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">outdir</span><span class="p">,</span> <span class="n">costs</span><span class="p">)</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="c1"># loky keeps its idle workers, and their memory, alive otherwise; stop</span>
+        <span class="c1"># them here too when an example aborts the build.</span>
+        <span class="n">_shutdown_parallel_executor</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">)</span></div>
 
 
 

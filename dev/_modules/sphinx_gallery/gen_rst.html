@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>sphinx_gallery.gen_rst &#8212; Sphinx-Gallery 0.23.0.dev5+ga0beb25bb-git documentation</title>
+    <title>sphinx_gallery.gen_rst &#8212; Sphinx-Gallery 0.23.0.dev6+g3a15653fc-git documentation</title>
   
   
   
@@ -46,7 +46,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../_static/documentation_options.js?v=f7744c1f"></script>
+    <script src="../../_static/documentation_options.js?v=52052589"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/sg-tags.js?v=d80f6fa4"></script>
@@ -66,7 +66,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.23.0.dev5+ga0beb25bb" />
+  <meta name="docsearch:version" content="0.23.0.dev6+g3a15653fc" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -1315,6 +1315,26 @@
         <span class="n">backrefs_dir</span><span class="p">,</span>
     <span class="p">)</span></div>
 
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_shutdown_parallel_executor</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Stop the loky workers that ``Parallel`` reuses between galleries.</span>
+
+<span class="sd">    loky keeps its reusable executor, and the idle workers it holds along with</span>
+<span class="sd">    whatever memory the examples left in them, alive for minutes after the last</span>
+<span class="sd">    ``Parallel`` call. Nothing else stops that pool, so the workers would still</span>
+<span class="sd">    be running while Sphinx reads and writes the pages. Does nothing when the</span>
+<span class="sd">    examples did not run in parallel, or when joblib is not installed.</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">"parallel"</span><span class="p">]:</span>
+        <span class="k">return</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># imported lazily: joblib is optional, and the module is private to it</span>
+        <span class="n">loky</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="s2">"joblib.externals.loky"</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="c1"># reuse=True gives back the executor the examples ran in, if there is one</span>
+    <span class="n">loky</span><span class="o">.</span><span class="n">get_reusable_executor</span><span class="p">(</span><span class="n">reuse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">shutdown</span><span class="p">(</span><span class="n">wait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="handle_exception">
