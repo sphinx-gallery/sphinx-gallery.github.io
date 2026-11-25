@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>sphinx_gallery.directives &#8212; Sphinx-Gallery 0.23.0.dev12+g45aee0073-git documentation</title>
+    <title>sphinx_gallery.directives &#8212; Sphinx-Gallery 0.23.0.dev13+g8b1769736-git documentation</title>
   
   
   
@@ -46,7 +46,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../_static/documentation_options.js?v=d20fb836"></script>
+    <script src="../../_static/documentation_options.js?v=f942023b"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/sg-tags.js?v=d80f6fa4"></script>
@@ -66,7 +66,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.23.0.dev12+g45aee0073" />
+  <meta name="docsearch:version" content="0.23.0.dev13+g8b1769736" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -476,10 +476,12 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">namedtuple</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span><span class="p">,</span> <span class="n">PurePosixPath</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">urllib.parse</span><span class="w"> </span><span class="kn">import</span> <span class="n">quote</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">docutils</span><span class="w"> </span><span class="kn">import</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">statemachine</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">docutils.parsers.rst</span><span class="w"> </span><span class="kn">import</span> <span class="n">Directive</span><span class="p">,</span> <span class="n">directives</span>
@@ -772,8 +774,8 @@
 
     <span class="n">has_content</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">required_arguments</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">optional_arguments</span> <span class="o">=</span> <span class="mi">3</span>
-    <span class="n">final_argument_whitespace</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">optional_arguments</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">final_argument_whitespace</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">option_spec</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">"srcset"</span><span class="p">:</span> <span class="n">directives</span><span class="o">.</span><span class="n">unchanged</span><span class="p">,</span>
         <span class="s2">"class"</span><span class="p">:</span> <span class="n">directives</span><span class="o">.</span><span class="n">class_option</span><span class="p">,</span>
@@ -804,17 +806,18 @@
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_parse_srcset</span><span class="p">(</span><span class="n">st</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""Parse st."""</span>
-    <span class="n">entries</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">","</span><span class="p">)</span>
     <span class="n">srcset</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">entries</span><span class="p">:</span>
-        <span class="n">spl</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">" "</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">spl</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">srcset</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">spl</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">spl</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="n">mult</span> <span class="o">=</span> <span class="n">spl</span><span class="p">[</span><span class="mi">1</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-            <span class="n">srcset</span><span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">mult</span><span class="p">)]</span> <span class="o">=</span> <span class="n">spl</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">st</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">","</span><span class="p">):</span>
+        <span class="n">entry</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="c1"># Paths may contain spaces, so only a trailing token can be a descriptor</span>
+        <span class="n">path</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">desc</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="n">rpartition</span><span class="p">(</span><span class="s2">" "</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="sa">r</span><span class="s2">"\d+(\.\d+)?x"</span><span class="p">,</span> <span class="n">desc</span><span class="p">):</span>
+            <span class="n">mult</span><span class="p">,</span> <span class="n">path</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">desc</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="n">path</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span><span class="s1">'srcset argument "</span><span class="si">{entry}</span><span class="s1">" is invalid.'</span><span class="p">)</span>
+            <span class="n">mult</span><span class="p">,</span> <span class="n">path</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">entry</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'srcset argument "</span><span class="si">{</span><span class="n">entry</span><span class="si">}</span><span class="s1">" is invalid.'</span><span class="p">)</span>
+        <span class="n">srcset</span><span class="p">[</span><span class="n">mult</span><span class="p">]</span> <span class="o">=</span> <span class="n">path</span>
     <span class="k">return</span> <span class="n">srcset</span>
 
 
@@ -847,7 +850,7 @@
     <span class="k">for</span> <span class="n">mult</span> <span class="ow">in</span> <span class="n">srcset</span><span class="p">:</span>
         <span class="n">nm</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">srcset</span><span class="p">[</span><span class="n">mult</span><span class="p">][</span><span class="mi">1</span><span class="p">:])</span><span class="o">.</span><span class="n">name</span>
         <span class="c1"># ../../_images/plot_1_2_0x.png</span>
-        <span class="n">relpath</span> <span class="o">=</span> <span class="n">imagerel</span> <span class="o">+</span> <span class="n">nm</span>
+        <span class="n">relpath</span> <span class="o">=</span> <span class="n">imagerel</span> <span class="o">+</span> <span class="n">quote</span><span class="p">(</span><span class="n">nm</span><span class="p">)</span>
         <span class="n">srcsetst</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">relpath</span><span class="si">}</span><span class="s2">"</span>
         <span class="k">if</span> <span class="n">mult</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">srcsetst</span> <span class="o">+=</span> <span class="s2">", "</span>
@@ -858,7 +861,7 @@
 
     <span class="c1"># make uri also be relative...</span>
     <span class="n">nm</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">node</span><span class="p">[</span><span class="s2">"uri"</span><span class="p">][</span><span class="mi">1</span><span class="p">:])</span><span class="o">.</span><span class="n">name</span>
-    <span class="n">uri</span> <span class="o">=</span> <span class="n">imagerel</span> <span class="o">+</span> <span class="n">nm</span>
+    <span class="n">uri</span> <span class="o">=</span> <span class="n">imagerel</span> <span class="o">+</span> <span class="n">quote</span><span class="p">(</span><span class="n">nm</span><span class="p">)</span>
 
     <span class="n">alt</span> <span class="o">=</span> <span class="n">node</span><span class="p">[</span><span class="s2">"alt"</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">node</span><span class="p">[</span><span class="s2">"class"</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
