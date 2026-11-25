@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Configuration &#8212; Sphinx-Gallery 0.23.0.dev9+g3b59d60c6-git documentation</title>
+    <title>Configuration &#8212; Sphinx-Gallery 0.23.0.dev10+g096e81dba-git documentation</title>
   
   
   
@@ -47,7 +47,7 @@
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="_static/documentation_options.js?v=6c5e205e"></script>
+    <script src="_static/documentation_options.js?v=1597fea4"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/sg-tags.js?v=d80f6fa4"></script>
@@ -69,7 +69,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.23.0.dev9+g3b59d60c6" />
+  <meta name="docsearch:version" content="0.23.0.dev10+g096e81dba" />
   
     
     <script src="_static/searchtools.js"></script>
@@ -840,11 +840,13 @@ executed, you can modify <code class="docutils literal notranslate"><span class=
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>will build all examples starting with <code class="docutils literal notranslate"><span class="pre">plot_compute_</span></code>. The key
-<code class="docutils literal notranslate"><span class="pre">filename_pattern</span></code> (and <code class="docutils literal notranslate"><span class="pre">ignore_pattern</span></code>) accepts <a class="reference external" href="https://docs.python.org/3/library/re.html">regular expressions</a>
-which will be matched with the full path of the example. This is the reason
-the leading <code class="docutils literal notranslate"><span class="pre">'/'</span></code> is required. Users are advised to use <code class="docutils literal notranslate"><span class="pre">re.escape(os.sep)</span></code>
-instead of <code class="docutils literal notranslate"><span class="pre">'/'</span></code> if they want to be agnostic to the operating system.</p>
+<p>will execute examples whose path contains <code class="docutils literal notranslate"><span class="pre">/plot_compute_</span></code>. Both options accept
+<a class="reference external" href="https://docs.python.org/3/library/re.html">regular expressions</a>. <code class="docutils literal notranslate"><span class="pre">filename_pattern</span></code> matches against the full path of
+the example. Use <code class="docutils literal notranslate"><span class="pre">re.escape(os.sep)</span></code> in place of <code class="docutils literal notranslate"><span class="pre">'/'</span></code> to match the path
+separator on the current operating system.</p>
+<p><code class="docutils literal notranslate"><span class="pre">ignore_pattern</span></code> matches against the filename alone. For example,
+<code class="docutils literal notranslate"><span class="pre">r'^skip_'</span></code> omits files whose names start with <code class="docutils literal notranslate"><span class="pre">skip_</span></code> in any gallery
+directory.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">filename_pattern</span></code> option is also useful if you want to build only a
 subset of the examples. For example, you may
 want to build only one example so that you can link it in the documentation.
