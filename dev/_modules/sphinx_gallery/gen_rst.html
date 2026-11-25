@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>sphinx_gallery.gen_rst &#8212; Sphinx-Gallery 0.23.0.dev11+g4a8ef6b80-git documentation</title>
+    <title>sphinx_gallery.gen_rst &#8212; Sphinx-Gallery 0.23.0.dev12+g45aee0073-git documentation</title>
   
   
   
@@ -46,7 +46,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../_static/documentation_options.js?v=a8c2330f"></script>
+    <script src="../../_static/documentation_options.js?v=d20fb836"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/sg-tags.js?v=d80f6fa4"></script>
@@ -66,7 +66,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.23.0.dev11+g4a8ef6b80" />
+  <meta name="docsearch:version" content="0.23.0.dev12+g45aee0073" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -778,7 +778,11 @@
 <div class="viewcode-block" id="codestr2rst">
 <a class="viewcode-back" href="../../gen_modules/sphinx_gallery.gen_rst.html#sphinx_gallery.gen_rst.codestr2rst">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">codestr2rst</span><span class="p">(</span><span class="n">codestr</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">lang</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"python"</span><span class="p">,</span> <span class="n">lineno</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Return reStructuredText code block from code string."""</span>
+<span class="w">    </span><span class="sd">"""Return reStructuredText code block from code string.</span>
+
+<span class="sd">    ``lineno`` is the line number of the first line of ``codestr``, and is used</span>
+<span class="sd">    as the starting line number of the rendered block.</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">lineno</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># Sphinx only starts numbering from the first non-empty line.</span>
         <span class="n">blank_lines</span> <span class="o">=</span> <span class="n">codestr</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">codestr</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()))</span>
@@ -2325,6 +2329,12 @@
     <span class="c1"># A simple example has two blocks: one for the</span>
     <span class="c1"># example introduction/explanation and one for the code</span>
     <span class="n">is_example_notebook_like</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">script_blocks</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span>
+    <span class="n">line_numbers</span> <span class="o">=</span> <span class="n">file_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"line_numbers"</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">"line_numbers"</span><span class="p">])</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">line_numbers</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">line_numbers</span> <span class="o">!=</span> <span class="s2">"per-block"</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ExtensionError</span><span class="p">(</span>
+            <span class="s2">"sphinx_gallery_line_numbers setting must be a bool or 'per-block', "</span>
+            <span class="sa">f</span><span class="s2">"got </span><span class="si">{</span><span class="n">line_numbers</span><span class="si">!r}</span><span class="s2">"</span>
+        <span class="p">)</span>
     <span class="n">example_rst</span> <span class="o">=</span> <span class="s2">""</span>
     <span class="k">for</span> <span class="n">bi</span><span class="p">,</span> <span class="p">(</span><span class="n">script_block</span><span class="p">,</span> <span class="n">code_output</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">script_blocks</span><span class="p">,</span> <span class="n">output_blocks</span><span class="p">)):</span>
         <span class="c1"># do not add comment to the title block, otherwise the linking does</span>
@@ -2335,15 +2345,16 @@
                 <span class="n">script_block</span><span class="o">.</span><span class="n">lineno</span> <span class="o">+</span> <span class="n">script_block</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">),</span>
             <span class="p">)</span>
         <span class="k">if</span> <span class="n">script_block</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">"code"</span><span class="p">:</span>
-            <span class="n">lineno</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="n">script_block</span><span class="o">.</span><span class="n">lineno</span>
-                <span class="k">if</span> <span class="n">file_conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"line_numbers"</span><span class="p">,</span> <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">"line_numbers"</span><span class="p">])</span>
-                <span class="k">else</span> <span class="kc">None</span>
-            <span class="p">)</span>
+            <span class="n">lineno</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">content</span> <span class="o">=</span> <span class="n">script_block</span><span class="o">.</span><span class="n">content</span>
+            <span class="k">if</span> <span class="n">line_numbers</span> <span class="o">==</span> <span class="s2">"per-block"</span><span class="p">:</span>
+                <span class="c1"># codestr2rst would otherwise offset lineno by the leading blank lines</span>
+                <span class="n">content</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"\A(?:[ \t]*\n)+"</span><span class="p">,</span> <span class="s2">""</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span>
+                <span class="n">lineno</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">elif</span> <span class="n">line_numbers</span><span class="p">:</span>
+                <span class="n">lineno</span> <span class="o">=</span> <span class="n">script_block</span><span class="o">.</span><span class="n">lineno</span>
 
-            <span class="n">code_rst</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="n">codestr2rst</span><span class="p">(</span><span class="n">script_block</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="n">language</span><span class="p">,</span> <span class="n">lineno</span><span class="o">=</span><span class="n">lineno</span><span class="p">)</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span>
-            <span class="p">)</span>
+            <span class="n">code_rst</span> <span class="o">=</span> <span class="n">codestr2rst</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="n">language</span><span class="p">,</span> <span class="n">lineno</span><span class="o">=</span><span class="n">lineno</span><span class="p">)</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span>
             <span class="k">if</span> <span class="n">is_example_notebook_like</span><span class="p">:</span>
                 <span class="n">example_rst</span> <span class="o">+=</span> <span class="n">code_rst</span>
                 <span class="n">example_rst</span> <span class="o">+=</span> <span class="n">code_output</span>

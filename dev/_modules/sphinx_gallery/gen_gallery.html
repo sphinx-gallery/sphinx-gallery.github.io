@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>sphinx_gallery.gen_gallery &#8212; Sphinx-Gallery 0.23.0.dev11+g4a8ef6b80-git documentation</title>
+    <title>sphinx_gallery.gen_gallery &#8212; Sphinx-Gallery 0.23.0.dev12+g45aee0073-git documentation</title>
   
   
   
@@ -46,7 +46,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../_static/documentation_options.js?v=a8c2330f"></script>
+    <script src="../../_static/documentation_options.js?v=d20fb836"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/sg-tags.js?v=d80f6fa4"></script>
@@ -66,7 +66,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.23.0.dev11+g4a8ef6b80" />
+  <meta name="docsearch:version" content="0.23.0.dev12+g45aee0073" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -648,6 +648,22 @@
     <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 
 
+<span class="k">def</span><span class="w"> </span><span class="nf">_line_numbers_eval</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span> <span class="o">|</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"per-block"</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""Evaluate the ``line_numbers`` config.</span>
+
+<span class="sd">    Like `_bool_eval`, but additionally accepts ``"per-block"``, and raises a</span>
+<span class="sd">    `ConfigError` instead of a `NameError` for any other string.</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">"</span><span class="se">\"</span><span class="s2">'"</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"per-block"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">"per-block"</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_bool_eval</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">NameError</span><span class="p">,</span> <span class="ne">SyntaxError</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"'line_numbers' must be a bool or 'per-block', got: </span><span class="si">{</span><span class="n">x</span><span class="si">!r}</span><span class="s2">"</span>
+        <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="kc">None</span>
+
+
 <span class="k">def</span><span class="w"> </span><span class="nf">_update_gallery_conf_exclude_implicit_doc</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">:</span> <span class="n">GalleryConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Update gallery config exclude_implicit_doc.</span>
 
@@ -871,7 +887,6 @@
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span>
         <span class="s2">"download_all_examples"</span><span class="p">,</span>
         <span class="s2">"inspect_global_variables"</span><span class="p">,</span>
-        <span class="s2">"line_numbers"</span><span class="p">,</span>
         <span class="s2">"nested_sections"</span><span class="p">,</span>
         <span class="s2">"only_warn_on_example_error"</span><span class="p">,</span>
         <span class="s2">"promote_jupyter_magic"</span><span class="p">,</span>
@@ -880,6 +895,8 @@
         <span class="s2">"show_signature"</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="n">gallery_conf</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">_bool_eval</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+
+    <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">"line_numbers"</span><span class="p">]</span> <span class="o">=</span> <span class="n">_line_numbers_eval</span><span class="p">(</span><span class="n">gallery_conf</span><span class="p">[</span><span class="s2">"line_numbers"</span><span class="p">])</span>
 
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">"default_role"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">""</span>
     <span class="n">gallery_conf</span><span class="p">[</span><span class="s2">"source_suffix"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">".rst"</span><span class="p">:</span> <span class="s2">"restructuredtext"</span><span class="p">}</span>
